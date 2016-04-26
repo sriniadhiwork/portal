@@ -1,6 +1,6 @@
 before_script:
-  - apt-get update -qq && apt-get install -y -qq npm
-  - npm install gulp
+  - npm install
+  - bower install
 
 test:
   script:
