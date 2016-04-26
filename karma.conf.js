@@ -80,20 +80,9 @@ module.exports = function(config) {
             dir: 'coverage/',
             subdir: '.',
             file: 'coverage.lcov'
-            //      type : 'html',
-            //      dir : 'coverage/'
         },
 
-        htmlReporter: {
-            outputFile: 'test_reports/units.html'
-        },
-
-        junitReporter: {
-            outputDir: 'test_reports',
-            suite: 'unit'
-        },
-
-        reporters: ['dots', 'progress', 'junit', 'growl', 'html'],
+        reporters: ['progress'],
 
         proxies: {
             '/assets/': path.join('/base/', conf.paths.src, '/assets/')

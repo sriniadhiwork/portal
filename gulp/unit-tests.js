@@ -35,15 +35,13 @@ function runTests (singleRun, done) {
         autoWatch: !singleRun,
         reporters: reporters,
         preprocessors: preprocessors,
-                htmlReporter: {
+        htmlReporter: {
             outputFile: 'test_reports/units.html'
         },
-
         junitReporter: {
             outputDir: 'test_reports',
             suite: 'unit'
         }
-
     };
 
     var server = new karma.Server(localConfig, function(failCount) {

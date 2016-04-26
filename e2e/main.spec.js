@@ -1,21 +1,17 @@
 'use strict';
 
+require('jasmine-given');
+
 describe('The main view', function () {
-  var page;
+    var page = require('./main.po');
 
-  beforeEach(function () {
-    browser.get('/index.html');
-    page = require('./main.po');
-  });
+    describe('visiting the main page', function () {
+        Given(function () { page.visitPage(); });
 
-  it('should include jumbotron with correct data', function() {
-    expect(page.h1El.getText()).toBe('\'Allo, \'Allo!');
-    expect(page.imgEl.getAttribute('src')).toMatch(/assets\/images\/yeoman.png$/);
-    expect(page.imgEl.getAttribute('alt')).toBe('I\'m Yeoman');
-  });
-
-  it('should list more than 5 awesome things', function () {
-    expect(page.thumbnailEls.count()).toBeGreaterThan(5);
-  });
+        Then(function () { expect(page.h1El.getText()).toBe('\'Allo, \'Allo!'); })
+        Then(function () { expect(page.imgEl.getAttribute('src')).toMatch(/assets\/images\/yeoman.png$/); })
+        Then(function () { expect(page.imgEl.getAttribute('alt')).toBe('I\'m Yeoman'); });
+        Then(function () { expect(page.thumbnailEls.count()).toBeGreaterThan(5); })
+    });
 
 });

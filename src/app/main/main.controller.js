@@ -19,7 +19,7 @@
         function activate() {
             getWebDevTec();
             $timeout(function() {
-                vm.classAnimation = 'rubberBand';
+                vm.classAnimation = 'pulse';
             }, 4000);
         }
 
