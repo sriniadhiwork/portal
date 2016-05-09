@@ -3,10 +3,10 @@
 
     angular
         .module('portal')
-        .directive('acmeNavbar', acmeNavbar);
+        .directive('aiNavbar', aiNavbar);
 
     /** @ngInject */
-    function acmeNavbar() {
+    function aiNavbar() {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/components/navbar/navbar.html',
@@ -14,18 +14,23 @@
             controller: NavbarController,
             controllerAs: 'vm',
             bindToController: {
-                creationDate: '='
+                active: '@'
             }
         };
 
         return directive;
 
         /** @ngInject */
-        function NavbarController(moment) {
+        function NavbarController($log, commonService) {
             var vm = this;
 
-            vm.relativeDate = moment(vm.creationDate).fromNow();
+            vm.isAuthenticated = isAuthenticated;
+
+            ////////////////////////////////////////////////////////////////////
+
+            function isAuthenticated () {
+                return commonService.isAuthenticated();
+            }
         }
     }
-
 })();

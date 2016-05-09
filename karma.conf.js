@@ -82,8 +82,6 @@ module.exports = function(config) {
             file: 'coverage.lcov'
         },
 
-        reporters: ['progress'],
-
         proxies: {
             '/assets/': path.join('/base/', conf.paths.src, '/assets/')
         }

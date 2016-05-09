@@ -15,19 +15,19 @@ var pathSrcJs = [
 ];
 
 function runTests (singleRun, done) {
-    var reporters = ['progress', 'dots', 'junit', 'growl', 'html'];
+    var reporters = ['dots', 'junit', 'growl', 'html'];
     var preprocessors = {};
 
     pathSrcHtml.forEach(function(path) {
         preprocessors[path] = ['ng-html2js'];
     });
 
-    if (singleRun) {
+//    if (singleRun) {
         pathSrcJs.forEach(function(path) {
             preprocessors[path] = ['coverage'];
         });
         reporters.push('coverage')
-    }
+//    }
 
     var localConfig = {
         configFile: path.join(__dirname, '/../karma.conf.js'),

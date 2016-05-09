@@ -1,32 +1,26 @@
 (function() {
     'use strict';
 
-    /**
-     * @todo Complete the test
-     * This example is not perfect.
-     * Test should check if MomentJS have been called
-     */
     describe('directive navbar', function() {
-        // var $window;
-        var vm;
-        var el;
-        var timeInMs;
+        var vm, el, commonService;
 
-        beforeEach(module('portal'));
-        beforeEach(inject(function($compile, $rootScope) {
-            // spyOn(_$window_, 'moment').and.callThrough();
-            // $window = _$window_;
+        beforeEach(function () {
+            module('portal', function ($provide) {
+                $provide.decorator('commonService', function ($delegate) {
+                    $delegate.isAuthenticated = jasmine.createSpy();
+                    return $delegate;
+                });
+            });
+            inject(function($compile, $rootScope, _commonService_) {
+                commonService = _commonService_;
 
-            timeInMs = new Date();
-            timeInMs = timeInMs.setHours(timeInMs.getHours() - 24);
+                el = angular.element('<ai-navbar></ai-navbar>');
 
-            el = angular.element('<acme-navbar creation-date="' + timeInMs + '"></acme-navbar>');
-
-            $compile(el)($rootScope.$new());
-            $rootScope.$digest();
-            vm = el.isolateScope().vm;
-            // ctrl = el.controller('acmeNavbar');
-        }));
+                $compile(el)($rootScope.$new());
+                $rootScope.$digest();
+                vm = el.isolateScope().vm;
+            });
+        });
 
         it('should be compiled', function() {
             expect(el.html()).not.toEqual(null);
@@ -34,17 +28,12 @@
 
         it('should have isolate scope object with instanciate members', function() {
             expect(vm).toEqual(jasmine.any(Object));
-
-            expect(vm.creationDate).toEqual(jasmine.any(Number));
-            expect(vm.creationDate).toEqual(timeInMs);
-
-            expect(vm.relativeDate).toEqual(jasmine.any(String));
-            expect(vm.relativeDate).toEqual('a day ago');
         });
 
-        // it('should call Moment', function() {
-        //   console.log($window.moment)
-        //   expect($window.moment).toHaveBeenCalled();
-        // });
+        it('should know if the user is logged in', function () {
+            expect(vm.isAuthenticated).toBeDefined();
+            vm.isAuthenticated();
+            expect(commonService.isAuthenticated).toHaveBeenCalled();
+        });
     });
 })();

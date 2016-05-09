@@ -1,20 +1,28 @@
 <nav class="navbar navbar-static-top navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="https://github.com/Swiip/generator-gulp-angular">
-        <i class="fa fa-home"></i> Gulp Angular
+      <a class="navbar-brand" href="#">
+        <i class="fa fa-home"></i> PULSE
       </a>
     </div>
 
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
-      <ul class="nav navbar-nav">
-        <li class="active"><a ng-href="#">Home</a></li>
-        <li><a ng-href="#">About</a></li>
-        <li><a ng-href="#">Contact</a></li>
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right acme-navbar-text navbar-text">
-        <li>Application was created {{ vm.relativeDate }}.</li>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-class="{ 'active' : (vm.active === 'home') }"><a ng-href="#/">Home</a></li>
+        <li ng-class="{ 'active' : (vm.active === 'about') }"><a ng-href="#/about">About</a></li>
+        <li ng-class="{'active': vm.active === 'admin' }" class="uib-dropdown" uib-dropdown uib-keyboard-nav auto-close="outsideClick">
+          <button id="admin-login-nav" type="button" class="btn btn-primary navbar-btn" uib-dropdown-toggle aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user"></i> <span ng-if="!vm.getUsername()" class="sr-only">Log in</span>{{ vm.getUsername() }} <span class="fa fa-caret-down"></span>
+          </button>
+          <ul class="uib-dropdown-menu" role="menu" aria-labelledby="admin-login-nav">
+            <li role="menuitem">
+              <ai-login form-class="navbar-form"
+                        p-class="navbar-text"
+                        p-class-fail="navbar-text">
+              </ai-login>
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
