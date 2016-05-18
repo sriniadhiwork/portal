@@ -30,7 +30,7 @@ function browserSyncInit(baseDir, browser) {
      * For more details and option, https://github.com/chimurai/http-proxy-middleware/blob/v0.9.0/README.md
      */
     server.middleware = proxyMiddleware('/rest', {
-        target: 'http://localhost:8080/',
+        target: 'http://localhost:9000/',
         pathRewrite: { '^/rest' : '/' },
         changeOrigin: true
     });

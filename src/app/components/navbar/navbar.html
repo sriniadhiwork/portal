@@ -10,19 +10,10 @@
       <ul class="nav navbar-nav navbar-right">
         <li ng-class="{ 'active' : (vm.active === 'home') }"><a ng-href="#/">Home</a></li>
         <li ng-class="{ 'active' : (vm.active === 'about') }"><a ng-href="#/about">About</a></li>
-        <li ng-class="{'active': vm.active === 'admin' }" class="uib-dropdown" uib-dropdown uib-keyboard-nav auto-close="outsideClick">
-          <button id="admin-login-nav" type="button" class="btn btn-primary navbar-btn" uib-dropdown-toggle aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-user"></i> <span ng-if="!vm.getUsername()" class="sr-only">Log in</span>{{ vm.getUsername() }} <span class="fa fa-caret-down"></span>
-          </button>
-          <ul class="uib-dropdown-menu" role="menu" aria-labelledby="admin-login-nav">
-            <li role="menuitem">
-              <ai-login form-class="navbar-form"
-                        p-class="navbar-text"
-                        p-class-fail="navbar-text">
-              </ai-login>
-            </li>
-          </ul>
-        </li>
+        <form class="navbar-form navbar-right" role="log in" method="get" action="http://localhost:8080/saml/login?disco=true">
+          <button type="submit" class="btn btn-default">Log In</button>
+          <input type="hidden" name="idp" id="idp_http://idp.ssocircle.com" value="http://idp.ssocircle.com">
+        </form>
       </ul>
     </div>
   </div>

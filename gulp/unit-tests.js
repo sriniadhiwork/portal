@@ -22,12 +22,10 @@ function runTests (singleRun, done) {
         preprocessors[path] = ['ng-html2js'];
     });
 
-//    if (singleRun) {
-        pathSrcJs.forEach(function(path) {
-            preprocessors[path] = ['coverage'];
-        });
-        reporters.push('coverage')
-//    }
+    pathSrcJs.forEach(function(path) {
+        preprocessors[path] = ['coverage'];
+    });
+    reporters.push('coverage')
 
     var localConfig = {
         configFile: path.join(__dirname, '/../karma.conf.js'),
@@ -41,6 +39,15 @@ function runTests (singleRun, done) {
         junitReporter: {
             outputDir: 'test_reports',
             suite: 'unit'
+        },
+        coverageReporter: {
+            // specify a common output directory
+            dir: 'coverage',
+            reporters: [
+                { type: 'lcov', subdir: '.' },
+                // display summary to screen
+                { type: 'text-summary' }
+            ]
         }
     };
 

@@ -88,6 +88,12 @@
             expect(commonService.getUsername()).toEqual('Bob Jones');
         });
 
+        it('should not have a username if the user isn\'t logged in, and should call the server logout to confirm the user isn\'t logged in', function () {
+            $httpBackend.expectPOST('/rest/authenticate/logout', {}).respond(200);
+            expect(commonService.getUsername()).toEqual('');
+            $httpBackend.flush();
+        });
+
         it('should allow the user to log out', function () {
             commonService.saveToken(mock.token);
             commonService.logout();
