@@ -25,11 +25,32 @@
             var vm = this;
 
             vm.isAuthenticated = isAuthenticated;
+            vm.getUsername = getUsername;
+            vm.login = login;
+            vm.logout = logout;
+
+            activate();
 
             ////////////////////////////////////////////////////////////////////
 
+            function activate () {
+                vm.login()
+            }
+
             function isAuthenticated () {
                 return commonService.isAuthenticated();
+            }
+
+            function getUsername () {
+                return commonService.getUsername();
+            }
+
+            function login () {
+                commonService.login();
+            }
+
+            function logout () {
+                commonService.logout();
             }
         }
     }

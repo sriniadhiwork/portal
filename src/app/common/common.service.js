@@ -4,10 +4,11 @@
     angular
         .module('portal.common')
         .constant('API', '/rest')
+        .constant('AuthAPI', '/auth')
         .service('commonService', commonService);
 
     /** @ngInject */
-    function commonService ($http, $q, API, $log, $localStorage, $window) {
+    function commonService ($http, $q, API, AuthAPI, $log, $localStorage, $window) {
         var self = this;
 
         self.getGreeting = getGreeting;
@@ -29,14 +30,17 @@
         }
 
         function getToken () {
+            //$log.debug('in getToken', $localStorage.jwtToken);
             return $localStorage.jwtToken;
         }
 
         function getUsername () {
+            //$log.debug('in getusername');
             if (self.isAuthenticated()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                return identity[2] + ' ' + identity[3];
+                //$log.debug('identity', identity);
+                return identity[0] + ' ' + identity[1];
             } else {
                 self.logout();
                 return '';
@@ -53,11 +57,11 @@
             }
         }
 
-        function login (userObject) {
-            return postApi('/authenticate/authenticate', userObject)
+        function login () {
+            return getApi('/jwt', AuthAPI)
                 .then(function (response) {
-                    $log.debug(response);
-                    self.saveToken(response.data);
+                    //$log.debug('calling jwt', response);
+                    self.saveToken(response.token);
                     return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);
@@ -65,10 +69,7 @@
         }
 
         function logout () {
-            postApi('/authenticate/logout', {})
-                .then(function () {
-                    delete($localStorage.jwtToken);
-                });
+            delete($localStorage.jwtToken);
         }
 
         function saveToken (token) {
@@ -77,8 +78,10 @@
 
         ////////////////////////////////////////////////////////////////////
 
-        function getApi (endpoint) {
-            return $http.get(API + endpoint)
+        function getApi (endpoint, api) {
+            if (api === null || angular.isUndefined(api))
+                api = API;
+            return $http.get(api + endpoint)
                 .then(function(response) {
                     return response.data;
                 }, function (response) {
@@ -90,7 +93,7 @@
             var base64 = token.split('.')[1].replace('-','+').replace('_','/');
             return angular.fromJson($window.atob(base64));
         }
-
+        /*
         function postApi (endpoint, postObject) {
             return $http.post(API + endpoint, postObject)
                 .then(function (response) {
@@ -99,5 +102,6 @@
                     return $q.reject(response);
                 });
         }
+        */
     }
 })();
