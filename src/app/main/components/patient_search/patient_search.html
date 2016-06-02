@@ -1,0 +1,73 @@
+<div class="form-horizontal" ng-form="vm.queryForm">
+  <div class="form-group">
+    <label for="firstName" class="col-sm-4 control-label">First Name</label>
+    <div class="col-sm-8">
+      <input class="input-sm form-control" type="text" ng-model="vm.query.firstName" id="firstName" name="firstName"></input>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="lastName" class="col-sm-4 control-label">Last Name</label>
+    <div class="col-sm-8">
+      <input class="input-sm form-control" type="text" ng-model="vm.query.lastName" id="lastName" name="lastName"></input>
+    </div>
+  </div>
+  <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.date }">
+    <label for="dob" class="col-sm-4 control-label">Date of Birth</label>
+    <div class="col-sm-8">
+      <input class="input-sm form-control" type="date" ng-model="vm.query.dob" id="dob" name="dob"></input>
+      <div class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.date">Improper format (mm/dd/yyyy)</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="gender" class="col-sm-4 control-label">Gender</label>
+    <div class="col-sm-8">
+      <select class="input-sm form-control" ng-model="vm.query.gender" id="gender" name="gender">
+        <option selected="true">Unknown</option>
+        <option value="Female">Female</option>
+        <option value="Male">Male</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern }">
+    <label for="ssn" class="col-sm-4 control-label">SSN (or last 4)</label>
+    <div class="col-sm-8">
+      <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn" placeholder="XXX-XX-XXXX or XXXX" pattern="(\d{3}-?\d{2}-?\d{4}|\d{4})"></input>
+      <div class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX or XXXX)</div>
+    </div>
+  </div>
+  <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.homeZip.$touched) && vm.queryForm.homeZip.$error.pattern }">
+    <label for="homeZip" class="col-sm-4 control-label">Home Zip Code</label>
+    <div class="col-sm-8">
+      <input class="input-sm form-control" type="text" ng-model="vm.query.homeZip" id="homeZip" name="homeZip" placeholder="XXXXX or XXXXX-XXXX" pattern="\d{5}-?(\d{4})?"></input>
+      <div class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.homeZip.$touched) && vm.queryForm.homeZip.$error.pattern">Improper format (XXXXX or XXXXX-XXXX)</div>
+    </div>
+  </div>
+  <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.patientId.$touched) && vm.queryForm.patientId.$error.required }">
+    <label for="patientId" class="col-sm-4 control-label">Patient ID <span class="text-danger">*</span></label>
+    <div class="col-sm-8">
+      <input class="input-sm form-control" type="text" ng-model="vm.query.patientId" id="patientId" name="patientId" required></input>
+      <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.patientId.$touched) && vm.queryForm.patientId.$error.required">Field is required</span>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-6 col-sm-offset-4">
+      <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
+              class="btn btn-success btn-block"
+              ng-mouseover="vm.showFormErrors = true"
+              ng-focus="vm.showFormErrors = true"
+              ng-click="vm.queryPatient()">Search <i class="fa fa-search"></i></button>
+    </div>
+  </div>
+  <div class="form-group" ng-if="vm.queryForm.$invalid && vm.showFormErrors">
+    <div class="col-sm-10 col-sm-offset-2 text-danger">
+      The following error<span ng-if="vm.errorCount() > 1">(s)</span> must be fixed:
+      <ul>
+        <li ng-if="vm.queryForm.dob.$error.date">Date of Birth is an invalid format (mm/dd/yyyy)</li>
+        <li ng-if="vm.queryForm.ssn.$error.pattern">Improper SSN format (XXX-XX-XXXX or XXXX)</li>
+        <li ng-if="vm.queryForm.homeZip.$error.pattern">Improper Zip Code format (XXXXX or XXXXX-XXXX)</li>
+        <li ng-if="vm.queryForm.patientId.$error.required">Patient ID is required</li>
+      </ul>
+    </div>
+  </div>
+</div>

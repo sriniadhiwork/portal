@@ -1,4 +1,5 @@
-# Portal project for PULSE
+# Release Notes for PULSE Portal
 
-Run the server with `gulp serve`
-Run the tests with `gulp test:auto`
+## Version 0.0.1
+_Date TBD_
+Initial release

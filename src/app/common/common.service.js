@@ -11,23 +11,15 @@
     function commonService ($http, $q, API, AuthAPI, $log, $localStorage, $window) {
         var self = this;
 
-        self.getGreeting = getGreeting;
         self.getToken = getToken;
         self.getUsername = getUsername;
         self.isAuthenticated = isAuthenticated;
         self.login = login;
         self.logout = logout;
+        self.queryPatient = queryPatient;
         self.saveToken = saveToken;
 
         ////////////////////////////////////////////////////////////////////
-
-        function getGreeting (name) {
-            if (name) {
-                return getApi('/greeting/greeting?name=' + name);
-            } else {
-                return getApi('/greeting/greeting');
-            }
-        }
 
         function getToken () {
             //$log.debug('in getToken', $localStorage.jwtToken);
@@ -72,6 +64,15 @@
             delete($localStorage.jwtToken);
         }
 
+        function queryPatient (queryObj) {
+            return postApi('/query/patient', queryObj)
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
         function saveToken (token) {
             $localStorage.jwtToken = token;
         }
@@ -79,8 +80,8 @@
         ////////////////////////////////////////////////////////////////////
 
         function getApi (endpoint, api) {
-            if (api === null || angular.isUndefined(api))
-                api = API;
+//            if (api === null || angular.isUndefined(api))
+//                api = API;
             return $http.get(api + endpoint)
                 .then(function(response) {
                     return response.data;
@@ -93,7 +94,7 @@
             var base64 = token.split('.')[1].replace('-','+').replace('_','/');
             return angular.fromJson($window.atob(base64));
         }
-        /*
+
         function postApi (endpoint, postObject) {
             return $http.post(API + endpoint, postObject)
                 .then(function (response) {
@@ -102,6 +103,5 @@
                     return $q.reject(response);
                 });
         }
-        */
     }
 })();

@@ -28,8 +28,7 @@
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
 
         var mock = {};
-        mock.aGreeting = {id: 1, content: "Hello, world"};
-        mock.aPersonalizedGreeting = {id: 1, content: "Hello, Bob"};
+        mock.patientQueryResponse = {results: [{id:2, firstName: 'Joe', lastName: 'Rogan'}, {id:3, firstName: 'Sue', lastName: 'Samson'}]};
 
         beforeEach(inject(function (_commonService_, _$httpBackend_, $window, $localStorage) {
             commonService = _commonService_;
@@ -37,56 +36,13 @@
             mock.token = tokenPrefix + $window.btoa(jwt) + tokenSuffix;
             delete($localStorage.jwtToken);
 
-            requestHandler.get = $httpBackend.whenGET('/rest/greeting/greeting').respond(mock.aGreeting);
-            $httpBackend.whenGET('/rest/greeting/greeting?name=Bob').respond(mock.aPersonalizedGreeting);
-            requestHandler.post = $httpBackend.whenPOST('/rest/authenticate/logout').respond(200);
-            $httpBackend.whenGET('/auth/jwt').respond({token: mock.token});
+            requestHandler.get = $httpBackend.whenGET('/auth/jwt').respond(200, {token: mock.token});
         }));
 
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
         });
-
-        it('should return a greeting', function () {
-            commonService.getGreeting().then(function (response) {
-                expect(response).toEqual(mock.aGreeting);
-            });
-            $httpBackend.flush();
-        });
-
-        it('should return a customized greeting', function () {
-            commonService.getGreeting('Bob').then(function (response) {
-                expect(response).toEqual(mock.aPersonalizedGreeting);
-            });
-            $httpBackend.flush();
-        });
-
-        it('should reject a call that doesn\'t return an object', function () {
-            requestHandler.get.respond(401, 'a rejection');
-            commonService.getGreeting().then(function (response) {
-                expect(response).toEqual('a rejection');
-            });
-            $httpBackend.flush();
-        });
-
-        it('should reject a call that doesn\'t return an object', function () {
-            requestHandler.get.respond(401, 'a rejection');
-            commonService.getGreeting().then(function (response) {
-                expect(response).toEqual('a rejection');
-            });
-            $httpBackend.flush();
-        });
-
-        /*
-        xit('should reject a call that doesn\'t return an object', function () {
-            requestHandler.post.respond(401, {message: 'a rejection'});
-            commonService.logout().then(function (response) {
-                expect(response).toEqual('a rejection');
-            });
-            $httpBackend.flush();
-        });
-        */
 
         it('should read a jwt to see if the user is authenticated', function () {
             expect(commonService.isAuthenticated()).toBeFalsy();
@@ -106,7 +62,7 @@
         });
 
         it('should allow the user to log in', function () {
-            $httpBackend.expectGET('/auth/jwt').respond(200, {token: mock.token});
+//            $httpBackend.expectGET('/auth/jwt').respond(200, {token: mock.token});
             commonService.login();
             expect(commonService.isAuthenticated()).toBeFalsy();
             expect(commonService.getToken()).toBeUndefined();
@@ -116,7 +72,7 @@
         });
 
         it('should return a message if the user doesn\'t log in', function () {
-            $httpBackend.expectGET('/auth/jwt').respond(401, {message: 'test'});
+            requestHandler.get.respond(401, {message: 'test'});
             commonService.login().then(function (response) {
                 expect(response.message).toEqual('test');
             });
@@ -128,6 +84,20 @@
             expect(commonService.isAuthenticated()).toBeTruthy();
             commonService.logout();
             expect(commonService.isAuthenticated()).toBeFalsy();
+        });
+
+        it('should call /query/patient', function () {
+            $httpBackend.expectPOST('/rest/query/patient', {}).respond(200, {results: mock.patientQueryResponse});
+            commonService.queryPatient({});
+            $httpBackend.flush();
+        });
+
+        it('should reject a call that doesn\'t return an object', function () {
+            $httpBackend.expectPOST('/rest/query/patient', {}).respond(401, {message: 'a rejection'});
+            commonService.queryPatient({}).then(function (response) {
+                expect(response).toEqual('a rejection');
+            });
+            $httpBackend.flush();
         });
     });
 })();
