@@ -30,6 +30,7 @@
         var mock = {};
         mock.patientQueryResponse = {results: [{id:2, firstName: 'Joe', lastName: 'Rogan'}, {id:3, firstName: 'Sue', lastName: 'Samson'}]};
         mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
+        mock.fakeDocument = {data: "<document><made><of>XML</of></made></document"};
 
         beforeEach(inject(function (_commonService_, _$httpBackend_, $window, $localStorage) {
             commonService = _commonService_;
@@ -39,6 +40,7 @@
 
             requestHandler.getAuthJwt = $httpBackend.whenGET('/auth/jwt').respond(200, {token: mock.token});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET('/rest/query/patient/3/documents').respond(200, {results: mock.patientDocuments});
+            requestHandler.getDocument = $httpBackend.whenGET('/rest/query/patient/3/documents/2').respond(200, {results: mock.fakeDocument});
         }));
 
         afterEach(function () {
@@ -107,6 +109,16 @@
             $httpBackend.flush();
             requestHandler.getRestQueryPatientDocuments.respond(401, {message: 'test'});
             commonService.queryPatientDocuments(3).then(function (response) {
+                expect(response.message).toEqual('test');
+            });
+            $httpBackend.flush();
+        });
+
+        it('should return data of a document', function () {
+            commonService.getDocument(3,2);
+            $httpBackend.flush();
+            requestHandler.getDocument.respond(401, {message: 'test'});
+            commonService.getDocument(3,2).then(function (response) {
                 expect(response.message).toEqual('test');
             });
             $httpBackend.flush();

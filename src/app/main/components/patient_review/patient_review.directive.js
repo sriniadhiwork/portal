@@ -24,6 +24,7 @@
         function PatientReviewController($log, commonService) {
             var vm = this;
 
+            vm.getDocument = getDocument;
             vm.queryPatientDocuments = queryPatientDocuments;
 
             activate();
@@ -33,11 +34,17 @@
             function activate () {
             }
 
+            function getDocument (patient, doc) {
+                commonService.getDocument(patient.id, doc.id).then(function (response) {
+                    doc.status = 'cached';
+                    doc.data = response.data;
+                });
+            }
+
             function queryPatientDocuments (patient, queryIndex) {
                 commonService.queryPatientDocuments(patient.id).then(function (response) {
                     patient.documents = response.results;
                 });
-                $log.debug(patient.id, queryIndex, vm.patientResults[queryIndex]);
                 vm.patientResults[queryIndex].results = [patient];
             }
         }

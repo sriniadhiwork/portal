@@ -4,11 +4,13 @@
     describe('main.aiPatientReview', function() {
         var vm, el, $log, $q, commonService, mock;
         mock = {patientDocuments: {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]}};
+        mock.fakeDocument = {data: "<document><made><of>XML</of></made></document"};
 
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.queryPatientDocuments = jasmine.createSpy();
+                    $delegate.getDocument = jasmine.createSpy();
                     return $delegate;
                 });
             });
@@ -17,6 +19,7 @@
                 $q = _$q_;
                 commonService = _commonService_;
                 commonService.queryPatientDocuments.and.returnValue($q.when(mock.patientDocuments));
+                commonService.getDocument.and.returnValue($q.when(mock.fakeDocument));
 
                 el = angular.element('<ai-patient-review patient-results="[{query: {firstName: \'Bob\'}, results: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}, {id: 2, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-search>');
 
@@ -60,6 +63,23 @@
             expect(vm.patientResults[0].results.length).toBe(2);
             vm.queryPatientDocuments(vm.patientResults[0].results[0], 0);
             expect(vm.patientResults[0].results.length).toBe(1);
+        });
+
+        it('should have a way to get documents', function () {
+            //given
+            var patient = vm.patientResults[0].results[0];
+            vm.queryPatientDocuments(patient, 0);
+            el.isolateScope().$digest();
+            expect(patient.documents[0].status).toBeUndefined();
+
+            //when
+            vm.getDocument(patient, patient.documents[0]);
+            el.isolateScope().$digest();
+
+            //then
+            expect(commonService.getDocument).toHaveBeenCalled();
+            expect(patient.documents[0].status).toEqual('cached');
+            expect(patient.documents[0].data).toEqual(mock.fakeDocument.data);
         });
     });
 })();

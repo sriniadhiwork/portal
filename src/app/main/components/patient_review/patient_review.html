@@ -69,7 +69,8 @@
             <td colspan="{{ query.results.length > 1 ? 3 : 2}}">Available documents
               <ul class="list-unstyled">
                 <li ng-repeat="doc in patient.documents">
-                  <button class="btn btn-success btn-sm"><span class="sr-only">Download</span><i class="fa fa-download"></i></button>
+                  <button ng-if="doc.status !== 'cached'" ng-click="vm.getDocument(patient, doc)" class="btn btn-success btn-sm"><span class="sr-only">Download</span><i class="fa fa-download"></i></button>
+                  <button ng-if="doc.status === 'cached'" class="btn btn-success btn-sm"><span class="sr-only">View</span><i class="fa fa-eye"></i></button>
                   <strong>Title:</strong> {{ doc.title }} (<strong>Type:</strong> {{ doc.filetype }})
                 </li>
               </ul>

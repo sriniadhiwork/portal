@@ -29,9 +29,13 @@
                          {title: 'X-Rays', filetype: 'gif'},
                          {title: 'A thing that happened once', filetype: 'pptx'},
                          {title: 'Another title', filetype: 'C-CDA 2.2'}];
+        var aDocument = [{data: "<document><made><of>XML</of></made></document>"},
+                         {data: "<doc><thing>some txt</thing><another-thing>more text</another-thing></doc>"},
+                         {data: "<ccda><item>1</item><item>2</item><item>3</item></ccda>"}];
 
         $httpBackend.whenPOST('/rest/query/patient').respond(200, {results: randomArray(patients, Math.floor(Math.random() * 6) + 3)});
-        $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents/).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
+        $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents$/).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
+        $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents\/.*/).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
 
         $httpBackend.whenGET(/^app/).passThrough();
         $httpBackend.whenGET(/^\/auth/).passThrough();

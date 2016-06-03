@@ -11,6 +11,7 @@
     function commonService ($http, $q, API, AuthAPI, $log, $localStorage, $window) {
         var self = this;
 
+        self.getDocument = getDocument
         self.getToken = getToken;
         self.getUsername = getUsername;
         self.isAuthenticated = isAuthenticated;
@@ -21,6 +22,15 @@
         self.saveToken = saveToken;
 
         ////////////////////////////////////////////////////////////////////
+
+        function getDocument (patientId, documentId) {
+            return getApi('/query/patient/' + patientId + '/documents/' + documentId)
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
 
         function getToken () {
             //$log.debug('in getToken', $localStorage.jwtToken);
