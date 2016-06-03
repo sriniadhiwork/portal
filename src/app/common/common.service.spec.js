@@ -29,6 +29,7 @@
 
         var mock = {};
         mock.patientQueryResponse = {results: [{id:2, firstName: 'Joe', lastName: 'Rogan'}, {id:3, firstName: 'Sue', lastName: 'Samson'}]};
+        mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
 
         beforeEach(inject(function (_commonService_, _$httpBackend_, $window, $localStorage) {
             commonService = _commonService_;
@@ -36,7 +37,8 @@
             mock.token = tokenPrefix + $window.btoa(jwt) + tokenSuffix;
             delete($localStorage.jwtToken);
 
-            requestHandler.get = $httpBackend.whenGET('/auth/jwt').respond(200, {token: mock.token});
+            requestHandler.getAuthJwt = $httpBackend.whenGET('/auth/jwt').respond(200, {token: mock.token});
+            requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET('/rest/query/patient/3/documents').respond(200, {results: mock.patientDocuments});
         }));
 
         afterEach(function () {
@@ -72,7 +74,7 @@
         });
 
         it('should return a message if the user doesn\'t log in', function () {
-            requestHandler.get.respond(401, {message: 'test'});
+            requestHandler.getAuthJwt.respond(401, {message: 'test'});
             commonService.login().then(function (response) {
                 expect(response.message).toEqual('test');
             });
@@ -96,6 +98,16 @@
             $httpBackend.expectPOST('/rest/query/patient', {}).respond(401, {message: 'a rejection'});
             commonService.queryPatient({}).then(function (response) {
                 expect(response).toEqual('a rejection');
+            });
+            $httpBackend.flush();
+        });
+
+        it('should call /query/patientDocuments', function () {
+            commonService.queryPatientDocuments(3);
+            $httpBackend.flush();
+            requestHandler.getRestQueryPatientDocuments.respond(401, {message: 'test'});
+            commonService.queryPatientDocuments(3).then(function (response) {
+                expect(response.message).toEqual('test');
             });
             $httpBackend.flush();
         });

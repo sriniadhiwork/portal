@@ -2,7 +2,7 @@
     'use strict';
 
     describe('main.aiPatientSearch', function() {
-        var vm, el, $log, $q, commonService, mock;
+        var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
         mock = {patientSearch: {results: [{id:2, firstName: 'Joe', lastName: 'Rogan'}, {id:3, firstName: 'Sue', lastName: 'Samson'}]}};
 
         beforeEach(function () {
@@ -12,7 +12,9 @@
                     return $delegate;
                 });
             });
-            inject(function($compile, $rootScope, _$log_, _$q_, _commonService_) {
+            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
+                $compile = _$compile_;
+                $rootScope = _$rootScope_;
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
@@ -60,6 +62,15 @@
             vm.queryPatient();
             el.isolateScope().$digest();
             expect(vm.patientResults.length).toBe(2);
+        });
+
+        it('should initialize an empty array if one isn\'t provided', function () {
+            el = angular.element('<ai-patient-search></ai-patient-search>');
+            $compile(el)($rootScope.$new());
+            $rootScope.$digest();
+            vm = el.isolateScope().vm;
+
+            expect(vm.patientResults).toEqual([]);
         });
     });
 })();

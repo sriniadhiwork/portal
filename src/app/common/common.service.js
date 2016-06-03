@@ -17,6 +17,7 @@
         self.login = login;
         self.logout = logout;
         self.queryPatient = queryPatient;
+        self.queryPatientDocuments = queryPatientDocuments;
         self.saveToken = saveToken;
 
         ////////////////////////////////////////////////////////////////////
@@ -73,6 +74,15 @@
                 });
         }
 
+        function queryPatientDocuments (patientId) {
+            return getApi('/query/patient/' + patientId + '/documents')
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
         function saveToken (token) {
             $localStorage.jwtToken = token;
         }
@@ -80,8 +90,8 @@
         ////////////////////////////////////////////////////////////////////
 
         function getApi (endpoint, api) {
-//            if (api === null || angular.isUndefined(api))
-//                api = API;
+            if (api === null || angular.isUndefined(api))
+                api = API;
             return $http.get(api + endpoint)
                 .then(function(response) {
                     return response.data;

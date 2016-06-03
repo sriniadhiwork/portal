@@ -14,7 +14,7 @@
             controller: PatientSearchController,
             controllerAs: 'vm',
             bindToController: {
-                patientResults: '='
+                patientResults: '=?'
             }
         };
 
@@ -32,6 +32,9 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                if (angular.isUndefined(vm.patientResults)) {
+                    vm.patientResults = [];
+                }
             }
 
             function errorCount () {
