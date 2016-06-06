@@ -29,9 +29,9 @@
                          {title: 'X-Rays', filetype: 'gif'},
                          {title: 'A thing that happened once', filetype: 'pptx'},
                          {title: 'Another title', filetype: 'C-CDA 2.2'}];
-        var aDocument = [{data: "<document><made><of>XML</of></made></document>"},
-                         {data: "<doc><thing>some txt</thing><another-thing>more text</another-thing></doc>"},
-                         {data: "<ccda><item>1</item><item>2</item><item>3</item></ccda>"}];
+        var aDocument = [{data: "<document>\n<made>\n<of attribute='a value'>XML</of>\n</made>\n</document>"},
+                         {data: "<doc ns='docstring'>\n<thing>some txt</thing>\n<another-thing>more text</another-thing>\n</doc>"},
+                         {data: "<ccda version='1.1'>\n<item>1</item>\n<item>2</item>\n<item>3</item>\n</ccda>"}];
 
         $httpBackend.whenPOST('/rest/query/patient').respond(200, {results: randomArray(patients, Math.floor(Math.random() * 6) + 3)});
         $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents$/).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});

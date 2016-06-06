@@ -14,7 +14,8 @@
             controller: PatientReviewController,
             controllerAs: 'vm',
             bindToController: {
-                patientResults: '='
+                patientResults: '=',
+                activeDocument: '=?'
             }
         };
 
@@ -24,6 +25,7 @@
         function PatientReviewController($log, commonService) {
             var vm = this;
 
+            vm.activateDocument = activateDocument;
             vm.getDocument = getDocument;
             vm.queryPatientDocuments = queryPatientDocuments;
 
@@ -32,6 +34,10 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+            }
+
+            function activateDocument (doc) {
+                vm.activeDocument = doc;
             }
 
             function getDocument (patient, doc) {

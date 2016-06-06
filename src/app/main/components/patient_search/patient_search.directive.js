@@ -35,6 +35,10 @@
                 if (angular.isUndefined(vm.patientResults)) {
                     vm.patientResults = [];
                 }
+
+                //debug
+                //vm.query = {patientId:  'fake id'};
+                //vm.queryPatient();
             }
 
             function errorCount () {

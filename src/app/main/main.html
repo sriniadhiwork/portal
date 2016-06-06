@@ -4,15 +4,23 @@
     <ai-navbar active="home"></ai-navbar>
   </header>
   <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-6">
       <ai-patient-search
          patient-results="vm.patientResults">
       </ai-patient-search>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-6">
       <ai-patient-review
-         patient-results="vm.patientResults">
+         patient-results="vm.patientResults"
+         active-document="vm.activeDocument">
       </ai-patient-review>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <ai-document-review
+         active-document="vm.activeDocument">
+      </ai-document-review>
     </div>
   </div>
 </div>

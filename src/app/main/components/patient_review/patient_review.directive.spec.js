@@ -81,5 +81,20 @@
             expect(patient.documents[0].status).toEqual('cached');
             expect(patient.documents[0].data).toEqual(mock.fakeDocument.data);
         });
+
+        it('should have a way to activate a document', function () {
+            //given
+            var patient = vm.patientResults[0].results[0];
+            vm.queryPatientDocuments(patient, 0);
+            el.isolateScope().$digest();
+            vm.getDocument(patient, patient.documents[0]);
+            el.isolateScope().$digest();
+
+            //when
+            vm.activateDocument(patient.documents[0]);
+
+            //then
+            expect(vm.activeDocument).toEqual(patient.documents[0]);
+        });
     });
 })();
