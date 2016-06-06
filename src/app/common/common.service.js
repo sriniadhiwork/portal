@@ -11,15 +11,26 @@
     function commonService ($http, $q, API, AuthAPI, $log, $localStorage, $window) {
         var self = this;
 
+        self.getDocument = getDocument
         self.getToken = getToken;
         self.getUsername = getUsername;
         self.isAuthenticated = isAuthenticated;
         self.login = login;
         self.logout = logout;
         self.queryPatient = queryPatient;
+        self.queryPatientDocuments = queryPatientDocuments;
         self.saveToken = saveToken;
 
         ////////////////////////////////////////////////////////////////////
+
+        function getDocument (patientId, documentId) {
+            return getApi('/query/patient/' + patientId + '/documents/' + documentId)
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
 
         function getToken () {
             //$log.debug('in getToken', $localStorage.jwtToken);
@@ -73,6 +84,15 @@
                 });
         }
 
+        function queryPatientDocuments (patientId) {
+            return getApi('/query/patient/' + patientId + '/documents')
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
         function saveToken (token) {
             $localStorage.jwtToken = token;
         }
@@ -80,8 +100,8 @@
         ////////////////////////////////////////////////////////////////////
 
         function getApi (endpoint, api) {
-//            if (api === null || angular.isUndefined(api))
-//                api = API;
+            if (api === null || angular.isUndefined(api))
+                api = API;
             return $http.get(api + endpoint)
                 .then(function(response) {
                     return response.data;
