@@ -1,4 +1,4 @@
-<div class="component" ng-if="vm.patientResults.length > 0">
+<div class="component patient-review" ng-if="vm.patientResults.length > 0">
   <h1>Query results</h1>
   <div ng-repeat="query in vm.patientResults track by $index" class="animated fadeIn">
     <h2>Patient Information</h2>
@@ -46,7 +46,7 @@
       </tbody>
     </table>
     <div ng-if="query.showResults" class="">
-      <h2>Results</h2>
+      <h3>Results</h3>
       <table class="table">
         <thead>
           <tr>

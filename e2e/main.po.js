@@ -7,10 +7,21 @@
 
 var MainPage = function () {
     function MainPage () {
-        this.jumbEl = element(by.css('.jumbotron'));
-        this.h1El = this.jumbEl.element(by.css('h1'));
-        this.imgEl = this.jumbEl.element(by.css('img'));
+        /*
         this.thumbnailEls = element(by.css('body')).all(by.repeater('awesomeThing in main.awesomeThings'));
+        */
+
+        this.patientSearch = {root: element(by.css('.patient-search'))};
+        this.patientSearch.firstNameEl = this.patientSearch.root.element(by.id('firstName'));
+        this.patientSearch.patientIdEl = this.patientSearch.root.element(by.id('patientId'));
+        this.patientSearch.submitBtnEl = this.patientSearch.root.element(by.tagName('button'));
+
+        this.patientReview = {root: element(by.css('.patient-review'))};
+        this.patientReview.showDetailsA = this.patientReview.root.all(by.tagName('tfoot')).first().element(by.tagName('a'));
+        this.patientReview.queries = this.patientReview.root.all(by.tagName('tbody')).first().all(by.tagName('tr'));
+        this.patientReview.patients = this.patientReview.root.all(by.tagName('tbody')).last().all(by.tagName('tr'));
+
+        this.documentReview = {root: element(by.css('.document-review'))};
     }
 
     MainPage.prototype.visitPage = function () {

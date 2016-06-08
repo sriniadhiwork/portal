@@ -18,7 +18,7 @@
           </form>
         </li>
         <li ng-if="vm.isAuthenticated()">
-          <form class="navbar-form" role="log in" method="get" action="http://localhost:8080/saml/logout?local=true">
+          <form class="navbar-form" role="log out" method="get" action="http://localhost:8080/saml/logout?local=true">
             <button ng-click="vm.logout()" type="button" class="btn btn-default">Log Out</button>
           </form>
         </li>

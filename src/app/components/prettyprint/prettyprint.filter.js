@@ -1,3 +1,4 @@
+/* global prettyPrintOne */
 (function() {
     'use strict';
 
