@@ -23,36 +23,41 @@ describe('the main view', function () {
         describe('should have no queries at load', function () {
             Then(function () { expect(page.patientReview.queries.count()).toBe(0) });
         });
-/*
+
         describe('should have one query after sending a query', function () {
-            doSearch(page).then(function () {
-                Then(function () { expect(page.patientReview.queries.count()).toBe(1); });
+            Then(function () {
+                doSearch(page).then(function () {
+                    Then(function () { expect(page.patientReview.queries.count()).toBe(1); });
+                });
             });
         });
-/*
+
         describe('should shrink patients down to one when one is chosen', function () {
-            doSearch(page).then(function () {
-                return showDetails(page)
-            }).then(function () {
-                Then(function () { expect(page.patientReview.patients.count()).toBeGreaterThan(1); });
-                return selectPatient(page)
-            }).then(function () {
-                Then(function () { expect(page.patientReview.patients.count()).toBe(1); });
+            Then(function () {
+                doSearch(page).then(function () {
+                    return showDetails(page)
+                }).then(function () {
+                    Then(function () { expect(page.patientReview.patients.count()).toBeGreaterThan(1); });
+                    return selectPatient(page)
+                }).then(function () {
+                    Then(function () { expect(page.patientReview.patients.count()).toBe(1); });
+                });
             });
         });
-/*
-        describe('should indicated when a document is cached', function () {
-            doSearch(page).then(function () {
-                return showDetails(page)
-            }).then(function () {
-                return selectPatient(page)
-            }).then(function () {
-                return cacheDocument(page)
-            }).then(function () {
-                Then(function () { expect(page.patientReview.patients.first().all(by.tagName('li')).first().element(by.tagName('button')).getAttribute('class')).toBe('fa fa-eye'); });
+
+        describe('should indicate when a document is cached', function () {
+            Then(function () {
+                doSearch(page).then(function () {
+                    return showDetails(page)
+                }).then(function () {
+                    return selectPatient(page)
+                }).then(function () {
+                    return cacheDocument(page)
+                }).then(function () {
+                    Then(function () { expect(page.patientReview.patients.first().all(by.tagName('li')).first().element(by.tagName('button')).getAttribute('class')).toBe('fa fa-eye'); });
+                });
             });
         });
-        */
     });
 
     describe('the document-review section', function () {
@@ -76,5 +81,6 @@ function selectPatient (page) {
 }
 
 function cacheDocument (page) {
+                    browser.pause();
     return page.patientReview.patients.first().all(by.tagName('li')).first().element(by.tagName('button')).click();
 }
