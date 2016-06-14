@@ -60,9 +60,6 @@
             <td>{{ patient.firstName }}</td>
             <td>{{ patient.lastName }}</td>
             <td ng-if="query.results.length > 1"><button class="btn btn-success btn-block" ng-click="vm.queryPatientDocuments(patient, $parent.$parent.$index)">Select patient <i class="fa fa-check"></i></button>
-              <!--
-                  {{ patient.id + '-' + $parent.$parent.$index }}
-                -->
             </td>
           </tr>
           <tr ng-repeat-end ng-if="patient.documents && patient.documents.length > 0">

@@ -18,8 +18,10 @@ var MainPage = function () {
 
         this.patientReview = {root: element(by.css('.patient-review'))};
         this.patientReview.showDetailsA = this.patientReview.root.all(by.tagName('tfoot')).first().element(by.tagName('a'));
-        this.patientReview.queries = this.patientReview.root.all(by.tagName('tbody')).first().all(by.tagName('tr'));
-        this.patientReview.patients = this.patientReview.root.all(by.tagName('tbody')).last().all(by.tagName('tr'));
+        this.patientReview.queries = this.patientReview.root.all(by.repeater('query in vm.patientResults')); //by.tagName('tbody')).first().all(by.tagName('tr'));
+        this.patientReview.patients = this.patientReview.root.all(by.repeater('patient in query.results')); //by.tagName('tbody')).last().all(by.tagName('tr'));
+        //this.patientReview.documents = this.patientReview.root.all(by.tagName('tbody')).last().all(by.tagName('tr')).last().all(by.repeater('doc in patient.documents'));
+        this.patientReview.documents = this.patientReview.root.all(by.repeater('doc in patient.documents'));
 
         this.documentReview = {root: element(by.css('.document-review'))};
     }

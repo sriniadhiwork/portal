@@ -8,8 +8,15 @@ describe('the main view', function () {
     Given(function () { page.visitPage(); });
 
     describe('the patient-search section', function () {
+        describe('should not show errors until button focused on', function () {
+            When(function () { page.patientSearch.patientIdEl.clear(); });
+
+            Then(function () { expect(page.patientSearch.submitBtnEl.isEnabled()).toBeTruthy(); });
+        });
+
         describe('should not send a query without a patient ID', function () {
             When(function () { page.patientSearch.patientIdEl.clear(); });
+            When(function () { page.patientSearch.submitBtnEl.click(); });
 
             Then(function () { expect(page.patientSearch.submitBtnEl.isEnabled()).toBeFalsy(); });
         });
@@ -45,6 +52,23 @@ describe('the main view', function () {
             });
         });
 
+        describe('should indicate when a document is not cached', function () {
+            Then(function () {
+                doSearch(page).then(function () {
+                    return showDetails(page)
+                }).then(function () {
+                    return selectPatient(page)
+                }).then(function () {
+                    page.patientReview.documents.first().element(by.tagName('button')).getText().then(function (text) {
+                        expect(text).toBe('Download');
+                    });
+                    page.patientReview.documents.first().element(by.tagName('i')).getAttribute('class').then(function (text) {
+                        expect(text).toBe('fa fa-download');
+                    });
+                });
+            });
+        });
+
         describe('should indicate when a document is cached', function () {
             Then(function () {
                 doSearch(page).then(function () {
@@ -54,7 +78,12 @@ describe('the main view', function () {
                 }).then(function () {
                     return cacheDocument(page)
                 }).then(function () {
-                    Then(function () { expect(page.patientReview.patients.first().all(by.tagName('li')).first().element(by.tagName('button')).getAttribute('class')).toBe('fa fa-eye'); });
+                    page.patientReview.documents.first().element(by.tagName('button')).getText().then(function (text) {
+                        expect(text).toBe('View');
+                    });
+                    page.patientReview.documents.first().element(by.tagName('i')).getAttribute('class').then(function (text) {
+                        expect(text).toBe('fa fa-eye');
+                    });
                 });
             });
         });
@@ -81,6 +110,5 @@ function selectPatient (page) {
 }
 
 function cacheDocument (page) {
-                    browser.pause();
-    return page.patientReview.patients.first().all(by.tagName('li')).first().element(by.tagName('button')).click();
+    return page.patientReview.documents.first().element(by.tagName('button')).click();
 }
