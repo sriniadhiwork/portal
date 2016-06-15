@@ -7,10 +7,6 @@
 
 var MainPage = function () {
     function MainPage () {
-        /*
-        this.thumbnailEls = element(by.css('body')).all(by.repeater('awesomeThing in main.awesomeThings'));
-        */
-
         this.patientSearch = {root: element(by.css('.patient-search'))};
         this.patientSearch.firstNameEl = this.patientSearch.root.element(by.id('firstName'));
         this.patientSearch.patientIdEl = this.patientSearch.root.element(by.id('patientId'));
@@ -20,10 +16,13 @@ var MainPage = function () {
         this.patientReview.showDetailsA = this.patientReview.root.all(by.tagName('tfoot')).first().element(by.tagName('a'));
         this.patientReview.queries = this.patientReview.root.all(by.repeater('query in vm.patientResults')); //by.tagName('tbody')).first().all(by.tagName('tr'));
         this.patientReview.patients = this.patientReview.root.all(by.repeater('patient in query.results')); //by.tagName('tbody')).last().all(by.tagName('tr'));
-        //this.patientReview.documents = this.patientReview.root.all(by.tagName('tbody')).last().all(by.tagName('tr')).last().all(by.repeater('doc in patient.documents'));
         this.patientReview.documents = this.patientReview.root.all(by.repeater('doc in patient.documents'));
 
         this.documentReview = {root: element(by.css('.document-review'))};
+        this.documentReview.document = this.documentReview.root.element(by.tagName('pre'));
+
+        this.organizationStatus = {root: element(by.css('.organization-status'))};
+        this.organizationStatus.organizations = this.organizationStatus.root.all(by.repeater('org in vm.organizations'));
     }
 
     MainPage.prototype.visitPage = function () {

@@ -21,7 +21,7 @@
                 commonService.queryPatientDocuments.and.returnValue($q.when(mock.patientDocuments));
                 commonService.getDocument.and.returnValue($q.when(mock.fakeDocument));
 
-                el = angular.element('<ai-patient-review patient-results="[{query: {firstName: \'Bob\'}, results: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}, {id: 2, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-search>');
+                el = angular.element('<ai-patient-review patient-results="[{query: {firstName: \'Bob\'}, results: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}, {id: 2, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-review>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();

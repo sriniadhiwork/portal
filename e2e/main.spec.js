@@ -76,7 +76,7 @@ describe('the main view', function () {
                 }).then(function () {
                     return selectPatient(page)
                 }).then(function () {
-                    return cacheDocument(page)
+                    return clickDocument(page)
                 }).then(function () {
                     page.patientReview.documents.first().element(by.tagName('button')).getText().then(function (text) {
                         expect(text).toBe('View');
@@ -92,6 +92,34 @@ describe('the main view', function () {
     describe('the document-review section', function () {
         describe('should have no documents at load', function () {
             Then(function () { expect(page.documentReview.root.isPresent()).toBeFalsy(); });
+        });
+
+        describe('should display a document when one is selected', function () {
+            Then(function () {
+                doSearch(page).then(function () {
+                    return showDetails(page)
+                }).then(function () {
+                    return selectPatient(page)
+                }).then(function () {
+                    return clickDocument(page)
+                }).then(function () {
+                    return clickDocument(page)
+                }).then(function () {
+                    page.documentReview.document.getText().then(function (text) {
+                        expect(text).not.toBe('');
+                    });
+                });
+            });
+        });
+    });
+
+    describe('the organization status section', function () {
+        describe('should exist on page load', function () {
+            Then(function () { expect(page.organizationStatus.root.isPresent()).toBeTruthy(); });
+        });
+
+        describe('should have more than 0 organizations', function () {
+            Then(function () { expect(page.organizationStatus.organizations.count()).toBeGreaterThan(0); });
         });
     });
 });
@@ -109,6 +137,6 @@ function selectPatient (page) {
     return page.patientReview.patients.first().element(by.tagName('button')).click();
 }
 
-function cacheDocument (page) {
+function clickDocument (page) {
     return page.patientReview.documents.first().element(by.tagName('button')).click();
 }

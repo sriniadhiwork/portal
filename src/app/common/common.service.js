@@ -17,6 +17,7 @@
         self.isAuthenticated = isAuthenticated;
         self.login = login;
         self.logout = logout;
+        self.queryOrganizations = queryOrganizations;
         self.queryPatient = queryPatient;
         self.queryPatientDocuments = queryPatientDocuments;
         self.saveToken = saveToken;
@@ -73,6 +74,15 @@
 
         function logout () {
             delete($localStorage.jwtToken);
+        }
+
+        function queryOrganizations () {
+            return getApi('/organizations')
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
         }
 
         function queryPatient (queryObj) {
