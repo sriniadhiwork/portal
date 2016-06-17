@@ -65,5 +65,10 @@
             vm.logout();
             expect(commonService.logout).toHaveBeenCalled();
         });
+
+        it('should know what the login endpoint is', function () {
+            expect(vm.getLoginEndpoint).toBeDefined();
+            expect(vm.getLoginEndpoint()).toBe('/auth');
+        });
     });
 })();

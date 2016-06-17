@@ -12,14 +12,14 @@
         <li ng-class="{ 'active' : (vm.active === 'about') }"><a ng-href="#/about">About</a></li>
         <p ng-if="vm.isAuthenticated()" class="ai-navbar-text navbar-text">{{ vm.getUsername() }}</p>
         <li ng-if="!vm.isAuthenticated()">
-          <form class="navbar-form navbar-right" role="log in" method="get" action="http://localhost:8080/saml/login?disco=true">
+          <form class="navbar-form navbar-right" role="log in" method="get" action="{{ vm.getLoginEndpoint() + '/saml/login?disco=true' }}">
             <button type="submit" class="btn btn-default">Log In</button>
             <!--<input type="hidden" name="idp" id="idp_http://idp.ssocircle.com" value="http://idp.ssocircle.com"></input>-->
             <input type="hidden" name="idp" id="idp_https://idp.testshib.org/idp/shibboleth" value="https://idp.testshib.org/idp/shibboleth"></input>
           </form>
         </li>
         <li ng-if="vm.isAuthenticated()">
-          <form class="navbar-form" role="log out" method="get" action="http://localhost:8080/saml/logout?local=true">
+          <form class="navbar-form" role="log out" method="get" action="{{ vm.getLoginEndpoint() + '/saml/logout?local=true' }}">
             <button ng-click="vm.logout()" type="button" class="btn btn-default">Log Out</button>
           </form>
         </li>
