@@ -3,8 +3,8 @@
 
     angular
         .module('portal.common')
-        .constant('API', '/rest')
-        .constant('AuthAPI', '/auth')
+//        .constant('API', '/rest')
+//        .constant('AuthAPI', '/auth')
         .service('commonService', commonService);
 
     /** @ngInject */

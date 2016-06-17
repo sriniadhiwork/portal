@@ -3,7 +3,7 @@
 
     describe('portal.common.services', function () {
 
-        beforeEach(module('portal.common'));
+        beforeEach(module('portal.common', 'portal.constants'));
 
         var $log;
         beforeEach(inject(function (_$log_) {
