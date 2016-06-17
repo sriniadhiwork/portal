@@ -39,6 +39,16 @@ describe('the main view', function () {
             });
         });
 
+        fdescribe('should have a way to clear a query', function () {
+            Then(function () {
+                doSearch(page).then(function () {
+                    page.patientReview.queries.first().element(by.tagName('button')).click().then(function () {
+                        expect(page.patientReview.queries.count()).toBe(0);
+                    });
+                });
+            });
+        });
+
         describe('should shrink patients down to one when one is chosen', function () {
             Then(function () {
                 doSearch(page).then(function () {
@@ -107,6 +117,24 @@ describe('the main view', function () {
                 }).then(function () {
                     page.documentReview.document.getText().then(function (text) {
                         expect(text).not.toBe('');
+                    });
+                });
+            });
+        });
+
+        describe('should clear a displayed document when directed', function () {
+            Then(function () {
+                doSearch(page).then(function () {
+                    return showDetails(page)
+                }).then(function () {
+                    return selectPatient(page)
+                }).then(function () {
+                    return clickDocument(page)
+                }).then(function () {
+                    return clickDocument(page)
+                }).then(function () {
+                    page.documentReview.close.click().then(function () {
+                        expect(page.documentReview.root.isPresent()).toBeFalsy();
                     });
                 });
             });

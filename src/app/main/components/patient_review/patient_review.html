@@ -2,6 +2,7 @@
   <h1>Query results</h1>
   <div ng-repeat="query in vm.patientResults track by $index" class="animated fadeIn">
     <h2>Patient Information</h2>
+    <span class="pull-right"><button class="btn btn-danger"><i class="fa fa-close"></i><span class="sr-only">Clear Query</span></button></span>
     <table class="table">
       <thead>
         <tr>

@@ -20,6 +20,7 @@ var MainPage = function () {
 
         this.documentReview = {root: element(by.css('.document-review'))};
         this.documentReview.document = this.documentReview.root.element(by.tagName('pre'));
+        this.documentReview.close = this.documentReview.root.element(by.tagName('button'));
 
         this.organizationStatus = {root: element(by.css('.organization-status'))};
         this.organizationStatus.organizations = this.organizationStatus.root.all(by.repeater('org in vm.organizations'));
