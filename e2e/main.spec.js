@@ -39,7 +39,7 @@ describe('the main view', function () {
             });
         });
 
-        fdescribe('should have a way to clear a query', function () {
+        describe('should have a way to clear a query', function () {
             Then(function () {
                 doSearch(page).then(function () {
                     page.patientReview.queries.first().element(by.tagName('button')).click().then(function () {

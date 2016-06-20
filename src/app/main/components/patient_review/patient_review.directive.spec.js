@@ -96,5 +96,24 @@
             //then
             expect(vm.activeDocument).toEqual(patient.documents[0]);
         });
+
+        it('should have a way to clear patient queries', function () {
+            // given a patient in the queue
+            expect(vm.patientResults.length).toBe(1);
+
+            // when first result is cleared
+            vm.clearQuery(0);
+
+            // then expect to have no patients in queue
+            expect(vm.patientResults.length).toBe(0);
+        });
+
+        it('should not try to clear an out of bounds query', function () {
+            expect(vm.patientResults.length).toBe(1);
+
+            vm.clearQuery(2);
+
+            expect(vm.patientResults.length).toBe(1);
+        });
     });
 })();

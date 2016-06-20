@@ -26,6 +26,7 @@
             var vm = this;
 
             vm.activateDocument = activateDocument;
+            vm.clearQuery = clearQuery;
             vm.getDocument = getDocument;
             vm.queryPatientDocuments = queryPatientDocuments;
 
@@ -38,6 +39,12 @@
 
             function activateDocument (doc) {
                 vm.activeDocument = doc;
+            }
+
+            function clearQuery (index) {
+                if (index < vm.patientResults.length) {
+                    vm.patientResults.splice(index,1);
+                }
             }
 
             function getDocument (patient, doc) {
