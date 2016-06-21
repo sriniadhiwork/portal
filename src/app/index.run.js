@@ -45,7 +45,7 @@
                              {id: 2, name: 'EHR For Fun', url: 'http://www.example.com/2', status: 'Inactive'},
                              {id: 3, name: 'Ambulatory Center', url: 'http://www.example.com/3', status: 'Active'}];
 
-        $httpBackend.whenPOST('/rest/query/patient').respond(200, {results: randomArray(patients, Math.floor(Math.random() * 6) + 3)});
+        $httpBackend.whenPOST(/rest\/query\/patient$/).respond(200, {results: randomArray(patients, Math.floor(Math.random() * 6) + 3)});
         $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents$/).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
         $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents\/.*/).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
         $httpBackend.whenGET(/\/rest\/organizations/).respond(200, {results: randomArray(organizations, Math.floor(Math.random() * 3) + 3)});
