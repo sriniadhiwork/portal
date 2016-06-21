@@ -20,6 +20,17 @@ describe('the main view', function () {
 
             Then(function () { expect(page.patientSearch.submitBtnEl.isEnabled()).toBeFalsy(); });
         });
+
+        describe('should re-enable the search button when the patient id is entered', function () {
+            When(function () { page.patientSearch.patientIdEl.clear(); });
+            When(function () { page.patientSearch.submitBtnEl.click(); });
+
+            Then(function () {
+                doSearch(page).then(function () {
+                    Then(function () { expect(page.patientSearch.submitBtnEl.isEnabled()).toBeTruthy(); });
+                });
+            });
+        });
     });
 
     describe('the patient-review section', function () {
