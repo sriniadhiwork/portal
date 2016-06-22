@@ -21,13 +21,12 @@
         return directive;
 
         /** @ngInject */
-        function NavbarController($log, commonService, AuthAPI) {
+        function NavbarController($log, commonService) {
             var vm = this;
 
             vm.isAuthenticated = isAuthenticated;
-            vm.getLoginEndpoint = getLoginEndpoint;
+            vm.getUserAcf = getUserAcf;
             vm.getUsername = getUsername;
-            vm.login = login;
             vm.logout = logout;
 
             activate();
@@ -35,23 +34,18 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                vm.login()
             }
 
             function isAuthenticated () {
                 return commonService.isAuthenticated();
             }
 
+            function getUserAcf () {
+                return commonService.getUserAcf();
+            }
+
             function getUsername () {
                 return commonService.getUsername();
-            }
-
-            function getLoginEndpoint () {
-                return AuthAPI;
-            }
-
-            function login () {
-                commonService.login();
             }
 
             function logout () {

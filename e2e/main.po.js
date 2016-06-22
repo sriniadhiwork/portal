@@ -7,6 +7,13 @@
 
 var MainPage = function () {
     function MainPage () {
+        this.acfEntry = {root: element(by.css('.acf-entry'))};
+        this.acfEntry.acfSelectEl = this.acfEntry.root.element(by.id('selectAcf'));
+        this.acfEntry.acfSelectOptions = this.acfEntry.acfSelectEl.all(by.tagName('option'));
+        this.acfEntry.acfNewEl = this.acfEntry.root.element(by.id('newAcf'));
+        this.acfEntry.acfNewChk = this.acfEntry.root.element(by.id('addNewAcf'));
+        this.acfEntry.acfSubmitBtn = this.acfEntry.root.element(by.id('acfSubmit'));
+
         this.patientSearch = {root: element(by.css('.patient-search'))};
         this.patientSearch.firstNameEl = this.patientSearch.root.element(by.id('firstName'));
         this.patientSearch.patientIdEl = this.patientSearch.root.element(by.id('patientId'));

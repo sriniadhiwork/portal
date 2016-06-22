@@ -1,7 +1,7 @@
 <nav class="navbar navbar-static-top navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="#/">
         <i class="fa fa-home fa-spin"></i> PULSE
       </a>
     </div>
@@ -10,19 +10,10 @@
       <ul class="nav navbar-nav navbar-right">
         <li ng-class="{ 'active' : (vm.active === 'home') }"><a ng-href="#/">Home</a></li>
         <li ng-class="{ 'active' : (vm.active === 'about') }"><a ng-href="#/about">About</a></li>
-        <p ng-if="vm.isAuthenticated()" class="ai-navbar-text navbar-text">{{ vm.getUsername() }}</p>
-        <li ng-if="!vm.isAuthenticated()">
-          <form class="navbar-form navbar-right" role="log in" method="get" action="{{ vm.getLoginEndpoint() + '/saml/login?disco=true' }}">
-            <button type="submit" class="btn btn-default">Log In</button>
-            <!--<input type="hidden" name="idp" id="idp_http://idp.ssocircle.com" value="http://idp.ssocircle.com"></input>-->
-            <input type="hidden" name="idp" id="idp_https://idp.testshib.org/idp/shibboleth" value="https://idp.testshib.org/idp/shibboleth"></input>
-          </form>
-        </li>
-        <li ng-if="vm.isAuthenticated()">
-          <form class="navbar-form" role="log out" method="get" action="{{ vm.getLoginEndpoint() + '/saml/logout?local=true' }}">
-            <button ng-click="vm.logout()" type="button" class="btn btn-default">Log Out</button>
-          </form>
-        </li>
+        <span ng-if="vm.isAuthenticated()">
+          <p class="ai-navbar-text navbar-text">{{ vm.getUsername() }} (ACF: {{ vm.getUserAcf().name }})</p>
+          <button ng-click="vm.logout()" type="button" class="btn btn-default navbar-btn">Log Out</button>
+        </span>
       </ul>
     </div>
   </div>
