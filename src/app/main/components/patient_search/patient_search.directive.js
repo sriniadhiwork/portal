@@ -14,7 +14,7 @@
             controller: PatientSearchController,
             controllerAs: 'vm',
             bindToController: {
-                patientResults: '=?'
+                patientQueries: '=?'
             }
         };
 
@@ -32,13 +32,9 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                if (angular.isUndefined(vm.patientResults)) {
-                    vm.patientResults = [];
+                if (angular.isUndefined(vm.patientQueries)) {
+                    vm.patientQueries = [];
                 }
-
-                //debug
-                //vm.query = {patientId:  'fake id'};
-                //vm.queryPatient();
             }
 
             function errorCount () {
@@ -57,7 +53,7 @@
                 var queryObj = {query: angular.copy(vm.query)};
                 commonService.queryPatient(queryObj.query).then(function (response) {
                     queryObj.results = response.results;
-                    vm.patientResults.push(queryObj);
+                    vm.patientQueries.push(queryObj);
                 });
             }
         }

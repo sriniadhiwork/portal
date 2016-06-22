@@ -7,6 +7,9 @@
 
 var MainPage = function () {
     function MainPage () {
+        this.nav = {root: element(by.tagName('header'))};
+        this.nav.logoutButton = this.nav.root.element(by.tagName('button'));
+
         this.acfEntry = {root: element(by.css('.acf-entry'))};
         this.acfEntry.acfSelectEl = this.acfEntry.root.element(by.id('selectAcf'));
         this.acfEntry.acfSelectOptions = this.acfEntry.acfSelectEl.all(by.tagName('option'));
@@ -16,14 +19,17 @@ var MainPage = function () {
 
         this.patientSearch = {root: element(by.css('.patient-search'))};
         this.patientSearch.firstNameEl = this.patientSearch.root.element(by.id('firstName'));
-        this.patientSearch.patientIdEl = this.patientSearch.root.element(by.id('patientId'));
         this.patientSearch.submitBtnEl = this.patientSearch.root.element(by.tagName('button'));
 
         this.patientReview = {root: element(by.css('.patient-review'))};
         this.patientReview.showDetailsA = this.patientReview.root.all(by.tagName('tfoot')).first().element(by.tagName('a'));
-        this.patientReview.queries = this.patientReview.root.all(by.repeater('query in vm.patientResults'));
-        this.patientReview.patients = this.patientReview.root.all(by.repeater('patient in query.results'));
-        this.patientReview.documents = this.patientReview.root.all(by.repeater('doc in patient.documents'));
+        this.patientReview.queries = this.patientReview.root.all(by.repeater('query in vm.patientQueries'));
+        this.patientReview.patientResults = this.patientReview.queries.first().all(by.repeater('patient in query.results'));
+
+        this.acfPatientList = {root: element(by.css('.acf-patient-list'))};
+        this.acfPatientList.patients = this.acfPatientList.root.all(by.repeater('patient in vm.patients'));
+        this.acfPatientList.showDocumentsA = this.acfPatientList.patients.all(by.tagName('a')).first();
+        this.acfPatientList.documents = this.acfPatientList.root.all(by.repeater('doc in patient.documents'));
 
         this.documentReview = {root: element(by.css('.document-review'))};
         this.documentReview.document = this.documentReview.root.element(by.tagName('pre'));

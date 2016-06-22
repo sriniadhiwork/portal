@@ -8,19 +8,9 @@
     /** @ngInject */
     function runBlock($log, $httpBackend, $window, AuthAPI) {
 
+        var firstNames = ['Joe', 'Sue', 'Fred', 'Betty', 'George', 'Lucy', 'Bill', 'Jen', 'Rob', 'Kate', 'Alex', 'Bob'];
+        var lastNames = ['Rogan', 'Samson', 'Johnson', 'McCready', 'Trunch', 'Baker', 'Miller', 'ODonnel', 'Block', 'Robinson', 'Smithsonion', 'Jones'];
 
-        var patients = [{id:2, firstName: 'Joe', lastName: 'Rogan'},
-                        {id:3, firstName: 'Sue', lastName: 'Samson'},
-                        {id:5, firstName: 'Fred', lastName: 'Johnson'},
-                        {id:6, firstName: 'Betty', lastName: 'McCready'},
-                        {id:7, firstName: 'George', lastName: 'Trunch'},
-                        {id:8, firstName: 'Lucy', lastName: 'Baker'},
-                        {id:9, firstName: 'Bill', lastName: 'Miller'},
-                        {id:10, firstName: 'Jen', lastName: 'ODonnel'},
-                        {id:11, firstName: 'Rob', lastName: 'Block'},
-                        {id:12, firstName: 'Kate', lastName: 'Robinson'},
-                        {id:13, firstName: 'Alex', lastName: 'Smithsonion'},
-                        {id:4, firstName: 'Bob', lastName: 'Jones'}];
         var documents = [{title: 'Title of a doc', filetype: 'C-CDA 1'},
                          {title: 'A study in search', filetype: 'docx'},
                          {title: 'Living the dream', filetype: 'pdf'},
@@ -43,7 +33,7 @@
                     {name: 'Mall', address: {}},
                     {name: 'Campsite', address: {}}];
 
-        $httpBackend.whenPOST(/rest\/query\/patient$/).respond(200, {results: randomArray(patients, Math.floor(Math.random() * 6) + 3)});
+        $httpBackend.whenPOST(/rest\/query\/patient$/).respond(200, {results: makePeople(Math.floor(Math.random() * 6) + 3)});
         $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents$/).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
         $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents\/.*/).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
         $httpBackend.whenGET(/\/rest\/organizations/).respond(200, {results: randomArray(organizations, Math.floor(Math.random() * 3) + 3)});
@@ -57,6 +47,17 @@
         $httpBackend.whenGET(/^app/).passThrough();
         $httpBackend.whenGET(/^\/auth/).passThrough();
         $log.info('runBlock end');
+
+        function makePeople(count) {
+            var ret = [];
+            for (var i = 0; i < count; i++) {
+                ret.push({firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+                          lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
+                          organization: organizations[Math.floor(Math.random() * organizations.length)],
+                          id: i});
+            }
+            return ret;
+        }
 
         function randomArray(array, count) {
             var ret = [];

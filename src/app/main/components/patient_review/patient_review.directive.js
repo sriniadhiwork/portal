@@ -14,8 +14,8 @@
             controller: PatientReviewController,
             controllerAs: 'vm',
             bindToController: {
-                patientResults: '=',
-                activeDocument: '=?'
+                patientQueries: '=',
+                patients: '=?'
             }
         };
 
@@ -25,40 +25,37 @@
         function PatientReviewController($log, commonService) {
             var vm = this;
 
-            vm.activateDocument = activateDocument;
             vm.clearQuery = clearQuery;
-            vm.getDocument = getDocument;
             vm.queryPatientDocuments = queryPatientDocuments;
+            vm.selectPatient = selectPatient;
 
             activate();
 
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-            }
-
-            function activateDocument (doc) {
-                vm.activeDocument = doc;
-            }
-
-            function clearQuery (index) {
-                if (index < vm.patientResults.length) {
-                    vm.patientResults.splice(index,1);
+                if (angular.isUndefined(vm.patients)) {
+                    vm.patients = [];
                 }
             }
 
-            function getDocument (patient, doc) {
-                commonService.getDocument(patient.id, doc.id).then(function (response) {
-                    doc.status = 'cached';
-                    doc.data = response.data;
-                });
+            function clearQuery (index) {
+                if (index < vm.patientQueries.length) {
+                    vm.patientQueries.splice(index,1);
+                }
             }
 
-            function queryPatientDocuments (patient, queryIndex) {
+            function queryPatientDocuments (patient) {
                 commonService.queryPatientDocuments(patient.id).then(function (response) {
                     patient.documents = response.results;
                 });
-                vm.patientResults[queryIndex].results = [patient];
+            }
+
+            function selectPatient (queryIndex, patientIndex) {
+                var patient = vm.patientQueries[queryIndex].results[patientIndex];
+                vm.queryPatientDocuments(patient);
+                vm.patients.push(patient);
+                vm.clearQuery(queryIndex);
             }
         }
     }

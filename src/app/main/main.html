@@ -14,14 +14,18 @@
     <div class="row">
       <div class="col-sm-4">
         <ai-patient-search
-           patient-results="vm.patientResults">
+           patient-queries="vm.patientQueries">
         </ai-patient-search>
+        <ai-patient-review
+           patient-queries="vm.patientQueries"
+           patients="vm.patients">
+        </ai-patient-review>
       </div>
       <div class="col-sm-4">
-        <ai-patient-review
-           patient-results="vm.patientResults"
+        <ai-acf-patient-list
+           patients="vm.patients"
            active-document="vm.activeDocument">
-        </ai-patient-review>
+        </ai-acf-patient-list>
       </div>
       <div class="col-sm-4">
         <ai-organization-status>

@@ -8,12 +8,19 @@ describe('the main view', function () {
     Given(function () { page.visitPage(); });
 
     describe('the acf-entry section', function () {
+
         describe('should exist at load', function () {
             Then(function () { expect(page.acfEntry.root.isPresent()).toBeTruthy(); });
         });
 
         describe('should show options at load', function () {
             Then(function () { expect(page.acfEntry.acfSelectOptions.count()).toBeGreaterThan(0); });
+        });
+
+        describe('should not be clickable until an option is selected', function () {
+            When(function () { submitAcf(page); });
+
+            Then(function () { expect(page.acfEntry.acfSubmitBtn.isEnabled()).toBeFalsy(); });
         });
 
         describe('should not exist after entering a new ACF and submitting', function () {
@@ -37,23 +44,16 @@ describe('the main view', function () {
 
             Then(function () { expect(page.acfEntry.root.isPresent()).toBeFalsy(); });
         });
-
-        describe('should not be clickable until an option is selected', function () {
-            When(function () { submitAcf(page); });
-
-            Then(function () { expect(page.acfEntry.acfSubmitBtn.isEnabled()).toBeFalsy(); });
-        });
     });
 
     describe('after selecting an acf', function () {
 
         describe('the patient-search section', function () {
             describe('should not show errors until button focused on', function () {
-                When(function () { page.patientSearch.patientIdEl.clear(); });
-
                 Then(function () { expect(page.patientSearch.submitBtnEl.isEnabled()).toBeTruthy(); });
             });
 
+            /*
             describe('should not send a query without a patient ID', function () {
                 When(function () { page.patientSearch.patientIdEl.clear(); });
                 When(function () { page.patientSearch.submitBtnEl.click(); });
@@ -71,6 +71,7 @@ describe('the main view', function () {
                     });
                 });
             });
+            */
         });
 
         describe('the patient-review section', function () {
@@ -83,79 +84,65 @@ describe('the main view', function () {
             });
 
             describe('should have one query after sending a query', function () {
-                Then(function () {
-                    doSearch(page).then(function () {
-                        Then(function () { expect(page.patientReview.queries.count()).toBe(1); });
-                    });
-                });
+                When(function () { doSearch(page); });
+
+                Then(function () { expect(page.patientReview.queries.count()).toBe(1); });
             });
 
             describe('should have a way to clear a query', function () {
-                When(function () { doSearch(page); });
-
-                Then(function () {
-                    page.patientReview.queries.first().element(by.tagName('button')).click().then(function () {
-                        expect(page.patientReview.queries.count()).toBe(0);
+                When(function () {
+                    doSearch(page).then(function () {
+                        page.patientReview.queries.first().element(by.tagName('button')).click();
                     });
                 });
-                /*
 
-                  Then(function () {
-                  doSearch(page).then(function () {
-                  page.patientReview.queries.first().element(by.tagName('button')).click().then(function () {
-                  expect(page.patientReview.queries.count()).toBe(0);
-                  });
-                  });
-                  });*/
+                Then(function () { expect(page.patientReview.queries.count()).toBe(0); });
             });
 
-            describe('should shrink patients down to one when one is chosen', function () {
-                Then(function () {
+            describe('should clear the query when a patient is chosen', function () {
+                When(function () {
                     doSearch(page).then(function () {
                         return showDetails(page)
                     }).then(function () {
-                        Then(function () { expect(page.patientReview.patients.count()).toBeGreaterThan(1); });
                         return selectPatient(page)
-                    }).then(function () {
-                        Then(function () { expect(page.patientReview.patients.count()).toBe(1); });
                     });
                 });
-            });
 
+                Then(function () { expect(page.patientReview.queries.count()).toBe(0); });
+            });
+        });
+
+        describe('the acf-patient-list section', function () {
             describe('should indicate when a document is not cached', function () {
-                Then(function () {
+                When(function () {
                     doSearch(page).then(function () {
                         return showDetails(page)
                     }).then(function () {
                         return selectPatient(page)
                     }).then(function () {
-                        page.patientReview.documents.first().element(by.tagName('button')).getText().then(function (text) {
-                            expect(text).toBe('Download');
-                        });
-                        page.patientReview.documents.first().element(by.tagName('i')).getAttribute('class').then(function (text) {
-                            expect(text).toBe('fa fa-download');
-                        });
+                        return showDocuments(page);
                     });
                 });
+
+                Then(function () { expect(page.acfPatientList.documents.first().element(by.tagName('button')).getText()).toBe('Download'); });
+                And(function () { expect(page.acfPatientList.documents.first().element(by.tagName('i')).getAttribute('class')).toBe('fa fa-download'); });
             });
 
             describe('should indicate when a document is cached', function () {
-                Then(function () {
+                When(function () {
                     doSearch(page).then(function () {
                         return showDetails(page)
                     }).then(function () {
                         return selectPatient(page)
                     }).then(function () {
-                        return clickDocument(page)
+                        return showDocuments(page);
                     }).then(function () {
-                        page.patientReview.documents.first().element(by.tagName('button')).getText().then(function (text) {
-                            expect(text).toBe('View');
-                        });
-                        page.patientReview.documents.first().element(by.tagName('i')).getAttribute('class').then(function (text) {
-                            expect(text).toBe('fa fa-eye');
-                        });
+                        return clickDocument(page)
                     });
                 });
+
+                Then(function () { expect(page.acfPatientList.documents.first().element(by.tagName('button')).getText()).toBe('View'); });
+                And(function () { expect(page.acfPatientList.documents.first().element(by.tagName('i')).getAttribute('class')).toBe('fa fa-eye'); });
             });
         });
 
@@ -165,39 +152,41 @@ describe('the main view', function () {
             });
 
             describe('should display a document when one is selected', function () {
-                Then(function () {
+                When(function () {
                     doSearch(page).then(function () {
                         return showDetails(page)
                     }).then(function () {
                         return selectPatient(page)
                     }).then(function () {
-                        return clickDocument(page)
+                        return showDocuments(page);
                     }).then(function () {
                         return clickDocument(page)
                     }).then(function () {
-                        page.documentReview.document.getText().then(function (text) {
-                            expect(text).not.toBe('');
-                        });
+                        return clickDocument(page)
                     });
                 });
+
+                Then(function () { expect(page.documentReview.document.getText()).not.toBe(''); });
             });
 
             describe('should clear a displayed document when directed', function () {
-                Then(function () {
+                When(function () {
                     doSearch(page).then(function () {
                         return showDetails(page)
                     }).then(function () {
                         return selectPatient(page)
                     }).then(function () {
-                        return clickDocument(page)
+                        return showDocuments(page);
                     }).then(function () {
                         return clickDocument(page)
                     }).then(function () {
-                        page.documentReview.close.click().then(function () {
-                            expect(page.documentReview.root.isPresent()).toBeFalsy();
-                        });
+                        return clickDocument(page)
+                    }).then(function () {
+                        page.documentReview.close.click()
                     });
                 });
+
+                Then(function () { expect(page.documentReview.root.isPresent()).toBeFalsy();});
             });
         });
 
@@ -226,7 +215,6 @@ function submitAcf (page) {
 }
 
 function doSearch (page) {
-    page.patientSearch.patientIdEl.sendKeys('test');
     return page.patientSearch.submitBtnEl.click();
 }
 
@@ -235,9 +223,13 @@ function showDetails (page) {
 }
 
 function selectPatient (page) {
-    return page.patientReview.patients.first().element(by.tagName('button')).click();
+    return page.patientReview.patientResults.first().element(by.tagName('button')).click();
+}
+
+function showDocuments (page) {
+    return page.acfPatientList.showDocumentsA.click();
 }
 
 function clickDocument (page) {
-    return page.patientReview.documents.first().element(by.tagName('button')).click();
+    return page.acfPatientList.documents.first().element(by.tagName('button')).click();
 }
