@@ -7,6 +7,11 @@ describe('the main view', function () {
 
     Given(function () { page.visitPage(); });
 
+    afterEach(function () {
+        browser.executeScript('window.sessionStorage.clear();');
+        browser.executeScript('window.localStorage.clear();');
+    });
+
     describe('the acf-entry section', function () {
 
         describe('should exist at load', function () {
@@ -47,6 +52,12 @@ describe('the main view', function () {
     });
 
     describe('after selecting an acf', function () {
+
+        Given(function () {
+            selectAcf(page).then(function () {
+                return submitAcf(page);
+            });
+        });
 
         describe('the patient-search section', function () {
             describe('should not show errors until button focused on', function () {
