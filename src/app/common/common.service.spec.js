@@ -55,127 +55,133 @@
             $httpBackend.verifyNoOutstandingRequest();
         });
 
-        it('should read a jwt to see if the user is authenticated', function () {
-            expect(commonService.isAuthenticated()).toBeFalsy();
-            commonService.saveToken(mock.token);
-            expect(commonService.isAuthenticated()).toBeTruthy();
-            expect(commonService.getToken()).toEqual(mock.token);
-        });
+        describe('user authentication issues', function () {
 
-        it('should know the logged in user\'s name', function () {
-            commonService.saveToken(mock.token);
-            expect(commonService.getUsername()).toEqual('Bob Jones');
-        });
-
-        it('should know the logged in user\'s ACF', function () {
-            commonService.saveToken(mock.token);
-            expect(commonService.getUserAcf().name).toEqual('ACF Number 1');
-            commonService.logout();
-            expect(commonService.getUserAcf()).toEqual('');
-        });
-
-        it('should not have a username if the user isn\'t logged in', function () {
-            commonService.logout();
-            expect(commonService.getUsername()).toEqual('');
-        });
-
-        it('should allow the user to log in', function () {
-//            $httpBackend.expectGET('/auth/jwt').respond(200, {token: mock.token});
-            commonService.login();
-            expect(commonService.isAuthenticated()).toBeFalsy();
-            expect(commonService.getToken()).toBeUndefined();
-            $httpBackend.flush();
-            expect(commonService.isAuthenticated()).toBeTruthy();
-            expect(commonService.getToken()).toEqual(mock.token);
-        });
-
-        it('should return a message if the user doesn\'t log in', function () {
-            requestHandler.getAuthJwt.respond(401, {message: 'test'});
-            commonService.login().then(function (response) {
-                expect(response.message).toEqual('test');
+            it('should read a jwt to see if the user is authenticated', function () {
+                expect(commonService.isAuthenticated()).toBeFalsy();
+                commonService.saveToken(mock.token);
+                expect(commonService.isAuthenticated()).toBeTruthy();
+                expect(commonService.getToken()).toEqual(mock.token);
             });
-            $httpBackend.flush();
-        });
 
-        it('should allow the user to log out', function () {
-            commonService.saveToken(mock.token);
-            expect(commonService.isAuthenticated()).toBeTruthy();
-            commonService.logout();
-            expect(commonService.isAuthenticated()).toBeFalsy();
-        });
-
-        it('should call /query/patient', function () {
-            $httpBackend.expectPOST('/rest/query/patient', {}).respond(200, {results: mock.patientQueryResponse});
-            commonService.queryPatient({});
-            $httpBackend.flush();
-        });
-
-        it('should reject a call that doesn\'t return an object', function () {
-            $httpBackend.expectPOST('/rest/query/patient', {}).respond(401, {message: 'a rejection'});
-            commonService.queryPatient({}).then(function (response) {
-                expect(response).toEqual('a rejection');
+            it('should know the logged in user\'s name', function () {
+                commonService.saveToken(mock.token);
+                expect(commonService.getUsername()).toEqual('Bob Jones');
             });
-            $httpBackend.flush();
+
+            it('should know the logged in user\'s ACF', function () {
+                commonService.saveToken(mock.token);
+                expect(commonService.getUserAcf().name).toEqual('ACF Number 1');
+                commonService.logout();
+                expect(commonService.getUserAcf()).toEqual('');
+            });
+
+            it('should not have a username if the user isn\'t logged in', function () {
+                commonService.logout();
+                expect(commonService.getUsername()).toEqual('');
+            });
+
+            it('should allow the user to log in', function () {
+                //$httpBackend.expectGET('/auth/jwt').respond(200, {token: mock.token});
+                commonService.login();
+                expect(commonService.isAuthenticated()).toBeFalsy();
+                expect(commonService.getToken()).toBeUndefined();
+                $httpBackend.flush();
+                expect(commonService.isAuthenticated()).toBeTruthy();
+                expect(commonService.getToken()).toEqual(mock.token);
+            });
+
+            it('should return a message if the user doesn\'t log in', function () {
+                requestHandler.getAuthJwt.respond(401, {message: 'test'});
+                commonService.login().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should allow the user to log out', function () {
+                commonService.saveToken(mock.token);
+                expect(commonService.isAuthenticated()).toBeTruthy();
+                commonService.logout();
+                expect(commonService.isAuthenticated()).toBeFalsy();
+            });
         });
 
-        it('should call /query/patientDocuments', function () {
-            commonService.queryPatientDocuments(3);
-            $httpBackend.flush();
-            requestHandler.getRestQueryPatientDocuments.respond(401, {message: 'test'});
-            commonService.queryPatientDocuments(3).then(function (response) {
-                expect(response.message).toEqual('test');
-            });
-            $httpBackend.flush();
-        });
+        describe('should call /rest endpoints', function () {
 
-        it('should return data of a document', function () {
-            commonService.getDocument(3,2);
-            $httpBackend.flush();
-            requestHandler.getDocument.respond(401, {message: 'test'});
-            commonService.getDocument(3,2).then(function (response) {
-                expect(response.message).toEqual('test');
+            it('should call /query/patient', function () {
+                $httpBackend.expectPOST('/rest/query/patient', {}).respond(200, {results: mock.patientQueryResponse});
+                commonService.queryPatient({});
+                $httpBackend.flush();
             });
-            $httpBackend.flush();
-        });
 
-        it('should call /organizations', function () {
-            commonService.queryOrganizations();
-            $httpBackend.flush();
-            requestHandler.getOrganizations.respond(401, {message: 'test'});
-            commonService.queryOrganizations().then(function (response) {
-                expect(response.message).toEqual('test');
+            it('should reject a call that doesn\'t return an object', function () {
+                $httpBackend.expectPOST('/rest/query/patient', {}).respond(401, {message: 'a rejection'});
+                commonService.queryPatient({}).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
             });
-            $httpBackend.flush();
-        });
 
-        it('should call /acfs', function () {
-            commonService.getAcfs();
-            $httpBackend.flush();
-            requestHandler.getAcfs.respond(401, {message: 'test'});
-            commonService.getAcfs().then(function (response) {
-                expect(response.message).toEqual('test');
+            it('should call /query/patientDocuments', function () {
+                commonService.queryPatientDocuments(3);
+                $httpBackend.flush();
+                requestHandler.getRestQueryPatientDocuments.respond(401, {message: 'test'});
+                commonService.queryPatientDocuments(3).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
             });
-            $httpBackend.flush();
-        });
 
-        it('should call /acfs/set', function () {
-            commonService.setAcf({});
-            $httpBackend.flush();
-            requestHandler.setAcf.respond(401, {message: 'a rejection'});
-            commonService.setAcf({}).then(function (response) {
-                expect(response).toEqual('a rejection');
+            it('should return data of a document', function () {
+                commonService.getDocument(3,2);
+                $httpBackend.flush();
+                requestHandler.getDocument.respond(401, {message: 'test'});
+                commonService.getDocument(3,2).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
             });
-            $httpBackend.flush();
-        });
 
-        it('should call /acfs/add', function () {
-            commonService.addAcf(mock.newAcf);
-            $httpBackend.flush();
-            requestHandler.addAcf.respond(401, {message: 'a rejection'});
-            commonService.addAcf(mock.newAcf).then(function (response) {
-                expect(response).toEqual('a rejection');
+            it('should call /organizations', function () {
+                commonService.queryOrganizations();
+                $httpBackend.flush();
+                requestHandler.getOrganizations.respond(401, {message: 'test'});
+                commonService.queryOrganizations().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
             });
-            $httpBackend.flush();
+
+            it('should call /acfs', function () {
+                commonService.getAcfs();
+                $httpBackend.flush();
+                requestHandler.getAcfs.respond(401, {message: 'test'});
+                commonService.getAcfs().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /acfs/set', function () {
+                commonService.setAcf({});
+                $httpBackend.flush();
+                requestHandler.setAcf.respond(401, {message: 'a rejection'});
+                commonService.setAcf({}).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /acfs/add', function () {
+                commonService.addAcf(mock.newAcf);
+                $httpBackend.flush();
+                requestHandler.addAcf.respond(401, {message: 'a rejection'});
+                commonService.addAcf(mock.newAcf).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
         });
     });
 })();
