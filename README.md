@@ -5,6 +5,7 @@ Install npm
 Install gulp
 
 npm install
+npm install -g bower
 bower install
 
 Run the server with `gulp serve`

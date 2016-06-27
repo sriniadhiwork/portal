@@ -21,17 +21,10 @@ $fa-font-path: "../../bower_components/font-awesome/fonts";
     padding: 0.2em 0;
 }
 
-.thumbnail {
-    height: 200px;
-
-    img.pull-right {
-        width: 50px;
-    }
-}
-
 .component {
     border: 1px solid green;
 }
+
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject
  *  all your sass files automatically

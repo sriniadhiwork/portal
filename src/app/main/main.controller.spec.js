@@ -4,7 +4,7 @@
     describe('controllers', function() {
         var vm, scope, commonService;
 
-        beforeEach(module('portal.main'));
+        beforeEach(module('portal.main', 'portal.constants'));
         beforeEach(inject(function($controller, _commonService_, $q, $rootScope) {
             commonService = _commonService_;
             scope = $rootScope.$new();

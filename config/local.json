@@ -1,0 +1,4 @@
+{
+    'API': '/rest',
+    'AuthAPI':  '/auth'
+}

@@ -8,6 +8,7 @@
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.getUsername = jasmine.createSpy();
+                    $delegate.getUserAcf = jasmine.createSpy();
                     $delegate.isAuthenticated = jasmine.createSpy();
                     $delegate.login = jasmine.createSpy();
                     $delegate.logout = jasmine.createSpy();
@@ -46,18 +47,16 @@
             expect(commonService.isAuthenticated).toHaveBeenCalled();
         });
 
-        it('should have a function to retrieve a token', function () {
-            expect(vm.login).toBeDefined();
-        });
-
-        it('should call commonService.login', function () {
-            expect(commonService.login).toHaveBeenCalled();
-        });
-
         it('should know if the user is logged in', function () {
             expect(vm.getUsername).toBeDefined();
             vm.getUsername();
             expect(commonService.getUsername).toHaveBeenCalled();
+        });
+
+        it('should know the user\'s ACF', function () {
+            expect(vm.getUserAcf).toBeDefined();
+            vm.getUserAcf();
+            expect(commonService.getUserAcf).toHaveBeenCalled();
         });
 
         it('should have a way to log out', function () {

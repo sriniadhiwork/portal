@@ -1,7 +1,8 @@
-<div class="component" ng-if="vm.patientResults.length > 0">
+<div class="component patient-review" ng-if="vm.patientQueries.length > 0">
   <h1>Query results</h1>
-  <div ng-repeat="query in vm.patientResults track by $index" class="animated fadeIn">
+  <div ng-repeat="query in vm.patientQueries track by $index" class="animated fadeIn">
     <h2>Patient Information</h2>
+    <span class="pull-right"><button class="btn btn-danger" ng-click="vm.clearQuery($index)"><i class="fa fa-close"></i><span class="sr-only">Clear Query</span></button></span>
     <table class="table">
       <thead>
         <tr>
@@ -20,7 +21,7 @@
           <td>{{ query.query.patientId }}</td>
         </tr>
         <tr ng-if="query.query.firstName">
-          <td>firstName</td>
+          <td>First Name</td>
           <td>{{ query.query.firstName }}</td>
         </tr>
         <tr ng-if="query.query.lastName">
@@ -46,34 +47,23 @@
       </tbody>
     </table>
     <div ng-if="query.showResults" class="">
-      <h2>Results</h2>
+      <h3>Results</h3>
       <table class="table">
         <thead>
           <tr>
             <th scope="cols">First name</th>
             <th scope="cols">Last name</th>
+            <th scope="cols">Organization</th>
             <th scope="cols" ng-if="query.results.length > 1">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat-start="patient in query.results">
+          <tr ng-repeat="patient in query.results track by $index">
             <td>{{ patient.firstName }}</td>
             <td>{{ patient.lastName }}</td>
-            <td ng-if="query.results.length > 1"><button class="btn btn-success btn-block" ng-click="vm.queryPatientDocuments(patient, $parent.$parent.$index)">Select patient <i class="fa fa-check"></i></button>
-              <!--
-                  {{ patient.id + '-' + $parent.$parent.$index }}
-                -->
-            </td>
-          </tr>
-          <tr ng-repeat-end ng-if="patient.documents && patient.documents.length > 0">
-            <td colspan="{{ query.results.length > 1 ? 3 : 2}}">Available documents
-              <ul class="list-unstyled">
-                <li ng-repeat="doc in patient.documents">
-                  <button ng-if="doc.status !== 'cached'" ng-click="vm.getDocument(patient, doc)" class="btn btn-success btn-sm"><span class="sr-only">Download</span><i class="fa fa-download"></i></button>
-                  <button ng-if="doc.status === 'cached'" ng-click="vm.activateDocument(doc)" class="btn btn-success btn-sm"><span class="sr-only">View</span><i class="fa fa-eye"></i></button>
-                  <strong>Title:</strong> {{ doc.title }} (<strong>Type:</strong> {{ doc.filetype }})
-                </li>
-              </ul>
+            <td>{{ patient.organization.name }}</td>
+            <td ng-if="query.results.length > 1">
+              <button class="btn btn-success btn-block" ng-click="vm.selectPatient($parent.$parent.$index, $index)">Select patient <i class="fa fa-check"></i></button>
             </td>
           </tr>
         </tbody>

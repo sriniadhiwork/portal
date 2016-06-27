@@ -3,25 +3,47 @@
 
     angular
         .module('portal.common')
-        .constant('API', '/rest')
-        .constant('AuthAPI', '/auth')
         .service('commonService', commonService);
 
     /** @ngInject */
     function commonService ($http, $q, API, AuthAPI, $log, $localStorage, $window) {
         var self = this;
 
+        self.addAcf = addAcf;
+        self.getAcfs = getAcfs;
         self.getDocument = getDocument
         self.getToken = getToken;
+        self.getUserAcf = getUserAcf;
         self.getUsername = getUsername;
         self.isAuthenticated = isAuthenticated;
         self.login = login;
         self.logout = logout;
+        self.queryOrganizations = queryOrganizations;
         self.queryPatient = queryPatient;
         self.queryPatientDocuments = queryPatientDocuments;
         self.saveToken = saveToken;
+        self.setAcf = setAcf;
 
         ////////////////////////////////////////////////////////////////////
+
+        function addAcf (newAcf) {
+            return postApi('/acfs/add', {name: newAcf})
+                .then(function (response) {
+                    self.saveToken(response); //DEBUG
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function getAcfs () {
+            return getApi('/acfs')
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
 
         function getDocument (patientId, documentId) {
             return getApi('/query/patient/' + patientId + '/documents/' + documentId)
@@ -33,17 +55,25 @@
         }
 
         function getToken () {
-            //$log.debug('in getToken', $localStorage.jwtToken);
             return $localStorage.jwtToken;
         }
 
-        function getUsername () {
-            //$log.debug('in getusername');
+        function getUserAcf () {
             if (self.isAuthenticated()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                //$log.debug('identity', identity);
-                return identity[0] + ' ' + identity[1];
+                return identity[4];
+            } else {
+                self.logout();
+                return '';
+            }
+        }
+
+        function getUsername () {
+            if (self.isAuthenticated()) {
+                var token = self.getToken();
+                var identity = parseJwt(token).Identity;
+                return identity[2] + ' ' + identity[3];
             } else {
                 self.logout();
                 return '';
@@ -61,6 +91,7 @@
         }
 
         function login () {
+            // fake login function
             return getApi('/jwt', AuthAPI)
                 .then(function (response) {
                     //$log.debug('calling jwt', response);
@@ -73,6 +104,15 @@
 
         function logout () {
             delete($localStorage.jwtToken);
+        }
+
+        function queryOrganizations () {
+            return getApi('/organizations')
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
         }
 
         function queryPatient (queryObj) {
@@ -95,6 +135,16 @@
 
         function saveToken (token) {
             $localStorage.jwtToken = token;
+        }
+
+        function setAcf (acf) {
+            return postApi('/acfs/set', acf)
+                .then(function (response) {
+                    self.saveToken(response); //DEBUG
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
         }
 
         ////////////////////////////////////////////////////////////////////
