@@ -6,3 +6,4 @@ coverage/
 .tmp/
 dist/
 test_reports/
+/build/
