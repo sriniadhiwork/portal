@@ -3,19 +3,7 @@
 
     describe('portal.common.services', function () {
 
-        beforeEach(module('portal.common', 'portal.constants'));
-
-        var $log;
-        beforeEach(inject(function (_$log_) {
-            $log = _$log_;
-        }));
-        afterEach(function () {
-            if ($log.debug.logs.length > 0) {
-                //console.debug("\n Debug: " + $log.debug.logs.join("\n Debug: "));
-            }
-        });
-
-        var commonService, $httpBackend, requestHandler;
+        var commonService, $httpBackend, $window, requestHandler, LogoutRedirect;
 
         requestHandler = {};
 
@@ -32,15 +20,30 @@
         mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
         mock.fakeDocument = {data: "<document><made><of>XML</of></made></document"};
         mock.organizations = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
-        mock.acfs =[{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
+        mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
         mock.newAcf = 'New ACF';
 
-        beforeEach(inject(function (_commonService_, _$httpBackend_, $window, $localStorage) {
+        beforeEach(module('portal.common', 'portal.constants'));
+
+        var $log;
+        beforeEach(inject(function (_$log_) {
+            $log = _$log_;
+        }));
+        afterEach(function () {
+            if ($log.debug.logs.length > 0) {
+                //console.debug("\n Debug: " + $log.debug.logs.join("\n Debug: "));
+            }
+        });
+
+        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _LogoutRedirect_) {
             commonService = _commonService_;
             $httpBackend = _$httpBackend_;
+            $window = _$window_;
             mock.token = tokenPrefix + $window.btoa(jwt) + tokenSuffix;
+            LogoutRedirect = _LogoutRedirect_;
             delete($localStorage.jwtToken);
 
+            spyOn($window.location, 'replace');
             requestHandler.getAuthJwt = $httpBackend.whenGET('/auth/jwt').respond(200, {token: mock.token});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET('/rest/query/patient/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getDocument = $httpBackend.whenGET('/rest/query/patient/3/documents/2').respond(200, {results: mock.fakeDocument});
@@ -104,6 +107,11 @@
                 expect(commonService.isAuthenticated()).toBeTruthy();
                 commonService.logout();
                 expect(commonService.isAuthenticated()).toBeFalsy();
+            });
+
+            it('should redirect the user to an external page on logout', function () {
+                commonService.logout();
+                expect($window.location.replace).toHaveBeenCalledWith(LogoutRedirect);
             });
         });
 
