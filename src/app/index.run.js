@@ -6,7 +6,7 @@
         .run(runBlock);
 
     /** @ngInject */
-    function runBlock($log, $httpBackend, $window, AuthAPI) {
+    function runBlock($log, $httpBackend, $window, API, AuthAPI) {
 
         var firstNames = ['Faustina', 'Janise', 'Dung', 'Chaya', 'Karry', 'Maye', 'Ericka', 'Apryl', 'Cara', 'Markus', 'Rosetta', 'Amie', 'Kris', 'Jerold', 'Lorena', 'Lanora', 'Tandra', 'Alvera', 'Keitha', 'Darlena', 'Ross', 'Hisako', 'Daniella', 'Bonny', 'Herma', 'Jacquline', 'Adan', 'Naoma', 'Katlyn', 'Gwyn', 'Hannah', 'Markus', 'Augustina', 'Dorothy', 'Fredrick', 'Clemente', 'Dawne', 'Courtney', 'Margherita', 'Adella'];
         var lastNames = ['Beene', 'Fairbank', 'Petrarca', 'Klingler', 'Melvin', 'Cheeseman', 'Clagon', 'Odriscoll', 'Monteith', 'Yates', 'Brandenburg', 'Bolz', 'Laughter', 'Chaisson', 'Plourde', 'Miltenberger', 'Zubia', 'Rapozo', 'Voit', 'Muriel', 'Houghtaling', 'Hubbell', 'Weldy', 'Becraft', 'Weinman', 'Shawver', 'Suda', 'Shakespeare', 'Prado', 'Newman', 'Coney', 'Reddout', 'Cothren', 'Arocho', 'Brittian', 'Ingalls', 'Kuhn', 'Munford', 'Kobel', 'Duwe'];
@@ -33,19 +33,16 @@
                     {name: 'Mall', address: {}},
                     {name: 'Campsite', address: {}}];
 
-        $httpBackend.whenPOST(/rest\/query\/patient$/).respond(200, {results: makePeople(Math.floor(Math.random() * 6) + 3)});
-        $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents$/).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
-        $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents\/.*/).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
-        $httpBackend.whenGET(/\/rest\/organizations/).respond(200, {results: randomArray(organizations, Math.floor(Math.random() * 3) + 3)});
-        $httpBackend.whenGET(/\/rest\/acfs/).respond(200, {acfs: randomArray(acfs, Math.floor(Math.random() * 4) + 2)});
-
-        $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, makeToken());
-
-        $httpBackend.whenPOST(/\/rest\/acfs\/add/).respond(function(method, url, data) { return [200, makeToken(data), {}]; });
-        $httpBackend.whenPOST(/\/rest\/acfs\/set/).respond(function(method, url, data) { return [200, makeToken(data), {}]; });
-
+        $httpBackend.whenGET (new RegExp(API + '/acfs')).respond(200, {acfs: randomArray(acfs, Math.floor(Math.random() * 4) + 2)});
+        $httpBackend.whenPOST(new RegExp(API + '/acfs/create')).respond(function(method, url, data) { return [200, makeToken(data), {}]; });
+        $httpBackend.whenPOST(new RegExp(API + '/acfs/set')).respond(function(method, url, data) { return [200, makeToken(data), {}]; });
+        $httpBackend.whenGET (new RegExp(API + '/organizations')).respond(200, {results: randomArray(organizations, Math.floor(Math.random() * 3) + 3)});
+        $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents$')).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
+        $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents/.*')).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
+        $httpBackend.whenPOST(new RegExp(API + '/search$')).respond(200, {results: makePeople(Math.floor(Math.random() * 6) + 3)});
+        $httpBackend.whenGET (new RegExp(AuthAPI + '/.*')).passThrough();
         $httpBackend.whenGET(/^app/).passThrough();
-        $httpBackend.whenGET(/^\/auth/).passThrough();
+
         $log.info('runBlock end');
 
         function makePeople(count) {

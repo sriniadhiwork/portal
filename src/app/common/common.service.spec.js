@@ -3,7 +3,8 @@
 
     describe('portal.common.services', function () {
 
-        var commonService, $httpBackend, $window, requestHandler, LogoutRedirect;
+        var commonService, $httpBackend, $window, requestHandler;
+        var API, AuthAPI, LogoutRedirect;
 
         requestHandler = {};
 
@@ -12,6 +13,8 @@
         expDate.setDate(expDate.getDate() + 1);
         var jwt = '{"username": "test2","id": ' + 2 + ',"iat": ' + iatDate.getTime() + ', "exp": ' + expDate.getTime() +
             ',"Identity":[-1,"ADMIN","Bob","Jones",{"name":"ACF Number 1"}],"Authorities":["ROLE_ADMIN","DA_ADMIN"] }';
+        var jwtWithoutAcf = '{"username": "test2","id": ' + 2 + ',"iat": ' + iatDate.getTime() + ', "exp": ' + expDate.getTime() +
+            ',"Identity":[-1,"ADMIN","Bob","Jones",{}],"Authorities":["ROLE_ADMIN","DA_ADMIN"] }';
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
 
@@ -35,22 +38,25 @@
             }
         });
 
-        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _LogoutRedirect_) {
+        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _LogoutRedirect_, _API_, _AuthAPI_) {
             commonService = _commonService_;
             $httpBackend = _$httpBackend_;
             $window = _$window_;
             mock.token = tokenPrefix + $window.btoa(jwt) + tokenSuffix;
+            mock.tokenWOAcf = tokenPrefix + $window.btoa(jwtWithoutAcf) + tokenSuffix;
             LogoutRedirect = _LogoutRedirect_;
+            API = _API_;
+            AuthAPI = _AuthAPI_;
             delete($localStorage.jwtToken);
 
             spyOn($window.location, 'replace');
-            requestHandler.getAuthJwt = $httpBackend.whenGET('/auth/jwt').respond(200, {token: mock.token});
-            requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET('/rest/query/patient/3/documents').respond(200, {results: mock.patientDocuments});
-            requestHandler.getDocument = $httpBackend.whenGET('/rest/query/patient/3/documents/2').respond(200, {results: mock.fakeDocument});
-            requestHandler.getOrganizations = $httpBackend.whenGET('/rest/organizations').respond(200, {results: mock.organizations});
-            requestHandler.getAcfs = $httpBackend.whenGET('/rest/acfs').respond(200, {results: mock.acfs});
-            requestHandler.setAcf = $httpBackend.whenPOST('/rest/acfs/set', {}).respond(200, {results: {}});
-            requestHandler.addAcf = $httpBackend.whenPOST('/rest/acfs/add', {name: mock.newAcf}).respond(200, {results: {}});
+            requestHandler.addAcf = $httpBackend.whenPOST(API + '/acfs/create', {name: mock.newAcf}).respond(200, {results: {}});
+            requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
+            requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, {results: mock.fakeDocument});
+            requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
+            requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
+            requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
+            requestHandler.setAcf = $httpBackend.whenPOST(API + '/acfs/set', {}).respond(200, {results: {}});
         }));
 
         afterEach(function () {
@@ -65,11 +71,27 @@
                 commonService.saveToken(mock.token);
                 expect(commonService.isAuthenticated()).toBeTruthy();
                 expect(commonService.getToken()).toEqual(mock.token);
+                commonService.logout();
+                requestHandler.getSamlUserToken.respond(200, {token: 'fake token'});
+                commonService.getToken(true);
+                $httpBackend.flush();
+                expect(commonService.getToken()).toBeUndefined();
+                commonService.saveToken('invalid token format');
+                expect(commonService.isAuthenticated()).toBeFalsy();
             });
 
             it('should know the logged in user\'s name', function () {
                 commonService.saveToken(mock.token);
                 expect(commonService.getUsername()).toEqual('Bob Jones');
+            });
+
+            it('should know the logged in user\'s ACF', function () {
+                commonService.saveToken(mock.token);
+                expect(commonService.hasAcf()).toBeTruthy();
+                commonService.logout();
+                expect(commonService.hasAcf()).toBeFalsy();
+                commonService.saveToken(mock.tokenWOAcf);
+                expect(commonService.hasAcf()).toBeFalsy();
             });
 
             it('should know the logged in user\'s ACF', function () {
@@ -84,24 +106,6 @@
                 expect(commonService.getUsername()).toEqual('');
             });
 
-            it('should allow the user to log in', function () {
-                //$httpBackend.expectGET('/auth/jwt').respond(200, {token: mock.token});
-                commonService.login();
-                expect(commonService.isAuthenticated()).toBeFalsy();
-                expect(commonService.getToken()).toBeUndefined();
-                $httpBackend.flush();
-                expect(commonService.isAuthenticated()).toBeTruthy();
-                expect(commonService.getToken()).toEqual(mock.token);
-            });
-
-            it('should return a message if the user doesn\'t log in', function () {
-                requestHandler.getAuthJwt.respond(401, {message: 'test'});
-                commonService.login().then(function (response) {
-                    expect(response.message).toEqual('test');
-                });
-                $httpBackend.flush();
-            });
-
             it('should allow the user to log out', function () {
                 commonService.saveToken(mock.token);
                 expect(commonService.isAuthenticated()).toBeTruthy();
@@ -113,18 +117,34 @@
                 commonService.logout();
                 expect($window.location.replace).toHaveBeenCalledWith(LogoutRedirect);
             });
+
+            it('should call the saml SP to find the Spring Boot User Object', function () {
+                commonService.getSamlUserToken();
+                $httpBackend.flush();
+                requestHandler.getSamlUserToken.respond(401, {message: 'test'});
+                commonService.getSamlUserToken().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call the saml SP on getToken if the user is not logged in', function () {
+                $httpBackend.expectGET(AuthAPI + '/jwt');
+                commonService.getToken(true);
+                $httpBackend.flush();
+            });
         });
 
         describe('should call /rest endpoints', function () {
 
-            it('should call /query/patient', function () {
-                $httpBackend.expectPOST('/rest/query/patient', {}).respond(200, {results: mock.patientQueryResponse});
+            it('should call /patients', function () {
+                $httpBackend.expectPOST(API + '/search', {}).respond(200, {results: mock.patientQueryResponse});
                 commonService.queryPatient({});
                 $httpBackend.flush();
             });
 
             it('should reject a call that doesn\'t return an object', function () {
-                $httpBackend.expectPOST('/rest/query/patient', {}).respond(401, {message: 'a rejection'});
+                $httpBackend.expectPOST(API + '/search', {}).respond(401, {message: 'a rejection'});
                 commonService.queryPatient({}).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });

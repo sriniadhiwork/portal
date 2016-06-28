@@ -4,39 +4,52 @@
   </header>
   <div ng-if="!vm.isAuthenticated()">
     <div class="row">
-      <div class="col-sm-4 col-sm-offset-4">
-        <ai-acf-entry>
-        </ai-acf-entry>
+      <div class="col-sm-2 col-sm-offset-5">
+        <form class="" role="log in" method="get" action="http://localhost:8080/saml/login?disco=true">
+          <button type="submit" class="btn btn-default btn-block">Log In</button>
+          <!--<input type="hidden" name="idp" id="idp_http://idp.ssocircle.com" value="http://idp.ssocircle.com"></input>-->
+          <input type="hidden" name="idp" id="idp_https://idp.testshib.org/idp/shibboleth" value="https://idp.testshib.org/idp/shibboleth"></input>
+        </form>
       </div>
     </div>
   </div>
   <div ng-if="vm.isAuthenticated()">
-    <div class="row">
-      <div class="col-sm-4">
-        <ai-patient-search
-           patient-queries="vm.patientQueries">
-        </ai-patient-search>
-        <ai-patient-review
-           patient-queries="vm.patientQueries"
-           patients="vm.patients">
-        </ai-patient-review>
-      </div>
-      <div class="col-sm-4">
-        <ai-acf-patient-list
-           patients="vm.patients"
-           active-document="vm.activeDocument">
-        </ai-acf-patient-list>
-      </div>
-      <div class="col-sm-4">
-        <ai-organization-status>
-        </ai-organization-status>
+    <div ng-if="!vm.hasAcf()">
+      <div class="row">
+        <div class="col-sm-4 col-sm-offset-4">
+          <ai-acf-entry>
+          </ai-acf-entry>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <ai-document-review
-           active-document="vm.activeDocument">
-        </ai-document-review>
+    <div ng-if="vm.hasAcf()">
+      <div class="row">
+        <div class="col-sm-4">
+          <ai-patient-search
+             patient-queries="vm.patientQueries">
+          </ai-patient-search>
+          <ai-patient-review
+             patient-queries="vm.patientQueries"
+             patients="vm.patients">
+          </ai-patient-review>
+        </div>
+        <div class="col-sm-4">
+          <ai-acf-patient-list
+             patients="vm.patients"
+             active-document="vm.activeDocument">
+          </ai-acf-patient-list>
+        </div>
+        <div class="col-sm-4">
+          <ai-organization-status>
+          </ai-organization-status>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <ai-document-review
+             active-document="vm.activeDocument">
+          </ai-document-review>
+        </div>
       </div>
     </div>
   </div>

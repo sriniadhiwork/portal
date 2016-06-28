@@ -12,11 +12,12 @@
         self.addAcf = addAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument
+        self.getSamlUserToken = getSamlUserToken;
         self.getToken = getToken;
         self.getUserAcf = getUserAcf;
         self.getUsername = getUsername;
+        self.hasAcf = hasAcf;
         self.isAuthenticated = isAuthenticated;
-        self.login = login;
         self.logout = logout;
         self.queryOrganizations = queryOrganizations;
         self.queryPatient = queryPatient;
@@ -27,7 +28,7 @@
         ////////////////////////////////////////////////////////////////////
 
         function addAcf (newAcf) {
-            return postApi('/acfs/add', {name: newAcf})
+            return postApi('/acfs/create', {name: newAcf})
                 .then(function (response) {
                     self.saveToken(response); //DEBUG
                     return $q.when(response);
@@ -46,7 +47,7 @@
         }
 
         function getDocument (patientId, documentId) {
-            return getApi('/query/patient/' + patientId + '/documents/' + documentId)
+            return getApi('/patients/' + patientId + '/documents/' + documentId)
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {
@@ -54,8 +55,28 @@
                 });
         }
 
-        function getToken () {
-            return $localStorage.jwtToken;
+        function getSamlUserToken () {
+            return getApi('/jwt', AuthAPI)
+                .then(function (response) {
+                    return $q.when(response.token);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function getToken (callApi) {
+            var token = $localStorage.jwtToken;
+            if (!token && callApi) {
+                self.getSamlUserToken().then(function(token) {
+                    if (validTokenFormat(token)) {
+                        self.saveToken(token);
+                        return token;
+                    } else {
+                        return null
+                    }
+                });
+            }
+            return token;
         }
 
         function getUserAcf () {
@@ -80,26 +101,30 @@
             }
         }
 
+        function hasAcf () {
+            if (self.isAuthenticated()) {
+                var token = self.getToken();
+                var identity = parseJwt(token).Identity;
+                if (identity[4] && angular.isString(identity[4].name))
+                    return true;
+                else
+                    return false;
+            } else {
+                self.logout();
+                return false;
+            }
+        }
         function isAuthenticated () {
             var token = self.getToken();
             if (token) {
                 var params = parseJwt(token);
-                return Math.round(new Date().getTime() / 1000) <= params.exp;
+                if (params)
+                    return Math.round(new Date().getTime() / 1000) <= params.exp;
+                else
+                    return false;
             } else {
                 return false;
             }
-        }
-
-        function login () {
-            // fake login function
-            return getApi('/jwt', AuthAPI)
-                .then(function (response) {
-                    //$log.debug('calling jwt', response);
-                    self.saveToken(response.token);
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
         }
 
         function logout () {
@@ -117,7 +142,7 @@
         }
 
         function queryPatient (queryObj) {
-            return postApi('/query/patient', queryObj)
+            return postApi('/search', queryObj)
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {
@@ -126,7 +151,7 @@
         }
 
         function queryPatientDocuments (patientId) {
-            return getApi('/query/patient/' + patientId + '/documents')
+            return getApi('/patients/' + patientId + '/documents')
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {
@@ -162,8 +187,12 @@
         }
 
         function parseJwt (token) {
-            var base64 = token.split('.')[1].replace('-','+').replace('_','/');
-            return angular.fromJson($window.atob(base64));
+            if (validTokenFormat(token)) {
+                var base64 = token.split('.')[1].replace('-','+').replace('_','/');
+                return angular.fromJson($window.atob(base64));
+            } else {
+                return null;
+            }
         }
 
         function postApi (endpoint, postObject) {
@@ -173,6 +202,10 @@
                 }, function (response) {
                     return $q.reject(response);
                 });
+        }
+
+        function validTokenFormat(token) {
+            return (angular.isString(token) && token.match(/.*\..*\..*/));
         }
     }
 })();
