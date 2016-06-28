@@ -9,7 +9,7 @@
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.getAcfs = jasmine.createSpy('getAcfs');
-                    $delegate.addAcf = jasmine.createSpy('addAcf');
+                    $delegate.createAcf = jasmine.createSpy('createAcf');
                     $delegate.setAcf = jasmine.createSpy('setAcf');
                     return $delegate;
                 });
@@ -22,15 +22,13 @@
                 commonService = _commonService_;
                 commonService.getAcfs.and.returnValue($q.when({acfs: mock.acfs}));
                 commonService.setAcf.and.returnValue($q.when({}));
-                commonService.addAcf.and.returnValue($q.when({}));
+                commonService.createAcf.and.returnValue($q.when({response: {name: 'new acf', address: {}, id: 3}}));
 
                 el = angular.element('<ai-acf-entry></ai-acf-entry>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();
                 vm = el.isolateScope().vm;
-
-                //vm.queryForm = {$error: { required: [1, 2], invalid: [3], notAnError: 4 }};
             });
         });
 
@@ -61,23 +59,23 @@
             expect(vm.acfSubmit).toBeDefined();
         });
 
-        it('should call commonService.addAcf if one is in the newAcf field', function () {
+        it('should call commonService.createAcf if one is in the newAcf field', function () {
             vm.newAcf = 'New Acf';
-            vm.addNewAcf = true;
+            vm.createNewAcf = true;
             vm.acfSubmit();
-            expect(commonService.addAcf).toHaveBeenCalled();
+            expect(commonService.createAcf).toHaveBeenCalled();
         });
 
-        it('should not call commonService.addAcf if there isn\'t one in the newAcf field', function () {
+        it('should not call commonService.createAcf if there isn\'t one in the newAcf field', function () {
             vm.newAcf = '';
-            vm.addNewAcf = false;
+            vm.createNewAcf = false;
             vm.acfSubmit();
-            expect(commonService.addAcf).not.toHaveBeenCalled();
+            expect(commonService.createAcf).not.toHaveBeenCalled();
         });
 
         it('should call commonService.setAcf if there is one selected', function () {
             vm.newAcf = '';
-            vm.addNewAcf = false;
+            vm.createNewAcf = false;
             vm.selectAcf = vm.acfs[0];
             vm.acfSubmit();
             expect(commonService.setAcf).toHaveBeenCalled();
@@ -85,9 +83,17 @@
 
         it('should not call commonService.setAcf if the checkbox isnt\'t checked', function () {
             vm.selectAcf = null;
-            vm.addNewAcf = false;
+            vm.createNewAcf = false;
             vm.acfSubmit();
             expect(commonService.setAcf).not.toHaveBeenCalled();
+        });
+
+        it('should call setAcf after createAcf', function () {
+            vm.newAcf = 'New Acf';
+            vm.createNewAcf = true;
+            vm.acfSubmit();
+            el.isolateScope().$digest();
+            expect(commonService.setAcf).toHaveBeenCalled();
         });
     });
 })();

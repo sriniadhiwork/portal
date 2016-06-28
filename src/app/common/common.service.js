@@ -9,7 +9,7 @@
     function commonService ($http, $q, API, AuthAPI, LogoutRedirect, $log, $localStorage, $window) {
         var self = this;
 
-        self.addAcf = addAcf;
+        self.createAcf = createAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument
         self.getSamlUserToken = getSamlUserToken;
@@ -27,10 +27,9 @@
 
         ////////////////////////////////////////////////////////////////////
 
-        function addAcf (newAcf) {
-            return postApi('/acfs/create', {name: newAcf})
+        function createAcf (newAcf) {
+            return postApi('/acfs/create', newAcf)
                 .then(function (response) {
-                    self.saveToken(response); //DEBUG
                     return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);
@@ -80,12 +79,12 @@
         }
 
         function getUserAcf () {
-            if (self.isAuthenticated()) {
+            if (self.isAuthenticated() && self.hasAcf()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                return identity[4];
+                var acf = angular.fromJson(identity[3]);
+                return acf;
             } else {
-                self.logout();
                 return '';
             }
         }
@@ -94,9 +93,8 @@
             if (self.isAuthenticated()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                return identity[2] + ' ' + identity[3];
+                return identity[0] + ' ' + identity[1];
             } else {
-                self.logout();
                 return '';
             }
         }
@@ -105,12 +103,11 @@
             if (self.isAuthenticated()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                if (identity[4] && angular.isString(identity[4].name))
+                if (identity[3] && angular.fromJson(identity[3]) && angular.isString(angular.fromJson(identity[3]).name))
                     return true;
                 else
                     return false;
             } else {
-                self.logout();
                 return false;
             }
         }
@@ -164,10 +161,10 @@
         }
 
         function setAcf (acf) {
-            return postApi('/acfs/set', acf)
+            return postApi('/jwt/setAcf', acf, AuthAPI)
                 .then(function (response) {
-                    self.saveToken(response); //DEBUG
-                    return $q.when(response);
+                    self.saveToken(response.token);
+                    return $q.when(response.token);
                 }, function (error) {
                     return $q.reject(error);
                 });
@@ -195,8 +192,10 @@
             }
         }
 
-        function postApi (endpoint, postObject) {
-            return $http.post(API + endpoint, postObject)
+        function postApi (endpoint, postObject, api) {
+            if (api === null || angular.isUndefined(api))
+                api = API;
+            return $http.post(api + endpoint, postObject)
                 .then(function (response) {
                     return response.data;
                 }, function (response) {

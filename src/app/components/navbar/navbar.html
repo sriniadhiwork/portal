@@ -11,7 +11,7 @@
         <li ng-class="{ 'active' : (vm.active === 'home') }"><a ng-href="#/">Home</a></li>
         <li ng-class="{ 'active' : (vm.active === 'about') }"><a ng-href="#/about">About</a></li>
         <span ng-if="vm.isAuthenticated()">
-          <p class="ai-navbar-text navbar-text">{{ vm.getUsername() }}<span ng-if="vm.hasAcf()" (ACF: {{ vm.getUserAcf().name }})</span></p>
+          <p class="ai-navbar-text navbar-text">{{ vm.getUsername() }}<span ng-if="vm.hasAcf()"> (ACF: {{ vm.getUserAcf().name }})</span></p>
           <button type="button" ng-click="vm.logout()" class="btn btn-default navbar-btn">Log Out</button>
         </span>
       </ul>

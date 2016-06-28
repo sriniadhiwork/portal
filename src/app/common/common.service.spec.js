@@ -11,10 +11,8 @@
         var iatDate = new Date();
         var expDate = new Date();
         expDate.setDate(expDate.getDate() + 1);
-        var jwt = '{"username": "test2","id": ' + 2 + ',"iat": ' + iatDate.getTime() + ', "exp": ' + expDate.getTime() +
-            ',"Identity":[-1,"ADMIN","Bob","Jones",{"name":"ACF Number 1"}],"Authorities":["ROLE_ADMIN","DA_ADMIN"] }';
-        var jwtWithoutAcf = '{"username": "test2","id": ' + 2 + ',"iat": ' + iatDate.getTime() + ', "exp": ' + expDate.getTime() +
-            ',"Identity":[-1,"ADMIN","Bob","Jones",{}],"Authorities":["ROLE_ADMIN","DA_ADMIN"] }';
+        var jwt = angular.toJson({username: 'test2', id: 2, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: ['Bob','Jones','email@sample.org', {name: 'ACF Number 1', address: {}, id: 0}], Authorities: ['ROLE_ADMIN', 'DA_ADMIN']});
+        var jwtWithoutAcf = angular.toJson({username: 'test2', id: 2, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: ['Bob','Jones','email@sample.org', {}], Authorities: ['ROLE_ADMIN', 'DA_ADMIN']});
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
 
@@ -24,7 +22,7 @@
         mock.fakeDocument = {data: "<document><made><of>XML</of></made></document"};
         mock.organizations = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
-        mock.newAcf = 'New ACF';
+        mock.newAcf = {name: 'New ACF'};
 
         beforeEach(module('portal.common', 'portal.constants'));
 
@@ -50,13 +48,13 @@
             delete($localStorage.jwtToken);
 
             spyOn($window.location, 'replace');
-            requestHandler.addAcf = $httpBackend.whenPOST(API + '/acfs/create', {name: mock.newAcf}).respond(200, {results: {}});
+            requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, {results: {}});
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, {results: mock.fakeDocument});
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
-            requestHandler.setAcf = $httpBackend.whenPOST(API + '/acfs/set', {}).respond(200, {results: {}});
+            requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
         }));
 
         afterEach(function () {
@@ -201,11 +199,11 @@
                 $httpBackend.flush();
             });
 
-            it('should call /acfs/add', function () {
-                commonService.addAcf(mock.newAcf);
+            it('should call /acfs/create', function () {
+                commonService.createAcf(mock.newAcf);
                 $httpBackend.flush();
-                requestHandler.addAcf.respond(401, {message: 'a rejection'});
-                commonService.addAcf(mock.newAcf).then(function (response) {
+                requestHandler.createAcf.respond(401, {message: 'a rejection'});
+                commonService.createAcf(mock.newAcf).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();

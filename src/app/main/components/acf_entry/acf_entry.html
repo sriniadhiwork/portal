@@ -3,7 +3,7 @@
   <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required }">
     <label for="selectAcf" class="col-sm-4 control-label">ACF Selection</label>
     <div class="col-sm-8">
-      <select class="input-sm form-control" ng-model="vm.selectAcf" id="selectAcf" name="selectAcf" ng-disabled="vm.addNewAcf || vm.acfs.length === 0" ng-required="!vm.addNewAcf"
+      <select class="input-sm form-control" ng-model="vm.selectAcf" id="selectAcf" name="selectAcf" ng-disabled="vm.createNewAcf || vm.acfs.length === 0" ng-required="!vm.createNewAcf"
               ng-options="acf.name for acf in vm.acfs">
       </select>
       <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required">Field is required</span>
@@ -12,14 +12,14 @@
   <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.newAcf.$touched) && vm.queryForm.newAcf.$error.required }">
     <label for="newAcf" class="col-sm-4 control-label">New ACF</label>
     <div class="col-sm-8">
-      <input class="input-sm form-control" type="text" ng-model="vm.newAcf" id="newAcf" name="newAcf" ng-disabled="!vm.addNewAcf" ng-required="vm.addNewAcf"></input>
+      <input class="input-sm form-control" type="text" ng-model="vm.newAcf" id="newAcf" name="newAcf" ng-disabled="!vm.createNewAcf" ng-required="vm.createNewAcf"></input>
       <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.newAcf.$touched) && vm.queryForm.newAcf.$error.required">Field is required</span>
     </div>
   </div>
   <div class="form-group">
-    <label for="addNewAcf" class="col-sm-4 control-label">ACF not found?</label>
+    <label for="createNewAcf" class="col-sm-4 control-label">ACF not found?</label>
     <div class="col-sm-8">
-      <input class="input-sm" type="checkbox" ng-model="vm.addNewAcf" id="addNewAcf" name="addNewAcf" ng-disabled="!vm.acfs || vm.acfs.length === 0"></input>
+      <input class="input-sm" type="checkbox" ng-model="vm.createNewAcf" id="createNewAcf" name="createNewAcf" ng-disabled="!vm.acfs || vm.acfs.length === 0"></input>
     </div>
   </div>
   <div class="form-group">
