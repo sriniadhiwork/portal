@@ -20,7 +20,7 @@
                 commonService = _commonService_;
                 commonService.queryPatient.and.returnValue($q.when(mock.patientSearch));
 
-                el = angular.element('<ai-patient-search patient-results="[{query: {firstName: \'Bob\'}, results: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-search>');
+                el = angular.element('<ai-patient-search patient-queries="[{query: {firstName: \'Bob\'}, results: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-search>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();
@@ -42,7 +42,7 @@
 
         it('should have isolate scope object with instanciate members', function () {
             expect(vm).toEqual(jasmine.any(Object));
-            expect(vm.patientResults.length).toBe(1);
+            expect(vm.patientQueries.length).toBe(1);
         });
 
         it('should know how many errors the queryForm has', function () {
@@ -58,10 +58,10 @@
             expect(commonService.queryPatient).toHaveBeenCalled();
         });
 
-        it('should append the results of queryPatient to patientResults', function () {
+        it('should append the results of queryPatient to patientQueries', function () {
             vm.queryPatient();
             el.isolateScope().$digest();
-            expect(vm.patientResults.length).toBe(2);
+            expect(vm.patientQueries.length).toBe(2);
         });
 
         it('should initialize an empty array if one isn\'t provided', function () {
@@ -70,7 +70,7 @@
             $rootScope.$digest();
             vm = el.isolateScope().vm;
 
-            expect(vm.patientResults).toEqual([]);
+            expect(vm.patientQueries).toEqual([]);
         });
     });
 })();

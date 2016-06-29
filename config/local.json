@@ -1,0 +1,5 @@
+{
+    'API': '/rest',
+    'AuthAPI':  '/auth',
+    'LogoutRedirect': 'http://localhost:3000'
+}

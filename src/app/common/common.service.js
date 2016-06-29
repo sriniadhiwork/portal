@@ -3,28 +3,32 @@
 
     angular
         .module('portal.common')
-        .constant('API', '/rest')
-        .constant('AuthAPI', '/auth')
         .service('commonService', commonService);
 
     /** @ngInject */
-    function commonService ($http, $q, API, AuthAPI, $log, $localStorage, $window) {
+    function commonService ($http, $q, API, AuthAPI, LogoutRedirect, $log, $localStorage, $window) {
         var self = this;
 
+        self.createAcf = createAcf;
+        self.getAcfs = getAcfs;
         self.getDocument = getDocument
+        self.getSamlUserToken = getSamlUserToken;
         self.getToken = getToken;
+        self.getUserAcf = getUserAcf;
         self.getUsername = getUsername;
+        self.hasAcf = hasAcf;
         self.isAuthenticated = isAuthenticated;
-        self.login = login;
         self.logout = logout;
+        self.queryOrganizations = queryOrganizations;
         self.queryPatient = queryPatient;
         self.queryPatientDocuments = queryPatientDocuments;
         self.saveToken = saveToken;
+        self.setAcf = setAcf;
 
         ////////////////////////////////////////////////////////////////////
 
-        function getDocument (patientId, documentId) {
-            return getApi('/query/patient/' + patientId + '/documents/' + documentId)
+        function createAcf (newAcf) {
+            return postApi('/acfs/create', newAcf)
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {
@@ -32,51 +36,114 @@
                 });
         }
 
-        function getToken () {
-            //$log.debug('in getToken', $localStorage.jwtToken);
-            return $localStorage.jwtToken;
+        function getAcfs () {
+            return getApi('/acfs')
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
         }
 
-        function getUsername () {
-            //$log.debug('in getusername');
-            if (self.isAuthenticated()) {
+        function getDocument (patientId, documentId) {
+            return getApi('/patients/' + patientId + '/documents/' + documentId)
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function getSamlUserToken () {
+            return getApi('/jwt', AuthAPI)
+                .then(function (response) {
+                    return $q.when(response.token);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function getToken (callApi) {
+            var token = $localStorage.jwtToken;
+            if (!token && callApi) {
+                self.getSamlUserToken().then(function(token) {
+                    if (validTokenFormat(token)) {
+                        self.saveToken(token);
+                        return token;
+                    } else {
+                        return null
+                    }
+                });
+            }
+            return token;
+        }
+
+        function getUserAcf () {
+            if (self.isAuthenticated() && self.hasAcf()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                //$log.debug('identity', identity);
-                return identity[0] + ' ' + identity[1];
+                var acf = angular.fromJson(identity[3]);
+                return acf;
             } else {
-                self.logout();
                 return '';
             }
         }
 
-        function isAuthenticated () {
-            var token = self.getToken();
-            if (token) {
-                var params = parseJwt(token);
-                return Math.round(new Date().getTime() / 1000) <= params.exp;
+        function getUsername () {
+            if (self.isAuthenticated()) {
+                var token = self.getToken();
+                var identity = parseJwt(token).Identity;
+                return identity[0] + ' ' + identity[1];
+            } else {
+                return '';
+            }
+        }
+
+        function hasAcf () {
+            if (self.isAuthenticated()) {
+                var token = self.getToken();
+                var identity = parseJwt(token).Identity;
+                if (identity[3] && angular.fromJson(identity[3]) && angular.isString(angular.fromJson(identity[3]).name))
+                    return true;
+                else
+                    return false;
             } else {
                 return false;
             }
         }
+        function isAuthenticated () {
+            var valid;
+            var token = self.getToken();
+            if (token) {
+                var params = parseJwt(token);
+                if (params)
+                    valid =  Math.round(new Date().getTime() / 1000) <= params.exp;
+                else
+                    valid = false;
+                if (!valid)
+                    delete($localStorage.jwtToken);
+            } else {
+                valid = false;
+            }
+            return valid;
+        }
 
-        function login () {
-            return getApi('/jwt', AuthAPI)
+        function logout () {
+            delete($localStorage.jwtToken);
+            $window.location.replace(LogoutRedirect);
+        }
+
+        function queryOrganizations () {
+            return getApi('/organizations')
                 .then(function (response) {
-                    //$log.debug('calling jwt', response);
-                    self.saveToken(response.token);
                     return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);
                 });
         }
 
-        function logout () {
-            delete($localStorage.jwtToken);
-        }
-
         function queryPatient (queryObj) {
-            return postApi('/query/patient', queryObj)
+            return postApi('/search', queryObj)
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {
@@ -85,7 +152,7 @@
         }
 
         function queryPatientDocuments (patientId) {
-            return getApi('/query/patient/' + patientId + '/documents')
+            return getApi('/patients/' + patientId + '/documents')
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {
@@ -95,6 +162,16 @@
 
         function saveToken (token) {
             $localStorage.jwtToken = token;
+        }
+
+        function setAcf (acf) {
+            return postApi('/jwt/setAcf', acf, AuthAPI)
+                .then(function (response) {
+                    self.saveToken(response.token);
+                    return $q.when(response.token);
+                }, function (error) {
+                    return $q.reject(error);
+                });
         }
 
         ////////////////////////////////////////////////////////////////////
@@ -111,17 +188,27 @@
         }
 
         function parseJwt (token) {
-            var base64 = token.split('.')[1].replace('-','+').replace('_','/');
-            return angular.fromJson($window.atob(base64));
+            if (validTokenFormat(token)) {
+                var base64 = token.split('.')[1].replace('-','+').replace('_','/');
+                return angular.fromJson($window.atob(base64));
+            } else {
+                return null;
+            }
         }
 
-        function postApi (endpoint, postObject) {
-            return $http.post(API + endpoint, postObject)
+        function postApi (endpoint, postObject, api) {
+            if (api === null || angular.isUndefined(api))
+                api = API;
+            return $http.post(api + endpoint, postObject)
                 .then(function (response) {
                     return response.data;
                 }, function (response) {
                     return $q.reject(response);
                 });
+        }
+
+        function validTokenFormat(token) {
+            return (angular.isString(token) && token.match(/.*\..*\..*/));
         }
     }
 })();

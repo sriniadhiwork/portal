@@ -33,11 +33,11 @@ function browserSyncInit(baseDir, browser) {
         proxyMiddleware('/rest', {
             target: 'http://localhost:9000/',
             pathRewrite: { '^/rest' : '/' },
-            changeOrigin: true})
-        ,
+            changeOrigin: true
+        }),
         proxyMiddleware('/auth', {
             target: 'http://localhost:8080/',
-            pathRewrite: { '^/auth' : '/' },
+            pathRewrite: { '^/auth' : '' },
             changeOrigin: true
         })
     ];

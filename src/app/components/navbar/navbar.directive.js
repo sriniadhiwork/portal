@@ -25,8 +25,9 @@
             var vm = this;
 
             vm.isAuthenticated = isAuthenticated;
+            vm.getUserAcf = getUserAcf;
             vm.getUsername = getUsername;
-            vm.login = login;
+            vm.hasAcf = hasAcf;
             vm.logout = logout;
 
             activate();
@@ -34,19 +35,22 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                vm.login()
             }
 
             function isAuthenticated () {
                 return commonService.isAuthenticated();
             }
 
+            function getUserAcf () {
+                return commonService.getUserAcf();
+            }
+
             function getUsername () {
                 return commonService.getUsername();
             }
 
-            function login () {
-                commonService.login();
+            function hasAcf () {
+                return commonService.hasAcf();
             }
 
             function logout () {

@@ -6,20 +6,10 @@
         .run(runBlock);
 
     /** @ngInject */
-    function runBlock($log, $httpBackend) {
+    function runBlock($log, $httpBackend, $window, API, AuthAPI) {
 
-        var patients = [{id:2, firstName: 'Joe', lastName: 'Rogan'},
-                        {id:3, firstName: 'Sue', lastName: 'Samson'},
-                        {id:5, firstName: 'Fred', lastName: 'Johnson'},
-                        {id:6, firstName: 'Betty', lastName: 'McCready'},
-                        {id:7, firstName: 'George', lastName: 'Trunch'},
-                        {id:8, firstName: 'Lucy', lastName: 'Baker'},
-                        {id:9, firstName: 'Bill', lastName: 'Miller'},
-                        {id:10, firstName: 'Jen', lastName: 'ODonnel'},
-                        {id:11, firstName: 'Rob', lastName: 'Block'},
-                        {id:12, firstName: 'Kate', lastName: 'Robinson'},
-                        {id:13, firstName: 'Alex', lastName: 'Smithsonion'},
-                        {id:4, firstName: 'Bob', lastName: 'Jones'}];
+        var firstNames = ['Faustina', 'Janise', 'Dung', 'Chaya', 'Karry', 'Maye', 'Ericka', 'Apryl', 'Cara', 'Markus', 'Rosetta', 'Amie', 'Kris', 'Jerold', 'Lorena', 'Lanora', 'Tandra', 'Alvera', 'Keitha', 'Darlena', 'Ross', 'Hisako', 'Daniella', 'Bonny', 'Herma', 'Jacquline', 'Adan', 'Naoma', 'Katlyn', 'Gwyn', 'Hannah', 'Markus', 'Augustina', 'Dorothy', 'Fredrick', 'Clemente', 'Dawne', 'Courtney', 'Margherita', 'Adella'];
+        var lastNames = ['Beene', 'Fairbank', 'Petrarca', 'Klingler', 'Melvin', 'Cheeseman', 'Clagon', 'Odriscoll', 'Monteith', 'Yates', 'Brandenburg', 'Bolz', 'Laughter', 'Chaisson', 'Plourde', 'Miltenberger', 'Zubia', 'Rapozo', 'Voit', 'Muriel', 'Houghtaling', 'Hubbell', 'Weldy', 'Becraft', 'Weinman', 'Shawver', 'Suda', 'Shakespeare', 'Prado', 'Newman', 'Coney', 'Reddout', 'Cothren', 'Arocho', 'Brittian', 'Ingalls', 'Kuhn', 'Munford', 'Kobel', 'Duwe'];
         var documents = [{title: 'Title of a doc', filetype: 'C-CDA 1'},
                          {title: 'A study in search', filetype: 'docx'},
                          {title: 'Living the dream', filetype: 'pdf'},
@@ -32,23 +22,47 @@
         var aDocument = [{data: "<document>\n<made>\n<of attribute='a value'>XML</of>\n</made>\n</document>"},
                          {data: "<doc ns='docstring'>\n<thing>some txt</thing>\n<another-thing>more text</another-thing>\n</doc>"},
                          {data: "<ccda version='1.1'>\n<item>1</item>\n<item>2</item>\n<item>3</item>\n</ccda>"}];
+        var organizations = [{id: 1, name: 'Hospital', url: 'http://www.example.com', status: 'Active'},
+                             {id: 2, name: 'EHR For Fun', url: 'http://www.example.com/2', status: 'Inactive'},
+                             {id: 3, name: 'Ambulatory Center', url: 'http://www.example.com/3', status: 'Active'}];
+        var acfs = [{name: 'ACF', address: {}},
+                    {name: 'Another ACF', address: {}},
+                    {name: 'Fairground', address: {}},
+                    {name: 'Remote Hospital', address: {}},
+                    {name: 'Mall', address: {}},
+                    {name: 'Campsite', address: {}}];
 
-        $httpBackend.whenPOST('/rest/query/patient').respond(200, {results: randomArray(patients, Math.floor(Math.random() * 6) + 3)});
-        $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents$/).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
-        $httpBackend.whenGET(/\/rest\/query\/patient\/.*\/documents\/.*/).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
-
+        $httpBackend.whenGET (new RegExp(API + '/acfs')).respond(200, {acfs: randomArray(acfs, Math.floor(Math.random() * 4) + 2)});
+        $httpBackend.whenPOST(new RegExp(API + '/acfs/create')).respond(function(method, url, data) { return [200, {name: data, address: {}, id: acfs.length}, {}]; });
+        $httpBackend.whenGET (new RegExp(API + '/organizations')).respond(200, {results: randomArray(organizations, Math.floor(Math.random() * 3) + 3)});
+        $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents$')).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
+        $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents/.*')).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
+        $httpBackend.whenPOST(new RegExp(API + '/search$')).respond(200, {results: makePeople(Math.floor(Math.random() * 6) + 3)});
+        $httpBackend.whenGET (new RegExp(AuthAPI + '/.*')).passThrough();
+        $httpBackend.whenPOST(new RegExp(AuthAPI + '/.*')).passThrough();
         $httpBackend.whenGET(/^app/).passThrough();
-        $httpBackend.whenGET(/^\/auth/).passThrough();
+
         $log.info('runBlock end');
+
+        function makePeople(count) {
+            var ret = [];
+            for (var i = 0; i < count; i++) {
+                ret.push({firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+                          lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
+                          organization: organizations[Math.floor(Math.random() * organizations.length)],
+                          id: i});
+            }
+            return ret;
+        }
 
         function randomArray(array, count) {
             var ret = [];
             for (var i = 0; i < count; i++) {
                 ret.push(angular.copy(array[Math.floor(Math.random() * array.length)]));
+                ret[i].name = ret[i].name + ' ' + (i + 1);
                 ret[i].id = i;
             }
             return ret;
         }
     }
-
 })();

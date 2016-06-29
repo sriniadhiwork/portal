@@ -24,6 +24,7 @@ exports.config = {
         // needs jasmine to be in the global and protractor does not guarantee
         // this until inside the onPrepare function.
         var jasmineReporters = require('jasmine-reporters');
+        var jasmineSpecReporter = require('jasmine-spec-reporter');
         jasmine.getEnv().addReporter(
             new jasmineReporters.JUnitXmlReporter({
                 consolidateAll: true,
@@ -31,11 +32,17 @@ exports.config = {
                 filePrefix: 'e2e_junit'
             })
         );
+        jasmine.getEnv().addReporter(new jasmineSpecReporter({
+            displayStackTrace: 'all',
+            displaySpecDuration: true,
+            displaySuiteNumber: true
+        }));
     },
 
     // Options to be passed to Jasmine-node.
     jasmineNodeOpts: {
         showColors: true,
+        print: function () {},
         defaultTimeoutInterval: 30000
     }
 };

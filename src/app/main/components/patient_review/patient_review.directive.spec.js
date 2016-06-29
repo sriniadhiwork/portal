@@ -2,26 +2,25 @@
     'use strict';
 
     describe('main.aiPatientReview', function() {
-        var vm, el, $log, $q, commonService, mock;
+        var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
         mock = {patientDocuments: {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]}};
-        mock.fakeDocument = {data: "<document><made><of>XML</of></made></document"};
 
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.queryPatientDocuments = jasmine.createSpy();
-                    $delegate.getDocument = jasmine.createSpy();
                     return $delegate;
                 });
             });
-            inject(function($compile, $rootScope, _$log_, _$q_, _commonService_) {
+            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
+                $compile = _$compile_;
+                $rootScope = _$rootScope_;
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
                 commonService.queryPatientDocuments.and.returnValue($q.when(mock.patientDocuments));
-                commonService.getDocument.and.returnValue($q.when(mock.fakeDocument));
 
-                el = angular.element('<ai-patient-review patient-results="[{query: {firstName: \'Bob\'}, results: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}, {id: 2, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-search>');
+                el = angular.element('<ai-patient-review patient-queries="[{query: {firstName: \'Bob\'}, results: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}, {id: 2, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-review>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();
@@ -41,60 +40,63 @@
 
         it('should have isolate scope object with instanciate members', function () {
             expect(vm).toEqual(jasmine.any(Object));
-            expect(vm.patientResults.length).toBe(1);
+            expect(vm.patientQueries.length).toBe(1);
+            expect(vm.patients).toEqual([]);
         });
 
         it('should have a function to query for patient documents', function () {
             expect(vm.queryPatientDocuments).toBeDefined();
         });
 
-        it('should call commonService.queryPatient on query', function () {
-            vm.queryPatientDocuments(vm.patientResults[0].results[0], 0);
-            expect(commonService.queryPatientDocuments).toHaveBeenCalledWith(1);
+        it('should call commonService.queryPatientDocuments on query', function () {
+            vm.selectPatient(0,0);
+            expect(commonService.queryPatientDocuments).toHaveBeenCalledWith(vm.patients[0].id);
         });
 
-        it('should append the results of queryPatient to patientResults', function () {
-            vm.queryPatientDocuments(vm.patientResults[0].results[0], 0);
+        it('should append the results of queryPatient to patientQueries', function () {
+            vm.selectPatient(0,0);
+            vm.queryPatientDocuments(vm.patients[0]);
             el.isolateScope().$digest();
-            expect(vm.patientResults[0].results[0].documents.length).toBe(2);
+            expect(vm.patients[0].documents.length).toBe(2);
         });
 
-        it('should remove patients from the query who aren\'t the selected one', function () {
-            expect(vm.patientResults[0].results.length).toBe(2);
-            vm.queryPatientDocuments(vm.patientResults[0].results[0], 0);
-            expect(vm.patientResults[0].results.length).toBe(1);
+        it('should have a way to mark a patient as matching a query', function () {
+            expect(vm.selectPatient).toBeDefined();
         });
 
-        it('should have a way to get documents', function () {
-            //given
-            var patient = vm.patientResults[0].results[0];
-            vm.queryPatientDocuments(patient, 0);
-            el.isolateScope().$digest();
-            expect(patient.documents[0].status).toBeUndefined();
-
-            //when
-            vm.getDocument(patient, patient.documents[0]);
-            el.isolateScope().$digest();
-
-            //then
-            expect(commonService.getDocument).toHaveBeenCalled();
-            expect(patient.documents[0].status).toEqual('cached');
-            expect(patient.documents[0].data).toEqual(mock.fakeDocument.data);
+        it('should move patients from queries to patients list', function () {
+            var patient = angular.copy(vm.patientQueries[0].results[0]);
+            vm.selectPatient(0, 0);
+            expect(vm.patients[0]).toEqual(patient);
+            expect(vm.patientQueries.length).toBe(0);
         });
 
-        it('should have a way to activate a document', function () {
-            //given
-            var patient = vm.patientResults[0].results[0];
-            vm.queryPatientDocuments(patient, 0);
-            el.isolateScope().$digest();
-            vm.getDocument(patient, patient.documents[0]);
-            el.isolateScope().$digest();
+        it('shouldn\'t initialize an empty array if one is provided', function () {
+            el = angular.element('<ai-patient-review patients=[]></ai-patient-review>');
+            $compile(el)($rootScope.$new());
+            $rootScope.$digest();
+            vm = el.isolateScope().vm;
 
-            //when
-            vm.activateDocument(patient.documents[0]);
+            expect(vm.patients).toEqual([]);
+        });
 
-            //then
-            expect(vm.activeDocument).toEqual(patient.documents[0]);
+        it('should have a way to clear patient queries', function () {
+            // given a patient in the queue
+            expect(vm.patientQueries.length).toBe(1);
+
+            // when first result is cleared
+            vm.clearQuery(0);
+
+            // then expect to have no patients in queue
+            expect(vm.patientQueries.length).toBe(0);
+        });
+
+        it('should not try to clear an out of bounds query', function () {
+            expect(vm.patientQueries.length).toBe(1);
+
+            vm.clearQuery(2);
+
+            expect(vm.patientQueries.length).toBe(1);
         });
     });
 })();
