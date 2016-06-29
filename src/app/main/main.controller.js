@@ -6,11 +6,13 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, commonService) {
+    function MainController($log, commonService, AuthAPI) {
         var vm = this;
 
         vm.hasAcf = hasAcf;
         vm.isAuthenticated = isAuthenticated;
+
+        vm.authAction = AuthAPI + '/saml/login?disco=true';
 
         activate();
 

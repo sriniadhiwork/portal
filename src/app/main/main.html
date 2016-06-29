@@ -5,7 +5,7 @@
   <div ng-if="!vm.isAuthenticated()" class="fake-login">
     <div class="row">
       <div class="col-sm-2 col-sm-offset-5">
-        <form class="" role="log in" method="get" action="http://localhost:8080/saml/login?disco=true">
+        <form class="" role="log in" method="get" action="{{ vm.authAction }}">
           <button type="submit" class="btn btn-default btn-block">Log In</button>
           <!--<input type="hidden" name="idp" id="idp_http://idp.ssocircle.com" value="http://idp.ssocircle.com"></input>-->
           <input type="hidden" name="idp" id="idp_https://idp.testshib.org/idp/shibboleth" value="https://idp.testshib.org/idp/shibboleth"></input>
