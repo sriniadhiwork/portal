@@ -38,4 +38,4 @@ Protractor e2etests are run with ``gulp protractor``
 
 ## Dependencies
 
-Login, and hence everything, including e2e tests, depends on the [SAML Service Provider](../saml-service-provider) application running. The default configuration expects it to be running on http://localhost:8080
+Login, and hence everything, including e2e tests, depends on the [SAML Service Provider](https://github.com/pulse-admin/saml-service-provider) application running. The default configuration expects it to be running on http://localhost:8080
