@@ -112,16 +112,20 @@
             }
         }
         function isAuthenticated () {
+            var valid;
             var token = self.getToken();
             if (token) {
                 var params = parseJwt(token);
                 if (params)
-                    return Math.round(new Date().getTime() / 1000) <= params.exp;
+                    valid =  Math.round(new Date().getTime() / 1000) <= params.exp;
                 else
-                    return false;
+                    valid = false;
+                if (!valid)
+                    delete($localStorage.jwtToken);
             } else {
-                return false;
+                valid = false;
             }
+            return valid;
         }
 
         function logout () {

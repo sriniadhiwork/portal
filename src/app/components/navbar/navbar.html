@@ -1,19 +1,20 @@
 <nav class="navbar navbar-static-top navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#/">
-        <i class="fa fa-home fa-spin"></i> PULSE
+      <a class="navbar-brand" href="#/" ng-if="vm.isAuthenticated()">
+        <i class="fa fa-home fa-spin"></i> Patient Unified Lookup System for Emergencies (PULSE)
+      </a>
+      <a class="navbar-brand" href="#/" ng-if="!vm.isAuthenticated()">
+        <i class="fa fa-home fa-spin"></i> Disaster Healthcare Volunteer (DHV)
       </a>
     </div>
 
-    <div class="collapse navbar-collapse">
+    <div class="collapse navbar-collapse" ng-if="vm.isAuthenticated()">
       <ul class="nav navbar-nav navbar-right">
         <li ng-class="{ 'active' : (vm.active === 'home') }"><a ng-href="#/">Home</a></li>
         <li ng-class="{ 'active' : (vm.active === 'about') }"><a ng-href="#/about">About</a></li>
-        <span ng-if="vm.isAuthenticated()">
-          <p class="ai-navbar-text navbar-text">{{ vm.getUsername() }}<span ng-if="vm.hasAcf()"> (ACF: {{ vm.getUserAcf().name }})</span></p>
-          <button type="button" ng-click="vm.logout()" class="btn btn-default navbar-btn">Log Out</button>
-        </span>
+        <p class="ai-navbar-text navbar-text">{{ vm.getUsername() }}<span ng-if="vm.hasAcf()"> (ACF: {{ vm.getUserAcf().name }})</span></p>
+        <button type="button" ng-click="vm.logout()" class="btn btn-default navbar-btn">Log Out</button>
       </ul>
     </div>
   </div>
