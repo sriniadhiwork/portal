@@ -2,7 +2,7 @@
   <header>
     <ai-navbar active="home"></ai-navbar>
   </header>
-  <div ng-if="!vm.isAuthenticated()">
+  <div ng-if="!vm.isAuthenticated()" class="fake-login">
     <div class="row">
       <div class="col-sm-2 col-sm-offset-5">
         <form class="" role="log in" method="get" action="http://localhost:8080/saml/login?disco=true">
