@@ -35,14 +35,8 @@
 
             function acfSubmit () {
                 if (vm.createNewAcf) {
-/*                    commonService.createAcf(vm.newAcf).then(function (response) {
-                        $log.debug(response);
-                        commonService.setAcf(response);
-                    });
-                    */
                     commonService.createAcf(vm.newAcf).then(function (response) {
                         commonService.setAcf(response);
-                        $log.debug('response is', response);
                     });
                 } else {
                     if (vm.selectAcf) {
@@ -52,9 +46,15 @@
             }
 
             function getAcfs () {
+                vm.acfs = [];
                 commonService.getAcfs().then(function (response) {
-                    vm.acfs = response.acfs;
-                    vm.createNewAcf = (!vm.acfs || !vm.acfs.length > 0);
+                    vm.acfs = vm.acfs.concat(response.acfs);
+                    if (vm.acfs.length === 0) {
+                        vm.createNewAcf = true;
+                    }
+                },function () {
+                    vm.acfs = [];
+                    vm.createNewAcf = true;
                 });
             }
         }

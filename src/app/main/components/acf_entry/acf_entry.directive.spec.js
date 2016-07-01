@@ -55,6 +55,24 @@
             expect(vm.acfs.length).toBe(2);
         });
 
+        it('should set createNewAcf to true if getAcfs has 0 acfs', function () {
+            commonService.getAcfs.and.returnValue($q.when({acfs: []}));
+            vm.getAcfs();
+            el.isolateScope().$digest();
+            expect(commonService.getAcfs).toHaveBeenCalled();
+            expect(vm.acfs.length).toBe(0);
+            expect(vm.createNewAcf).toBe(true);
+        });
+
+        it('should set acfs to an empty array if the server fails', function () {
+            commonService.getAcfs.and.returnValue($q.reject({}));
+            vm.getAcfs();
+            el.isolateScope().$digest();
+            expect(commonService.getAcfs).toHaveBeenCalled();
+            expect(vm.acfs.length).toBe(0);
+            expect(vm.createNewAcf).toBe(true);
+        });
+
         it('should have a function to submit the active ACF', function () {
             expect(vm.acfSubmit).toBeDefined();
         });

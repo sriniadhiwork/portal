@@ -25,21 +25,17 @@
         var organizations = [{id: 1, name: 'Hospital', url: 'http://www.example.com', status: 'Active'},
                              {id: 2, name: 'EHR For Fun', url: 'http://www.example.com/2', status: 'Inactive'},
                              {id: 3, name: 'Ambulatory Center', url: 'http://www.example.com/3', status: 'Active'}];
-        var acfs = [{name: 'ACF', address: {}},
-                    {name: 'Another ACF', address: {}},
-                    {name: 'Fairground', address: {}},
-                    {name: 'Remote Hospital', address: {}},
-                    {name: 'Mall', address: {}},
-                    {name: 'Campsite', address: {}}];
 
-        $httpBackend.whenGET (new RegExp(API + '/acfs')).respond(200, {acfs: randomArray(acfs, Math.floor(Math.random() * 4) + 2)});
-        $httpBackend.whenPOST(new RegExp(API + '/acfs/create')).respond(function(method, url, data) { return [200, {name: data, address: {}, id: acfs.length}, {}]; });
-        $httpBackend.whenGET (new RegExp(API + '/organizations')).respond(200, {results: randomArray(organizations, Math.floor(Math.random() * 3) + 3)});
+        //$httpBackend.whenGET (new RegExp(API + '/organizations')).respond(200, {results: randomArray(organizations, Math.floor(Math.random() * 3) + 3)});
         $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents$')).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
         $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents/.*')).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
         $httpBackend.whenPOST(new RegExp(API + '/search$')).respond(200, {results: makePeople(Math.floor(Math.random() * 6) + 3)});
-        $httpBackend.whenGET (new RegExp(AuthAPI + '/.*')).passThrough();
-        $httpBackend.whenPOST(new RegExp(AuthAPI + '/.*')).passThrough();
+
+        $httpBackend.whenGET (new RegExp(API + '/acfs')).passThrough();
+        $httpBackend.whenPOST(new RegExp(API + '/acfs/create')).passThrough();
+        $httpBackend.whenGET (new RegExp(API + '/organizations')).passThrough();
+        $httpBackend.whenGET (new RegExp(AuthAPI)).passThrough();
+        $httpBackend.whenPOST(new RegExp(AuthAPI)).passThrough();
         $httpBackend.whenGET(/^app/).passThrough();
 
         $log.info('runBlock end');
