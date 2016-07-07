@@ -14,8 +14,7 @@
             controller: PatientReviewController,
             controllerAs: 'vm',
             bindToController: {
-                patientQueries: '=',
-                patients: '=?'
+                patientQueries: '='
             }
         };
 
@@ -26,17 +25,14 @@
             var vm = this;
 
             vm.clearQuery = clearQuery;
-            vm.queryPatientDocuments = queryPatientDocuments;
-            vm.selectPatient = selectPatient;
+            vm.isStageable = isStageable;
+            vm.stagePatientRecords = stagePatientRecords;
 
             activate();
 
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                if (angular.isUndefined(vm.patients)) {
-                    vm.patients = [];
-                }
             }
 
             function clearQuery (index) {
@@ -45,17 +41,29 @@
                 }
             }
 
-            function queryPatientDocuments (patient) {
-                commonService.queryPatientDocuments(patient.id).then(function (response) {
-                    patient.documents = response.results;
-                });
+            function isStageable (queryIndex) {
+                var ret = false;
+                for (var i = 0; i < vm.patientQueries[queryIndex].records.length; i++) {
+                    ret = ret || vm.patientQueries[queryIndex].records[i].selected;
+                }
+                return ret;
             }
 
-            function selectPatient (queryIndex, patientIndex) {
-                var patient = vm.patientQueries[queryIndex].results[patientIndex];
-                vm.queryPatientDocuments(patient);
-                vm.patients.push(patient);
-                vm.clearQuery(queryIndex);
+            function stagePatientRecords (queryIndex) {
+                if (vm.isStageable(queryIndex)) {
+                    var newPatient = {
+                        patientRecords: [],
+                        patient: vm.patientQueries[queryIndex].patient,
+                        id: vm.patientQueries[queryIndex].id
+                    };
+                    for (var i = 0; i < vm.patientQueries[queryIndex].records.length; i++) {
+                        if (vm.patientQueries[queryIndex].records[i].selected) {
+                            newPatient.patientRecords.push(vm.patientQueries[queryIndex].records[i].id);
+                        }
+                    }
+                    commonService.stagePatient(newPatient);
+                    vm.clearQuery(queryIndex);
+                }
             }
         }
     }

@@ -17,12 +17,13 @@
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
 
         var mock = {};
-        mock.patientQueryResponse = {results: [{id:2, firstName: 'Joe', lastName: 'Rogan'}, {id:3, firstName: 'Sue', lastName: 'Samson'}]};
-        mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
-        mock.fakeDocument = {data: "<document><made><of>XML</of></made></document"};
-        mock.organizations = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
+        mock.fakeDocument = {data: "<document><made><of>XML</of></made></document"};
         mock.newAcf = {name: 'New ACF'};
+        mock.organizations = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
+        mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
+        mock.patientQueryResponse = {results: [{id:2, firstName: 'Joe', lastName: 'Rogan'}, {id:3, firstName: 'Sue', lastName: 'Samson'}]};
+        mock.stagePatient = { patientRecords: [0,1], id: 1, patient: { firstName: 'Joe', lastName: 'Watson' } };
 
         beforeEach(module('portal.common', 'portal.constants'));
 
@@ -56,6 +57,7 @@
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
+            requestHandler.stagePatient = $httpBackend.whenPOST(API + '/queries/1/stage', mock.stagePatient).respond(200, {});
         }));
 
         afterEach(function () {
@@ -228,6 +230,16 @@
                 commonService.editAcf(mock.newAcf);
                 $httpBackend.flush();
                 expect(commonService.setAcf).toHaveBeenCalledWith(mock.newAcf);
+            });
+
+            it('should call /queries/{{id}}/stage', function () {
+                commonService.stagePatient(mock.stagePatient);
+                $httpBackend.flush();
+                requestHandler.stagePatient.respond(401, {message: 'a rejection'});
+                commonService.stagePatient(mock.stagePatient).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
             });
         });
     });

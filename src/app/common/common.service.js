@@ -25,6 +25,7 @@
         self.queryPatientDocuments = queryPatientDocuments;
         self.saveToken = saveToken;
         self.setAcf = setAcf;
+        self.stagePatient = stagePatient;
 
         ////////////////////////////////////////////////////////////////////
 
@@ -180,6 +181,15 @@
                 .then(function (response) {
                     self.saveToken(response.token);
                     return $q.when(response.token);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function stagePatient (patient) {
+            return postApi('/queries/' + patient.id + '/stage', patient)
+                .then(function (response) {
+                    return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);
                 });

@@ -1,73 +1,93 @@
-<div class="component patient-review" ng-if="vm.patientQueries.length > 0">
-  <h1>Query results</h1>
-  <div ng-repeat="query in vm.patientQueries track by $index" class="animated fadeIn">
-    <h2>Patient Information</h2>
-    <span class="pull-right"><button class="btn btn-danger" ng-click="vm.clearQuery($index)"><i class="fa fa-close"></i><span class="sr-only">Clear Query</span></button></span>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="cols">Field</th>
-          <th scope="cols">Value</th>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <td colspan="2"><a href ng-click="query.showResults = !query.showResults">{{ query.showResults ? 'Hide' : 'Show'}} {{ query.results.length }} result<span ng-if="query.results.length > 1">s</span></a></td>
-        </tr>
-      </tfoot>
-      <tbody>
-        <tr ng-if="query.query.patientId">
-          <td>Patient ID</td>
-          <td>{{ query.query.patientId }}</td>
-        </tr>
-        <tr ng-if="query.query.firstName">
-          <td>First Name</td>
-          <td>{{ query.query.firstName }}</td>
-        </tr>
-        <tr ng-if="query.query.lastName">
-          <td>Last Name</td>
-          <td>{{ query.query.lastName }}</td>
-        </tr>
-        <tr ng-if="query.query.dob">
-          <td>DOB</td>
-          <td>{{ query.query.dob | date : 'mediumDate' : 'UTC' }}</td>
-        </tr>
-        <tr ng-if="query.query.gender">
-          <td>Gender</td>
-          <td>{{ query.query.gender }}</td>
-        </tr>
-        <tr ng-if="query.query.ssn">
-          <td>SSN</td>
-          <td>{{ query.query.ssn }}</td>
-        </tr>
-        <tr ng-if="query.query.homeZip">
-          <td>Home Zip</td>
-          <td>{{ query.query.homeZip }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div ng-if="query.showResults" class="">
-      <h3>Results</h3>
+<div class="component patient-review container-fluid" ng-if="vm.patientQueries.length > 0">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>Queries</h1>
+    </div>
+  </div>
+  <div ng-repeat="query in vm.patientQueries track by $index" class="animated fadeIn row">
+    <div class="col-sm-12">
+      <h2>
+        Queried Patient Information
+        <span class="pull-right"><button class="btn btn-danger" ng-click="vm.clearQuery($index)"><i class="fa fa-close"></i><span class="sr-only">Clear Query</span></button></span>
+      </h2>
       <table class="table">
         <thead>
           <tr>
-            <th scope="cols">First name</th>
-            <th scope="cols">Last name</th>
-            <th scope="cols">Organization</th>
-            <th scope="cols" ng-if="query.results.length > 1">Action</th>
+            <th scope="cols">Field</th>
+            <th scope="cols">Value</th>
           </tr>
         </thead>
+        <tfoot>
+          <tr>
+            <td colspan="2"><a href ng-click="query.showRecords = !query.showRecords">{{ query.showRecords ? 'Hide' : 'Show'}} {{ query.records.length }} record<span ng-if="query.records.length > 1">s</span></a></td>
+          </tr>
+        </tfoot>
         <tbody>
-          <tr ng-repeat="patient in query.results track by $index">
-            <td>{{ patient.firstName }}</td>
-            <td>{{ patient.lastName }}</td>
-            <td>{{ patient.organization.name }}</td>
-            <td ng-if="query.results.length > 1">
-              <button class="btn btn-success btn-block" ng-click="vm.selectPatient($parent.$parent.$index, $index)">Select patient <i class="fa fa-check"></i></button>
-            </td>
+          <tr ng-if="query.query.firstName">
+            <td>First Name</td>
+            <td>{{ query.query.firstName }}</td>
+          </tr>
+          <tr ng-if="query.query.lastName">
+            <td>Last Name</td>
+            <td>{{ query.query.lastName }}</td>
+          </tr>
+          <tr ng-if="query.query.dob">
+            <td>DOB</td>
+            <td>{{ query.query.dob | date : 'mediumDate' : 'UTC' }}</td>
+          </tr>
+          <tr ng-if="query.query.gender">
+            <td>Gender</td>
+            <td>{{ query.query.gender }}</td>
+          </tr>
+          <tr ng-if="query.query.ssn">
+            <td>SSN</td>
+            <td>{{ query.query.ssn }}</td>
+          </tr>
+          <tr ng-if="query.query.homeZip">
+            <td>Home Zip</td>
+            <td>{{ query.query.homeZip }}</td>
           </tr>
         </tbody>
       </table>
+    </div>
+    <div ng-if="query.showRecords" class="col-sm-12">
+      <h3>Possible Patient Records</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="cols" class="text-center"><span class="sr-only">Select record location<span></th>
+            <th scope="cols">First name</th>
+            <th scope="cols">Last name</th>
+            <th scope="cols">Organization</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="record in query.records track by $index">
+            <td class="text-center"><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}" class="sr-only">Select {{ record.firstName }} {{ record.lastName }}</label><input id="recordSelect{{$parent.$parent.$index}}-{{$index}}" type="checkbox" ng-model="record.selected"></td>
+            <td><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}" ng-click="query.patient.firstName = record.firstName">{{ record.firstName }}</label></td>
+            <td><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}" ng-click="query.patient.lastName = record.lastName">{{ record.lastName }}</label></td>
+            <td><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}">{{ record.organization.name }}</label></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="form-horizontal" ng-if="query.showRecords">
+      <div class="col-sm-12"><h3>True patient information</h3></div>
+      <div class="form-group">
+        <label for="truePatient{{$parent.$parent.index}}FirstName" class="control-label col-sm-4">First Name</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="truePatient{{$parent.$parent.index}}FirstName" ng-model="query.patient.firstName">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="truePatient{{$parent.$parent.index}}LastName" class="control-label col-sm-4">Last Name</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="truePatient{{$parent.$parent.index}}LastName" ng-model="query.patient.lastName">
+        </div>
+      </div>
+      <div class="col-sm-6 col-sm-offset-4">
+        <button class="btn btn-block btn-success" ng-click="vm.stagePatientRecords($parent.$index)" ng-disabled="!vm.isStageable($parent.$index)">Select record(s) for patient <i class="fa fa-save"></i></button>
+      </div>
     </div>
   </div>
 </div>
