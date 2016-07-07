@@ -10,6 +10,7 @@
         var self = this;
 
         self.createAcf = createAcf;
+        self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument
         self.getSamlUserToken = getSamlUserToken;
@@ -24,12 +25,23 @@
         self.queryPatientDocuments = queryPatientDocuments;
         self.saveToken = saveToken;
         self.setAcf = setAcf;
+        self.stagePatient = stagePatient;
 
         ////////////////////////////////////////////////////////////////////
 
         function createAcf (newAcf) {
             return postApi('/acfs/create', newAcf)
                 .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function editAcf (anAcf) {
+            return postApi('/acfs/' + anAcf.id + '/edit', anAcf)
+                .then(function (response) {
+                    self.setAcf(response.acf);
                     return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);
@@ -79,7 +91,7 @@
         }
 
         function getUserAcf () {
-            if (self.isAuthenticated() && self.hasAcf()) {
+            if (self.hasAcf()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
                 var acf = angular.fromJson(identity[3]);
@@ -169,6 +181,15 @@
                 .then(function (response) {
                     self.saveToken(response.token);
                     return $q.when(response.token);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function stagePatient (patient) {
+            return postApi('/queries/' + patient.id + '/stage', patient)
+                .then(function (response) {
+                    return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);
                 });

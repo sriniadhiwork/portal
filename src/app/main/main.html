@@ -17,9 +17,9 @@
   <div ng-if="vm.isAuthenticated()">
     <div ng-if="!vm.hasAcf()">
       <div class="row">
-        <div class="col-sm-4 col-sm-offset-4">
-          <ai-acf-entry>
-          </ai-acf-entry>
+        <div class="col-sm-6 col-sm-offset-3">
+          <ai-acf>
+          </ai-acf>
         </div>
       </div>
     </div>
@@ -30,8 +30,7 @@
              patient-queries="vm.patientQueries">
           </ai-patient-search>
           <ai-patient-review
-             patient-queries="vm.patientQueries"
-             patients="vm.patients">
+             patient-queries="vm.patientQueries">
           </ai-patient-review>
         </div>
         <div class="col-sm-4">
@@ -43,6 +42,8 @@
         <div class="col-sm-4">
           <ai-organization-status>
           </ai-organization-status>
+          <ai-acf>
+          </ai-acf>
         </div>
       </div>
       <div class="row">

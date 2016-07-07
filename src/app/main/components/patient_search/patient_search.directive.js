@@ -52,7 +52,7 @@
             function queryPatient () {
                 var queryObj = {query: angular.copy(vm.query)};
                 commonService.queryPatient(queryObj.query).then(function (response) {
-                    queryObj.results = response.results;
+                    queryObj.records = response.records;
                     vm.patientQueries.push(queryObj);
                 });
             }
