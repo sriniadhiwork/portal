@@ -49,6 +49,7 @@
 
             spyOn($window.location, 'replace');
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, {results: {}});
+            requestHandler.editAcf = $httpBackend.whenPOST(API + '/acfs/1/edit', mock.newAcf).respond(200, {acf: mock.newAcf});
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, {results: mock.fakeDocument});
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
@@ -207,6 +208,26 @@
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();
+            });
+
+            it('should call /acfs/{{id}}/edit', function () {
+                mock.newAcf.id = 1;
+                $httpBackend.expectPOST(AuthAPI + '/jwt/setAcf', mock.newAcf).respond(200, {});
+                commonService.editAcf(mock.newAcf);
+                $httpBackend.flush();
+                requestHandler.editAcf.respond(401, {message: 'a rejection'});
+                commonService.editAcf(mock.newAcf).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call setAcf after calling acfs/edit', function () {
+                spyOn(commonService, 'setAcf');
+                mock.newAcf.id = 1;
+                commonService.editAcf(mock.newAcf);
+                $httpBackend.flush();
+                expect(commonService.setAcf).toHaveBeenCalledWith(mock.newAcf);
             });
         });
     });

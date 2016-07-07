@@ -1,15 +1,18 @@
 (function() {
     'use strict';
 
-    describe('main.aiAcfEntry', function() {
+    describe('main.aiAcf', function() {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
         mock = { acfs: [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}]};
 
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
-                    $delegate.getAcfs = jasmine.createSpy('getAcfs');
                     $delegate.createAcf = jasmine.createSpy('createAcf');
+                    $delegate.editAcf = jasmine.createSpy('editAcf');
+                    $delegate.getAcfs = jasmine.createSpy('getAcfs');
+                    $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
+                    $delegate.hasAcf = jasmine.createSpy('hasAcf');
                     $delegate.setAcf = jasmine.createSpy('setAcf');
                     return $delegate;
                 });
@@ -20,11 +23,14 @@
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
-                commonService.getAcfs.and.returnValue($q.when({acfs: mock.acfs}));
-                commonService.setAcf.and.returnValue($q.when({}));
                 commonService.createAcf.and.returnValue($q.when({response: {name: 'new acf', address: {}, id: 3}}));
+                commonService.editAcf.and.returnValue($q.when({acf: mock.acfs[1]}));
+                commonService.getAcfs.and.returnValue($q.when({acfs: mock.acfs}));
+                commonService.getUserAcf.and.returnValue(mock.acfs[0]);
+                commonService.hasAcf.and.returnValue(true);
+                commonService.setAcf.and.returnValue($q.when({}));
 
-                el = angular.element('<ai-acf-entry></ai-acf-entry>');
+                el = angular.element('<ai-acf></ai-acf>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();
@@ -112,6 +118,50 @@
             vm.acfSubmit();
             el.isolateScope().$digest();
             expect(commonService.setAcf).toHaveBeenCalled();
+        });
+
+        it('should know if the user has an ACF', function () {
+            expect(vm.hasAcf).toBeDefined();
+            expect(vm.hasAcf()).toBeTruthy();
+        });
+
+        it('should have a function to get the user\`s ACF', function () {
+            expect(vm.getUserAcf).toBeDefined();
+        });
+
+        it('should call commonService.getUserAcf on load', function () {
+            expect(commonService.getUserAcf).toHaveBeenCalled();
+            expect(vm.acf).toBe(mock.acfs[0]);
+        });
+
+        it('should have a function to edit the current ACF', function () {
+            expect(vm.editAcf).toBeDefined();
+        });
+
+        it('should call commonService.editAcf when one is edited', function () {
+            vm.editAcf();
+            expect(commonService.editAcf).toHaveBeenCalledWith(mock.acfs[0]);
+        });
+
+        it('should turn off editing after editAcf is called', function () {
+            vm.isEditing = true;
+            vm.editAcf();
+            expect(vm.isEditing).toBe(false);
+        });
+
+        it('should set the local acf to the edited acf', function () {
+            vm.editAcf();
+            el.isolateScope().$digest();
+            expect(vm.acf).toBe(mock.acfs[1]);
+        });
+
+        it('should have a function to cancel editing', function () {
+            expect(vm.cancelEditing).toBeDefined();
+        });
+
+        it('should call commonService.getUserAcf on cancel', function () {
+            vm.cancelEditing();
+            expect(commonService.getUserAcf).toHaveBeenCalled();
         });
     });
 })();
