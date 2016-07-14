@@ -15,6 +15,7 @@
         self.getDocument = getDocument
         self.getSamlUserToken = getSamlUserToken;
         self.getToken = getToken;
+        self.getTokenVals = getTokenVals;
         self.getUserAcf = getUserAcf;
         self.getUsername = getUsername;
         self.hasAcf = hasAcf;
@@ -87,6 +88,11 @@
                     }
                 });
             }
+            return token;
+        }
+
+        function getTokenVals () {
+            var token = parseJwt(self.getToken());
             return token;
         }
 

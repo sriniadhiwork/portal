@@ -134,6 +134,12 @@
                 commonService.getToken(true);
                 $httpBackend.flush();
             });
+
+            it('should have a way to display the token parameters', function () {
+                commonService.saveToken(mock.token);
+                var storedJwt = commonService.getTokenVals();
+                expect(storedJwt).toEqual(angular.fromJson(jwt));
+            });
         });
 
         describe('should call /rest endpoints', function () {
