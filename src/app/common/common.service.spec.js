@@ -8,11 +8,12 @@
 
         requestHandler = {};
 
+        var user = { firstName: 'Bob', lastName: 'Jones', email: 'email@sample.org', username: 'aUsername', authorities: ['ROLE_ADMIN'] }
         var iatDate = new Date();
         var expDate = new Date();
         expDate.setDate(expDate.getDate() + 1);
-        var jwt = angular.toJson({username: 'test2', id: 2, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: ['Bob','Jones','email@sample.org', {name: 'ACF Number 1', address: {}, id: 0}], Authorities: ['ROLE_ADMIN', 'DA_ADMIN']});
-        var jwtWithoutAcf = angular.toJson({username: 'test2', id: 2, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: ['Bob','Jones','email@sample.org', {}], Authorities: ['ROLE_ADMIN', 'DA_ADMIN']});
+        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.firstName, user.lastName, user.email, {name: 'ACF Number 1', address: {}, id: 0}], Authorities: user.authorities});
+        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.firstName, user.lastName, user.email, {}], Authorities: user.authorities});
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
 
@@ -139,6 +140,13 @@
                 commonService.saveToken(mock.token);
                 var storedJwt = commonService.getTokenVals();
                 expect(storedJwt).toEqual(angular.fromJson(jwt));
+            });
+
+            it('should have a way to get the entire user\'s identity', function () {
+                expect(commonService.getUserIdentity).toBeDefined();
+                expect(commonService.getUserIdentity()).not.toEqual(user);
+                commonService.saveToken(mock.token);
+                expect(commonService.getUserIdentity()).toEqual(user);
             });
         });
 
