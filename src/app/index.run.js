@@ -28,6 +28,7 @@
 
         // fake backend data
         //$httpBackend.whenGET (new RegExp(API + '/organizations')).respond(200, {results: randomArray(organizations, Math.floor(Math.random() * 3) + 3)});
+        $httpBackend.whenGET (new RegExp(API + '/patients$')).respond(200, {results: makePeople(Math.floor(Math.random() * 6) + 3)});
         $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents$')).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
         $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents/.*')).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
         $httpBackend.whenPOST(new RegExp(API + '/search$')).respond(200, {records: makePeople(Math.floor(Math.random() * 6) + 3)});
