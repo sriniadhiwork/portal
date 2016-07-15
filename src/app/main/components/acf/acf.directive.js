@@ -28,6 +28,7 @@
             vm.getAcfs = getAcfs;
             vm.getUserAcf = getUserAcf;
             vm.hasAcf = hasAcf;
+            vm.submitForm = submitForm;
 
             activate();
 
@@ -82,6 +83,16 @@
 
             function hasAcf () {
                 return commonService.hasAcf();
+            }
+
+            function submitForm () {
+                if (!vm.queryForm.$invalid) {
+                    if (vm.hasAcf()) {
+                        vm.editAcf();
+                    } else {
+                        vm.acfSubmit();
+                    }
+                }
             }
         }
     }

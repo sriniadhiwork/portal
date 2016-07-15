@@ -17,7 +17,8 @@
       <label for="selectAcf" class="col-sm-4 control-label">ACF Selection</label>
       <div class="col-sm-8">
         <select class="input-sm form-control" ng-model="vm.selectAcf" id="selectAcf" name="selectAcf" ng-disabled="vm.createNewAcf || !vm.acfs || vm.acfs.length === 0" ng-required="!vm.createNewAcf"
-                ng-options="acf.name for acf in vm.acfs">
+                ng-options="acf.name for acf in vm.acfs"
+                ng-keyup="$event.keyCode == 13 && vm.submitForm()">
         </select>
         <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required">Field is required</span>
       </div>
@@ -29,50 +30,50 @@
     <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.newAcfName.$touched) && vm.queryForm.newAcfName.$error.required }">
       <label for="newAcfName" class="col-sm-4 control-label">Name</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.acf.name" id="newAcfName" name="newAcfName" ng-disabled="!vm.createNewAcf" ng-required="vm.createNewAcf"></input>
+        <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.name" id="newAcfName" name="newAcfName" ng-disabled="!vm.createNewAcf" ng-required="vm.createNewAcf"></input>
         <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.newAcfName.$touched) && vm.queryForm.newAcfName.$error.required">Field is required</span>
       </div>
     </div>
     <div class="form-group">
       <label for="newAcfPhone" class="col-sm-4 control-label">Phone</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.acf.phone" id="newAcfPhone" name="newAcfPhone" ng-disabled="!vm.createNewAcf"></input>
+        <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.phone" id="newAcfPhone" name="newAcfPhone" ng-disabled="!vm.createNewAcf"></input>
       </div>
     </div>
     <div class="form-group">
       <label for="newAcfStreet1" class="col-sm-4 control-label">Street Line 1</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.acf.address.street1" id="newAcfStreet1" name="newAcfStreet1" ng-disabled="!vm.createNewAcf"></input>
+        <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.street1" id="newAcfStreet1" name="newAcfStreet1" ng-disabled="!vm.createNewAcf"></input>
       </div>
     </div>
     <div class="form-group">
       <label for="newAcfStreet2" class="col-sm-4 control-label">Street Line 2</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.acf.address.street2" id="newAcfStreet2" name="newAcfStreet2" ng-disabled="!vm.createNewAcf"></input>
+        <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.street2" id="newAcfStreet2" name="newAcfStreet2" ng-disabled="!vm.createNewAcf"></input>
       </div>
     </div>
     <div class="form-group">
       <label for="newAcfCity" class="col-sm-4 control-label">City</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.acf.address.city" id="newAcfCity" name="newAcfCity" ng-disabled="!vm.createNewAcf"></input>
+        <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.city" id="newAcfCity" name="newAcfCity" ng-disabled="!vm.createNewAcf"></input>
       </div>
     </div>
     <div class="form-group">
       <label for="newAcfState" class="col-sm-4 control-label">State</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.acf.address.state" id="newAcfState" name="newAcfState" ng-disabled="!vm.createNewAcf"></input>
+        <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.state" id="newAcfState" name="newAcfState" ng-disabled="!vm.createNewAcf"></input>
       </div>
     </div>
     <div class="form-group">
       <label for="newAcfZip" class="col-sm-4 control-label">Zip</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.acf.address.zip" id="newAcfZip" name="newAcfZip" ng-disabled="!vm.createNewAcf"></input>
+        <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.zip" id="newAcfZip" name="newAcfZip" ng-disabled="!vm.createNewAcf"></input>
       </div>
     </div>
     <div class="form-group">
       <label for="newAcfCountry" class="col-sm-4 control-label">Country</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.acf.address.country" id="newAcfCountry" name="newAcfCountry" ng-disabled="!vm.createNewAcf"></input>
+        <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.country" id="newAcfCountry" name="newAcfCountry" ng-disabled="!vm.createNewAcf"></input>
       </div>
     </div>
     <div class="form-group" ng-if="!vm.hasAcf()">
