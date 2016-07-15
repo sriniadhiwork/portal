@@ -13,6 +13,7 @@
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument
+        self.getPatientsAtAcf = getPatientsAtAcf
         self.getSamlUserToken = getSamlUserToken;
         self.getToken = getToken;
         self.getTokenVals = getTokenVals;
@@ -61,6 +62,15 @@
 
         function getDocument (patientId, documentId) {
             return getApi('/patients/' + patientId + '/documents/' + documentId)
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function getPatientsAtAcf () {
+            return getApi('/patients')
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {

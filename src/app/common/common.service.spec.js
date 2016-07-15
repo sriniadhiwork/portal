@@ -55,6 +55,7 @@
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, {results: mock.fakeDocument});
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
+            requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
@@ -251,6 +252,17 @@
                 $httpBackend.flush();
                 requestHandler.stagePatient.respond(401, {message: 'a rejection'});
                 commonService.stagePatient(mock.stagePatient).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /patients', function () {
+                expect(commonService.getPatientsAtAcf).toBeDefined();
+                commonService.getPatientsAtAcf();
+                $httpBackend.flush();
+                requestHandler.getPatientsAtAcf.respond(401, {message: 'a rejection'});
+                commonService.getPatientsAtAcf().then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();

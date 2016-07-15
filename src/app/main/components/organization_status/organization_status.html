@@ -1,19 +1,23 @@
-<div class="component organization-status">
-  <h1>Organization Status</h1>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="cols">Organization</th>
-        <th scope="cols">Endpoint</th>
-        <th scope="cols">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="org in vm.organizations track by $index">
-        <td>{{ org.name }}</td>
-        <td>{{ org.url }}</td>
-        <td>{{ org.status }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="component container-fluid organization-status">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>Organization Status</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="cols">Organization</th>
+            <th scope="cols">Endpoint</th>
+            <th scope="cols">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="org in vm.organizations track by $index">
+            <td>{{ org.name }}</td>
+            <td>{{ org.url }}</td>
+            <td>{{ org.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
