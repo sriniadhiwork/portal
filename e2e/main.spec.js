@@ -5,12 +5,20 @@ require('jasmine-given');
 describe('the main view', function () {
     var page = require('./main.po');
 
-    Given(function () { page.visitPage(); });
+    beforeAll(function () {
+        page.visitPage();
+        fakeLogin(page);
+    });
+
+    beforeEach(function () {
+        page.visitPage();
+    });
 
     afterEach(function () {
         browser.executeScript('window.sessionStorage.clear();');
         browser.executeScript('window.localStorage.clear();');
     });
+
 
     describe('the acf-entry section', function () {
 
@@ -65,23 +73,23 @@ describe('the main view', function () {
             });
 
             /*
-            describe('should not send a query without a patient ID', function () {
-                When(function () { page.patientSearch.patientIdEl.clear(); });
-                When(function () { page.patientSearch.submitBtnEl.click(); });
+              describe('should not send a query without a patient ID', function () {
+              When(function () { page.patientSearch.patientIdEl.clear(); });
+              When(function () { page.patientSearch.submitBtnEl.click(); });
 
-                Then(function () { expect(page.patientSearch.submitBtnEl.isEnabled()).toBeFalsy(); });
-            });
+              Then(function () { expect(page.patientSearch.submitBtnEl.isEnabled()).toBeFalsy(); });
+              });
 
-            describe('should re-enable the search button when the patient id is entered', function () {
-                When(function () { page.patientSearch.patientIdEl.clear(); });
-                When(function () { page.patientSearch.submitBtnEl.click(); });
+              describe('should re-enable the search button when the patient id is entered', function () {
+              When(function () { page.patientSearch.patientIdEl.clear(); });
+              When(function () { page.patientSearch.submitBtnEl.click(); });
 
-                Then(function () {
-                    doSearch(page).then(function () {
-                        Then(function () { expect(page.patientSearch.submitBtnEl.isEnabled()).toBeTruthy(); });
-                    });
-                });
-            });
+              Then(function () {
+              doSearch(page).then(function () {
+              Then(function () { expect(page.patientSearch.submitBtnEl.isEnabled()).toBeTruthy(); });
+              });
+              });
+              });
             */
         });
 
@@ -212,6 +220,15 @@ describe('the main view', function () {
         });
     });
 });
+
+function fakeLogin (page) {
+    page.fakeLogin.submit.click();
+    browser.ignoreSynchronization = true;
+    element(by.css('input[name=j_username]')).sendKeys('myself');
+    element(by.css('input[name=j_password]')).sendKeys('myself');
+    element(by.css('input[type=submit]')).click();
+    browser.ignoreSynchronization = false;
+}
 
 function selectAcf (page) {
     return page.acfEntry.acfSelectOptions.last().click();

@@ -2,25 +2,23 @@
     'use strict';
 
     describe('main.aiPatientReview', function() {
-        var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
-        mock = {patientDocuments: {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]}};
+        var $compile, $rootScope, vm, el, $log, commonService;
 
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
-                    $delegate.queryPatientDocuments = jasmine.createSpy();
+                    $delegate.stagePatient = jasmine.createSpy('stagePatient');
                     return $delegate;
                 });
             });
-            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
+            inject(function(_$compile_, _$rootScope_, _$log_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;
-                $q = _$q_;
                 commonService = _commonService_;
-                commonService.queryPatientDocuments.and.returnValue($q.when(mock.patientDocuments));
+                commonService.stagePatient.and.returnValue({});
 
-                el = angular.element('<ai-patient-review patient-queries="[{query: {firstName: \'Bob\'}, results: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}, {id: 2, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-review>');
+                el = angular.element('<ai-patient-review patient-queries="[{query: {firstName: \'Bob\'}, id: 3, records: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}, {id: 2, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-review>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();
@@ -41,62 +39,71 @@
         it('should have isolate scope object with instanciate members', function () {
             expect(vm).toEqual(jasmine.any(Object));
             expect(vm.patientQueries.length).toBe(1);
-            expect(vm.patients).toEqual([]);
         });
 
-        it('should have a function to query for patient documents', function () {
-            expect(vm.queryPatientDocuments).toBeDefined();
+        describe('clearing queries', function () {
+
+            it('should have a way to clear patient queries', function () {
+                expect(vm.patientQueries.length).toBe(1);
+                vm.clearQuery(0);
+                expect(vm.patientQueries.length).toBe(0);
+            });
+
+            it('should not try to clear an out of bounds query', function () {
+                expect(vm.patientQueries.length).toBe(1);
+                vm.clearQuery(2);
+                expect(vm.patientQueries.length).toBe(1);
+            });
         });
 
-        it('should call commonService.queryPatientDocuments on query', function () {
-            vm.selectPatient(0,0);
-            expect(commonService.queryPatientDocuments).toHaveBeenCalledWith(vm.patients[0].id);
-        });
+        describe('staging patients', function() {
 
-        it('should append the results of queryPatient to patientQueries', function () {
-            vm.selectPatient(0,0);
-            vm.queryPatientDocuments(vm.patients[0]);
-            el.isolateScope().$digest();
-            expect(vm.patients[0].documents.length).toBe(2);
-        });
+            var patientQuery;
 
-        it('should have a way to mark a patient as matching a query', function () {
-            expect(vm.selectPatient).toBeDefined();
-        });
+            beforeEach(function () {
+                vm.patientQueries[0].records[0].selected = true;
+                vm.patientQueries[0].records[1].selected = false;
+                vm.patientQueries[0].patient = { firstName: 'Bob', lastName: 'Smith' };
+                patientQuery = { patientRecords: [1], id: 3 };
+                patientQuery.patient = vm.patientQueries[0].patient;
+            });
 
-        it('should move patients from queries to patients list', function () {
-            var patient = angular.copy(vm.patientQueries[0].results[0]);
-            vm.selectPatient(0, 0);
-            expect(vm.patients[0]).toEqual(patient);
-            expect(vm.patientQueries.length).toBe(0);
-        });
+            it('should have a function to select multiple patientRecords', function () {
+                expect(vm.stagePatientRecords).toBeDefined();
+            });
 
-        it('shouldn\'t initialize an empty array if one is provided', function () {
-            el = angular.element('<ai-patient-review patients=[]></ai-patient-review>');
-            $compile(el)($rootScope.$new());
-            $rootScope.$digest();
-            vm = el.isolateScope().vm;
+            it('should remove a staged query when selected', function () {
+                vm.stagePatientRecords(0);
+                expect(vm.patientQueries.length).toBe(0);
+            });
 
-            expect(vm.patients).toEqual([]);
-        });
+            it('should call commonService.stagePatient when stagePatientRecords is called', function () {
+                vm.patientQueries[0].records[0].selected = true;
+                vm.stagePatientRecords(0);
+                expect(commonService.stagePatient).toHaveBeenCalledWith(patientQuery);
+            });
 
-        it('should have a way to clear patient queries', function () {
-            // given a patient in the queue
-            expect(vm.patientQueries.length).toBe(1);
+            it('should not call commonService.stagePatient if there are no selected records', function () {
+                vm.patientQueries[0].records[0].selected = false;
+                vm.stagePatientRecords(0);
+                expect(commonService.stagePatient).not.toHaveBeenCalled();
+            });
 
-            // when first result is cleared
-            vm.clearQuery(0);
+            it('should not remove the query if there are no selected records', function () {
+                vm.patientQueries[0].records[0].selected = false;
+                vm.stagePatientRecords(0);
+                expect(vm.patientQueries.length).not.toBe(0);
+            });
 
-            // then expect to have no patients in queue
-            expect(vm.patientQueries.length).toBe(0);
-        });
+            it('should have a function to check if the patient can be staged', function () {
+                expect(vm.isStageable).toBeDefined();
+            });
 
-        it('should not try to clear an out of bounds query', function () {
-            expect(vm.patientQueries.length).toBe(1);
-
-            vm.clearQuery(2);
-
-            expect(vm.patientQueries.length).toBe(1);
+            it('should only be stageable if at least one record is selected', function () {
+                expect(vm.isStageable(0)).toBe(true);
+                vm.patientQueries[0].records[0].selected = false;
+                expect(vm.isStageable(0)).toBe(false);
+            });
         });
     });
 })();

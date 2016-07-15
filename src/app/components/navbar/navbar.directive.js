@@ -27,6 +27,7 @@
             vm.isAuthenticated = isAuthenticated;
             vm.getUserAcf = getUserAcf;
             vm.getUsername = getUsername;
+            vm.hasAcf = hasAcf;
             vm.logout = logout;
 
             activate();
@@ -46,6 +47,10 @@
 
             function getUsername () {
                 return commonService.getUsername();
+            }
+
+            function hasAcf () {
+                return commonService.hasAcf();
             }
 
             function logout () {

@@ -10,7 +10,7 @@
                     $delegate.getUsername = jasmine.createSpy();
                     $delegate.getUserAcf = jasmine.createSpy();
                     $delegate.isAuthenticated = jasmine.createSpy();
-                    $delegate.login = jasmine.createSpy();
+                    $delegate.hasAcf = jasmine.createSpy();
                     $delegate.logout = jasmine.createSpy();
                     return $delegate;
                 });
@@ -47,10 +47,16 @@
             expect(commonService.isAuthenticated).toHaveBeenCalled();
         });
 
-        it('should know if the user is logged in', function () {
+        it('should know the user\'s username', function () {
             expect(vm.getUsername).toBeDefined();
             vm.getUsername();
             expect(commonService.getUsername).toHaveBeenCalled();
+        });
+
+        it('should know if the user has an ACF', function () {
+            expect(vm.hasAcf).toBeDefined();
+            vm.hasAcf();
+            expect(commonService.hasAcf).toHaveBeenCalled();
         });
 
         it('should know the user\'s ACF', function () {
