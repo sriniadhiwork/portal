@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules/
 bower_components/
 coverage/
@@ -7,3 +8,14 @@ coverage/
 dist/
 test_reports/
 /build/
+=======
+node_modules/
+bower_components/
+coverage/
+.sass-cache/
+.idea/
+.tmp/
+dist/
+test_reports/
+/src/app/index.constants.js
+>>>>>>> c00e56bae4d48296508070ba7d458aa00871e2dd

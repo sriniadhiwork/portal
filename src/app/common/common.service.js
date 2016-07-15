@@ -6,7 +6,7 @@
         .service('commonService', commonService);
 
     /** @ngInject */
-    function commonService ($http, $q, API, AuthAPI, $log, $localStorage, $window) {
+    function commonService ($http, $q, API, AuthAPI, LogoutRedirect, $log, $localStorage, $window) {
         var self = this;
 
         self.addAcf = addAcf;
@@ -104,6 +104,7 @@
 
         function logout () {
             delete($localStorage.jwtToken);
+            $window.location.replace(LogoutRedirect);
         }
 
         function queryOrganizations () {
