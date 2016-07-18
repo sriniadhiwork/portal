@@ -13,9 +13,12 @@
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument
+        self.getPatientsAtAcf = getPatientsAtAcf
         self.getSamlUserToken = getSamlUserToken;
         self.getToken = getToken;
+        self.getTokenVals = getTokenVals;
         self.getUserAcf = getUserAcf;
+        self.getUserIdentity = getUserIdentity;
         self.getUsername = getUsername;
         self.hasAcf = hasAcf;
         self.isAuthenticated = isAuthenticated;
@@ -66,6 +69,15 @@
                 });
         }
 
+        function getPatientsAtAcf () {
+            return getApi('/patients')
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
         function getSamlUserToken () {
             return getApi('/jwt', AuthAPI)
                 .then(function (response) {
@@ -90,6 +102,11 @@
             return token;
         }
 
+        function getTokenVals () {
+            var token = parseJwt(self.getToken());
+            return token;
+        }
+
         function getUserAcf () {
             if (self.hasAcf()) {
                 var token = self.getToken();
@@ -99,6 +116,21 @@
             } else {
                 return '';
             }
+        }
+
+        function getUserIdentity () {
+            var user = { firstName: null, lastName: null, email: null, username: null, authorities: [] };
+            if (self.isAuthenticated()) {
+                var token = parseJwt(self.getToken());
+                var identity = token.Identity;
+                var authorities = token.Authorities;
+                user.firstName = identity[0];
+                user.lastName = identity[1];
+                user.email = identity[2];
+                user.authorities = authorities;
+                user.username = token.sub;
+            }
+            return user;
         }
 
         function getUsername () {

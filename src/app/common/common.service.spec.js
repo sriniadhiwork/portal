@@ -8,11 +8,12 @@
 
         requestHandler = {};
 
+        var user = { firstName: 'Bob', lastName: 'Jones', email: 'email@sample.org', username: 'aUsername', authorities: ['ROLE_ADMIN'] }
         var iatDate = new Date();
         var expDate = new Date();
         expDate.setDate(expDate.getDate() + 1);
-        var jwt = angular.toJson({username: 'test2', id: 2, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: ['Bob','Jones','email@sample.org', {name: 'ACF Number 1', address: {}, id: 0}], Authorities: ['ROLE_ADMIN', 'DA_ADMIN']});
-        var jwtWithoutAcf = angular.toJson({username: 'test2', id: 2, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: ['Bob','Jones','email@sample.org', {}], Authorities: ['ROLE_ADMIN', 'DA_ADMIN']});
+        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.firstName, user.lastName, user.email, {name: 'ACF Number 1', address: {}, id: 0}], Authorities: user.authorities});
+        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.firstName, user.lastName, user.email, {}], Authorities: user.authorities});
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
 
@@ -54,6 +55,7 @@
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, {results: mock.fakeDocument});
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
+            requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
@@ -133,6 +135,19 @@
                 $httpBackend.expectGET(AuthAPI + '/jwt');
                 commonService.getToken(true);
                 $httpBackend.flush();
+            });
+
+            it('should have a way to display the token parameters', function () {
+                commonService.saveToken(mock.token);
+                var storedJwt = commonService.getTokenVals();
+                expect(storedJwt).toEqual(angular.fromJson(jwt));
+            });
+
+            it('should have a way to get the entire user\'s identity', function () {
+                expect(commonService.getUserIdentity).toBeDefined();
+                expect(commonService.getUserIdentity()).not.toEqual(user);
+                commonService.saveToken(mock.token);
+                expect(commonService.getUserIdentity()).toEqual(user);
             });
         });
 
@@ -237,6 +252,17 @@
                 $httpBackend.flush();
                 requestHandler.stagePatient.respond(401, {message: 'a rejection'});
                 commonService.stagePatient(mock.stagePatient).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /patients', function () {
+                expect(commonService.getPatientsAtAcf).toBeDefined();
+                commonService.getPatientsAtAcf();
+                $httpBackend.flush();
+                requestHandler.getPatientsAtAcf.respond(401, {message: 'a rejection'});
+                commonService.getPatientsAtAcf().then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();

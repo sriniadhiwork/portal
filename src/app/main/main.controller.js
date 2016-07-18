@@ -12,6 +12,7 @@
         vm.hasAcf = hasAcf;
         vm.isAuthenticated = isAuthenticated;
 
+        vm.commonService = commonService;
         vm.authAction = AuthAPI + '/saml/login?disco=true';
 
         activate();

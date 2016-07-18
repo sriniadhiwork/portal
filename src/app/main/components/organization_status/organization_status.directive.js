@@ -25,7 +25,7 @@
             vm.queryOrganizations = queryOrganizations;
             vm.stopInterval = stopInterval;
 
-            vm.INTERVAL_MILLIS = 30000;
+            vm.INTERVAL_MILLIS = 300000;
 
             activate();
 

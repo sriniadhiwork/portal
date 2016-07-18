@@ -25,7 +25,7 @@
                 commonService = _commonService_;
                 commonService.createAcf.and.returnValue($q.when({response: {name: 'new acf', address: {}, id: 3}}));
                 commonService.editAcf.and.returnValue($q.when({acf: mock.acfs[1]}));
-                commonService.getAcfs.and.returnValue($q.when({acfs: mock.acfs}));
+                commonService.getAcfs.and.returnValue($q.when(mock.acfs));
                 commonService.getUserAcf.and.returnValue(mock.acfs[0]);
                 commonService.hasAcf.and.returnValue(true);
                 commonService.setAcf.and.returnValue($q.when({}));
@@ -62,7 +62,7 @@
         });
 
         it('should set createNewAcf to true if getAcfs has 0 acfs', function () {
-            commonService.getAcfs.and.returnValue($q.when({acfs: []}));
+            commonService.getAcfs.and.returnValue($q.when([]));
             vm.getAcfs();
             el.isolateScope().$digest();
             expect(commonService.getAcfs).toHaveBeenCalled();
@@ -162,6 +162,33 @@
         it('should call commonService.getUserAcf on cancel', function () {
             vm.cancelEditing();
             expect(commonService.getUserAcf).toHaveBeenCalled();
+        });
+
+        it('should have a function to submit the form on enter', function () {
+            expect(vm.submitForm).toBeDefined();
+        });
+
+        it('should call the edit form function on enter if user has acf', function () {
+            vm.isEditing = true;
+            spyOn(vm, 'editAcf');
+            vm.submitForm();
+            expect(vm.editAcf).toHaveBeenCalled();
+        });
+
+        it('should call acfSubmit on enter if the user has no acf', function () {
+            commonService.hasAcf.and.returnValue(false);
+            spyOn(vm, 'acfSubmit');
+            vm.submitForm();
+            el.isolateScope().$digest();
+            expect(vm.acfSubmit).toHaveBeenCalled();
+        });
+
+        it('should not allow submitForm to be called if the form is invalid', function () {
+            spyOn(vm, 'editAcf');
+            vm.queryForm.$invalid = true;
+            vm.isEditing = true;
+            vm.submitForm()
+            expect(vm.editAcf).not.toHaveBeenCalled();
         });
     });
 })();
