@@ -67,7 +67,7 @@
             function getAcfs () {
                 vm.acfs = [];
                 commonService.getAcfs().then(function (response) {
-                    vm.acfs = vm.acfs.concat(response.acfs);
+                    vm.acfs = vm.acfs.concat(response);
                     if (vm.acfs.length === 0) {
                         vm.createNewAcf = true;
                     }

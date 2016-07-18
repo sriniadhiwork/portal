@@ -25,7 +25,7 @@
                 commonService = _commonService_;
                 commonService.createAcf.and.returnValue($q.when({response: {name: 'new acf', address: {}, id: 3}}));
                 commonService.editAcf.and.returnValue($q.when({acf: mock.acfs[1]}));
-                commonService.getAcfs.and.returnValue($q.when({acfs: mock.acfs}));
+                commonService.getAcfs.and.returnValue($q.when(mock.acfs));
                 commonService.getUserAcf.and.returnValue(mock.acfs[0]);
                 commonService.hasAcf.and.returnValue(true);
                 commonService.setAcf.and.returnValue($q.when({}));
@@ -62,7 +62,7 @@
         });
 
         it('should set createNewAcf to true if getAcfs has 0 acfs', function () {
-            commonService.getAcfs.and.returnValue($q.when({acfs: []}));
+            commonService.getAcfs.and.returnValue($q.when([]));
             vm.getAcfs();
             el.isolateScope().$digest();
             expect(commonService.getAcfs).toHaveBeenCalled();
