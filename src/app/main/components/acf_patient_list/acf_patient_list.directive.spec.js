@@ -3,16 +3,24 @@
 
     describe('main.aiAcfPatientList', function() {
         var vm, el, $log, $q, commonService, mock;
-        mock = {patientDocuments: {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]}};
-        mock.fakeDocument = {data: "<document><made><of>XML</of></made></document"};
-        mock.userAcf = 'ACF Number 1';
+        mock = {
+            patients: [{
+                firstName: 'Bob', id: 1, lastName: 'Smith',
+                documents: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]
+            }, {
+                id: 2, firstName: 'Bob2', lastName: 'SmithSon',
+                documents: []
+            }],
+            fakeDocument: {data: "<document><made><of>XML</of></made></document"},
+            userAcf: 'ACF Number 1'
+        };
 
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
-                    $delegate.queryPatientDocuments = jasmine.createSpy();
-                    $delegate.getDocument = jasmine.createSpy();
-                    $delegate.getUserAcf = jasmine.createSpy('commonService.getUserAcf');
+                    $delegate.getDocument = jasmine.createSpy('getDocument');
+                    $delegate.getPatientsAtAcf = jasmine.createSpy('getPatientsAtAcf');
+                    $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
                     return $delegate;
                 });
             });
@@ -20,11 +28,11 @@
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
-                commonService.queryPatientDocuments.and.returnValue($q.when(mock.patientDocuments));
                 commonService.getDocument.and.returnValue($q.when(mock.fakeDocument));
+                commonService.getPatientsAtAcf.and.returnValue($q.when({results: mock.patients}));
                 commonService.getUserAcf.and.returnValue($q.when(mock.userAcf));
 
-                el = angular.element('<ai-acf-patient-list patients="[{firstName: \'Bob\', id: 1, lastName: \'Smith\', documents: [{},{}]}, {id: 2, firstName: \'Bob\', lastName: \'Smith\'}]"></ai-acf-patient-list>');
+                el = angular.element('<ai-acf-patient-list></ai-acf-patient-list>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();
@@ -72,11 +80,9 @@
         });
 
         it('should not try to clear an out of bounds query', function () {
-            expect(vm.patients.length).toBe(2);
-
-            vm.dischargePatient(2);
-
-            expect(vm.patients.length).toBe(2);
+            var patientQueueLength = vm.patients.length;
+            vm.dischargePatient(patientQueueLength + 1);
+            expect(vm.patients.length).toBe(patientQueueLength);
         });
 
         it('should know the user\'s ACF', function () {
@@ -84,6 +90,10 @@
             vm.getUserAcf().then(function (response) {
                 expect(response).toEqual(mock.userAcf);
             });
+        });
+
+        it('should call "getPatientsAtAcf" on load', function () {
+            expect(commonService.getPatientsAtAcf).toHaveBeenCalled();
         });
     });
 })();

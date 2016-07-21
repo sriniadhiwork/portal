@@ -28,12 +28,15 @@
             vm.getAcfs = getAcfs;
             vm.getUserAcf = getUserAcf;
             vm.hasAcf = hasAcf;
+            vm.submitForm = submitForm;
 
             activate();
 
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.createNewAcf = false;
+                vm.showFormErrors = false;
                 vm.getAcfs();
                 vm.acf = vm.getUserAcf();
                 vm.isEditing = false;
@@ -66,7 +69,7 @@
             function getAcfs () {
                 vm.acfs = [];
                 commonService.getAcfs().then(function (response) {
-                    vm.acfs = vm.acfs.concat(response.acfs);
+                    vm.acfs = vm.acfs.concat(response);
                     if (vm.acfs.length === 0) {
                         vm.createNewAcf = true;
                     }
@@ -82,6 +85,16 @@
 
             function hasAcf () {
                 return commonService.hasAcf();
+            }
+
+            function submitForm () {
+                if (!vm.queryForm.$invalid) {
+                    if (vm.hasAcf()) {
+                        vm.editAcf();
+                    } else {
+                        vm.acfSubmit();
+                    }
+                }
             }
         }
     }

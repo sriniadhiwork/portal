@@ -14,7 +14,6 @@
             controller: AcfPatientListController,
             controllerAs: 'vm',
             bindToController: {
-                patients: '=',
                 activeDocument: '=?'
             }
         };
@@ -35,6 +34,10 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.patients = [];
+                commonService.getPatientsAtAcf().then(function (response) {
+                    vm.patients = response.results;
+                });
             }
 
             function activateDocument (doc) {
