@@ -2,23 +2,27 @@
     'use strict';
 
     describe('main.aiPatientReview', function() {
-        var $compile, $rootScope, vm, el, $log, commonService;
+        var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
+        mock = {queries: [{query: {firstName: 'Bob'}, id: 3, records: [{id: 1, firstName: 'Bob', lastName: 'Smith'}, {id: 2, firstName: 'Bob', lastName: 'Smith'}]}, {lastName: 'smith'}]};
 
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
+                    $delegate.getQueries = jasmine.createSpy('getQueries');
                     $delegate.stagePatient = jasmine.createSpy('stagePatient');
                     return $delegate;
                 });
             });
-            inject(function(_$compile_, _$rootScope_, _$log_, _commonService_) {
+            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;
+                $q = _$q_;
                 commonService = _commonService_;
+                commonService.getQueries.and.returnValue($q.when(mock.queries));
                 commonService.stagePatient.and.returnValue({});
 
-                el = angular.element('<ai-patient-review patient-queries="[{query: {firstName: \'Bob\'}, id: 3, records: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}, {id: 2, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-review>');
+                el = angular.element('<ai-patient-review></ai-patient-review>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();
@@ -38,21 +42,36 @@
 
         it('should have isolate scope object with instanciate members', function () {
             expect(vm).toEqual(jasmine.any(Object));
-            expect(vm.patientQueries.length).toBe(1);
+        });
+
+        describe('finding queries', function () {
+
+            it('should have a function to find a user\'s queries', function () {
+                expect(vm.getQueries).toBeDefined();
+            });
+
+            it('should get queries for a user at login', function () {
+                expect(commonService.getQueries).toHaveBeenCalled();
+                expect(vm.patientQueries.length).toBe(2);
+            });
         });
 
         describe('clearing queries', function () {
 
+            beforeEach(function () {
+                vm.patientQueries = angular.copy(mock.queries);
+            });
+
             it('should have a way to clear patient queries', function () {
-                expect(vm.patientQueries.length).toBe(1);
+                expect(vm.patientQueries.length).toBe(2);
                 vm.clearQuery(0);
-                expect(vm.patientQueries.length).toBe(0);
+                expect(vm.patientQueries.length).toBe(1);
             });
 
             it('should not try to clear an out of bounds query', function () {
-                expect(vm.patientQueries.length).toBe(1);
-                vm.clearQuery(2);
-                expect(vm.patientQueries.length).toBe(1);
+                expect(vm.patientQueries.length).toBe(2);
+                vm.clearQuery(3);
+                expect(vm.patientQueries.length).toBe(2);
             });
         });
 
@@ -61,6 +80,7 @@
             var patientQuery;
 
             beforeEach(function () {
+                vm.patientQueries = angular.copy(mock.queries);
                 vm.patientQueries[0].records[0].selected = true;
                 vm.patientQueries[0].records[1].selected = false;
                 vm.patientQueries[0].patient = { firstName: 'Bob', lastName: 'Smith' };
@@ -74,7 +94,7 @@
 
             it('should remove a staged query when selected', function () {
                 vm.stagePatientRecords(0);
-                expect(vm.patientQueries.length).toBe(0);
+                expect(vm.patientQueries.length).toBe(1);
             });
 
             it('should call commonService.stagePatient when stagePatientRecords is called', function () {

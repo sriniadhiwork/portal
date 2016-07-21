@@ -30,13 +30,14 @@
         $httpBackend.whenGET (new RegExp(API + '/patients$')).respond(200, {results: makePeople(Math.floor(Math.random() * 6) + 3)});
         $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents$')).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
         $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents/.*')).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
-        $httpBackend.whenPOST(new RegExp(API + '/search$')).respond(200, {records: makePeople(Math.floor(Math.random() * 6) + 3)});
-        $httpBackend.whenPOST(new RegExp(API + '/queries/.*/stage')).respond(function(method, url, data) { return [200, data, {}]; });
 
         // real "go to actual endpoints" data
         $httpBackend.whenGET (new RegExp(API + '/acfs')).passThrough();
         $httpBackend.whenPOST(new RegExp(API + '/acfs')).passThrough();
+        $httpBackend.whenPOST(new RegExp(API + '/search')).passThrough();
         $httpBackend.whenGET (new RegExp(API + '/organizations')).passThrough();
+        $httpBackend.whenGET (new RegExp(API + '/queries')).passThrough();
+        $httpBackend.whenPOST(new RegExp(API + '/queries')).passThrough();
         $httpBackend.whenGET (new RegExp(AuthAPI)).passThrough();
         $httpBackend.whenPOST(new RegExp(AuthAPI)).passThrough();
         $httpBackend.whenGET(/^app/).passThrough();

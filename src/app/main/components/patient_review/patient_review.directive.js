@@ -13,9 +13,7 @@
             scope: {},
             controller: PatientReviewController,
             controllerAs: 'vm',
-            bindToController: {
-                patientQueries: '='
-            }
+            bindToController: {}
         };
 
         return directive;
@@ -26,6 +24,7 @@
 
             vm.clearQuery = clearQuery;
             vm.isStageable = isStageable;
+            vm.getQueries = getQueries;
             vm.stagePatientRecords = stagePatientRecords;
 
             activate();
@@ -33,6 +32,7 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.getQueries();
             }
 
             function clearQuery (index) {
@@ -47,6 +47,12 @@
                     ret = ret || vm.patientQueries[queryIndex].records[i].selected;
                 }
                 return ret;
+            }
+
+            function getQueries () {
+                commonService.getQueries().then(function (response) {
+                    vm.patientQueries = response;
+                });
             }
 
             function stagePatientRecords (queryIndex) {
