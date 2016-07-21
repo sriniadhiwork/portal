@@ -6,15 +6,15 @@
         <thead>
           <tr>
             <th scope="cols">Organization</th>
-            <th scope="cols">Endpoint</th>
-            <th scope="cols">Status</th>
+            <th scope="cols">Adapter</th>
+            <th scope="cols">Active</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="org in vm.organizations track by $index">
             <td>{{ org.name }}</td>
-            <td>{{ org.url }}</td>
-            <td>{{ org.status }}</td>
+            <td>{{ org.adapter }}</td>
+            <td>{{ org.active ? 'True' : 'False' }}</td>
           </tr>
         </tbody>
       </table>
