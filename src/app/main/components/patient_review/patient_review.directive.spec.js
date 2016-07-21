@@ -2,8 +2,9 @@
     'use strict';
 
     describe('main.aiPatientReview', function() {
-        var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
-        mock = {queries: [{query: {firstName: 'Bob'}, id: 3, records: [{id: 1, firstName: 'Bob', lastName: 'Smith'}, {id: 2, firstName: 'Bob', lastName: 'Smith'}]}, {lastName: 'smith'}]};
+        var $compile, $rootScope, vm, el, $interval, $log, $q, commonService, mock;
+        mock = {queries: [{id:7,userToken:"superego@testshib.org",status:"COMPLETE",terms:"{\"id\":null,\"orgPatientId\":null,\"firstName\":\"d\",\"lastName\":null,\"dateOfBirth\":null,\"gender\":null,\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"orgMaps\":[]}",      orgStatuses:[{id:14,queryId:7,orgId:2,status:"COMPLETE",startDate:1469130142755,endDate:1469130535902,success:true,results:[]},{id:13,queryId:7,orgId:3,status:"COMPLETE",startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,orgId:1,status:"COMPLETE",startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]},
+                          {id:5,userToken:"superego@testshib.org",status:"COMPLETE",terms:"{\"id\":null,\"orgPatientId\":null,\"firstName\":null,\"lastName\":null,\"dateOfBirth\":null,\"gender\":\"Unknown\",\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"orgMaps\":[]}",orgStatuses:[{id:8, queryId:5,orgId:2,status:"COMPLETE",startDate:1469128801455,endDate:1469130535943,success:true,results:[]},{id: 7,queryId:5,orgId:3,status:"COMPLETE",startDate:1469128801443,endDate:1469130535940,success:false,results:[]},{id:9, queryId:5,orgId:1,status:"COMPLETE",startDate:1469128801462,endDate:1469130535936,success:false,results:[]}]}]};
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -13,9 +14,10 @@
                     return $delegate;
                 });
             });
-            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
+            inject(function(_$compile_, _$rootScope_, _$interval_, _$log_, _$q_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
+                $interval = _$interval_;
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
@@ -54,6 +56,21 @@
                 expect(commonService.getQueries).toHaveBeenCalled();
                 expect(vm.patientQueries.length).toBe(2);
             });
+
+            it('should re-query the queries on a regular interval', function () {
+                expect(commonService.getQueries.calls.count()).toBe(1);
+                $interval.flush(vm.INTERVAL_MILLIS);
+                expect(commonService.getQueries.calls.count()).toBe(2);
+                $interval.flush(vm.INTERVAL_MILLIS);
+                expect(commonService.getQueries.calls.count()).toBe(3);
+            });
+
+            it('should be able to stop the interval', function () {
+                expect(vm.stopInterval).toBeDefined();
+                expect(vm.stop).toBeDefined();
+                vm.stopInterval();
+                expect(vm.stop).not.toBeDefined();
+            });
         });
 
         describe('clearing queries', function () {
@@ -81,10 +98,10 @@
 
             beforeEach(function () {
                 vm.patientQueries = angular.copy(mock.queries);
-                vm.patientQueries[0].records[0].selected = true;
-                vm.patientQueries[0].records[1].selected = false;
+                vm.patientQueries[0].orgStatuses[0].results[0] = {selected: true};
+                vm.patientQueries[0].orgStatuses[0].results[1] = {selected: false};
                 vm.patientQueries[0].patient = { firstName: 'Bob', lastName: 'Smith' };
-                patientQuery = { patientRecords: [1], id: 3 };
+                patientQuery = { patientRecords: [{selected: true}], id: 7 };
                 patientQuery.patient = vm.patientQueries[0].patient;
             });
 
@@ -98,19 +115,19 @@
             });
 
             it('should call commonService.stagePatient when stagePatientRecords is called', function () {
-                vm.patientQueries[0].records[0].selected = true;
+                vm.patientQueries[0].orgStatuses[0].results[0].selected = true;
                 vm.stagePatientRecords(0);
                 expect(commonService.stagePatient).toHaveBeenCalledWith(patientQuery);
             });
 
             it('should not call commonService.stagePatient if there are no selected records', function () {
-                vm.patientQueries[0].records[0].selected = false;
+                vm.patientQueries[0].orgStatuses[0].results[0].selected = false;
                 vm.stagePatientRecords(0);
                 expect(commonService.stagePatient).not.toHaveBeenCalled();
             });
 
             it('should not remove the query if there are no selected records', function () {
-                vm.patientQueries[0].records[0].selected = false;
+                vm.patientQueries[0].orgStatuses[0].results[0].selected = false;
                 vm.stagePatientRecords(0);
                 expect(vm.patientQueries.length).not.toBe(0);
             });
@@ -121,7 +138,7 @@
 
             it('should only be stageable if at least one record is selected', function () {
                 expect(vm.isStageable(0)).toBe(true);
-                vm.patientQueries[0].records[0].selected = false;
+                vm.patientQueries[0].orgStatuses[0].results[0].selected = false;
                 expect(vm.isStageable(0)).toBe(false);
             });
         });
