@@ -27,7 +27,6 @@
           <option selected="true">Unknown</option>
           <option value="Female">Female</option>
           <option value="Male">Male</option>
-          <option value="Other">Other</option>
         </select>
       </div>
     </div>
@@ -52,7 +51,7 @@
                 id="queryFormSubmit"
                 ng-mouseover="vm.showFormErrors = true"
                 ng-focus="vm.showFormErrors = true"
-                ng-click="vm.queryPatient()">Search <i class="fa fa-search"></i></button>
+                ng-click="vm.searchForPatient()">Search <i class="fa fa-search"></i></button>
       </div>
     </div>
     <div class="form-group" ng-if="vm.queryForm.$invalid && vm.showFormErrors">

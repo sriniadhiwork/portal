@@ -8,7 +8,7 @@
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
-                    $delegate.queryPatient = jasmine.createSpy();
+                    $delegate.searchForPatient = jasmine.createSpy();
                     return $delegate;
                 });
             });
@@ -18,9 +18,9 @@
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
-                commonService.queryPatient.and.returnValue($q.when(mock.patientSearch));
+                commonService.searchForPatient.and.returnValue($q.when(mock.patientSearch));
 
-                el = angular.element('<ai-patient-search patient-queries="[{query: {firstName: \'Bob\'}, results: [{id: 1, firstName: \'Bob\', lastName: \'Smith\'}]}]"></ai-patient-search>');
+                el = angular.element('<ai-patient-search></ai-patient-search>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();
@@ -42,7 +42,6 @@
 
         it('should have isolate scope object with instanciate members', function () {
             expect(vm).toEqual(jasmine.any(Object));
-            expect(vm.patientQueries.length).toBe(1);
         });
 
         it('should know how many errors the queryForm has', function () {
@@ -50,27 +49,12 @@
         });
 
         it('should have a function to query for patients', function () {
-            expect(vm.queryPatient).toBeDefined();
+            expect(vm.searchForPatient).toBeDefined();
         });
 
-        it('should call commonService.queryPatient on query', function () {
-            vm.queryPatient();
-            expect(commonService.queryPatient).toHaveBeenCalled();
-        });
-
-        it('should append the results of queryPatient to patientQueries', function () {
-            vm.queryPatient();
-            el.isolateScope().$digest();
-            expect(vm.patientQueries.length).toBe(2);
-        });
-
-        it('should initialize an empty array if one isn\'t provided', function () {
-            el = angular.element('<ai-patient-search></ai-patient-search>');
-            $compile(el)($rootScope.$new());
-            $rootScope.$digest();
-            vm = el.isolateScope().vm;
-
-            expect(vm.patientQueries).toEqual([]);
+        it('should call commonService.searchForPatient on query', function () {
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).toHaveBeenCalled();
         });
     });
 })();

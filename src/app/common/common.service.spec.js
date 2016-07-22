@@ -55,6 +55,7 @@
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, {results: mock.fakeDocument});
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
+            requestHandler.getQueries = $httpBackend.whenGET(API + '/queries').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
@@ -155,23 +156,33 @@
 
             it('should call /patients', function () {
                 $httpBackend.expectPOST(API + '/search', {}).respond(200, {results: mock.patientQueryResponse});
-                commonService.queryPatient({});
+                commonService.searchForPatient({});
                 $httpBackend.flush();
             });
 
             it('should reject a call that doesn\'t return an object', function () {
                 $httpBackend.expectPOST(API + '/search', {}).respond(401, {message: 'a rejection'});
-                commonService.queryPatient({}).then(function (response) {
+                commonService.searchForPatient({}).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();
             });
 
+            it('should call /queries', function () {
+                commonService.getQueries();
+                $httpBackend.flush();
+                requestHandler.getQueries.respond(401, {message: 'test'});
+                commonService.getQueries().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
             it('should call /query/patientDocuments', function () {
-                commonService.queryPatientDocuments(3);
+                commonService.searchForPatientDocuments(3);
                 $httpBackend.flush();
                 requestHandler.getRestQueryPatientDocuments.respond(401, {message: 'test'});
-                commonService.queryPatientDocuments(3).then(function (response) {
+                commonService.searchForPatientDocuments(3).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();

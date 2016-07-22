@@ -12,8 +12,9 @@
         self.createAcf = createAcf;
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
-        self.getDocument = getDocument
-        self.getPatientsAtAcf = getPatientsAtAcf
+        self.getDocument = getDocument;
+        self.getQueries = getQueries;
+        self.getPatientsAtAcf = getPatientsAtAcf;
         self.getSamlUserToken = getSamlUserToken;
         self.getToken = getToken;
         self.getTokenVals = getTokenVals;
@@ -24,9 +25,9 @@
         self.isAuthenticated = isAuthenticated;
         self.logout = logout;
         self.queryOrganizations = queryOrganizations;
-        self.queryPatient = queryPatient;
-        self.queryPatientDocuments = queryPatientDocuments;
         self.saveToken = saveToken;
+        self.searchForPatient = searchForPatient;
+        self.searchForPatientDocuments = searchForPatientDocuments;
         self.setAcf = setAcf;
         self.stagePatient = stagePatient;
 
@@ -62,6 +63,15 @@
 
         function getDocument (patientId, documentId) {
             return getApi('/patients/' + patientId + '/documents/' + documentId)
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function getQueries () {
+            return getApi('/queries')
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {
@@ -186,7 +196,11 @@
                 });
         }
 
-        function queryPatient (queryObj) {
+        function saveToken (token) {
+            $localStorage.jwtToken = token;
+        }
+
+        function searchForPatient (queryObj) {
             return postApi('/search', queryObj)
                 .then(function (response) {
                     return $q.when(response);
@@ -195,17 +209,13 @@
                 });
         }
 
-        function queryPatientDocuments (patientId) {
+        function searchForPatientDocuments (patientId) {
             return getApi('/patients/' + patientId + '/documents')
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);
                 });
-        }
-
-        function saveToken (token) {
-            $localStorage.jwtToken = token;
         }
 
         function setAcf (acf) {

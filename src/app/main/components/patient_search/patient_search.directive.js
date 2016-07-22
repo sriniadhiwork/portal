@@ -13,9 +13,7 @@
             scope: {},
             controller: PatientSearchController,
             controllerAs: 'vm',
-            bindToController: {
-                patientQueries: '=?'
-            }
+            bindToController: {}
         };
 
         return directive;
@@ -25,16 +23,13 @@
             var vm = this;
 
             vm.errorCount = errorCount;
-            vm.queryPatient = queryPatient;
+            vm.searchForPatient = searchForPatient;
 
             activate();
 
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                if (angular.isUndefined(vm.patientQueries)) {
-                    vm.patientQueries = [];
-                }
             }
 
             function errorCount () {
@@ -49,12 +44,9 @@
                 return count;
             }
 
-            function queryPatient () {
+            function searchForPatient () {
                 var queryObj = {query: angular.copy(vm.query)};
-                commonService.queryPatient(queryObj.query).then(function (response) {
-                    queryObj.records = response.records;
-                    vm.patientQueries.push(queryObj);
-                });
+                commonService.searchForPatient(queryObj.query);
             }
         }
     }

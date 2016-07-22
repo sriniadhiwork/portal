@@ -19,13 +19,13 @@
         return directive;
 
         /** @ngInject */
-        function OrganizationStatusController($log, $interval, $scope, commonService) {
+        function OrganizationStatusController($log, $interval, $scope, commonService, OrganizationQueryInterval) {
             var vm = this;
 
             vm.queryOrganizations = queryOrganizations;
             vm.stopInterval = stopInterval;
 
-            vm.INTERVAL_MILLIS = 300000;
+            vm.INTERVAL_MILLIS = OrganizationQueryInterval * 1000;
 
             activate();
 
@@ -39,7 +39,7 @@
             function queryOrganizations () {
                 $log.info('querying');
                 commonService.queryOrganizations().then(function (response) {
-                    vm.organizations = response.results;
+                    vm.organizations = response;
                 });
             }
 
