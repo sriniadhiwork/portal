@@ -61,7 +61,7 @@
 
             function editAcf () {
                 commonService.editAcf(vm.acf).then(function (response) {
-                    vm.acf = response.acf;
+                    vm.acf = response;
                 });
                 vm.isEditing = false;
             }
