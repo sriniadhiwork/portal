@@ -3,7 +3,7 @@
 
     describe('main.aiOrganizationStatus', function() {
         var vm, el, $log, $q, $interval, commonService, mock;
-        mock = {organizations: {results: [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}]}};
+        mock = {organizations: [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}]};
 
         beforeEach(function () {
             module('portal', function ($provide) {

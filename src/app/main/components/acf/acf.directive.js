@@ -35,6 +35,8 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.createNewAcf = false;
+                vm.showFormErrors = false;
                 vm.getAcfs();
                 vm.acf = vm.getUserAcf();
                 vm.isEditing = false;

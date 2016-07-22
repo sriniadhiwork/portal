@@ -1,7 +1,8 @@
-<div class="component patient-review container-fluid" ng-if="vm.patientQueries.length > 0">
+<div class="component patient-review container-fluid">
   <div class="row">
     <div class="col-sm-12">
-      <h1>Queries</h1>
+      <h1>Queries ({{ vm.patientQueries.length}})</h1>
+      <span ng-if="!vm.patientQueries.length > 0">No current queries</span>
     </div>
   </div>
   <div ng-repeat="query in vm.patientQueries track by $index" class="animated fadeIn row">
@@ -19,33 +20,17 @@
         </thead>
         <tfoot>
           <tr>
-            <td colspan="2"><a href ng-click="query.showRecords = !query.showRecords">{{ query.showRecords ? 'Hide' : 'Show'}} {{ query.records.length }} record<span ng-if="query.records.length > 1">s</span></a></td>
+            <td colspan="2"><a href ng-click="query.showRecords = !query.showRecords">{{ query.showRecords ? 'Hide' : 'Show'}} {{ query.orgStatuses.length }} record<span ng-if="query.orgStatuses.length > 1">s</span></a></td>
           </tr>
         </tfoot>
         <tbody>
-          <tr ng-if="query.query.firstName">
-            <td>First Name</td>
-            <td>{{ query.query.firstName }}</td>
+          <tr>
+            <td>Status</td>
+            <td>{{ query.status }}</td>
           </tr>
-          <tr ng-if="query.query.lastName">
-            <td>Last Name</td>
-            <td>{{ query.query.lastName }}</td>
-          </tr>
-          <tr ng-if="query.query.dob">
-            <td>DOB</td>
-            <td>{{ query.query.dob | date : 'mediumDate' : 'UTC' }}</td>
-          </tr>
-          <tr ng-if="query.query.gender">
-            <td>Gender</td>
-            <td>{{ query.query.gender }}</td>
-          </tr>
-          <tr ng-if="query.query.ssn">
-            <td>SSN</td>
-            <td>{{ query.query.ssn }}</td>
-          </tr>
-          <tr ng-if="query.query.homeZip">
-            <td>Home Zip</td>
-            <td>{{ query.query.homeZip }}</td>
+          <tr>
+            <td>Terms</td>
+            <td><pre>{{ vm.parseTerms(query.terms) | json }}</pre></td>
           </tr>
         </tbody>
       </table>
@@ -55,18 +40,21 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="cols" class="text-center"><span class="sr-only">Select record location<span></th>
-            <th scope="cols">First name</th>
-            <th scope="cols">Last name</th>
             <th scope="cols">Organization</th>
+            <th scope="cols">Status</th>
+            <th scope="cols">Results</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="record in query.records track by $index">
-            <td class="text-center"><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}" class="sr-only">Select {{ record.firstName }} {{ record.lastName }}</label><input id="recordSelect{{$parent.$parent.$index}}-{{$index}}" type="checkbox" ng-model="record.selected"></td>
-            <td><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}" ng-click="query.patient.firstName = record.firstName">{{ record.firstName }}</label></td>
-            <td><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}" ng-click="query.patient.lastName = record.lastName">{{ record.lastName }}</label></td>
-            <td><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}">{{ record.organization.name }}</label></td>
+          <tr ng-repeat="org in query.orgStatuses track by org.id">
+            <td>{{ org.orgId }}</td>
+            <td>{{ org.status }}</td>
+            <td>
+              <ul>
+                <li ng-repeat="record in org.results">
+                  <input id="recordSelect{{$parent.$parent.$index}}-{{$index}}" type="checkbox" ng-model="record.selected"></td><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}">{{ record.name }}</label></li>
+              </ul>
+            </td>
           </tr>
         </tbody>
       </table>

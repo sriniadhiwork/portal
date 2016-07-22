@@ -1,5 +1,7 @@
 {
     'API': '/rest',
     'AuthAPI':  '/auth',
+    'OrganizationQueryInterval': 600,
+    'QueryQueryInterval': 60,
     'LogoutRedirect': 'http://localhost:3000'
 }
