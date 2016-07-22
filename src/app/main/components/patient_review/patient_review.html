@@ -30,7 +30,7 @@
           </tr>
           <tr>
             <td>Terms</td>
-            <td><pre ng-bind-html="query.terms"></pre></td>
+            <td><pre>{{ vm.parseTerms(query.terms) | json }}</pre></td>
           </tr>
         </tbody>
       </table>

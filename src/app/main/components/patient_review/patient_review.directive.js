@@ -25,6 +25,7 @@
             vm.clearQuery = clearQuery;
             vm.isStageable = isStageable;
             vm.getQueries = getQueries;
+            vm.parseTerms = parseTerms;
             vm.stagePatientRecords = stagePatientRecords;
             vm.stopInterval = stopInterval;
 
@@ -59,6 +60,10 @@
                 commonService.getQueries().then(function (response) {
                     vm.patientQueries = response;
                 });
+            }
+
+            function parseTerms (terms) {
+                return angular.fromJson(terms);
             }
 
             function stagePatientRecords (queryIndex) {

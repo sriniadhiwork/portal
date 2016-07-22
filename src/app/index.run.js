@@ -27,7 +27,7 @@
                              {id: 3, name: 'Ambulatory Center', url: 'http://www.example.com/3', status: 'Active'}];
 
         // fake backend data
-        $httpBackend.whenGET (new RegExp(API + '/patients$')).respond(200, {results: makePeople(Math.floor(Math.random() * 6) + 3)});
+        $httpBackend.whenGET (new RegExp(API + '/patients$')).respond(200, {results: makePeople(Math.floor(Math.random() * 6) + 3, 5)});
         $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents$')).respond(200, {results: randomArray(documents, Math.floor(Math.random() * 6) + 1)});
         $httpBackend.whenGET (new RegExp(API + '/patients/.*/documents/.*')).respond(200, aDocument[Math.floor(Math.random() * aDocument.length)]);
 
@@ -44,12 +44,14 @@
 
         $log.info('runBlock end');
 
-        function makePeople(count) {
+        function makePeople(count, docCount) {
             var ret = [];
             for (var i = 0; i < count; i++) {
+                var docList = randomArray(documents, Math.floor(Math.random() * docCount) + 1);
                 ret.push({firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
                           lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
                           organization: organizations[Math.floor(Math.random() * organizations.length)],
+                          documents: docList,
                           id: i});
             }
             return ret;
