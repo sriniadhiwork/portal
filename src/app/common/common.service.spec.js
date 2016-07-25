@@ -240,7 +240,7 @@
 
             it('should call /acfs/{{id}}/edit', function () {
                 mock.newAcf.id = 1;
-                $httpBackend.expectPOST(AuthAPI + '/jwt/setAcf', mock.newAcf).respond(200, {});
+                $httpBackend.expectPOST(AuthAPI + '/jwt/setAcf', {acf: mock.newAcf}).respond(200, {});
                 commonService.editAcf(mock.newAcf);
                 $httpBackend.flush();
                 requestHandler.editAcf.respond(401, {message: 'a rejection'});
@@ -255,7 +255,7 @@
                 mock.newAcf.id = 1;
                 commonService.editAcf(mock.newAcf);
                 $httpBackend.flush();
-                expect(commonService.setAcf).toHaveBeenCalledWith(mock.newAcf);
+                expect(commonService.setAcf).toHaveBeenCalledWith({acf: mock.newAcf});
             });
 
             it('should call /queries/{{id}}/stage', function () {

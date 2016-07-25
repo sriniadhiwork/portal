@@ -45,7 +45,7 @@
         function editAcf (anAcf) {
             return postApi('/acfs/' + anAcf.id + '/edit', anAcf)
                 .then(function (response) {
-                    self.setAcf(response.acf);
+                    self.setAcf(response);
                     return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);

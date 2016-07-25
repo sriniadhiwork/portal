@@ -1,7 +1,11 @@
-<div class="component document-review" ng-if="vm.activeDocument" class="animated fadeIn">
-  <h1>
-    Document Review
-    <button class="btn btn-danger pull-right" ng-click="vm.cancel()"><span class="sr-only">Close document</span><i class="fa fa-close"></i></button>
-  </h1>
-  <pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre>
+<div class="container-fluid component document-review" ng-if="vm.activeDocument" class="animated fadeIn">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>
+        Document Review
+        <button class="btn btn-danger pull-right" ng-click="vm.cancel()"><span class="sr-only">Close document</span><i class="fa fa-close"></i></button>
+      </h1>
+      <pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre>
+    </div>
+  </div>
 </div>
