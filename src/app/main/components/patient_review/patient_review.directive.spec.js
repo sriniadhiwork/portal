@@ -2,7 +2,7 @@
     'use strict';
 
     describe('main.aiPatientReview', function() {
-        var $compile, $rootScope, vm, el, $interval, $log, $q, commonService, mock;
+        var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
         mock = {queries: [{id:7,userToken:'superego@testshib.org',status:'COMPLETE',terms:"{\"id\":null,\"orgPatientId\":null,\"firstName\":\"d\",\"lastName\":null,\"dateOfBirth\":null,\"gender\":null,\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"orgMaps\":[]}",      orgStatuses:[{id:14,queryId:7,orgId:2,status:'COMPLETE',startDate:1469130142755,endDate:1469130535902,success:true,results:[]},{id:13,queryId:7,orgId:3,status:'COMPLETE',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,orgId:1,status:'COMPLETE',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]},
                           {id:5,userToken:'superego@testshib.org',status:'COMPLETE',terms:"{\"id\":null,\"orgPatientId\":null,\"firstName\":null,\"lastName\":null,\"dateOfBirth\":null,\"gender\":\"Unknown\",\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"orgMaps\":[]}",orgStatuses:[{id:8, queryId:5,orgId:2,status:'COMPLETE',startDate:1469128801455,endDate:1469130535943,success:true,results:[]},{id: 7,queryId:5,orgId:3,status:'COMPLETE',startDate:1469128801443,endDate:1469130535940,success:false,results:[]},{id:9, queryId:5,orgId:1,status:'COMPLETE',startDate:1469128801462,endDate:1469130535936,success:false,results:[]}]}]};
 
@@ -17,10 +17,9 @@
                     return $delegate;
                 });
             });
-            inject(function(_$compile_, _$rootScope_, _$interval_, _$log_, _$q_, _commonService_) {
+            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
-                $interval = _$interval_;
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
@@ -58,21 +57,6 @@
             it('should get queries for a user at login', function () {
                 expect(commonService.getQueries).toHaveBeenCalled();
                 expect(vm.patientQueries.length).toBe(2);
-            });
-
-            it('should re-query the queries on a regular interval', function () {
-                expect(commonService.getQueries.calls.count()).toBe(1);
-                $interval.flush(vm.INTERVAL_MILLIS);
-                expect(commonService.getQueries.calls.count()).toBe(2);
-                $interval.flush(vm.INTERVAL_MILLIS);
-                expect(commonService.getQueries.calls.count()).toBe(3);
-            });
-
-            it('should be able to stop the interval', function () {
-                expect(vm.stopInterval).toBeDefined();
-                expect(vm.stop).toBeDefined();
-                vm.stopInterval();
-                expect(vm.stop).not.toBeDefined();
             });
 
             it('should parse the terms', function () {

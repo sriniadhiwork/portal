@@ -10,16 +10,24 @@
         var directive = {
             restrict: 'E',
             templateUrl: 'app/main/components/patient_review/patient_review.html',
-            scope: {},
+            scope: { registerHandler: '&' },
             controller: PatientReviewController,
             controllerAs: 'vm',
-            bindToController: {}
+            bindToController: {},
+            link: function (scope, element, attr, ctrl) {
+                var handler = scope.registerHandler({
+                    handler: function () {
+                        ctrl.getQueries();
+                    }
+                });
+                scope.$on('$destroy', handler);
+            }
         };
 
         return directive;
 
         /** @ngInject */
-        function PatientReviewController($log, $interval, $scope, commonService, QueryQueryInterval) {
+        function PatientReviewController($log, $scope, commonService) {
             var vm = this;
 
             vm.clearQuery = clearQuery;
@@ -27,9 +35,6 @@
             vm.getQueries = getQueries;
             vm.parseTerms = parseTerms;
             vm.stagePatientRecords = stagePatientRecords;
-            vm.stopInterval = stopInterval;
-
-            vm.INTERVAL_MILLIS = QueryQueryInterval * 1000;
 
             activate();
 
@@ -37,7 +42,6 @@
 
             function activate () {
                 vm.getQueries();
-                vm.stop = $interval(vm.getQueries,vm.INTERVAL_MILLIS);
             }
 
             function clearQuery (index) {
@@ -84,20 +88,6 @@
                     vm.clearQuery(queryIndex);
                 }
             }
-
-            function stopInterval () {
-                if (angular.isDefined(vm.stop)) {
-                    $interval.cancel(stop);
-                    vm.stop = undefined;
-                }
-            }
-
-            ////////////////////////////////////////////////////////////////////
-
-            $scope.$on('$destroy', function () {
-                vm.stopInterval();
-            });
-
         }
     }
 })();

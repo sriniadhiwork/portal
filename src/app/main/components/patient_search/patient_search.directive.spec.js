@@ -56,5 +56,17 @@
             vm.searchForPatient();
             expect(commonService.searchForPatient).toHaveBeenCalled();
         });
+
+        it('should clear the query fields on a search', function () {
+            vm.query = { firstName: 'fake', lastName: 'name' };
+            vm.searchForPatient();
+            expect(vm.query).toEqual({});
+        });
+
+        it('should tell the controller that a search was performed', function () {
+            spyOn(vm,'triggerHandlers');
+            vm.searchForPatient();
+            expect(vm.triggerHandlers).toHaveBeenCalled();
+        });
     });
 })();

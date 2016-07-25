@@ -5,7 +5,7 @@
       <span ng-if="!vm.patientQueries.length > 0">No current queries</span>
     </div>
   </div>
-  <div ng-repeat="query in vm.patientQueries track by $index" class="animated fadeIn row">
+  <div ng-repeat="query in vm.patientQueries | orderBy:'-id' track by query.id" class="animated fadeIn row">
     <div class="col-sm-12">
       <h2>
         Queried Patient Information
@@ -29,8 +29,26 @@
             <td>{{ query.status }}</td>
           </tr>
           <tr>
+            <td>ID</td>
+            <td>{{ query.id }}</td>
+          </tr>
+          <tr>
+            <td>User Token</td>
+            <td>{{ query.userToken}}</td>
+          </tr>
+          <tr>
             <td>Terms</td>
-            <td><pre>{{ vm.parseTerms(query.terms) | json }}</pre></td>
+            <td>
+              <ul>
+                <li><strong>firstName: </strong> {{ vm.parseTerms(query.terms).firstName }}</li>
+                <li><strong>lastName: </strong> {{ vm.parseTerms(query.terms).lastName }}</li>
+                <li><strong>dateOfBirth: </strong> {{ vm.parseTerms(query.terms).dateOfBirth | date }}</li>
+                <li><strong>gender: </strong> {{ vm.parseTerms(query.terms).gender }}</li>
+                <li><strong>phoneNumber: </strong> {{ vm.parseTerms(query.terms).phoneNumber }}</li>
+                <li><strong>address: </strong> {{ vm.parseTerms(query.terms).address }}</li>
+                <li><strong>ssn: </strong> {{ vm.parseTerms(query.terms).ssn }}</li>
+              </ul>
+            </td>
           </tr>
         </tbody>
       </table>

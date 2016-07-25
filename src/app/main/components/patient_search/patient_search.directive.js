@@ -10,10 +10,10 @@
         var directive = {
             restrict: 'E',
             templateUrl: 'app/main/components/patient_search/patient_search.html',
-            scope: {},
+            scope: { },
             controller: PatientSearchController,
             controllerAs: 'vm',
-            bindToController: {}
+            bindToController: { triggerHandlers: '&' }
         };
 
         return directive;
@@ -47,6 +47,8 @@
             function searchForPatient () {
                 var queryObj = {query: angular.copy(vm.query)};
                 commonService.searchForPatient(queryObj.query);
+                vm.triggerHandlers();
+                vm.query = {};
             }
         }
     }
