@@ -19,7 +19,7 @@
 
         var mock = {};
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
-        mock.fakeDocument = {data: "<document><made><of>XML</of></made></document"};
+        mock.fakeDocument = {data: '<document><made><of>XML</of></made></document'};
         mock.newAcf = {name: 'New ACF'};
         mock.organizations = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
         mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
@@ -50,10 +50,11 @@
             delete($localStorage.jwtToken);
 
             spyOn($window.location, 'replace');
+            requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
             requestHandler.editAcf = $httpBackend.whenPOST(API + '/acfs/1/edit', mock.newAcf).respond(200, {acf: mock.newAcf});
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
-            requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, {results: mock.fakeDocument});
+            requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
             requestHandler.getQueries = $httpBackend.whenGET(API + '/queries').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
@@ -193,6 +194,16 @@
                 $httpBackend.flush();
                 requestHandler.getDocument.respond(401, {message: 'test'});
                 commonService.getDocument(3,2).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should cache documents', function () {
+                commonService.cacheDocument(3,2);
+                $httpBackend.flush();
+                requestHandler.cacheDocument.respond(401, {message: 'test'});
+                commonService.cacheDocument(3,2).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();

@@ -36,11 +36,11 @@
       </div>
       <div class="row">
         <div class="col-sm-6">
-          <ai-patient-search>
+          <ai-patient-search trigger-handlers="vm.triggerHandlers()">
           </ai-patient-search>
         </div>
         <div class="col-sm-6">
-          <ai-patient-review>
+          <ai-patient-review register-handler="vm.registerHandler(handler)">
           </ai-patient-review>
         </div>
       </div>
@@ -55,20 +55,6 @@
              active-document="vm.activeDocument">
           </ai-document-review>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4">
-        Token parameters
-        <pre>{{ vm.commonService.getTokenVals() | json }}</pre>
-      </div>
-      <div class="col-sm-4">
-        User ACF:
-        <pre>{{ vm.commonService.getUserAcf() | json }}</pre>
-      </div>
-      <div class="col-sm-4">
-        User Identity:
-        <pre>{{ vm.commonService.getUserIdentity() | json }}</pre>
       </div>
     </div>
   </div>

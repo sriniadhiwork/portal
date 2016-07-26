@@ -27,6 +27,7 @@
                 vm = el.isolateScope().vm;
 
                 vm.queryForm = {$error: { required: [1, 2], invalid: [3], notAnError: 4 }};
+                vm.query = { firstName: 'fake', lastName: 'name' };
             });
         });
 
@@ -55,6 +56,57 @@
         it('should call commonService.searchForPatient on query', function () {
             vm.searchForPatient();
             expect(commonService.searchForPatient).toHaveBeenCalled();
+        });
+
+        it('should clear the query fields on a search', function () {
+            vm.searchForPatient();
+            expect(vm.query).toEqual({});
+        });
+
+        it('should tell the controller that a search was performed', function () {
+            spyOn(vm,'triggerHandlers');
+            vm.searchForPatient();
+            expect(vm.triggerHandlers).toHaveBeenCalled();
+        });
+
+        it('should not let a search be performed with no parameters', function () {
+            vm.query = {};
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).not.toHaveBeenCalled();
+            vm.query = { firstName: 'fake' };
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).toHaveBeenCalled();
+            vm.query = { lastName: 'last' };
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).toHaveBeenCalled();
+            vm.query = { dob: 'dob' };
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).toHaveBeenCalled();
+            vm.query = { gender: 'm' };
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).toHaveBeenCalled();
+            vm.query = { ssn: '1234' };
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).toHaveBeenCalled();
+            vm.query = { homeZip: '12345' };
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).toHaveBeenCalled();
+        });
+
+        it('should have a "isDisabled" based on not having values in the search', function () {
+            expect(vm.hasSearchTerm).toBeDefined();
+            vm.query = { firstName: 'fake' };
+            expect(vm.hasSearchTerm()).toBe(true);
+            vm.query = { lastName: 'last' };
+            expect(vm.hasSearchTerm()).toBe(true);
+            vm.query = { gender: 'm' };
+            expect(vm.hasSearchTerm()).toBe(true);
+            vm.query = { ssn: '1234' };
+            expect(vm.hasSearchTerm()).toBe(true);
+            vm.query = { homeZip: '12345' };
+            expect(vm.hasSearchTerm()).toBe(true);
+            vm.query = {};
+            expect(vm.hasSearchTerm()).toBeFalsy();
         });
     });
 })();
