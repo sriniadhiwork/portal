@@ -9,7 +9,7 @@
     <div class="col-sm-12">
       <h2>
         Queried Patient Information
-        <span class="pull-right"><button class="btn btn-danger" ng-click="vm.clearQuery($index)"><i class="fa fa-close"></i><span class="sr-only">Clear Query</span></button></span>
+        <span class="pull-right"><button class="btn btn-danger" ng-click="vm.clearQuery(query)"><i class="fa fa-close"></i><span class="sr-only">Clear Query</span></button></span>
       </h2>
       <table class="table">
         <thead>
@@ -20,7 +20,7 @@
         </thead>
         <tfoot>
           <tr>
-            <td colspan="2"><a href ng-click="query.showRecords = !query.showRecords">{{ query.showRecords ? 'Hide' : 'Show'}} {{ query.orgStatuses.length }} record<span ng-if="query.orgStatuses.length > 1">s</span></a></td>
+            <td colspan="2"><a href ng-click="query.showRecords = !query.showRecords">{{ query.showRecords ? 'Hide' : 'Show'}} {{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> from {{ query.orgStatuses.length }} organization<span ng-if="query.orgStatuses.length > 1">s</span></a></td>
           </tr>
         </tfoot>
         <tbody>
@@ -40,13 +40,13 @@
             <td>Terms</td>
             <td>
               <ul>
-                <li><strong>firstName: </strong> {{ vm.parseTerms(query.terms).firstName }}</li>
-                <li><strong>lastName: </strong> {{ vm.parseTerms(query.terms).lastName }}</li>
-                <li><strong>dateOfBirth: </strong> {{ vm.parseTerms(query.terms).dateOfBirth | date }}</li>
-                <li><strong>gender: </strong> {{ vm.parseTerms(query.terms).gender }}</li>
-                <li><strong>phoneNumber: </strong> {{ vm.parseTerms(query.terms).phoneNumber }}</li>
-                <li><strong>address: </strong> {{ vm.parseTerms(query.terms).address }}</li>
-                <li><strong>ssn: </strong> {{ vm.parseTerms(query.terms).ssn }}</li>
+                <li ng-if="query.terms.firstName"><strong>First Name: </strong> {{ query.terms.firstName }}</li>
+                <li ng-if="query.terms.lastName"><strong>Last Name: </strong> {{ query.terms.lastName }}</li>
+                <li ng-if="query.terms.dateOfBirth"><strong>Date Of Birth: </strong> {{ query.terms.dateOfBirth | date }}</li>
+                <li ng-if="query.terms.gender"><strong>Gender: </strong> {{ query.terms.gender }}</li>
+                <li ng-if="query.terms.phoneNumber"><strong>Phone Number: </strong> {{ query.terms.phoneNumber }}</li>
+                <li ng-if="query.terms.address"><strong>Address: </strong> {{ query.terms.address }}</li>
+                <li ng-if="query.terms.ssn"><strong>SSN: </strong> {{ query.terms.ssn }}</li>
               </ul>
             </td>
           </tr>
@@ -68,10 +68,22 @@
             <td>{{ org.orgId }}</td>
             <td>{{ org.status }}</td>
             <td>
-              <ul>
-                <li ng-repeat="record in org.results">
-                  <input id="recordSelect{{$parent.$parent.$index}}-{{$index}}" type="checkbox" ng-model="record.selected"></td><label for="recordSelect{{$parent.$parent.$index}}-{{$index}}">{{ record.name }}</label></li>
+              <ul ng-if="org.results.length > 0" class="list-unstyled">
+                <li ng-repeat="record in org.results track by record.id">
+                  <input id="recordSelect-{{ record.id }}" type="checkbox" ng-model="record.selected"></input>
+                  <label for="recordSelect-{{ record.id }}">{{ record.firstName + ' ' + record.lastName }}</label>
+                  <ul>
+                    <li href ng-click="query.patient.firstName = record.firstName"><strong>First Name:</strong> {{ record.firstName }}</li>
+                    <li href ng-click="query.patient.lastName = record.lastName"><strong>Last Name:</strong> {{ record.lastName }}</li>
+                    <li href ng-click="vm.setDob(query, record.dateOfBirth)"><strong>Date Of Birth:</strong> {{ record.dateOfBirth | date }}</li>
+                    <li href ng-click="query.patient.gender = record.gender"><strong>Gender:</strong> {{ record.gender }}</li>
+                    <li href ng-click="query.patient.ssn = record.ssn"><strong>SSN:</strong> {{ record.ssn }}</li>
+                    <li href ng-click="query.patient.address = record.address"><strong>Address:</strong> {{ record.address }}</li>
+                    <li href ng-click="query.patient.phoneNumber = record.phoneNumber"><strong>Phone Number:</strong> {{ record.phoneNumber }}</li>
+                  </ul>
+                </li>
               </ul>
+              <span ng-if="org.results.length === 0">No records found</span>
             </td>
           </tr>
         </tbody>
@@ -80,19 +92,53 @@
     <div class="form-horizontal" ng-if="query.showRecords">
       <div class="col-sm-12"><h3>True patient information</h3></div>
       <div class="form-group">
-        <label for="truePatient{{$parent.$parent.index}}FirstName" class="control-label col-sm-4">First Name</label>
+        <label for="truePatient{{ query.id }}FirstName" class="control-label col-sm-4">First Name</label>
         <div class="col-sm-8">
-          <input type="text" class="form-control" id="truePatient{{$parent.$parent.index}}FirstName" ng-model="query.patient.firstName">
+          <input type="text" class="form-control" id="truePatient{{ query.id }}FirstName" ng-model="query.patient.firstName">
         </div>
       </div>
       <div class="form-group">
-        <label for="truePatient{{$parent.$parent.index}}LastName" class="control-label col-sm-4">Last Name</label>
+        <label for="truePatient{{ query.id }}LastName" class="control-label col-sm-4">Last Name</label>
         <div class="col-sm-8">
-          <input type="text" class="form-control" id="truePatient{{$parent.$parent.index}}LastName" ng-model="query.patient.lastName">
+          <input type="text" class="form-control" id="truePatient{{ query.id }}LastName" ng-model="query.patient.lastName">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="truePatient{{ query.id }}DateOfBirth" class="control-label col-sm-4">Date Of Birth</label>
+        <div class="col-sm-8">
+          <input type="date" class="form-control" id="truePatient{{ query.id }}DateOfBirth" ng-model="query.patient.dateOfBirth">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="truePatient{{ query.id }}Gender" class="control-label col-sm-4">Gender</label>
+        <div class="col-sm-8">
+          <select class="input-sm form-control" ng-model="query.patient.gender" id="truePatient{{ query.id }}Gender">
+            <option value="U">Unknown</option>
+            <option value="F">Female</option>
+            <option value="M">Male</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="truePatient{{ query.id }}ssn" class="control-label col-sm-4">SSN</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="truePatient{{ query.id }}ssn" ng-model="query.patient.ssn">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="truePatient{{ query.id }}Address" class="control-label col-sm-4">Address</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="truePatient{{ query.id }}Address" ng-model="query.patient.address">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="truePatient{{ query.id }}PhoneNumber" class="control-label col-sm-4">Phone Number</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="truePatient{{ query.id }}PhoneNumber" ng-model="query.patient.phoneNumber">
         </div>
       </div>
       <div class="col-sm-6 col-sm-offset-4">
-        <button class="btn btn-block btn-success" ng-click="vm.stagePatientRecords($parent.$index)" ng-disabled="!vm.isStageable($parent.$index)">Select record(s) for patient <i class="fa fa-save"></i></button>
+        <button class="btn btn-block btn-success" ng-click="vm.stagePatientRecords(query)" ng-disabled="!vm.isStageable(query)">Select record(s) for patient <i class="fa fa-save"></i></button>
       </div>
     </div>
   </div>

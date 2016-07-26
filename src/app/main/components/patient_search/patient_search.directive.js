@@ -23,6 +23,7 @@
             var vm = this;
 
             vm.errorCount = errorCount;
+            vm.hasSearchTerm = hasSearchTerm;
             vm.searchForPatient = searchForPatient;
 
             activate();
@@ -30,6 +31,7 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.query = {};
             }
 
             function errorCount () {
@@ -44,11 +46,24 @@
                 return count;
             }
 
+            function hasSearchTerm () {
+                var ret = false;
+                ret = ret || (vm.query.firstName && vm.query.firstName.length > 0)
+                    || (vm.query.lastName && vm.query.lastName.length > 0)
+                    || (vm.query.dob)
+                    || (vm.query.gender && vm.query.gender.length > 0)
+                    || (vm.query.ssn && vm.query.ssn.length > 0)
+                    || (vm.query.homeZip && vm.query.homeZip.length > 0);
+                return ret;
+            }
+
             function searchForPatient () {
-                var queryObj = {query: angular.copy(vm.query)};
-                commonService.searchForPatient(queryObj.query);
-                vm.triggerHandlers();
-                vm.query = {};
+                if (hasSearchTerm()) {
+                    var queryObj = {query: angular.copy(vm.query)};
+                    commonService.searchForPatient(queryObj.query);
+                    vm.triggerHandlers();
+                    vm.query = {};
+                }
             }
         }
     }
