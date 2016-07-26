@@ -30,7 +30,7 @@
                 $q = _$q_;
                 commonService = _commonService_;
                 commonService.cacheDocument.and.returnValue($q.when(true));
-                commonService.getDocument.and.returnValue($q.when(mock.fakeDocument));
+                commonService.getDocument.and.returnValue($q.when(mock.fakeDocument.data));
                 commonService.getPatientsAtAcf.and.returnValue($q.when(mock.patients));
                 commonService.getUserAcf.and.returnValue($q.when(mock.userAcf));
 

@@ -54,7 +54,7 @@
 
             function getDocument (patient, doc) {
                 commonService.getDocument(patient.id, doc.id).then(function (response) {
-                    doc.data = response;
+                    doc.data = response.data;
                     vm.activeDocument = doc;
                 });
             }
