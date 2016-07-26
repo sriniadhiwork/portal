@@ -29,8 +29,8 @@
           <li ng-repeat="org in patient.orgMaps track by org.id" ng-if="org.documents.length > 0">Documents from {{ org.organization.name }}
             <ul>
               <li ng-repeat="doc in org.documents track by doc.id">
-                  <button ng-if="!doc.cached || true" ng-click="vm.cacheDocument(patient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
-                  <button ng-if="doc.cached || true" ng-click="vm.getDocument(patient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
+                  <button ng-if="!doc.cached" ng-click="vm.cacheDocument(patient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
+                  <button ng-if="doc.cached" ng-click="vm.getDocument(patient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
                   {{ doc.name }}
               </li>
             </ul>
