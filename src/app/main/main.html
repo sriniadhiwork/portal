@@ -25,46 +25,36 @@
     </div>
     <div ng-if="vm.hasAcf()">
       <div class="row">
-        <div class="col-sm-4">
-          <ai-patient-search
-             patient-queries="vm.patientQueries">
-          </ai-patient-search>
-          <ai-patient-review
-             patient-queries="vm.patientQueries">
-          </ai-patient-review>
-        </div>
-        <div class="col-sm-4">
-          <ai-acf-patient-list
-             active-document="vm.activeDocument">
-          </ai-acf-patient-list>
-        </div>
-        <div class="col-sm-4">
+        <div class="col-sm-6">
           <ai-organization-status>
           </ai-organization-status>
+        </div>
+        <div class="col-sm-6">
           <ai-acf>
           </ai-acf>
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-6">
+          <ai-patient-search trigger-handlers="vm.triggerHandlers()">
+          </ai-patient-search>
+        </div>
+        <div class="col-sm-6">
+          <ai-patient-review register-handler="vm.registerHandler(handler)">
+          </ai-patient-review>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <ai-acf-patient-list
+             active-document="vm.activeDocument">
+          </ai-acf-patient-list>
+        </div>
+        <div class="col-sm-8">
           <ai-document-review
              active-document="vm.activeDocument">
           </ai-document-review>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4">
-        Token parameters
-        <pre>{{ vm.commonService.getTokenVals() | json }}</pre>
-      </div>
-      <div class="col-sm-4">
-        User ACF:
-        <pre>{{ vm.commonService.getUserAcf() | json }}</pre>
-      </div>
-      <div class="col-sm-4">
-        User Identity:
-        <pre>{{ vm.commonService.getUserIdentity() | json }}</pre>
       </div>
     </div>
   </div>

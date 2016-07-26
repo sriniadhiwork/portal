@@ -3,6 +3,8 @@
  *  The list of variables are listed here bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss
  */
 $navbar-inverse-link-color: #5AADBB;
+//$screen-lg: 1920px;
+//$grid-float-breakpoint: 100%;
 $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 $fa-font-path: "../../bower_components/font-awesome/fonts";
 @import "../../bower_components/font-awesome/scss/font-awesome.scss";
@@ -23,8 +25,14 @@ $fa-font-path: "../../bower_components/font-awesome/fonts";
 
 .component {
     border: 1px solid green;
+    border-width: 8px 1px 1px 1px;
+    border-radius: 8px 8px 0 0;
+    background-color: white;
 }
 
+body {
+    background: #ccc;
+}
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject
  *  all your sass files automatically

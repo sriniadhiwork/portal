@@ -50,10 +50,11 @@
             delete($localStorage.jwtToken);
 
             spyOn($window.location, 'replace');
+            requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
             requestHandler.editAcf = $httpBackend.whenPOST(API + '/acfs/1/edit', mock.newAcf).respond(200, {acf: mock.newAcf});
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
-            requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, {results: mock.fakeDocument});
+            requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, {results: mock.fakeDocument});
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
             requestHandler.getQueries = $httpBackend.whenGET(API + '/queries').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
@@ -198,6 +199,16 @@
                 $httpBackend.flush();
             });
 
+            it('should cache documents', function () {
+                commonService.cacheDocument(3,2);
+                $httpBackend.flush();
+                requestHandler.cacheDocument.respond(401, {message: 'test'});
+                commonService.cacheDocument(3,2).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
             it('should call /organizations', function () {
                 commonService.queryOrganizations();
                 $httpBackend.flush();
@@ -240,7 +251,7 @@
 
             it('should call /acfs/{{id}}/edit', function () {
                 mock.newAcf.id = 1;
-                $httpBackend.expectPOST(AuthAPI + '/jwt/setAcf', mock.newAcf).respond(200, {});
+                $httpBackend.expectPOST(AuthAPI + '/jwt/setAcf', {acf: mock.newAcf}).respond(200, {});
                 commonService.editAcf(mock.newAcf);
                 $httpBackend.flush();
                 requestHandler.editAcf.respond(401, {message: 'a rejection'});
@@ -255,7 +266,7 @@
                 mock.newAcf.id = 1;
                 commonService.editAcf(mock.newAcf);
                 $httpBackend.flush();
-                expect(commonService.setAcf).toHaveBeenCalledWith(mock.newAcf);
+                expect(commonService.setAcf).toHaveBeenCalledWith({acf: mock.newAcf});
             });
 
             it('should call /queries/{{id}}/stage', function () {

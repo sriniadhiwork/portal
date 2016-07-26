@@ -9,6 +9,7 @@
     function commonService ($http, $q, API, AuthAPI, LogoutRedirect, $log, $localStorage, $window) {
         var self = this;
 
+        self.cacheDocument = cacheDocument;
         self.createAcf = createAcf;
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
@@ -33,6 +34,15 @@
 
         ////////////////////////////////////////////////////////////////////
 
+        function cacheDocument (patientId, documentId) {
+            return getApi('/patients/' + patientId + '/documents/' + documentId)
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
         function createAcf (newAcf) {
             return postApi('/acfs/create', newAcf)
                 .then(function (response) {
@@ -45,7 +55,7 @@
         function editAcf (anAcf) {
             return postApi('/acfs/' + anAcf.id + '/edit', anAcf)
                 .then(function (response) {
-                    self.setAcf(response.acf);
+                    self.setAcf(response);
                     return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);
@@ -62,7 +72,7 @@
         }
 
         function getDocument (patientId, documentId) {
-            return getApi('/patients/' + patientId + '/documents/' + documentId)
+            return getApi('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false')
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {

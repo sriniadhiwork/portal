@@ -24,7 +24,7 @@
                 $q = _$q_;
                 commonService = _commonService_;
                 commonService.createAcf.and.returnValue($q.when({response: {name: 'new acf', address: {}, id: 3}}));
-                commonService.editAcf.and.returnValue($q.when({acf: mock.acfs[1]}));
+                commonService.editAcf.and.returnValue($q.when(mock.acfs[1]));
                 commonService.getAcfs.and.returnValue($q.when(mock.acfs));
                 commonService.getUserAcf.and.returnValue(mock.acfs[0]);
                 commonService.hasAcf.and.returnValue(true);

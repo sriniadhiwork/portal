@@ -2,7 +2,7 @@
     'use strict';
 
     describe('main.controller', function() {
-        var vm, scope, commonService;
+        var vm, scope, commonService, $log;
 
         beforeEach(function () {
             module('portal.main', 'portal.constants', function ($provide) {
@@ -14,8 +14,9 @@
                 });
             });
 
-            inject(function (_commonService_, $controller, $q, $rootScope) {
+            inject(function (_commonService_, _$log_, $controller, $q, $rootScope) {
                 commonService = _commonService_;
+                $log = _$log_;
                 commonService.isAuthenticated.and.returnValue(true);
                 commonService.hasAcf.and.returnValue(true);
 
@@ -23,6 +24,12 @@
                 vm = $controller('MainController');
                 scope.$digest();
             });
+        });
+
+        afterEach(function () {
+            if ($log.debug.logs.length > 0) {
+                //console.debug("\n Debug: " + $log.debug.logs.join("\n Debug: "));
+            }
         });
 
         it('should know if the user is authenticated', function () {
@@ -33,6 +40,38 @@
         it('should know if the user has an ACF', function () {
             expect(vm.hasAcf).toBeDefined();
             expect(vm.hasAcf()).toBeTruthy();
+        });
+
+        describe('handlers and triggers', function () {
+            it('should have a function to register handlers', function () {
+                expect(vm.registerHandler).toBeDefined();
+            });
+
+            it('should add a handler function is one is passed in', function () {
+                expect(vm.handlers.length).toBe(0);
+                vm.registerHandler(function () {});
+                expect(vm.handlers.length).toBe(1);
+            });
+
+            it('should remove handlers when scope is destroyed', function () {
+                expect(vm.handlers.length).toBe(0);
+                var removeHandler = vm.registerHandler(function () {});
+                expect(vm.handlers.length).toBe(1);
+                removeHandler();
+                expect(vm.handlers.length).toBe(0);
+            });
+
+            it('should have a function to trigger handlers', function () {
+                expect(vm.triggerHandlers).toBeDefined();
+            });
+
+            it('should call handler functions when triggered', function () {
+                this.aFunc = function () {};
+                spyOn(this, 'aFunc');
+                vm.registerHandler(this.aFunc);
+                vm.triggerHandlers();
+                expect(this.aFunc).toHaveBeenCalled();
+            });
         });
     });
 })();

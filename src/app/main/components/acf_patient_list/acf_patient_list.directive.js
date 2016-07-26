@@ -24,7 +24,7 @@
         function AcfPatientListController($log, commonService) {
             var vm = this;
 
-            vm.activateDocument = activateDocument;
+            vm.cacheDocument = cacheDocument;
             vm.dischargePatient = dischargePatient;
             vm.getDocument = getDocument;
             vm.getUserAcf = getUserAcf;
@@ -36,12 +36,14 @@
             function activate () {
                 vm.patients = [];
                 commonService.getPatientsAtAcf().then(function (response) {
-                    vm.patients = response.results;
+                    vm.patients = response;
                 });
             }
 
-            function activateDocument (doc) {
-                vm.activeDocument = doc;
+            function cacheDocument (patient, doc) {
+                commonService.cacheDocument(patient.id, doc.id).then(function (response) {
+                    doc.cached = response;
+                });
             }
 
             function dischargePatient (index) {
@@ -52,8 +54,8 @@
 
             function getDocument (patient, doc) {
                 commonService.getDocument(patient.id, doc.id).then(function (response) {
-                    doc.status = 'cached';
-                    doc.data = response.data;
+                    doc.data = response;
+                    vm.activeDocument = doc;
                 });
             }
 
