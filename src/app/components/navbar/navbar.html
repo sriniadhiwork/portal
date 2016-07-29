@@ -1,27 +1,26 @@
-<nav class="navbar navbar-static-top">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-4 col-sm-offset-4">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#/" ng-if="vm.isAuthenticated()">
-            <i class="fa fa-home fa-spin"></i> Patient Unified Lookup System for Emergencies (PULSE)
-          </a>
-          <a class="navbar-brand" href="#/" ng-if="!vm.isAuthenticated()">
-            <i class="fa fa-home fa-spin"></i> Disaster Healthcare Volunteer (DHV)
-          </a>
-        </div>
-      </div>
+    <div class="navbar-header">
+      <div class="row">
+        <div class="col-sm-8 col-sm-offset-4">
+          <a class="navbar-brand" href="#/" ng-click="vm.clear()"><img src="assets/images/PULSE_logo2.svg" alt="Certified Health IT Product List" class="img-responsive center-block" width="100%"/></a>
 
-      <div class="col-sm-4">
-        <div class="collapse navbar-collapse" ng-if="vm.isAuthenticated()">
-          <ul class="nav navbar-nav navbar-right">
-            <li ng-class="{ 'active' : (vm.active === 'home') }"><a ng-href="#/">Home</a></li>
-            <li ng-class="{ 'active' : (vm.active === 'about') }"><a ng-href="#/about">About</a></li>
-            <p class="ai-navbar-text navbar-text">{{ vm.getUsername() }}<span ng-if="vm.hasAcf()"> (ACF: {{ vm.getUserAcf().name }})</span></p>
-            <button type="button" ng-click="vm.logout()" class="btn btn-default navbar-btn">Log Out</button>
-          </ul>
+          <div class="btn-group navbar-toggle" uib-dropdown uib-7keyboard-nav is-open="!vm.navCollapse">
+            <button id="nav-dropdown" type="button" class="btn" uib-dropdown-toggle>
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <ul class="dropdown-menu" uib-dropdown-menu role="nav" aria-labelledby="nav-dropdown">
+              <li ng-class="{ 'active' : (vm.active === 'home') }"><a ng-href="#/">Home</a></li>
+              <li ng-class="{ 'active' : (vm.active === 'about') }"><a ng-href="#/about">About</a></li>
+              <li class="divider"></li>
+              <li><a href ng-click="vm.logout()">Log Out</a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </div><!-- /.container-fluid -->
 </nav>

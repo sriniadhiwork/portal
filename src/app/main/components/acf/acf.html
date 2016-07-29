@@ -1,22 +1,16 @@
 <div class="container-fluid component acf">
   <div class="form-horizontal" ng-form="vm.queryForm">
-    <div ng-if="!vm.hasAcf()" class="col-sm-12"><h1>ACF Registration</h1></div>
+    <div ng-if="!vm.hasAcf()" class="col-sm-12"><h1>Login to an ACF</h1></div>
     <div ng-if="vm.hasAcf()" class="col-sm-12">
       <h1>ACF Information
         <button class="btn btn-sm pull-right" ng-click="vm.isEditing = true" ng-if="!vm.isEditing"><i class="fa fa-pencil"></i><span class="sr-only">Edit ACF Information</span></button>
       </h1>
     </div>
-    <div class="form-group" ng-if="!vm.hasAcf()">
-      <label for="createNewAcf" class="col-sm-4 control-label">ACF not found?</label>
-      <div class="col-sm-8">
-        <input class="input-sm" type="checkbox" ng-model="vm.createNewAcf" id="createNewAcf" name="createNewAcf" ng-disabled="vm.acfs.length === 0"></input>
-      </div>
-    </div>
-    <div ng-if="!vm.hasAcf() && !vm.createNewAcf">
+    <div ng-if="!vm.hasAcf()">
       <div class="col-sm-12"><h2>Select an existing ACF</h2></div>
       <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required }">
-        <label for="selectAcf" class="col-sm-4 control-label">ACF Selection</label>
-        <div class="col-sm-8">
+        <label for="selectAcf" class="control-label sr-only">ACF Selection</label>
+        <div class="col-sm-12">
           <select class="input-sm form-control" ng-model="vm.selectAcf" id="selectAcf" name="selectAcf" ng-disabled="vm.createNewAcf || !vm.acfs || vm.acfs.length === 0" ng-required="!vm.createNewAcf"
                   ng-options="acf.name for acf in vm.acfs"
                   ng-keyup="$event.keyCode == 13 && vm.submitForm()">
@@ -24,104 +18,100 @@
           <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required">Field is required</span>
         </div>
       </div>
-      <div class="form-group">
-        <div class="col-sm-6 col-sm-offset-4">
-          <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
-                  class="btn btn-success btn-block"
-                  id="acfSubmit"
-                  ng-mouseover="vm.showFormErrors = true"
-                  ng-focus="vm.showFormErrors = true"
-                  ng-click="vm.acfSubmit()">Submit</button>
-        </div>
+    </div>
+    <div class="form-group" ng-if="!vm.hasAcf()">
+      <div class="col-sm-12">
+        <label for="createNewAcf" class="control-label">ACF not found?</label>
+        <input class="input-sm" type="checkbox" ng-model="vm.createNewAcf" id="createNewAcf" name="createNewAcf" ng-disabled="vm.acfs.length === 0"></input>
       </div>
     </div>
     <div ng-if="(!vm.hasAcf() && vm.createNewAcf) || (vm.hasAcf() && vm.isEditing)">
-      <div class="col-sm-12" ng-if="!vm.hasAcf()"><h2>Enter a new ACF</h2></div>
+      <div class="col-sm-12" ng-if="!vm.hasAcf()"><h2>Create a new ACF</h2></div>
       <div class="col-sm-12" ng-if="vm.hasAcf()"><h2>Edit current ACF</h2></div>
       <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.acfName.$touched) && vm.queryForm.acfName.$error.required }">
-        <label for="acfName" class="col-sm-4 control-label">Name</label>
-        <div class="col-sm-8">
+        <label for="acfName" class="col-sm-3 control-label">Name</label>
+        <div class="col-sm-9">
           <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.name" id="acfName" name="acfName" ng-disabled="!vm.createNewAcf && !vm.isEditing" ng-required="vm.createNewAcf || vm.isEditing"></input>
           <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.acfName.$touched) && vm.queryForm.acfName.$error.required">Field is required</span>
         </div>
       </div>
       <div class="form-group">
-        <label for="acfPhoneNumber" class="col-sm-4 control-label">Phone Number</label>
-        <div class="col-sm-8">
+        <label for="acfPhoneNumber" class="col-sm-3 control-label">Phone Number</label>
+        <div class="col-sm-9">
           <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.phoneNumber" id="acfPhoneNumber" name="acfPhoneNumber" ng-disabled="!vm.createNewAcf && !vm.isEditing"></input>
         </div>
       </div>
       <div class="form-group">
-        <label for="acfStreet1" class="col-sm-4 control-label">Street Line 1</label>
-        <div class="col-sm-8">
+        <label for="acfStreet1" class="col-sm-3 control-label">Street Line 1</label>
+        <div class="col-sm-9">
           <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.street1" id="acfStreet1" name="acfStreet1" ng-disabled="!vm.createNewAcf && !vm.isEditing"></input>
         </div>
       </div>
       <div class="form-group">
-        <label for="acfStreet2" class="col-sm-4 control-label">Street Line 2</label>
-        <div class="col-sm-8">
+        <label for="acfStreet2" class="col-sm-3 control-label">Street Line 2</label>
+        <div class="col-sm-9">
           <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.street2" id="acfStreet2" name="acfStreet2" ng-disabled="!vm.createNewAcf && !vm.isEditing"></input>
         </div>
       </div>
       <div class="form-group">
-        <label for="acfCity" class="col-sm-4 control-label">City</label>
-        <div class="col-sm-8">
+        <label for="acfCity" class="col-sm-3 control-label">City</label>
+        <div class="col-sm-9">
           <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.city" id="acfCity" name="acfCity" ng-disabled="!vm.createNewAcf && !vm.isEditing"></input>
         </div>
       </div>
       <div class="form-group">
-        <label for="acfState" class="col-sm-4 control-label">State</label>
-        <div class="col-sm-8">
+        <label for="acfState" class="col-sm-3 control-label">State</label>
+        <div class="col-sm-9">
           <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.state" id="acfState" name="acfState" ng-disabled="!vm.createNewAcf && !vm.isEditing"></input>
         </div>
       </div>
       <div class="form-group">
-        <label for="acfZip" class="col-sm-4 control-label">Zip</label>
-        <div class="col-sm-8">
+        <label for="acfZip" class="col-sm-3 control-label">Zip</label>
+        <div class="col-sm-9">
           <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.zip" id="acfZip" name="acfZip" ng-disabled="!vm.createNewAcf && !vm.isEditing"></input>
         </div>
       </div>
       <div class="form-group">
-        <label for="acfCountry" class="col-sm-4 control-label">Country</label>
-        <div class="col-sm-8">
+        <label for="acfCountry" class="col-sm-3 control-label">Country</label>
+        <div class="col-sm-9">
           <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.country" id="acfCountry" name="acfCountry" ng-disabled="!vm.createNewAcf && !vm.isEditing"></input>
         </div>
       </div>
-      <div class="form-group" ng-if="!vm.hasAcf()">
-        <div class="col-sm-6 col-sm-offset-4">
-          <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
-                  class="btn btn-success btn-block"
-                  id="acfSubmit"
-                  ng-mouseover="vm.showFormErrors = true"
-                  ng-focus="vm.showFormErrors = true"
-                  ng-click="vm.acfSubmit()">Submit</button>
-        </div>
+    </div>
+    <div class="form-group" ng-if="!vm.hasAcf()">
+      <div class="col-sm-6 col-sm-offset-4">
+        <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
+                class="btn btn-success btn-block"
+                id="acfSubmit"
+                ng-mouseover="vm.showFormErrors = true"
+                ng-focus="vm.showFormErrors = true"
+                ng-click="vm.acfSubmit()">Submit</button>
       </div>
-      <div class="form-group" ng-if="vm.hasAcf()">
-        <div class="col-sm-6 col-sm-offset-4">
-          <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
-                  class="btn btn-success btn-block"
-                  id="acfEdit"
-                  ng-mouseover="vm.showFormErrors = true"
-                  ng-focus="vm.showFormErrors = true"
-                  ng-click="vm.editAcf()">Save changes</button>
-        </div>
+    </div>
+    <div class="form-group" ng-if="vm.hasAcf() && vm.isEditing">
+      <div class="col-sm-6 col-sm-offset-4">
+        <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
+                class="btn btn-success btn-block"
+                id="acfEdit"
+                ng-mouseover="vm.showFormErrors = true"
+                ng-focus="vm.showFormErrors = true"
+                ng-click="vm.editAcf()">Save changes</button>
       </div>
-      <div class="form-group" ng-if="vm.hasAcf()">
-        <div class="col-sm-6 col-sm-offset-4">
-          <button class="btn btn-danger btn-block"
-                  id="acfCancelEdit"
-                  ng-click="vm.cancelEditing()">Cancel editing</button>
-        </div>
+    </div>
+    <div class="form-group" ng-if="vm.hasAcf() && vm.isEditing">
+      <div class="col-sm-6 col-sm-offset-4">
+        <button class="btn btn-danger btn-block"
+                id="acfCancelEdit"
+                ng-click="vm.cancelEditing()">Cancel editing</button>
       </div>
-      <div class="form-group" ng-if="vm.queryForm.$invalid && vm.showFormErrors">
-        <div class="col-sm-10 col-sm-offset-2 text-danger">
-          The following error<span ng-if="vm.errorCount() > 1">(s)</span> must be fixed:
-          <ul>
-            <li ng-if="vm.queryForm.selectAcf.$error.required">An ACF must be selected</li>
-            <li ng-if="vm.queryForm.acfName.$error.required">ACF Name is required</li>
-          </ul>
-        </div>
+    </div>
+    <div class="form-group" ng-if="vm.queryForm.$invalid && vm.showFormErrors">
+      <div class="col-sm-10 col-sm-offset-2 text-danger">
+        The following error<span ng-if="vm.errorCount() > 1">(s)</span> must be fixed:
+        <ul>
+          <li ng-if="vm.queryForm.selectAcf.$error.required">An ACF must be selected</li>
+          <li ng-if="vm.queryForm.acfName.$error.required">ACF Name is required</li>
+        </ul>
       </div>
     </div>
     <div ng-if="vm.hasAcf() && !vm.isEditing">
