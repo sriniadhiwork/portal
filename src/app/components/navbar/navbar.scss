@@ -1,24 +1,20 @@
-$top-nav-height: 100px;
+$top-nav-height: 120px;
+
+body {
+    margin-top: $top-nav-height;
+}
 
 header {
-    background-color: rgba(196,196,255,.5);
+    .navbar-default {
+        background-color: rgba(196,196,255,.5);
+    }
 
     .navbar {
         min-height: $top-nav-height;
         height: $top-nav-height;
         border-bottom: 4px solid #00f;
-
-        .navbar-brand {
-            position: absolute;
-            bottom: -$top-nav-height;
-            margin-right: auto;
-            margin-left: auto;
-        }
-
-        .navbar-collapse {
-            position: absolute;
-            bottom: -$top-nav-height;
-            right: 15px;
-        }
+    }
+    .navbar-toggle {
+        border: 0px;
     }
 }

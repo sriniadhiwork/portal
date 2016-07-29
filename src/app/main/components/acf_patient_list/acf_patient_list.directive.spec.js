@@ -68,7 +68,7 @@
             expect(vm.patients[0].documents[0].cached).toBe(true);
         });
 
-        xit('should have a way to get a document', function () {
+        it('should have a way to get a document', function () {
             var patient = vm.patients[0];
             vm.cacheDocument(patient, patient.documents[0]);
             el.isolateScope().$digest();
