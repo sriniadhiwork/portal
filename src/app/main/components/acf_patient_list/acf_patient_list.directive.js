@@ -41,8 +41,8 @@
             }
 
             function cacheDocument (patient, doc) {
-                commonService.cacheDocument(patient.id, doc.id).then(function (response) {
-                    doc.cached = response;
+                commonService.cacheDocument(patient.id, doc.id).then(function () {
+                    doc.cached = true;
                 });
             }
 
@@ -53,10 +53,14 @@
             }
 
             function getDocument (patient, doc) {
-                commonService.getDocument(patient.id, doc.id).then(function (response) {
-                    doc.data = response;
+                if (!doc.data) {
+                    commonService.getDocument(patient.id, doc.id).then(function (response) {
+                        doc.data = response.data;
+                        vm.activeDocument = doc;
+                    });
+                } else {
                     vm.activeDocument = doc;
-                });
+                }
             }
 
             function getUserAcf () {

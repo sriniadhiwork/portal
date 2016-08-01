@@ -35,6 +35,7 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.navCollapse = true;
             }
 
             function isAuthenticated () {

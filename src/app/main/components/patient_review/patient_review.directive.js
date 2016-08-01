@@ -34,7 +34,6 @@
             vm.isStageable = isStageable;
             vm.getQueries = getQueries;
             vm.getRecordCount = getRecordCount;
-            vm.parseTerms = parseTerms;
             vm.setDob = setDob;
             vm.stagePatientRecords = stagePatientRecords;
 
@@ -68,7 +67,6 @@
                 commonService.getQueries().then(function (response) {
                     vm.patientQueries = response;
                     for (var i = 0; i < vm.patientQueries.length; i++) {
-                        vm.patientQueries[i].terms = angular.copy(vm.parseTerms(vm.patientQueries[i].terms));
                         vm.patientQueries[i].recordCount = vm.getRecordCount(vm.patientQueries[i]);
                     }
                 });
@@ -80,10 +78,6 @@
                     recordCount += query.orgStatuses[i].results.length;
                 }
                 return recordCount;
-            }
-
-            function parseTerms (terms) {
-                return angular.fromJson(terms);
             }
 
             function setDob (query, dob) {

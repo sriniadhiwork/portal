@@ -9,7 +9,7 @@
     <div class="col-sm-12">
       <h2>
         {{ patient.firstName }} {{ patient.lastName }}
-        <button class="btn btn-danger pull-right" ng-click="vm.dischargePatient(patient)"><i class="fa fa-close"></i><span class="sr-only">Discharge Patient</span></button>
+        <button class="btn btn-danger pull-right" ng-click="vm.dischargePatient(patient)"><i class="fa fa-sign-out"></i><span class="sr-only">Discharge Patient</span></button>
       </h2>
       <div><a href ng-click="patient.showDemographics = !patient.showDemographics">{{ patient.showDemographics ? 'Hide' : 'Show' }} patient demographics</a></div>
       <div ng-if="patient.showDemographics">
@@ -29,8 +29,8 @@
           <li ng-repeat="org in patient.orgMaps track by org.id" ng-if="org.documents.length > 0">Documents from {{ org.organization.name }}
             <ul>
               <li ng-repeat="doc in org.documents track by doc.id">
-                  <button ng-if="!doc.cached || true" ng-click="vm.cacheDocument(patient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
-                  <button ng-if="doc.cached || true" ng-click="vm.getDocument(patient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
+                  <button ng-if="!doc.cached" ng-click="vm.cacheDocument(patient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
+                  <button ng-if="doc.cached" ng-click="vm.getDocument(patient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
                   {{ doc.name }}
               </li>
             </ul>
