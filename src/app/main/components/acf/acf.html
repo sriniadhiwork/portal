@@ -68,7 +68,7 @@
       <div class="form-group">
         <label for="acfZip" class="col-sm-3 control-label">Zip</label>
         <div class="col-sm-9">
-          <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.zip" id="acfZip" name="acfZip" ng-disabled="!vm.createNewAcf && !vm.isEditing"></input>
+          <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.zipcode" id="acfZip" name="acfZip" ng-disabled="!vm.createNewAcf && !vm.isEditing"></input>
         </div>
       </div>
       <div class="form-group">
@@ -143,7 +143,7 @@
           </tr>
           <tr>
             <th scope="rows">Zip</th>
-            <td>{{ vm.acf.address.zip }}</td>
+            <td>{{ vm.acf.address.zipcode }}</td>
           </tr>
           <tr>
             <th scope="rows">Country</th>
