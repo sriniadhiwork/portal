@@ -36,7 +36,6 @@
 
         function registerHandler (handler) {
             vm.handlers.push(handler);
-            $log.debug(vm.handlers);
             var removeHandler = function () {
                 vm.handlers = vm.handlers.filter(function (aHandler) {
                     return aHandler !== handler;

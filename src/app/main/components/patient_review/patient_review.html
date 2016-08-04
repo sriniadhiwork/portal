@@ -19,14 +19,16 @@
           </tr>
         </thead>
         <tfoot>
-          <tr>
+          <tr ng-if="query.status === 'COMPLETE'">
             <td colspan="2"><a href ng-click="query.showRecords = !query.showRecords">{{ query.showRecords ? 'Hide' : 'Show'}} {{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> from {{ query.orgStatuses.length }} organization<span ng-if="query.orgStatuses.length > 1">s</span></a></td>
           </tr>
         </tfoot>
         <tbody>
           <tr>
             <td>Status</td>
-            <td>{{ query.status }}</td>
+            <td>{{ query.status }}
+              <uib-progressbar class="progress-striped-no" ng-class="{'progress-striped active' : query.status !== 'COMPLETE'}" max="query.orgStatuses.length" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} / {{ query.orgStatuses.length }} organization<span ng-if="query.orgStatuses.length > 1">s</span> reporting</i></uib-progressbar>
+            </td>
           </tr>
           <tr>
             <td>ID</td>

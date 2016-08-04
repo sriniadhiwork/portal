@@ -29,15 +29,18 @@
         return directive;
 
         /** @ngInject */
-        function PatientReviewController($log, $scope, commonService) {
+        function PatientReviewController($log, $scope, $timeout, commonService, QueryQueryTimeout) {
             var vm = this;
 
             vm.clearQuery = clearQuery;
+            vm.countComplete = countComplete;
             vm.isStageable = isStageable;
             vm.getQueries = getQueries;
             vm.getRecordCount = getRecordCount;
             vm.setDob = setDob;
             vm.stagePatientRecords = stagePatientRecords;
+
+            vm.TIMEOUT_MILLIS = QueryQueryTimeout * 1000;
 
             activate();
 
@@ -55,6 +58,16 @@
                 }
             }
 
+            function countComplete (query) {
+                var count = 0;
+                for (var i = 0; i < query.orgStatuses.length; i++) {
+                    if (query.orgStatuses[i].status === 'COMPLETE') {
+                        count += 1;
+                    }
+                }
+                return count;
+            }
+
             function isStageable (query) {
                 var ret = false;
                 for (var i = 0; i < query.orgStatuses.length; i++) {
@@ -67,9 +80,14 @@
 
             function getQueries () {
                 commonService.getQueries().then(function (response) {
+                    var hasActive = false;
                     vm.patientQueries = response;
                     for (var i = 0; i < vm.patientQueries.length; i++) {
                         vm.patientQueries[i].recordCount = vm.getRecordCount(vm.patientQueries[i]);
+                        hasActive = hasActive || (vm.patientQueries[i].status === 'ACTIVE');
+                    }
+                    if (hasActive) {
+                        $timeout(vm.getQueries,vm.TIMEOUT_MILLIS);
                     }
                 });
             }
