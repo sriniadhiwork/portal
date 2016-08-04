@@ -1,0 +1,6 @@
+{
+    'API': 'http://52.40.244.116/rest',
+    'AuthAPI':  'http://52.40.244.116/auth',
+    'OrganizationQueryInterval': 60,
+    'LogoutRedirect': 'http://www.google.com'
+}

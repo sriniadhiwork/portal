@@ -4,26 +4,26 @@
     <div class="form-group">
       <label for="firstName" class="col-sm-4 control-label">First Name</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.query.firstName" id="firstName" name="firstName"></input>
+        <input class="input-sm form-control" type="text" ng-model="vm.query.firstName" id="firstName" name="firstName" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.hasSearchTerm() && vm.searchForPatient()"></input>
       </div>
     </div>
     <div class="form-group">
       <label for="lastName" class="col-sm-4 control-label">Last Name</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.query.lastName" id="lastName" name="lastName"></input>
+        <input class="input-sm form-control" type="text" ng-model="vm.query.lastName" id="lastName" name="lastName" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.hasSearchTerm() && vm.searchForPatient()"></input>
       </div>
     </div>
     <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.date }">
       <label for="dob" class="col-sm-4 control-label">Date of Birth</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="date" ng-model="vm.query.dob" id="dob" name="dob"></input>
+        <input class="input-sm form-control" type="date" ng-model="vm.query.dob" id="dob" name="dob" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.hasSearchTerm() && vm.searchForPatient()"></input>
         <div class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.date">Improper format (mm/dd/yyyy)</div>
       </div>
     </div>
     <div class="form-group">
       <label for="gender" class="col-sm-4 control-label">Gender</label>
       <div class="col-sm-8">
-        <select class="input-sm form-control" ng-model="vm.query.gender" id="gender" name="gender">
+        <select class="input-sm form-control" ng-model="vm.query.gender" id="gender" name="gender" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.hasSearchTerm() && vm.searchForPatient()">
           <option selected="true">Unknown</option>
           <option value="Female">Female</option>
           <option value="Male">Male</option>
@@ -33,14 +33,14 @@
     <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern }">
       <label for="ssn" class="col-sm-4 control-label">SSN (or last 4)</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn" placeholder="XXX-XX-XXXX or XXXX" pattern="(\d{3}-?\d{2}-?\d{4}|\d{4})"></input>
+        <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn" placeholder="XXX-XX-XXXX or XXXX" pattern="(\d{3}-?\d{2}-?\d{4}|\d{4})" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.hasSearchTerm() && vm.searchForPatient()"></input>
         <div class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX or XXXX)</div>
       </div>
     </div>
     <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.homeZip.$touched) && vm.queryForm.homeZip.$error.pattern }">
       <label for="homeZip" class="col-sm-4 control-label">Home Zip Code</label>
       <div class="col-sm-8">
-        <input class="input-sm form-control" type="text" ng-model="vm.query.homeZip" id="homeZip" name="homeZip" placeholder="XXXXX or XXXXX-XXXX" pattern="\d{5}-?(\d{4})?"></input>
+        <input class="input-sm form-control" type="text" ng-model="vm.query.homeZip" id="homeZip" name="homeZip" placeholder="XXXXX or XXXXX-XXXX" pattern="\d{5}-?(\d{4})?" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.hasSearchTerm() && vm.searchForPatient()"></input>
         <div class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.homeZip.$touched) && vm.queryForm.homeZip.$error.pattern">Improper format (XXXXX or XXXXX-XXXX)</div>
       </div>
     </div>
