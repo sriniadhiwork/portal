@@ -40,13 +40,14 @@
           </ai-patient-search>
         </div>
         <div class="col-sm-6">
-          <ai-patient-review register-handler="vm.registerHandler(handler)">
+          <ai-patient-review trigger-handlers="vm.triggerHandlers()" register-handler="vm.registerHandler(handler)">
           </ai-patient-review>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-4">
           <ai-acf-patient-list
+             register-handler="vm.registerHandler(handler)"
              active-document="vm.activeDocument">
           </ai-acf-patient-list>
         </div>

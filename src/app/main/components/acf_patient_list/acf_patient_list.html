@@ -19,8 +19,10 @@
           <li><strong>Date Of Birth:</strong> {{ patient.dateOfBirth | date }}</li>
           <li><strong>Gender:</strong> {{ patient.gender }}</li>
           <li><strong>SSN:</strong> {{ patient.ssn }}</li>
+          <!--
           <li><strong>Address:</strong> {{ patient.address }}</li>
           <li><strong>Phone Number:</strong> {{ patient.phoneNumber }}</li>
+          -->
         </ul>
       </div>
       <div><a href ng-click="patient.showDocuments = !patient.showDocuments">{{ patient.showDocuments ? 'Hide' : 'Show' }} patient documents</a></div>

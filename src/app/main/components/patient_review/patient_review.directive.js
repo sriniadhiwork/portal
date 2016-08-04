@@ -13,7 +13,9 @@
             scope: { registerHandler: '&' },
             controller: PatientReviewController,
             controllerAs: 'vm',
-            bindToController: {},
+            bindToController: {
+                triggerHandlers: '&'
+            },
             link: function (scope, element, attr, ctrl) {
                 var handler = scope.registerHandler({
                     handler: function () {
@@ -101,8 +103,11 @@
                             }
                         }
                     }
-                    commonService.stagePatient(newPatient);
+                    commonService.stagePatient(newPatient).then(function() {
+                        vm.triggerHandlers();
+                    });
                     vm.clearQuery(query);
+                    //vm.getQueries();
                 }
             }
         }

@@ -60,8 +60,9 @@
             function searchForPatient () {
                 if (hasSearchTerm()) {
                     var queryObj = {query: angular.copy(vm.query)};
-                    commonService.searchForPatient(queryObj.query);
-                    vm.triggerHandlers();
+                    commonService.searchForPatient(queryObj.query).then(function() {
+                        vm.triggerHandlers();
+                    });
                     vm.query = {};
                 }
             }

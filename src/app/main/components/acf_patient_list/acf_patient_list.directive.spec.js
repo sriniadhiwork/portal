@@ -117,5 +117,11 @@
         it('should call "getPatientsAtAcf" on load', function () {
             expect(commonService.getPatientsAtAcf).toHaveBeenCalled();
         });
+
+        it('should have a function to get patients', function () {
+            expect(vm.getPatientsAtAcf).toBeDefined();
+            vm.getPatientsAtAcf();
+            expect(commonService.getPatientsAtAcf).toHaveBeenCalled();
+        });
     });
 })();
