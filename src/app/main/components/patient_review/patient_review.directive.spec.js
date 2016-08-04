@@ -21,7 +21,7 @@
                 $q = _$q_;
                 commonService = _commonService_;
                 commonService.getQueries.and.returnValue($q.when(mock.queries));
-                commonService.stagePatient.and.returnValue({});
+                commonService.stagePatient.and.returnValue($q.when({}));
 
                 el = angular.element('<ai-patient-review></ai-patient-review>');
 
@@ -143,6 +143,13 @@
                 delete vm.patientQueries[0].patient;
                 vm.setDob(vm.patientQueries[0], 413269200000);
                 expect(vm.patientQueries[0].patient.dateOfBirth.getTime()).toBe(413269200000);
+            });
+
+            it('should tell the controller that a patient was staged', function () {
+                spyOn(vm,'triggerHandlers');
+                vm.stagePatientRecords(vm.patientQueries[0]);
+                el.isolateScope().$digest();
+                expect(vm.triggerHandlers).toHaveBeenCalled();
             });
         });
     });
