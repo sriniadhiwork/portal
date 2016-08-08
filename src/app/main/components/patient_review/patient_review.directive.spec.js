@@ -9,6 +9,7 @@
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
+                    $delegate.clearQuery = jasmine.createSpy('clearQuery');
                     $delegate.getQueries = jasmine.createSpy('getQueries');
                     $delegate.stagePatient = jasmine.createSpy('stagePatient');
                     return $delegate;
@@ -21,6 +22,7 @@
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
+                commonService.clearQuery.and.returnValue($q.when({}));
                 commonService.getQueries.and.returnValue($q.when(mock.queries));
                 commonService.stagePatient.and.returnValue($q.when({}));
 
@@ -117,7 +119,10 @@
 
             it('should have a way to clear patient queries', function () {
                 expect(vm.patientQueries.length).toBe(2);
+                commonService.getQueries.and.returnValue($q.when(angular.copy(mock.queries).splice(0,1)));
+
                 vm.clearQuery(vm.patientQueries[0]);
+                el.isolateScope().$digest();
                 expect(vm.patientQueries.length).toBe(1);
             });
 
@@ -127,6 +132,11 @@
                 fakeQuery.id = 'fake';
                 vm.clearQuery(fakeQuery);
                 expect(vm.patientQueries.length).toBe(2);
+            });
+
+            it('should call commonService.clearQuery', function () {
+                vm.clearQuery(vm.patientQueries[0]);
+                expect(commonService.clearQuery).toHaveBeenCalledWith(vm.patientQueries[0].id);
             });
         });
 
@@ -151,7 +161,9 @@
             });
 
             it('should remove a staged query when selected', function () {
+                commonService.getQueries.and.returnValue($q.when(angular.copy(mock.queries).splice(0,1)));
                 vm.stagePatientRecords(vm.patientQueries[0]);
+                el.isolateScope().$digest();
                 expect(vm.patientQueries.length).toBe(1);
             });
 

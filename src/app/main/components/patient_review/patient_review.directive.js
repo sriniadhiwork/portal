@@ -51,11 +51,9 @@
             }
 
             function clearQuery (query) {
-                for (var i = 0; i < vm.patientQueries.length; i++) {
-                    if (vm.patientQueries[i].id === query.id) {
-                        vm.patientQueries.splice(i,1);
-                    }
-                }
+                commonService.clearQuery(query.id).then(function () {
+                    vm.getQueries();
+                });
             }
 
             function countComplete (query) {
