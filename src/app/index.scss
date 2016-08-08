@@ -49,6 +49,17 @@ h2 {
     color: #ccc;
 }
 
+.st-sort-ascent:before {
+    content: '\25B2';
+}
+
+.st-sort-descent:before {
+    content: '\25BC';
+}
+
+.st-sort {
+    cursor: pointer;
+}
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject
  *  all your sass files automatically

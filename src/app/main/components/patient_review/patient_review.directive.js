@@ -122,8 +122,7 @@
                     commonService.stagePatient(newPatient).then(function() {
                         vm.triggerHandlers();
                     });
-                    vm.clearQuery(query);
-                    //vm.getQueries();
+                    vm.getQueries();
                 }
             }
         }
