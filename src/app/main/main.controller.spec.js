@@ -2,7 +2,7 @@
     'use strict';
 
     describe('main.controller', function() {
-        var vm, scope, commonService, $log;
+        var vm, scope, commonService, $log, $location;
 
         beforeEach(function () {
             module('portal.main', 'portal.constants', function ($provide) {
@@ -14,9 +14,10 @@
                 });
             });
 
-            inject(function (_commonService_, _$log_, $controller, $q, $rootScope) {
+            inject(function (_commonService_, _$log_, _$location_, $controller, $q, $rootScope) {
                 commonService = _commonService_;
                 $log = _$log_;
+                $location = _$location_;
                 commonService.isAuthenticated.and.returnValue(true);
                 commonService.hasAcf.and.returnValue(true);
 
@@ -40,6 +41,15 @@
         it('should know if the user has an ACF', function () {
             expect(vm.hasAcf).toBeDefined();
             expect(vm.hasAcf()).toBeTruthy();
+        });
+
+        it('should have a function to scroll', function () {
+            expect(vm.scrollTo).toBeDefined();
+        });
+
+        it('should set the location', function () {
+            vm.scrollTo('anId');
+            expect($location.hash()).toBe('anId');
         });
 
         describe('handlers and triggers', function () {

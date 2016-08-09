@@ -10,12 +10,21 @@
         var directive = {
             restrict: 'E',
             templateUrl: 'app/main/components/acf_patient_list/acf_patient_list.html',
-            scope: {},
+            scope: { registerHandler: '&' },
             controller: AcfPatientListController,
             controllerAs: 'vm',
             bindToController: {
                 activeDocument: '=?'
+            },
+            link: function (scope, element, attr, ctrl) {
+                var handler = scope.registerHandler({
+                    handler: function () {
+                        ctrl.getPatientsAtAcf();
+                    }
+                });
+                scope.$on('$destroy', handler);
             }
+
         };
 
         return directive;
@@ -27,6 +36,7 @@
             vm.cacheDocument = cacheDocument;
             vm.dischargePatient = dischargePatient;
             vm.getDocument = getDocument;
+            vm.getPatientsAtAcf = getPatientsAtAcf;
             vm.getUserAcf = getUserAcf;
 
             activate();
@@ -35,9 +45,7 @@
 
             function activate () {
                 vm.patients = [];
-                commonService.getPatientsAtAcf().then(function (response) {
-                    vm.patients = response;
-                });
+                vm.getPatientsAtAcf();
             }
 
             function cacheDocument (patient, doc) {
@@ -46,10 +54,10 @@
                 });
             }
 
-            function dischargePatient (index) {
-                if (index < vm.patients.length) {
-                    vm.patients.splice(index,1);
-                }
+            function dischargePatient (patient) {
+                commonService.dischargePatient(patient.id).then(function () {
+                    vm.getPatientsAtAcf();
+                });
             }
 
             function getDocument (patient, doc) {
@@ -61,6 +69,12 @@
                 } else {
                     vm.activeDocument = doc;
                 }
+            }
+
+            function getPatientsAtAcf () {
+                commonService.getPatientsAtAcf().then(function (response) {
+                    vm.patients = response;
+                });
             }
 
             function getUserAcf () {

@@ -66,6 +66,7 @@
         it('should tell the controller that a search was performed', function () {
             spyOn(vm,'triggerHandlers');
             vm.searchForPatient();
+            el.isolateScope().$digest();
             expect(vm.triggerHandlers).toHaveBeenCalled();
         });
 

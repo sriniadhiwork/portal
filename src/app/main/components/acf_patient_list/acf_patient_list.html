@@ -1,41 +1,50 @@
-<div class="container-fluid component acf-patient-list">
-  <div class="row">
-    <div class="col-sm-12">
-      <h1>{{ vm.patients.length }} Active Patient<span ng-if="vm.patients.length !== 1">s</span></h1>
+<div class="container-fluid acf-patient-list">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h1 class="panel-title">{{ vm.patients.length }} Active Patient<span ng-if="vm.patients.length !== 1">s</span></h1>
       <p>At ACF: {{ vm.getUserAcf().name }}</p>
     </div>
-  </div>
-  <div class="row" ng-if="vm.patients.length > 0" ng-repeat="patient in vm.patients | orderBy:'lastName' track by patient.id">
-    <div class="col-sm-12">
-      <h2>
-        {{ patient.firstName }} {{ patient.lastName }}
-        <button class="btn btn-danger pull-right" ng-click="vm.dischargePatient(patient)"><i class="fa fa-sign-out"></i><span class="sr-only">Discharge Patient</span></button>
-      </h2>
-      <div><a href ng-click="patient.showDemographics = !patient.showDemographics">{{ patient.showDemographics ? 'Hide' : 'Show' }} patient demographics</a></div>
-      <div ng-if="patient.showDemographics">
-        <ul class="list-unstyled">
-          <li><strong>First Name:</strong> {{ patient.firstName }}</li>
-          <li><strong>Last Name:</strong> {{ patient.lastName }}</li>
-          <li><strong>Date Of Birth:</strong> {{ patient.dateOfBirth | date }}</li>
-          <li><strong>Gender:</strong> {{ patient.gender }}</li>
-          <li><strong>SSN:</strong> {{ patient.ssn }}</li>
-          <li><strong>Address:</strong> {{ patient.address }}</li>
-          <li><strong>Phone Number:</strong> {{ patient.phoneNumber }}</li>
-        </ul>
-      </div>
-      <div><a href ng-click="patient.showDocuments = !patient.showDocuments">{{ patient.showDocuments ? 'Hide' : 'Show' }} patient documents</a></div>
-      <div ng-if="patient.showDocuments">
-        <ul class="list-unstyled">
-          <li ng-repeat="org in patient.orgMaps track by org.id" ng-if="org.documents.length > 0">Documents from {{ org.organization.name }}
-            <ul>
-              <li ng-repeat="doc in org.documents track by doc.id">
-                  <button ng-if="!doc.cached" ng-click="vm.cacheDocument(patient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
-                  <button ng-if="doc.cached" ng-click="vm.getDocument(patient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
-                  {{ doc.name }}
-              </li>
-            </ul>
-          </li>
-        </ul>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <table class="table table-striped" st-table="vm.displayedPatients" st-safe-src="vm.patients" ng-if="vm.patients.length > 0">
+            <thead>
+              <tr>
+                <th scope="cols">View More</th>
+                <th scope="cols" st-sort="firstName" st-skip-natural="true" class="st-sort">First Name</th>
+                <th scope="cols" st-sort="lastName" st-skip-natural="true" class="st-sort">Last Name</th>
+                <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Birth Date</th>
+                <th scope="cols" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Accessed</th>
+                <th scope="cols">Documents</th>
+                <th scope="cols">Discharge</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="patient in vm.displayedPatients">
+                <td><button class="btn btn-info" ng-click="patient.showDocuments = !patient.showDocuments"><i class="fa fa-caret-right"></i><span class="sr-only">{{ patient.showDocuments ? 'Hide' : 'Show' }} patient documents</span></button></td>
+                <td>{{ patient.firstName }}</td>
+                <td>{{ patient.lastName }}</td>
+                <td>{{ patient.dateOfBirth | date }}</td>
+                <td>{{ patient.lastRead | date : 'medium' }}</td>
+                <td>
+                  <ul class="list-unstyled">
+                    <li ng-repeat="org in patient.orgMaps track by org.id">Documents from {{ org.organization.name }}
+                      <ul>
+                        <li ng-if="org.documents.length === 0">No documents found</li>
+                        <li ng-repeat="doc in org.documents track by doc.id">
+                          <button ng-if="!doc.cached" ng-click="vm.cacheDocument(patient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
+                          <button ng-if="doc.cached" ng-click="vm.getDocument(patient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
+                          {{ doc.name }}
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </td>
+                <td><button class="btn btn-danger" ng-click="vm.dischargePatient(patient)"><i class="fa fa-sign-out"></i><span class="sr-only">Discharge {{ patient.firstName }} {{ patient.lastName }}</span></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

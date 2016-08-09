@@ -1,20 +1,22 @@
-<div class="component container-fluid organization-status">
-  <div class="row">
-    <div class="col-sm-12">
-      <h1>Organization Status</h1>
+<div class="container-fluid organization-status">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h1 class="panel-title">Organization Status</h1>
+    </div>
+    <div class="panel-body">
       <table class="table">
         <thead>
           <tr>
             <th scope="cols">Organization</th>
-            <th scope="cols">Adapter</th>
-            <th scope="cols">Active</th>
+            <th scope="cols">Phone</th>
+            <th scope="cols">Status</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="org in vm.organizations track by $index">
             <td>{{ org.name }}</td>
-            <td>{{ org.adapter }}</td>
-            <td>{{ org.active ? 'True' : 'False' }}</td>
+            <td>123-123-1234</td>
+            <td>{{ org.id > 2 ? 'Average 2 minute delay' : 'Connected' }}</td>
           </tr>
         </tbody>
       </table>

@@ -7,7 +7,12 @@ $grid-float-breakpoint: 100%;
 $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 $fa-font-path: "../../bower_components/font-awesome/fonts";
 @import "../../bower_components/font-awesome/scss/font-awesome.scss";
-
+/*@import url(https://fonts.googleapis.com/css?family=Heebo:400,800|Source+Sans+Pro:700italic,700);*/
+@import "https://fonts.googleapis.com/css?family=Heebo:400,800|Source+Sans+Pro:700italic,700";
+$body-bg: #efede6;
+$font-family-sans-serif:  "Heebo", Helvetica, Arial, sans-serif !default;
+$brand-success: #3cb878;
+$btn-font-weight: 800;
 /**
  *  Do not remove the comments below. It's the markers used by wiredep to inject
  *  sass dependencies when defined in the bower.json of your dependencies
@@ -29,8 +34,31 @@ $fa-font-path: "../../bower_components/font-awesome/fonts";
     background-color: white;
 }
 
-body {
-    background: #ccc;
+h2 {
+    font-family: 'Source Sans Pro';
+    font-weight: 700;
+}
+
+.panel-button {
+    background-color: rgba(1,1,1,0);
+    color: white;
+    border-color: white;
+}
+
+.panel-button:hover, .panel-button:focus, .panel-button.focus {
+    color: #ccc;
+}
+
+.st-sort-ascent:before {
+    content: '\25B2';
+}
+
+.st-sort-descent:before {
+    content: '\25BC';
+}
+
+.st-sort {
+    cursor: pointer;
 }
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject

@@ -10,7 +10,9 @@
         var self = this;
 
         self.cacheDocument = cacheDocument;
+        self.clearQuery = clearQuery;
         self.createAcf = createAcf;
+        self.dischargePatient = dischargePatient;
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
@@ -43,8 +45,26 @@
                 });
         }
 
+        function clearQuery (queryId) {
+            return postApi('/queries/' + queryId + '/delete', {})
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
         function createAcf (newAcf) {
             return postApi('/acfs/create', newAcf)
+                .then(function (response) {
+                    return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function dischargePatient (patientId) {
+            return postApi('/patients/' + patientId + '/delete', {})
                 .then(function (response) {
                     return $q.when(response);
                 }, function (error) {

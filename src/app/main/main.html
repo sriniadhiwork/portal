@@ -25,35 +25,56 @@
     </div>
     <div ng-if="vm.hasAcf()">
       <div class="row">
-        <div class="col-sm-6">
-          <ai-organization-status>
-          </ai-organization-status>
+        <div class="col-sm-1">
+          <button class="btn btn-success btn-block" ng-click="vm.scrollTo('PatientIntake')">Patient<br />Intake</button>
+          <button class="btn btn-success btn-block" ng-click="vm.scrollTo('PatientTreatment')">Patient<br />Treatment</button>
         </div>
-        <div class="col-sm-6">
-          <ai-acf>
-          </ai-acf>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6">
-          <ai-patient-search trigger-handlers="vm.triggerHandlers()">
-          </ai-patient-search>
-        </div>
-        <div class="col-sm-6">
-          <ai-patient-review register-handler="vm.registerHandler(handler)">
-          </ai-patient-review>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          <ai-acf-patient-list
-             active-document="vm.activeDocument">
-          </ai-acf-patient-list>
-        </div>
-        <div class="col-sm-8">
-          <ai-document-review
-             active-document="vm.activeDocument">
-          </ai-document-review>
+        <div class="col-sm-11">
+          <div class="row">
+            <div class="col-sm-4">
+              <ai-acf>
+              </ai-acf>
+            </div>
+            <div class="col-sm-8">
+              <ai-organization-status>
+              </ai-organization-status>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <h1>Patient Intake<a id="PatientIntake"></a></h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <ai-patient-search trigger-handlers="vm.triggerHandlers()">
+              </ai-patient-search>
+            </div>
+            <div class="col-sm-8">
+              <ai-patient-review trigger-handlers="vm.triggerHandlers()" register-handler="vm.registerHandler(handler)">
+              </ai-patient-review>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <h1>Patient Treatment<a id="PatientTreatment"></a></h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <ai-acf-patient-list
+                 register-handler="vm.registerHandler(handler)"
+                 active-document="vm.activeDocument">
+              </ai-acf-patient-list>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <ai-document-review
+                 active-document="vm.activeDocument">
+              </ai-document-review>
+            </div>
+          </div>
         </div>
       </div>
     </div>

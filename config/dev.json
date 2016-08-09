@@ -3,5 +3,6 @@
     'API': 'http://52.32.239.69/rest',
     'AuthAPI':  'http://52.32.239.69/auth',
     'OrganizationQueryInterval': 60,
+    'QueryQueryTimeout': 5,
     'LogoutRedirect': 'http://www.google.com'
 }

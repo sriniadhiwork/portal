@@ -6,12 +6,13 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, commonService, AuthAPI) {
+    function MainController($log, $location, $anchorScroll, commonService, AuthAPI) {
         var vm = this;
 
         vm.hasAcf = hasAcf;
         vm.isAuthenticated = isAuthenticated;
         vm.registerHandler = registerHandler;
+        vm.scrollTo = scrollTo;
         vm.triggerHandlers = triggerHandlers;
 
         vm.commonService = commonService;
@@ -42,6 +43,11 @@
                 });
             };
             return removeHandler;
+        }
+
+        function scrollTo (target) {
+            $location.hash(target);
+            //$anchorScroll();
         }
 
         function triggerHandlers () {
