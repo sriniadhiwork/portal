@@ -9,8 +9,8 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="cols">First Name</th>
-          <th scope="cols">Last Name</th>
+          <th scope="cols">Given Name</th>
+          <th scope="cols">Family Name</th>
           <th scope="cols">Date of Birth</th>
           <th scope="cols">Gender</th>
           <th scope="cols">SSN</th>
@@ -18,8 +18,8 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{ vm.query.terms.firstName }}</td>
-          <td>{{ vm.query.terms.lastName }}</td>
+          <td>{{ vm.query.terms.givenName }}</td>
+          <td>{{ vm.query.terms.familyName }}</td>
           <td>{{ vm.query.terms.dob | date }}</td>
           <td>{{ vm.query.terms.gender }}</td>
           <td>{{ vm.query.terms.ssn }}</td>
@@ -30,9 +30,9 @@
     <table class="table table-striped" st-table="vm.displayedRecords" st-safe-src="vm.query.orgStatuses">
       <thead>
         <tr>
-          <th scope="cols" st-sort="orgId" st-skip-natural="true" class="st-sort">Organization</th>
-          <th scope="cols" st-sort="firstName" st-skip-natural="true" class="st-sort">First Name</th>
-          <th scope="cols" st-sort="lastName" st-skip-natural="true" class="st-sort">Last Name</th>
+          <th scope="cols" st-sort="org.name" st-skip-natural="true" class="st-sort">Organization</th>
+          <th scope="cols" st-sort="givenName" st-skip-natural="true" class="st-sort">Given Name</th>
+          <th scope="cols" st-sort="familyName" st-skip-natural="true" class="st-sort">Family Name</th>
           <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
           <th scope="cols" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
           <th scope="cols" st-sort="ssn" st-skip-natural="true" class="st-sort">SSN</th>
@@ -43,12 +43,12 @@
         <tr>
           <td>&nbsp;</td>
           <td>
-            <label for="patientFirstName" class="control-label sr-only">First Name</label>
-            <input type="text" class="form-control" id="patientFirstName" ng-model="vm.patient.firstName">
+            <label for="patientGivenName" class="control-label sr-only">Given Name</label>
+            <input type="text" class="form-control" id="patientGivenName" ng-model="vm.patient.givenName">
           </td>
           <td>
-            <label for="patientLastName" class="control-label sr-only">Last Name</label>
-            <input type="text" class="form-control" id="patientLastName" ng-model="vm.patient.lastName">
+            <label for="patientFamilyName" class="control-label sr-only">Family Name</label>
+            <input type="text" class="form-control" id="patientFamilyName" ng-model="vm.patient.familyName">
           </td>
           <td>
             <label for="patientDob" class="control-label sr-only">Date Of Birth</label>
@@ -73,25 +73,25 @@
       </tfoot>
       <tbody>
         <tr ng-repeat-start="org in vm.query.orgStatuses track by org.id" ng-if="org.results && org.results.length > 0">
-          <td rowspan="{{ org.results.length }}">{{ org.orgId }}</td>
-          <td href ng-click="vm.patient.firstName = org.results[0].firstName">{{ org.results[0].firstName }}</td>
-          <td href ng-click="vm.patient.lastName = org.results[0].lastName">{{ org.results[0].lastName }}</td>
+          <td rowspan="{{ org.results.length }}">{{ org.org.name }}</td>
+          <td href ng-click="vm.patient.givenName = org.results[0].givenName">{{ org.results[0].givenName }}</td>
+          <td href ng-click="vm.patient.familyName = org.results[0].familyName">{{ org.results[0].familyName }}</td>
           <td href ng-click="vm.setDob(org.results[0].dob)">{{ org.results[0].dob | date }}</td>
           <td href ng-click="vm.patient.gender = org.results[0].gender">{{ org.results[0].gender }}</td>
           <td href ng-click="vm.patient.ssn = org.results[0].ssn">{{ org.results[0].ssn }}</td>
           <td>
-            <label class="sr-only" for="recordSelect-{{ org.results[0].id }}">{{ org.results[0].firstName + ' ' + org.results[0].lastName }}</label>
+            <label class="sr-only" for="recordSelect-{{ org.results[0].id }}">{{ org.results[0].givenName + ' ' + org.results[0].familyName }}</label>
             <input id="recordSelect-{{ org.results[0].id }}" type="checkbox" ng-model="org.results[0].selected">
           </td>
         </tr>
         <tr ng-repeat-end ng-repeat="record in org.results.slice(1)">
-          <td href ng-click="vm.patient.firstName = record.firstName">{{ record.firstName }}</td>
-          <td href ng-click="vm.patient.lastName = record.lastName">{{ record.lastName }}</td>
+          <td href ng-click="vm.patient.givenName = record.givenName">{{ record.givenName }}</td>
+          <td href ng-click="vm.patient.familyName = record.familyName">{{ record.familyName }}</td>
           <td href ng-click="vm.setDob(record.dob)">{{ record.dob | date }}</td>
           <td href ng-click="vm.patient.gender = record.gender">{{ record.gender }}</td>
           <td href ng-click="vm.patient.ssn = record.ssn">{{ record.ssn }}</td>
           <td>
-            <label class="sr-only" for="recordSelect-{{ record.id }}">{{ record.firstName + ' ' + record.lastName }}</label>
+            <label class="sr-only" for="recordSelect-{{ record.id }}">{{ record.givenName + ' ' + record.familyName }}</label>
             <input id="recordSelect-{{ record.id }}" type="checkbox" ng-model="record.selected">
           </td>
         </tr>

@@ -48,8 +48,8 @@
 
             function hasSearchTerm () {
                 var ret = false;
-                ret = ret || (vm.query.firstName && vm.query.firstName.length > 0)
-                    || (vm.query.lastName && vm.query.lastName.length > 0)
+                ret = ret || (vm.query.givenName && vm.query.givenName.length > 0)
+                    || (vm.query.familyName && vm.query.familyName.length > 0)
                     || (vm.query.dob)
                     || (vm.query.gender && vm.query.gender.length > 0)
                     || (vm.query.ssn && vm.query.ssn.length > 0)

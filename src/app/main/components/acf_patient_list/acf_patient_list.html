@@ -10,8 +10,8 @@
           <table class="table table-striped" st-table="vm.displayedPatients" st-safe-src="vm.patients" ng-if="vm.patients.length > 0">
             <thead>
               <tr>
-                <th scope="cols" st-sort="firstName" st-skip-natural="true" class="st-sort">First Name</th>
-                <th scope="cols" st-sort="lastName" st-skip-natural="true" class="st-sort">Last Name</th>
+                <th scope="cols" st-sort="givenName" st-skip-natural="true" class="st-sort">Given Name</th>
+                <th scope="cols" st-sort="familyName" st-skip-natural="true" class="st-sort">Family Name</th>
                 <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
                 <th scope="cols" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Accessed</th>
                 <th scope="cols">Documents</th>
@@ -20,8 +20,8 @@
             </thead>
             <tbody>
               <tr ng-repeat="patient in vm.displayedPatients">
-                <td>{{ patient.firstName }}</td>
-                <td>{{ patient.lastName }}</td>
+                <td>{{ patient.givenName }}</td>
+                <td>{{ patient.familyName }}</td>
                 <td>{{ patient.dateOfBirth | date }}</td>
                 <td>{{ patient.lastRead | date : 'medium' }}</td>
                 <td>
@@ -38,7 +38,7 @@
                     </li>
                   </ul>
                 </td>
-                <td><button class="btn btn-danger" ng-click="vm.dischargePatient(patient)"><i class="fa fa-sign-out"></i><span class="sr-only">Discharge {{ patient.firstName }} {{ patient.lastName }}</span></button></td>
+                <td><button class="btn btn-danger" ng-click="vm.dischargePatient(patient)"><i class="fa fa-sign-out"></i><span class="sr-only">Discharge {{ patient.givenName }} {{ patient.familyName }}</span></button></td>
               </tr>
             </tbody>
           </table>

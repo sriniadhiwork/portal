@@ -5,10 +5,10 @@
         var vm, el, $log, $q, commonService, mock;
         mock = {
             patients: [{
-                firstName: 'Bob', id: 1, lastName: 'Smith',
+                givenName: 'Bob', id: 1, familyName: 'Smith',
                 documents: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]
             }, {
-                id: 2, firstName: 'Bob2', lastName: 'SmithSon',
+                id: 2, givenName: 'Bob2', familyName: 'SmithSon',
                 documents: []
             }],
             fakeDocument: {data: "<document><made><of>XML</of></made></document"},
