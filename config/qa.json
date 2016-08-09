@@ -2,5 +2,6 @@
     'API': 'http://52.40.244.116/rest',
     'AuthAPI':  'http://52.40.244.116/auth',
     'OrganizationQueryInterval': 60,
+    'QueryQueryTimeout': 5,
     'LogoutRedirect': 'http://www.google.com'
 }

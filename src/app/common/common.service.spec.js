@@ -51,7 +51,9 @@
 
             spyOn($window.location, 'replace');
             requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
+            requestHandler.clearQuery = $httpBackend.whenPOST(API + '/queries/1/delete', {}).respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
+            requestHandler.dischargePatient = $httpBackend.whenPOST(API + '/patients/1/delete', {}).respond(200, true);
             requestHandler.editAcf = $httpBackend.whenPOST(API + '/acfs/1/edit', mock.newAcf).respond(200, {acf: mock.newAcf});
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
@@ -174,6 +176,26 @@
                 $httpBackend.flush();
                 requestHandler.getQueries.respond(401, {message: 'test'});
                 commonService.getQueries().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /queries/id/delete', function () {
+                commonService.clearQuery(1);
+                $httpBackend.flush();
+                requestHandler.clearQuery.respond(401, {message: 'test'});
+                commonService.clearQuery(1).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /patients/id/delete', function () {
+                commonService.dischargePatient(1);
+                $httpBackend.flush();
+                requestHandler.dischargePatient.respond(401, {message: 'test'});
+                commonService.dischargePatient(1).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
