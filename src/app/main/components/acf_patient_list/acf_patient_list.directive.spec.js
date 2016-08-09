@@ -5,10 +5,10 @@
         var vm, el, $log, $q, commonService, mock;
         mock = {
             patients: [{
-                firstName: 'Bob', id: 1, lastName: 'Smith',
+                givenName: 'Bob', id: 1, familyName: 'Smith',
                 documents: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]
             }, {
-                id: 2, firstName: 'Bob2', lastName: 'SmithSon',
+                id: 2, givenName: 'Bob2', familyName: 'SmithSon',
                 documents: []
             }],
             fakeDocument: {data: "<document><made><of>XML</of></made></document"},
@@ -19,6 +19,7 @@
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.cacheDocument = jasmine.createSpy('cacheDocument');
+                    $delegate.dischargePatient = jasmine.createSpy('dischargePatient');
                     $delegate.getDocument = jasmine.createSpy('getDocument');
                     $delegate.getPatientsAtAcf = jasmine.createSpy('getPatientsAtAcf');
                     $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
@@ -30,6 +31,7 @@
                 $q = _$q_;
                 commonService = _commonService_;
                 commonService.cacheDocument.and.returnValue($q.when({data: ''}));
+                commonService.dischargePatient.and.returnValue($q.when({}));
                 commonService.getDocument.and.returnValue($q.when(angular.copy(mock.fakeDocument)));
                 commonService.getPatientsAtAcf.and.returnValue($q.when(angular.copy(mock.patients)));
                 commonService.getUserAcf.and.returnValue($q.when(mock.userAcf));
@@ -94,11 +96,18 @@
             // given a patient in the queue
             expect(vm.patients.length).toBe(2);
 
+            commonService.getPatientsAtAcf.and.returnValue($q.when(angular.copy(mock.patients).splice(0,1)));
             // when first result is cleared
-            vm.dischargePatient(0);
+            vm.dischargePatient(vm.patients[0]);
+            el.isolateScope().$digest();
 
             // then expect to have one les patient in the queue
             expect(vm.patients.length).toBe(1);
+        });
+
+        it('should call commonService.dischargePatient on discharge', function () {
+            vm.dischargePatient(vm.patients[0]);
+            expect(commonService.dischargePatient).toHaveBeenCalledWith(1);
         });
 
         it('should not try to clear an out of bounds query', function () {

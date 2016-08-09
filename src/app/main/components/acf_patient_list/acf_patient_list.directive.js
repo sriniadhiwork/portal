@@ -54,10 +54,10 @@
                 });
             }
 
-            function dischargePatient (index) {
-                if (index < vm.patients.length) {
-                    vm.patients.splice(index,1);
-                }
+            function dischargePatient (patient) {
+                commonService.dischargePatient(patient.id).then(function () {
+                    vm.getPatientsAtAcf();
+                });
             }
 
             function getDocument (patient, doc) {

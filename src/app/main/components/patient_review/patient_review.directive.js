@@ -29,16 +29,14 @@
         return directive;
 
         /** @ngInject */
-        function PatientReviewController($log, $scope, $timeout, commonService, QueryQueryTimeout) {
+        function PatientReviewController($log, $scope, $timeout, $uibModal, commonService, QueryQueryTimeout) {
             var vm = this;
 
             vm.clearQuery = clearQuery;
             vm.countComplete = countComplete;
-            vm.isStageable = isStageable;
             vm.getQueries = getQueries;
             vm.getRecordCount = getRecordCount;
-            vm.setDob = setDob;
-            vm.stagePatientRecords = stagePatientRecords;
+            vm.stagePatient = stagePatient;
 
             vm.TIMEOUT_MILLIS = QueryQueryTimeout * 1000;
 
@@ -51,11 +49,9 @@
             }
 
             function clearQuery (query) {
-                for (var i = 0; i < vm.patientQueries.length; i++) {
-                    if (vm.patientQueries[i].id === query.id) {
-                        vm.patientQueries.splice(i,1);
-                    }
-                }
+                commonService.clearQuery(query.id).then(function () {
+                    vm.getQueries();
+                });
             }
 
             function countComplete (query) {
@@ -66,16 +62,6 @@
                     }
                 }
                 return count;
-            }
-
-            function isStageable (query) {
-                var ret = false;
-                for (var i = 0; i < query.orgStatuses.length; i++) {
-                    for (var j = 0; j < query.orgStatuses[i].results.length; j++) {
-                        ret = ret || query.orgStatuses[i].results[j].selected;
-                    }
-                }
-                return ret;
             }
 
             function getQueries () {
@@ -100,33 +86,25 @@
                 return recordCount;
             }
 
-            function setDob (query, dob) {
-                if (!query.patient) {
-                    query.patient = {};
-                }
-                query.patient.dateOfBirth = new Date(dob);
-            }
-
-            function stagePatientRecords (query) {
-                if (vm.isStageable(query)) {
-                    var newPatient = {
-                        patientRecordIds: [],
-                        patient: query.patient,
-                        id: query.id
-                    };
-                    for (var i = 0; i < query.orgStatuses.length; i++) {
-                        for (var j = 0; j < query.orgStatuses[i].results.length; j++) {
-                            if (query.orgStatuses[i].results[j].selected) {
-                                newPatient.patientRecordIds.push(query.orgStatuses[i].results[j].id);
-                            }
-                        }
+            function stagePatient (query) {
+                vm.stagePatientInstance = $uibModal.open({
+                    templateUrl: 'app/main/components/patient_stage/patient_stage.html',
+                    controller: 'PatientStageController',
+                    controllerAs: 'vm',
+                    animation: false,
+                    backdrop: 'static',
+                    keyboard: false,
+                    size: 'lg',
+                    resolve: {
+                        query: function () { return query; }
                     }
-                    commonService.stagePatient(newPatient).then(function() {
-                        vm.triggerHandlers();
-                    });
-                    vm.clearQuery(query);
-                    //vm.getQueries();
-                }
+                });
+                vm.stagePatientInstance.result.then(function () {
+                    vm.triggerHandlers();
+                    vm.getQueries();
+                }, function (result) {
+                    $log.debug('dismissed', result);
+                });
             }
         }
     }
