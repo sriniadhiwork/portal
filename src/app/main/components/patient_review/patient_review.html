@@ -5,134 +5,113 @@
       <span ng-if="!vm.patientQueries.length > 0">No current queries</span>
     </div>
     <div class="panel-body">
-      <div ng-repeat="query in vm.patientQueries | orderBy:'-id' track by query.id" class="animated fadeIn row">
+      <div class="row">
         <div class="col-sm-12">
-          <h2>
-            Queried Patient Information
-            <span class="pull-right"><button class="btn btn-danger" ng-click="vm.clearQuery(query)"><i class="fa fa-trash"></i><span class="sr-only">Clear Query</span></button></span>
-          </h2>
-          <table class="table">
+          <h2>Queried Patient Information</h2>
+          <table class="table table-striped" st-table="vm.displayedQueries" st-safe-src="vm.patientQueries" ng-if="vm.patientQueries.length > 0">
             <thead>
               <tr>
-                <th scope="cols">Field</th>
-                <th scope="cols">Value</th>
-              </tr>
-            </thead>
-            <tfoot>
-              <tr ng-if="query.status === 'COMPLETE'">
-                <td colspan="2"><a href ng-click="query.showRecords = !query.showRecords">{{ query.showRecords ? 'Hide' : 'Show'}} {{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> from {{ query.orgStatuses.length }} organization<span ng-if="query.orgStatuses.length > 1">s</span></a></td>
-              </tr>
-            </tfoot>
-            <tbody>
-              <tr>
-                <td>Status</td>
-                <td>{{ query.status }}
-                  <uib-progressbar class="progress-striped-no" ng-class="{'progress-striped active' : query.status !== 'COMPLETE'}" max="query.orgStatuses.length" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} / {{ query.orgStatuses.length }} organization<span ng-if="query.orgStatuses.length > 1">s</span> reporting</i></uib-progressbar>
-                </td>
-              </tr>
-              <tr>
-                <td>ID</td>
-                <td>{{ query.id }}</td>
-              </tr>
-              <tr>
-                <td>User Token</td>
-                <td>{{ query.userToken}}</td>
-              </tr>
-              <tr>
-                <td>Terms</td>
-                <td>
-                  <ul>
-                    <li ng-if="query.terms.firstName"><strong>First Name: </strong> {{ query.terms.firstName }}</li>
-                    <li ng-if="query.terms.lastName"><strong>Last Name: </strong> {{ query.terms.lastName }}</li>
-                    <li ng-if="query.terms.dob"><strong>Date Of Birth: </strong> {{ query.terms.dob | date }}</li>
-                    <li ng-if="query.terms.gender"><strong>Gender: </strong> {{ query.terms.gender }}</li>
-                    <li ng-if="query.terms.zip"><strong>Zip: </strong> {{ query.terms.zip }}</li>
-                    <li ng-if="query.terms.ssn"><strong>SSN: </strong> {{ query.terms.ssn }}</li>
-                  </ul>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div ng-if="query.showRecords" class="col-sm-12">
-          <h3>Possible Patient Records</h3>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="cols">Organization</th>
+                <th scope="cols" st-sort="firstName" st-skip-natural="true" class="st-sort">First Name</th>
+                <th scope="cols" st-sort="lastName" st-skip-natural="true" class="st-sort">Last Name</th>
+                <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
+                <th scope="cols" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Query Time</th>
                 <th scope="cols">Status</th>
-                <th scope="cols">Results</th>
+                <th scope="cols">Stage</th>
+                <th scope="cols">Clear</th>
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="org in query.orgStatuses track by org.id">
-                <td>{{ org.orgId }}</td>
-                <td>{{ org.status }}</td>
-                <td>
-                  <ul ng-if="org.results.length > 0" class="list-unstyled">
-                    <li ng-repeat="record in org.results track by record.id">
-                      <input id="recordSelect-{{ record.id }}" type="checkbox" ng-model="record.selected"></input>
-                      <label for="recordSelect-{{ record.id }}">{{ record.firstName + ' ' + record.lastName }}</label>
-                      <ul>
-                        <li href ng-click="query.patient.firstName = record.firstName"><strong>First Name:</strong> {{ record.firstName }}</li>
-                        <li href ng-click="query.patient.lastName = record.lastName"><strong>Last Name:</strong> {{ record.lastName }}</li>
-                        <li href ng-click="vm.setDob(query, record.dob)"><strong>Date Of Birth:</strong> {{ record.dob | date }}</li>
-                        <li href ng-click="query.patient.gender = record.gender"><strong>Gender:</strong> {{ record.gender }}</li>
-                        <li href ng-click="query.patient.ssn = record.ssn"><strong>SSN:</strong> {{ record.ssn }}</li>
-                        <li href ng-click="query.patient.zip = record.zip"><strong>Zip:</strong> {{ record.zip }}</li>
-                      </ul>
-                    </li>
-                  </ul>
-                  <span ng-if="org.results.length === 0">No records found</span>
-                </td>
+              <tr ng-repeat="query in vm.displayedQueries">
+                <td>{{ query.terms.firstName }}</td>
+                <td>{{ query.terms.lastName }}</td>
+                <td>{{ query.terms.dob | date }}</td>
+                <td>{{ query.lastRead | date : 'medium' }}</td>
+                <td><uib-progressbar class="progress-striped-no" ng-class="{'progress-striped active' : query.status !== 'COMPLETE'}" max="query.orgStatuses.length" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} / {{ query.orgStatuses.length }} organization<span ng-if="query.orgStatuses.length > 1">s</span> reporting</i></uib-progressbar></td>
+                <td><button class="btn btn-success btn-sm" ng-click="vm.stagePatient(query)" ng-disabled="query.status !== 'COMPLETE'"><i class="fa fa-plus"></i><span class="sr-only">Stage {{ query.terms.firstName }} {{ query.terms.lastName }}</span></button></td>
+                <td><button class="btn btn-danger btn-sm" ng-click="vm.clearQuery(query)"><i class="fa fa-trash"></i><span class="sr-only">Clear Query</span></button></td>
               </tr>
             </tbody>
           </table>
-        </div>
-        <div class="form-horizontal" ng-if="query.showRecords && query.recordCount > 0">
-          <div class="col-sm-12"><h3>True patient information</h3></div>
-          <div class="form-group">
-            <label for="truePatient{{ query.id }}FirstName" class="control-label col-sm-4">First Name</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="truePatient{{ query.id }}FirstName" ng-model="query.patient.firstName">
-            </div>
+          <div ng-if="query.showRecords" class="col-sm-12">
+            <h3>Possible Patient Records</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="cols">Organization</th>
+                  <th scope="cols">Status</th>
+                  <th scope="cols">Results</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="org in query.orgStatuses track by org.id">
+                  <td>{{ org.orgId }}</td>
+                  <td>{{ org.status }}</td>
+                  <td>
+                    <ul ng-if="org.results.length > 0" class="list-unstyled">
+                      <li ng-repeat="record in org.results track by record.id">
+                        <input id="recordSelect-{{ record.id }}" type="checkbox" ng-model="record.selected">
+                        <label for="recordSelect-{{ record.id }}">{{ record.firstName + ' ' + record.lastName }}</label>
+                        <ul>
+                          <li href ng-click="query.patient.firstName = record.firstName"><strong>First Name:</strong> {{ record.firstName }}</li>
+                          <li href ng-click="query.patient.lastName = record.lastName"><strong>Last Name:</strong> {{ record.lastName }}</li>
+                          <li href ng-click="vm.setDob(query, record.dob)"><strong>Date Of Birth:</strong> {{ record.dob | date }}</li>
+                          <li href ng-click="query.patient.gender = record.gender"><strong>Gender:</strong> {{ record.gender }}</li>
+                          <li href ng-click="query.patient.ssn = record.ssn"><strong>SSN:</strong> {{ record.ssn }}</li>
+                          <li href ng-click="query.patient.zip = record.zip"><strong>Zip:</strong> {{ record.zip }}</li>
+                        </ul>
+                      </li>
+                    </ul>
+                    <span ng-if="org.results.length === 0">No records found</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="form-group">
-            <label for="truePatient{{ query.id }}LastName" class="control-label col-sm-4">Last Name</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="truePatient{{ query.id }}LastName" ng-model="query.patient.lastName">
+          <div class="form-horizontal" ng-if="query.showRecords && query.recordCount > 0">
+            <div class="col-sm-12"><h3>True patient information</h3></div>
+            <div class="form-group">
+              <label for="truePatient{{ query.id }}FirstName" class="control-label col-sm-4">First Name</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="truePatient{{ query.id }}FirstName" ng-model="query.patient.firstName">
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="truePatient{{ query.id }}dob" class="control-label col-sm-4">Date Of Birth</label>
-            <div class="col-sm-8">
-              <input type="date" class="form-control" id="truePatient{{ query.id }}dob" ng-model="query.patient.dob">
+            <div class="form-group">
+              <label for="truePatient{{ query.id }}LastName" class="control-label col-sm-4">Last Name</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="truePatient{{ query.id }}LastName" ng-model="query.patient.lastName">
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="truePatient{{ query.id }}Gender" class="control-label col-sm-4">Gender</label>
-            <div class="col-sm-8">
-              <select class="input-sm form-control" ng-model="query.patient.gender" id="truePatient{{ query.id }}Gender">
-                <option value="U">Unknown</option>
-                <option value="F">Female</option>
-                <option value="M">Male</option>
-              </select>
+            <div class="form-group">
+              <label for="truePatient{{ query.id }}dob" class="control-label col-sm-4">Date Of Birth</label>
+              <div class="col-sm-8">
+                <input type="date" class="form-control" id="truePatient{{ query.id }}dob" ng-model="query.patient.dob">
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="truePatient{{ query.id }}ssn" class="control-label col-sm-4">SSN</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="truePatient{{ query.id }}ssn" ng-model="query.patient.ssn">
+            <div class="form-group">
+              <label for="truePatient{{ query.id }}Gender" class="control-label col-sm-4">Gender</label>
+              <div class="col-sm-8">
+                <select class="input-sm form-control" ng-model="query.patient.gender" id="truePatient{{ query.id }}Gender">
+                  <option value="U">Unknown</option>
+                  <option value="F">Female</option>
+                  <option value="M">Male</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="truePatient{{ query.id }}Zip" class="control-label col-sm-4">Zip</label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="truePatient{{ query.id }}Zip" ng-model="query.patient.zip">
+            <div class="form-group">
+              <label for="truePatient{{ query.id }}ssn" class="control-label col-sm-4">SSN</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="truePatient{{ query.id }}ssn" ng-model="query.patient.ssn">
+              </div>
             </div>
-          </div>
-          <div class="col-sm-4 col-sm-offset-4">
-            <button class="btn btn-block btn-success" ng-click="vm.stagePatientRecords(query)" ng-disabled="!vm.isStageable(query)">Select record(s) for patient <i class="fa fa-save"></i></button>
+            <div class="form-group">
+              <label for="truePatient{{ query.id }}Zip" class="control-label col-sm-4">Zip</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="truePatient{{ query.id }}Zip" ng-model="query.patient.zip">
+              </div>
+            </div>
+            <div class="col-sm-4 col-sm-offset-4">
+              <button class="btn btn-block btn-success" ng-click="vm.stagePatientRecords(query)" ng-disabled="!vm.isStageable(query)">Select record(s) for patient <i class="fa fa-save"></i></button>
+            </div>
           </div>
         </div>
       </div>

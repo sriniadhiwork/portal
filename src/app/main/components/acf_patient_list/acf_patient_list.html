@@ -10,10 +10,9 @@
           <table class="table table-striped" st-table="vm.displayedPatients" st-safe-src="vm.patients" ng-if="vm.patients.length > 0">
             <thead>
               <tr>
-                <th scope="cols">View More</th>
                 <th scope="cols" st-sort="firstName" st-skip-natural="true" class="st-sort">First Name</th>
                 <th scope="cols" st-sort="lastName" st-skip-natural="true" class="st-sort">Last Name</th>
-                <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Birth Date</th>
+                <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
                 <th scope="cols" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Accessed</th>
                 <th scope="cols">Documents</th>
                 <th scope="cols">Discharge</th>
@@ -21,7 +20,6 @@
             </thead>
             <tbody>
               <tr ng-repeat="patient in vm.displayedPatients">
-                <td><button class="btn btn-info" ng-click="patient.showDocuments = !patient.showDocuments"><i class="fa fa-caret-right"></i><span class="sr-only">{{ patient.showDocuments ? 'Hide' : 'Show' }} patient documents</span></button></td>
                 <td>{{ patient.firstName }}</td>
                 <td>{{ patient.lastName }}</td>
                 <td>{{ patient.dateOfBirth | date }}</td>
