@@ -2,10 +2,10 @@
   <div class="modal-header">
     <button type="btn btn-default" class="pull-right" aria-label="Cancel edits"
             ng-click="vm.cancel()"><i class="fa fa-close"></i><span class="sr-only">Close modal</span></button>
-    <h1 class="modal-title" id="titleLabel">Patient Staging</h1>
+    <h2 class="modal-title" id="titleLabel">Patient Staging</h2>
   </div>
   <div class="modal-body">
-    <h2>Queried Patient Information</h2>
+    <h3>Queried Patient Information</h3>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -26,7 +26,7 @@
         </tr>
       </tbody>
     </table>
-    <h2>Possible Patient Records</h2>
+    <h3>Possible Patient Records</h3>
     <table class="table table-striped" st-table="vm.displayedRecords" st-safe-src="vm.query.orgStatuses">
       <thead>
         <tr>
@@ -52,7 +52,12 @@
           </td>
           <td>
             <label for="patientDob" class="control-label sr-only">Date Of Birth</label>
-            <input type="date" class="form-control" id="patientDob" ng-model="vm.patient.dob">
+            <div class="input-group">
+              <input class="form-control" type="text" ng-model="vm.patient.dob" uib-datepicker-popup is-open="vm.dobPopup.open" id="patientDob">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
+              </span>
+            </div>
           </td>
           <td>
             <label for="patientGender" class="control-label sr-only">Gender</label>

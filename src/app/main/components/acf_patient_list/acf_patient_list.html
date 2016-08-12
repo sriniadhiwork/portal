@@ -1,8 +1,7 @@
 <div class="container-fluid acf-patient-list">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h1 class="panel-title">{{ vm.patients.length }} Active Patient<span ng-if="vm.patients.length !== 1">s</span></h1>
-      <p>At ACF: {{ vm.getUserAcf().name }}</p>
+      <h2 class="panel-title">{{ vm.patients.length }} Active Patient<span ng-if="vm.patients.length !== 1">s</span> at {{ vm.getUserAcf().name }}</h3>
     </div>
     <div class="panel-body">
       <div class="row">

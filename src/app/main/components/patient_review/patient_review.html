@@ -1,20 +1,20 @@
 <div class="patient-review container-fluid">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h1 class="panel-title">Queries ({{ vm.patientQueries.length}})</h1>
-      <span ng-if="!vm.patientQueries.length > 0">No current queries</span>
+      <h2 class="panel-title">Queries ({{ vm.patientQueries.length}})</h2>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-sm-12">
-          <h2>Queried Patient Information</h2>
+          <h3>Queried Patient Information</h3>
+          <p ng-if="!vm.patientQueries.length > 0">No current queries</p>
           <table class="table table-striped" st-table="vm.displayedQueries" st-safe-src="vm.patientQueries" ng-if="vm.patientQueries.length > 0">
             <thead>
               <tr>
                 <th scope="cols" st-sort="givenName" st-skip-natural="true" class="st-sort">Given Name</th>
                 <th scope="cols" st-sort="familyName" st-skip-natural="true" class="st-sort">Family Name</th>
                 <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
-                <th scope="cols" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Query Time</th>
+                <th scope="cols" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Updated</th>
                 <th scope="cols">Status</th>
                 <th scope="cols">Stage</th>
                 <th scope="cols">Clear</th>
