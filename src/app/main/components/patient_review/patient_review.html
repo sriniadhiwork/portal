@@ -1,12 +1,12 @@
 <div class="patient-review container-fluid">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h1 class="panel-title">Queries ({{ vm.patientQueries.length}})</h1>
+      <h2 class="panel-title">Queries ({{ vm.patientQueries.length}})</h2>
     </div>
     <div class="panel-body">
       <div class="row">
         <div class="col-sm-12">
-          <h2>Queried Patient Information</h2>
+          <h3>Queried Patient Information</h3>
           <p ng-if="!vm.patientQueries.length > 0">No current queries</p>
           <table class="table table-striped" st-table="vm.displayedQueries" st-safe-src="vm.patientQueries" ng-if="vm.patientQueries.length > 0">
             <thead>
