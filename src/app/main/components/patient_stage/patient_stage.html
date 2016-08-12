@@ -52,7 +52,12 @@
           </td>
           <td>
             <label for="patientDob" class="control-label sr-only">Date Of Birth</label>
-            <input type="date" class="form-control" id="patientDob" ng-model="vm.patient.dob">
+            <div class="input-group">
+              <input class="form-control" type="text" ng-model="vm.patient.dob" uib-datepicker-popup is-open="vm.dobPopup.open" id="patientDob">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
+              </span>
+            </div>
           </td>
           <td>
             <label for="patientGender" class="control-label sr-only">Gender</label>
