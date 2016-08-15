@@ -51,6 +51,7 @@
             function cacheDocument (patient, doc) {
                 commonService.cacheDocument(patient.id, doc.id).then(function () {
                     doc.cached = true;
+                    patient.documentStatus.cached += 1;
                 });
             }
 
@@ -74,6 +75,13 @@
             function getPatientsAtAcf () {
                 commonService.getPatientsAtAcf().then(function (response) {
                     vm.patients = response;
+                    for (var i = 0; i < vm.patients.length; i++) {
+                        var patient = vm.patients[i];
+                        patient.documentStatus = {total: 0, cached: 0};
+                        for (var j = 0; j < patient.orgMaps.length; j++) {
+                            patient.documentStatus.total += patient.orgMaps[j].documents.length;
+                        }
+                    }
                 });
             }
 
