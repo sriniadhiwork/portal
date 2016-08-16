@@ -17,6 +17,11 @@
                 controller: 'AboutController',
                 controllerAs: 'vm'
             })
+            .when('/resources', {
+                templateUrl: 'app/resources/resources.html',
+                controller: 'ResourcesController',
+                controllerAs: 'vm'
+            })
             .otherwise({
                 redirectTo: '/'
             });

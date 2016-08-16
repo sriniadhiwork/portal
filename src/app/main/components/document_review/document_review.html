@@ -1,10 +1,10 @@
 <div class="container-fluid document-review" ng-if="vm.activeDocument" class="animated fadeIn">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h1 class="panel-title">
+      <h2 class="panel-title">
         Document Review
         <button class="btn btn-sm pull-right panel-button" ng-click="vm.cancel()"><span class="sr-only">Close document</span><i class="fa fa-close"></i></button>
-      </h1>
+      </h2>
     </div>
     <div class="panel-body">
       <pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre>

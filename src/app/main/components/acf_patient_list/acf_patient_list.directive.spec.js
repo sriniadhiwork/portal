@@ -4,13 +4,19 @@
     describe('main.aiAcfPatientList', function() {
         var vm, el, $log, $q, commonService, mock;
         mock = {
-            patients: [{
-                firstName: 'Bob', id: 1, lastName: 'Smith',
-                documents: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]
-            }, {
-                id: 2, firstName: 'Bob2', lastName: 'SmithSon',
-                documents: []
-            }],
+            patients: [{id:3,orgPatientId:null,givenName:"John",familyName:"Doe",dateOfBirth:null,gender:"M",phoneNumber:null,
+                        address:{id:null,street1:null,street2:null,city:null,state:null,zipcode:null,country:null},
+                        ssn:"451674563",lastRead:1471014744607,
+                        acf:{id:4,name:"Fake",phoneNumber:null,address:null,lastRead:null},
+                        orgMaps:[{id:6,patientId:3,organization:{name:"OrganizationThreeUpdatedName",id:1,organizationId:4,adapter:"eHealth",ipAddress:"127.0.0.14",username:"org1User",password:"password1",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ehealthexchange",active:true},documentsQueryStatus:"COMPLETE",documentsQuerySuccess:true,documentsQueryStart:1471014744718,documentsQueryEnd:1471014744880,
+                                  documents:[{id:"8",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"7",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"5",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"6",name:"VCN CCDA.xml",orgMapId:6,patient:null}]},
+                                 {id:5,patientId:3,organization:{name:"IHE Org",id:2,organizationId:2,adapter:"IHE",ipAddress:"127.0.0.1",username:null,password:null,certificationKey:"1234567",endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"COMPLETE",documentsQuerySuccess:true,documentsQueryStart:1471014744707,documentsQueryEnd:1471014744753,
+                                  documents:[]},
+                                 {id:4,patientId:3,organization:{name:"IHE Org 2",id:3,organizationId:3,adapter:"eHealth",ipAddress:"127.0.0.1",username:"org3User",password:"password3",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"COMPLETE",documentsQuerySuccess:true,documentsQueryStart:1471014744634,documentsQueryEnd:1471014744759,
+                                  documents:[]}]}
+
+
+            ],
             fakeDocument: {data: "<document><made><of>XML</of></made></document"},
             userAcf: 'ACF Number 1'
         };
@@ -56,58 +62,58 @@
 
         it('should have isolate scope object with instanciate members', function () {
             expect(vm).toEqual(jasmine.any(Object));
-            expect(vm.patients.length).toBe(2);
+            expect(vm.patients.length).toBe(1);
         });
 
         it('should have a way to cache a document', function () {
-            expect(vm.patients[0].documents[0].cached).toBeUndefined();
+            expect(vm.patients[0].orgMaps[0].documents[0].cached).toBeUndefined();
             expect(vm.cacheDocument).toBeDefined();
 
-            vm.cacheDocument(vm.patients[0], vm.patients[0].documents[0]);
+            vm.cacheDocument(vm.patients[0], vm.patients[0].orgMaps[0].documents[0]);
             el.isolateScope().$digest();
 
-            expect(commonService.cacheDocument).toHaveBeenCalledWith(1,2);
-            expect(vm.patients[0].documents[0].cached).toBe(true);
+            expect(commonService.cacheDocument).toHaveBeenCalledWith(3, '8');
+            expect(vm.patients[0].orgMaps[0].documents[0].cached).toBe(true);
         });
 
         it('should have a way to get a document', function () {
             var patient = vm.patients[0];
-            vm.cacheDocument(patient, patient.documents[0]);
+            vm.cacheDocument(patient, patient.orgMaps[0].documents[0]);
             el.isolateScope().$digest();
 
-            vm.getDocument(patient, patient.documents[0]);
+            vm.getDocument(patient, patient.orgMaps[0].documents[0]);
             el.isolateScope().$digest();
 
-            expect(commonService.getDocument).toHaveBeenCalledWith(1,2);
-            expect(vm.activeDocument).toEqual(patient.documents[0]);
+            expect(commonService.getDocument).toHaveBeenCalledWith(3, '8');
+            expect(vm.activeDocument).toEqual(patient.orgMaps[0].documents[0]);
         });
 
         it('should not re-call the service if the document is already cached', function () {
             var patient = vm.patients[0];
-            vm.getDocument(patient, patient.documents[0]);
+            vm.getDocument(patient, patient.orgMaps[0].documents[0]);
             el.isolateScope().$digest();
 
-            vm.getDocument(patient, patient.documents[0]);
+            vm.getDocument(patient, patient.orgMaps[0].documents[0]);
             el.isolateScope().$digest();
             expect(commonService.getDocument.calls.count()).toBe(1);
         });
 
         it('should have a way to discharge patients', function () {
             // given a patient in the queue
-            expect(vm.patients.length).toBe(2);
+            expect(vm.patients.length).toBe(1);
 
-            commonService.getPatientsAtAcf.and.returnValue($q.when(angular.copy(mock.patients).splice(0,1)));
+            commonService.getPatientsAtAcf.and.returnValue($q.when([]));
             // when first result is cleared
             vm.dischargePatient(vm.patients[0]);
             el.isolateScope().$digest();
 
-            // then expect to have one les patient in the queue
-            expect(vm.patients.length).toBe(1);
+            // then expect to have one less patient in the queue
+            expect(vm.patients.length).toBe(0);
         });
 
         it('should call commonService.dischargePatient on discharge', function () {
             vm.dischargePatient(vm.patients[0]);
-            expect(commonService.dischargePatient).toHaveBeenCalledWith(1);
+            expect(commonService.dischargePatient).toHaveBeenCalledWith(3);
         });
 
         it('should not try to clear an out of bounds query', function () {
@@ -131,6 +137,14 @@
             expect(vm.getPatientsAtAcf).toBeDefined();
             vm.getPatientsAtAcf();
             expect(commonService.getPatientsAtAcf).toHaveBeenCalled();
+        });
+
+        it('should know how many documents a patient has', function () {
+            var patient = vm.patients[0];
+            expect(patient.documentStatus).toEqual({total: 4, cached: 0});
+            vm.cacheDocument(patient, patient.orgMaps[0].documents[0]);
+            el.isolateScope().$digest();
+            expect(patient.documentStatus).toEqual({total: 4, cached: 1});
         });
     });
 })();

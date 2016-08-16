@@ -159,13 +159,13 @@
         }
 
         function getUserIdentity () {
-            var user = { firstName: null, lastName: null, email: null, username: null, authorities: [] };
+            var user = { givenName: null, familyName: null, email: null, username: null, authorities: [] };
             if (self.isAuthenticated()) {
                 var token = parseJwt(self.getToken());
                 var identity = token.Identity;
                 var authorities = token.Authorities;
-                user.firstName = identity[0];
-                user.lastName = identity[1];
+                user.givenName = identity[0];
+                user.familyName = identity[1];
                 user.email = identity[2];
                 user.authorities = authorities;
                 user.username = token.sub;

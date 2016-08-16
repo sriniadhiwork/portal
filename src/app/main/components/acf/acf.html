@@ -2,14 +2,14 @@
   <div class="form-horizontal" ng-form="vm.queryForm">
     <div class="panel panel-primary">
       <div class="panel-heading">
-        <h1 class="panel-title" ng-if="!vm.hasAcf()">Login to an Alternate Care Facility (ACF)</h1>
-        <h1 class="panel-title" ng-if="vm.hasAcf()">Alternate Care Facility (ACF) Information
+        <h2 class="panel-title" ng-if="!vm.hasAcf()">Login to an Alternate Care Facility (ACF)</h2>
+        <h2 class="panel-title" ng-if="vm.hasAcf()">Alternate Care Facility (ACF) Information
           <button class="btn btn-sm pull-right panel-button" ng-click="vm.isEditing = true" ng-if="!vm.isEditing"><i class="fa fa-pencil"></i><span class="sr-only">Edit ACF Information</span></button>
-        </h1>
+        </h2>
       </div>
       <div class="panel-body">
         <div ng-if="!vm.hasAcf()">
-          <div class="col-sm-12"><h2>Select an existing ACF</h2></div>
+          <div class="col-sm-12"><h3>Select an existing ACF</h3></div>
           <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required }">
             <label for="selectAcf" class="control-label sr-only">ACF Selection</label>
             <div class="col-sm-12">
@@ -28,8 +28,8 @@
           </div>
         </div>
         <div ng-if="(!vm.hasAcf() && vm.createNewAcf) || (vm.hasAcf() && vm.isEditing)">
-          <div class="col-sm-12" ng-if="!vm.hasAcf()"><h2>Create a new ACF</h2></div>
-          <div class="col-sm-12" ng-if="vm.hasAcf()"><h2>Edit current ACF</h2></div>
+          <div class="col-sm-12" ng-if="!vm.hasAcf()"><h3>Create a new ACF</h3></div>
+          <div class="col-sm-12" ng-if="vm.hasAcf()"><h3>Edit current ACF</h3></div>
           <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.acfName.$touched) && vm.queryForm.acfName.$error.required }">
             <label for="acfName" class="col-sm-3 control-label">Name</label>
             <div class="col-sm-9">
@@ -114,7 +114,7 @@
           </div>
         </div>
         <div ng-if="vm.hasAcf() && !vm.isEditing">
-          <h2>{{ vm.acf.name }}</h2>
+          <h3>{{ vm.acf.name }}</h3>
           <table class="table">
             <tbody>
               <tr>

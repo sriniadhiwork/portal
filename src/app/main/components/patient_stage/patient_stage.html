@@ -1,0 +1,106 @@
+<div class="patient-stage" role="modal" aria-labeled-by="titleLabel">
+  <div class="modal-header">
+    <button type="btn btn-default" class="pull-right" aria-label="Cancel edits"
+            ng-click="vm.cancel()"><i class="fa fa-close"></i><span class="sr-only">Close modal</span></button>
+    <h2 class="modal-title" id="titleLabel">Patient Staging</h2>
+  </div>
+  <div class="modal-body">
+    <h3>Queried Patient Information</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="cols">Given Name</th>
+          <th scope="cols">Family Name</th>
+          <th scope="cols">Date of Birth</th>
+          <th scope="cols">Gender</th>
+          <th scope="cols">SSN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ vm.query.terms.givenName }}</td>
+          <td>{{ vm.query.terms.familyName }}</td>
+          <td>{{ vm.query.terms.dob | date }}</td>
+          <td>{{ vm.query.terms.gender }}</td>
+          <td>{{ vm.query.terms.ssn }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Possible Patient Records</h3>
+    <table class="table table-striped" st-table="vm.displayedRecords" st-safe-src="vm.query.orgStatuses">
+      <thead>
+        <tr>
+          <th scope="cols" st-sort="org.name" st-skip-natural="true" class="st-sort">Organization</th>
+          <th scope="cols" st-sort="givenName" st-skip-natural="true" class="st-sort">Given Name</th>
+          <th scope="cols" st-sort="familyName" st-skip-natural="true" class="st-sort">Family Name</th>
+          <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
+          <th scope="cols" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
+          <th scope="cols" st-sort="ssn" st-skip-natural="true" class="st-sort">SSN</th>
+          <th scope="cols">Select</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td>&nbsp;</td>
+          <td>
+            <label for="patientGivenName" class="control-label sr-only">Given Name</label>
+            <input type="text" class="form-control" id="patientGivenName" ng-model="vm.patient.givenName">
+          </td>
+          <td>
+            <label for="patientFamilyName" class="control-label sr-only">Family Name</label>
+            <input type="text" class="form-control" id="patientFamilyName" ng-model="vm.patient.familyName">
+          </td>
+          <td>
+            <label for="patientDob" class="control-label sr-only">Date Of Birth</label>
+            <div class="input-group">
+              <input class="form-control" type="text" ng-model="vm.patient.dob" uib-datepicker-popup is-open="vm.dobPopup.open" id="patientDob">
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
+              </span>
+            </div>
+          </td>
+          <td>
+            <label for="patientGender" class="control-label sr-only">Gender</label>
+            <select class="input-sm form-control" ng-model="vm.patient.gender" id="patientGender">
+              <option value="U">Unknown</option>
+              <option value="F">Female</option>
+              <option value="M">Male</option>
+            </select>
+          </td>
+          <td>
+            <label for="patientSSN" class="control-label sr-only">SSN</label>
+            <input type="text" class="form-control" id="patientSSN" ng-model="vm.patient.ssn">
+          </td>
+          <td>
+            <button class="btn btn-sm btn-success" ng-click="vm.stagePatient()" ng-disabled="!vm.isStageable()"><span class="sr-only">Select record(s) for patient</span><i class="fa fa-save"></i></button>
+          </td>
+        </tr>
+      </tfoot>
+      <tbody>
+        <tr ng-repeat-start="org in vm.query.orgStatuses track by org.id" ng-if="org.results && org.results.length > 0">
+          <td rowspan="{{ org.results.length }}">{{ org.org.name }}</td>
+          <td href ng-click="vm.patient.givenName = org.results[0].givenName">{{ org.results[0].givenName }}</td>
+          <td href ng-click="vm.patient.familyName = org.results[0].familyName">{{ org.results[0].familyName }}</td>
+          <td href ng-click="vm.setDob(org.results[0].dob)">{{ org.results[0].dob | date }}</td>
+          <td href ng-click="vm.patient.gender = org.results[0].gender">{{ org.results[0].gender }}</td>
+          <td href ng-click="vm.patient.ssn = org.results[0].ssn">{{ org.results[0].ssn }}</td>
+          <td>
+            <label class="sr-only" for="recordSelect-{{ org.results[0].id }}">{{ org.results[0].givenName + ' ' + org.results[0].familyName }}</label>
+            <input id="recordSelect-{{ org.results[0].id }}" type="checkbox" ng-model="org.results[0].selected">
+          </td>
+        </tr>
+        <tr ng-repeat-end ng-repeat="record in org.results.slice(1)">
+          <td href ng-click="vm.patient.givenName = record.givenName">{{ record.givenName }}</td>
+          <td href ng-click="vm.patient.familyName = record.familyName">{{ record.familyName }}</td>
+          <td href ng-click="vm.setDob(record.dob)">{{ record.dob | date }}</td>
+          <td href ng-click="vm.patient.gender = record.gender">{{ record.gender }}</td>
+          <td href ng-click="vm.patient.ssn = record.ssn">{{ record.ssn }}</td>
+          <td>
+            <label class="sr-only" for="recordSelect-{{ record.id }}">{{ record.givenName + ' ' + record.familyName }}</label>
+            <input id="recordSelect-{{ record.id }}" type="checkbox" ng-model="record.selected">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

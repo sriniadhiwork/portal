@@ -3,7 +3,7 @@
 
     describe('main.aiPatientSearch', function() {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
-        mock = {patientSearch: {results: [{id:2, firstName: 'Joe', lastName: 'Rogan'}, {id:3, firstName: 'Sue', lastName: 'Samson'}]}};
+        mock = {patientSearch: {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]}};
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -27,7 +27,7 @@
                 vm = el.isolateScope().vm;
 
                 vm.queryForm = {$error: { required: [1, 2], invalid: [3], notAnError: 4 }};
-                vm.query = { firstName: 'fake', lastName: 'name' };
+                vm.query = { givenName: 'fake', familyName: 'name' };
             });
         });
 
@@ -74,10 +74,10 @@
             vm.query = {};
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query = { firstName: 'fake' };
+            vm.query = { givenName: 'fake' };
             vm.searchForPatient();
             expect(commonService.searchForPatient).toHaveBeenCalled();
-            vm.query = { lastName: 'last' };
+            vm.query = { familyName: 'last' };
             vm.searchForPatient();
             expect(commonService.searchForPatient).toHaveBeenCalled();
             vm.query = { dob: 'dob' };
@@ -96,9 +96,9 @@
 
         it('should have a "isDisabled" based on not having values in the search', function () {
             expect(vm.hasSearchTerm).toBeDefined();
-            vm.query = { firstName: 'fake' };
+            vm.query = { givenName: 'fake' };
             expect(vm.hasSearchTerm()).toBe(true);
-            vm.query = { lastName: 'last' };
+            vm.query = { familyName: 'last' };
             expect(vm.hasSearchTerm()).toBe(true);
             vm.query = { gender: 'm' };
             expect(vm.hasSearchTerm()).toBe(true);

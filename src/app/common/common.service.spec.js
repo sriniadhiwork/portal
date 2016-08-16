@@ -8,12 +8,12 @@
 
         requestHandler = {};
 
-        var user = { firstName: 'Bob', lastName: 'Jones', email: 'email@sample.org', username: 'aUsername', authorities: ['ROLE_ADMIN'] }
+        var user = { givenName: 'Bob', familyName: 'Jones', email: 'email@sample.org', username: 'aUsername', authorities: ['ROLE_ADMIN'] }
         var iatDate = new Date();
         var expDate = new Date();
         expDate.setDate(expDate.getDate() + 1);
-        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.firstName, user.lastName, user.email, {name: 'ACF Number 1', address: {}, id: 0}], Authorities: user.authorities});
-        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.firstName, user.lastName, user.email, {}], Authorities: user.authorities});
+        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.givenName, user.familyName, user.email, {name: 'ACF Number 1', address: {}, id: 0}], Authorities: user.authorities});
+        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.givenName, user.familyName, user.email, {}], Authorities: user.authorities});
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
 
@@ -23,8 +23,8 @@
         mock.newAcf = {name: 'New ACF'};
         mock.organizations = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
         mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
-        mock.patientQueryResponse = {results: [{id:2, firstName: 'Joe', lastName: 'Rogan'}, {id:3, firstName: 'Sue', lastName: 'Samson'}]};
-        mock.stagePatient = { patientRecords: [0,1], id: 1, patient: { firstName: 'Joe', lastName: 'Watson' } };
+        mock.patientQueryResponse = {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]};
+        mock.stagePatient = { patientRecords: [0,1], id: 1, patient: { givenName: 'Joe', familyName: 'Watson' } };
 
         beforeEach(module('portal.common', 'portal.constants'));
 
