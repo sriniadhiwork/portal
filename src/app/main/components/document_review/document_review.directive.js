@@ -31,7 +31,7 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                vm.xslt = loadXMLDoc('assets/xslt/sample.xsl');
+                vm.xslt = loadXMLDoc('assets/xslt/CDA_Style.xsl');
             }
 
             function cancel () {
