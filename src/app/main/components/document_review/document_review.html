@@ -7,7 +7,9 @@
       </h2>
     </div>
     <div class="panel-body">
-      <pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre>
+      Showing <button href ng-click="vm.showRaw = !vm.showRaw" class="btn btn-default btn-sm">{{ vm.showRaw ? 'raw' : 'transformed' }}</button> document information
+      <div ng-if="!vm.showRaw" ng-bind-html="vm.activeDocument.data | xslt:vm.xslt"></div>
+      <pre ng-if="vm.showRaw" class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre>
     </div>
   </div>
 </div>

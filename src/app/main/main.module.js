@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('portal.main', ['portal.common', 'portal.resources']);
+        .module('portal.main', ['portal.common']);
 })();
