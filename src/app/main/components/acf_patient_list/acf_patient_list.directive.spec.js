@@ -11,7 +11,7 @@
                         orgMaps:[{id:6,patientId:3,organization:{name:"OrganizationThreeUpdatedName",id:1,organizationId:4,adapter:"eHealth",ipAddress:"127.0.0.14",username:"org1User",password:"password1",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ehealthexchange",active:true},documentsQueryStatus:"COMPLETE",documentsQuerySuccess:true,documentsQueryStart:1471014744718,documentsQueryEnd:1471014744880,
                                   documents:[{id:"8",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"7",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"5",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"6",name:"VCN CCDA.xml",orgMapId:6,patient:null}]},
                                  {id:5,patientId:3,organization:{name:"IHE Org",id:2,organizationId:2,adapter:"IHE",ipAddress:"127.0.0.1",username:null,password:null,certificationKey:"1234567",endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"COMPLETE",documentsQuerySuccess:true,documentsQueryStart:1471014744707,documentsQueryEnd:1471014744753,
-                                  documents:[]},
+                                  documents:[{id:"8",name:"VCN CCDA.xml",cached:true,orgMapId:6,patient:null}]},
                                  {id:4,patientId:3,organization:{name:"IHE Org 2",id:3,organizationId:3,adapter:"eHealth",ipAddress:"127.0.0.1",username:"org3User",password:"password3",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"COMPLETE",documentsQuerySuccess:true,documentsQueryStart:1471014744634,documentsQueryEnd:1471014744759,
                                   documents:[]}]}
 
@@ -139,12 +139,16 @@
             expect(commonService.getPatientsAtAcf).toHaveBeenCalled();
         });
 
+        it('should know if a patient\'s documents are cached', function () {
+            var patient = vm.patients[0];
+            expect(patient.documentStatus).toEqual({total: 5, cached: 1});
+        });
+
         it('should know how many documents a patient has', function () {
             var patient = vm.patients[0];
-            expect(patient.documentStatus).toEqual({total: 4, cached: 0});
             vm.cacheDocument(patient, patient.orgMaps[0].documents[0]);
             el.isolateScope().$digest();
-            expect(patient.documentStatus).toEqual({total: 4, cached: 1});
+            expect(patient.documentStatus).toEqual({total: 5, cached: 2});
         });
     });
 })();

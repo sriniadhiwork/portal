@@ -80,6 +80,11 @@
                         patient.documentStatus = {total: 0, cached: 0};
                         for (var j = 0; j < patient.orgMaps.length; j++) {
                             patient.documentStatus.total += patient.orgMaps[j].documents.length;
+                            for (var k = 0; k < patient.orgMaps[j].documents.length; k++) {
+                                if (patient.orgMaps[j].documents[k].cached) {
+                                    patient.documentStatus.cached += 1;
+                                }
+                            }
                         }
                     }
                 });

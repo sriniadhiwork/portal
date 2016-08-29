@@ -19,7 +19,7 @@
         it('should have an about', function () {
             expect(vm.about).toEqual('resources');
         });
-        
+
         it('should load have a swaggerUI at start', function () {
             expect(vm.swaggerUrl.length).toBeGreaterThan(0);
         });
