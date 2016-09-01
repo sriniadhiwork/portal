@@ -9,6 +9,7 @@
     function MainController($log, $location, $anchorScroll, commonService, AuthAPI) {
         var vm = this;
 
+        vm.bypassSaml = bypassSaml;
         vm.hasAcf = hasAcf;
         vm.isAuthenticated = isAuthenticated;
         vm.registerHandler = registerHandler;
@@ -25,6 +26,12 @@
         function activate () {
             commonService.getToken(true);
             vm.handlers = [];
+        }
+
+        function bypassSaml () {
+            commonService.getSamlUserToken().then(function () {
+                commonService.getToken(true);
+            });
         }
 
         function hasAcf () {

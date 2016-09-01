@@ -79,22 +79,22 @@
       <tbody>
         <tr ng-repeat-start="org in vm.query.orgStatuses track by org.id" ng-if="org.results && org.results.length > 0">
           <td rowspan="{{ org.results.length }}">{{ org.org.name }}</td>
-          <td href ng-click="vm.patient.givenName = org.results[0].givenName">{{ org.results[0].givenName }}</td>
-          <td href ng-click="vm.patient.familyName = org.results[0].familyName">{{ org.results[0].familyName }}</td>
-          <td href ng-click="vm.setDob(org.results[0].dob)">{{ org.results[0].dob | date }}</td>
-          <td href ng-click="vm.patient.gender = org.results[0].gender">{{ org.results[0].gender }}</td>
-          <td href ng-click="vm.patient.ssn = org.results[0].ssn">{{ org.results[0].ssn }}</td>
+          <td href ng-click="org.results[0].selected = true; vm.patient.givenName = org.results[0].givenName">{{ org.results[0].givenName }}</td>
+          <td href ng-click="org.results[0].selected = true; vm.patient.familyName = org.results[0].familyName">{{ org.results[0].familyName }}</td>
+          <td href ng-click="org.results[0].selected = true; vm.setDob(org.results[0].dob)">{{ org.results[0].dob | date }}</td>
+          <td href ng-click="org.results[0].selected = true; vm.patient.gender = org.results[0].gender">{{ org.results[0].gender }}</td>
+          <td href ng-click="org.results[0].selected = true; vm.patient.ssn = org.results[0].ssn">{{ org.results[0].ssn }}</td>
           <td>
             <label class="sr-only" for="recordSelect-{{ org.results[0].id }}">{{ org.results[0].givenName + ' ' + org.results[0].familyName }}</label>
             <input id="recordSelect-{{ org.results[0].id }}" type="checkbox" ng-model="org.results[0].selected">
           </td>
         </tr>
         <tr ng-repeat-end ng-repeat="record in org.results.slice(1)">
-          <td href ng-click="vm.patient.givenName = record.givenName">{{ record.givenName }}</td>
-          <td href ng-click="vm.patient.familyName = record.familyName">{{ record.familyName }}</td>
-          <td href ng-click="vm.setDob(record.dob)">{{ record.dob | date }}</td>
-          <td href ng-click="vm.patient.gender = record.gender">{{ record.gender }}</td>
-          <td href ng-click="vm.patient.ssn = record.ssn">{{ record.ssn }}</td>
+          <td href ng-click="record.selected = true; vm.patient.givenName = record.givenName">{{ record.givenName }}</td>
+          <td href ng-click="record.selected = true; vm.patient.familyName = record.familyName">{{ record.familyName }}</td>
+          <td href ng-click="record.selected = true; vm.setDob(record.dob)">{{ record.dob | date }}</td>
+          <td href ng-click="record.selected = true; vm.patient.gender = record.gender">{{ record.gender }}</td>
+          <td href ng-click="record.selected = true; vm.patient.ssn = record.ssn">{{ record.ssn }}</td>
           <td>
             <label class="sr-only" for="recordSelect-{{ record.id }}">{{ record.givenName + ' ' + record.familyName }}</label>
             <input id="recordSelect-{{ record.id }}" type="checkbox" ng-model="record.selected">
