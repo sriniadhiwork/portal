@@ -24,9 +24,10 @@
                 <td>{{ patient.dateOfBirth | date }}</td>
                 <td>{{ patient.lastRead | date : 'medium' }}</td>
                 <td>
-                  <uib-progress max="patient.documentStatus.total" ng-click="patient.showDocuments = !patient.showDocuments">
-                    <uib-bar value="patient.documentStatus.cached" type="success"><i>{{ patient.documentStatus.cached }} / {{ patient.documentStatus.total }} document<span ng-if="patient.documentStatus.total > 1">s</span> cached</i></uib-bar>
-                    <uib-bar value="patient.documentStatus.total - patient.documentStatus.cached" type="info"><i>{{ patient.documentStatus.total - patient.documentStatus.cached }} document<span ng-if="patient.documentStatus.total - patient.documentStatus.cached > 1">s</span> available</i></uib-bar>
+                  <uib-progress max="patient.documentStatus.total + vm.countActive(patient)" ng-click="patient.showDocuments = !patient.showDocuments">
+                    <uib-bar value="patient.documentStatus.cached" type="success"><i>{{ patient.documentStatus.cached }} / {{ patient.documentStatus.total }} document<span ng-if="patient.documentStatus.total !== 1">s</span> cached</i></uib-bar>
+                    <uib-bar value="patient.documentStatus.total - patient.documentStatus.cached" type="info"><i>{{ patient.documentStatus.total - patient.documentStatus.cached }} document<span ng-if="patient.documentStatus.total - patient.documentStatus.cached !== 1">s</span> available</i></uib-bar>
+                    <uib-bar value="vm.countActive(patient)" type="warning"><i>{{ vm.countActive(patient) }} organization<span ng-if="vm.countActive(patient) > 1">s</span> pending</i></uib-bar>
                   </uib-progress>
                   <ul class="list-unstyled" ng-if="patient.showDocuments">
                     <li ng-if="org.documents.length > 0" ng-repeat="org in patient.orgMaps track by org.id">Documents from {{ org.organization.name }}

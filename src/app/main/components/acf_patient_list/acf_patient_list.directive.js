@@ -30,14 +30,17 @@
         return directive;
 
         /** @ngInject */
-        function AcfPatientListController($log, commonService) {
+        function AcfPatientListController($log, $timeout, commonService, QueryQueryTimeout) {
             var vm = this;
 
             vm.cacheDocument = cacheDocument;
+            vm.countActive = countActive;
             vm.dischargePatient = dischargePatient;
             vm.getDocument = getDocument;
             vm.getPatientsAtAcf = getPatientsAtAcf;
             vm.getUserAcf = getUserAcf;
+
+            vm.TIMEOUT_MILLIS = QueryQueryTimeout * 1000;
 
             activate();
 
@@ -53,6 +56,15 @@
                     doc.cached = true;
                     patient.documentStatus.cached += 1;
                 });
+            }
+
+            function countActive (patient) {
+                var active = 0;
+                for (var i = 0; i < patient.orgMaps.length; i++) {
+                    if (patient.orgMaps[i].documentsQueryStatus === 'ACTIVE')
+                        active += 1;
+                }
+                return active;
             }
 
             function dischargePatient (patient) {
@@ -74,11 +86,13 @@
 
             function getPatientsAtAcf () {
                 commonService.getPatientsAtAcf().then(function (response) {
+                    var hasActive = false;
                     vm.patients = response;
                     for (var i = 0; i < vm.patients.length; i++) {
                         var patient = vm.patients[i];
                         patient.documentStatus = {total: 0, cached: 0};
                         for (var j = 0; j < patient.orgMaps.length; j++) {
+                            hasActive = hasActive || (patient.orgMaps[j].documentsQueryStatus === 'ACTIVE');
                             patient.documentStatus.total += patient.orgMaps[j].documents.length;
                             for (var k = 0; k < patient.orgMaps[j].documents.length; k++) {
                                 if (patient.orgMaps[j].documents[k].cached) {
@@ -86,6 +100,9 @@
                                 }
                             }
                         }
+                    }
+                    if (hasActive) {
+                        $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS);
                     }
                 });
             }
