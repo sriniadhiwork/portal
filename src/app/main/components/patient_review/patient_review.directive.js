@@ -73,7 +73,7 @@
                         hasActive = hasActive || (vm.patientQueries[i].status === 'ACTIVE');
                     }
                     if (hasActive) {
-                        $timeout(vm.getQueries,vm.TIMEOUT_MILLIS);
+                        $timeout(vm.getQueries, vm.TIMEOUT_MILLIS);
                     }
                 });
             }
