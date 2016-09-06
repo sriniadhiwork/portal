@@ -1,8 +1,10 @@
 {
     'API': '/rest',
     'AuthAPI':  '/auth',
+    'IdleTimeout': 20,
+    'KeepaliveInterval': 1,
+    'LogoutRedirect': 'http://localhost:3000',
     'OrganizationQueryInterval': 600,
     'QueryQueryTimeout': 5,
-    'SwaggerUrl': 'http://localhost:9090/api-docs',
-    'LogoutRedirect': 'http://localhost:3000'
+    'SwaggerUrl': 'http://localhost:9090/api-docs'
 }
