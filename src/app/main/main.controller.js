@@ -9,6 +9,7 @@
     function MainController($log, $location, $anchorScroll, $scope, Idle, Keepalive, commonService, AuthAPI) {
         var vm = this;
 
+        vm.bypassSaml = bypassSaml;
         vm.hasAcf = hasAcf;
         vm.isAuthenticated = isAuthenticated;
         vm.refreshToken = refreshToken;
@@ -29,6 +30,12 @@
             $scope.$on('Keepalive', function() {
                 $log.info('Keepalive');
                 vm.refreshToken();
+            });
+        }
+
+        function bypassSaml () {
+            commonService.getSamlUserToken().then(function () {
+                commonService.getToken(true);
             });
         }
 
