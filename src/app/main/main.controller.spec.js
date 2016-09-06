@@ -7,7 +7,7 @@
         beforeEach(function () {
             module('portal.main', 'portal.constants', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
-                    $delegate.getSamlUserToken = jasmine.createSpy('getSamlUserToken');
+                    $delegate.refreshToken = jasmine.createSpy('refreshToken');
                     $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
                     $delegate.hasAcf = jasmine.createSpy('hasAcf');
                     $delegate.getToken = jasmine.createSpy('getToken');
@@ -19,7 +19,6 @@
                 commonService = _commonService_;
                 $log = _$log_;
                 $location = _$location_;
-                commonService.getSamlUserToken.and.returnValue($q.when('token'));
                 commonService.isAuthenticated.and.returnValue(true);
                 commonService.hasAcf.and.returnValue(true);
 
@@ -65,10 +64,10 @@
             expect(vm.refreshToken).toHaveBeenCalled();
         });
 
-        it('should call commonService.getSamlUserToken on refreshToken', function () {
+        it('should call commonService.refreshToken on refreshToken', function () {
             vm.refreshToken();
             scope.$digest();
-            expect(commonService.getSamlUserToken).toHaveBeenCalled();
+            expect(commonService.refreshToken).toHaveBeenCalled();
         });
 
         describe('handlers and triggers', function () {

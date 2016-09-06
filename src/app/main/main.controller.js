@@ -41,9 +41,7 @@
         }
 
         function refreshToken () {
-            commonService.getSamlUserToken().then(function () {
-                commonService.getToken(true);
-            });
+            commonService.refreshToken();
         }
 
         function registerHandler (handler) {
