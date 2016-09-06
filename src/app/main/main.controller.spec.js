@@ -7,6 +7,7 @@
         beforeEach(function () {
             module('portal.main', 'portal.constants', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
+                    $delegate.getSamlUserToken = jasmine.createSpy('getSamlUserToken');
                     $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
                     $delegate.hasAcf = jasmine.createSpy('hasAcf');
                     $delegate.getToken = jasmine.createSpy('getToken');
@@ -18,12 +19,13 @@
                 commonService = _commonService_;
                 $log = _$log_;
                 $location = _$location_;
+                commonService.getSamlUserToken.and.returnValue($q.when('token'));
                 commonService.isAuthenticated.and.returnValue(true);
                 commonService.hasAcf.and.returnValue(true);
 
                 scope = $rootScope.$new();
-                vm = $controller('MainController');
-                scope.$digest();
+                vm = $controller('MainController', {$scope: scope});
+                //scope.$digest();
             });
         });
 
@@ -50,6 +52,23 @@
         it('should set the location', function () {
             vm.scrollTo('anId');
             expect($location.hash()).toBe('anId');
+        });
+
+        it('should have a function to refresh the token', function () {
+            expect(vm.refreshToken).toBeDefined();
+        });
+
+        it('should call the refreshToken function on a Keepalive ping', function () {
+            spyOn(vm, 'refreshToken');
+            scope.$emit('Keepalive');
+            scope.$digest();
+            expect(vm.refreshToken).toHaveBeenCalled();
+        });
+
+        it('should call commonService.getSamlUserToken on refreshToken', function () {
+            vm.refreshToken();
+            scope.$digest();
+            expect(commonService.getSamlUserToken).toHaveBeenCalled();
         });
 
         describe('handlers and triggers', function () {
