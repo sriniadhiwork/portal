@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('portal.main', ['portal.common']);
+        .module('portal.main', ['ngIdle', 'portal.common']);
 })();

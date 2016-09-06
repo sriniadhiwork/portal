@@ -6,7 +6,8 @@
         .run(runBlock);
 
     /** @ngInject */
-    function runBlock($log) {
+    function runBlock($log, Idle) {
         $log.info('runBlock end');
+        Idle.watch();
     }
 })();

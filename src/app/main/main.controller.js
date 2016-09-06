@@ -6,12 +6,12 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, $location, $anchorScroll, commonService, AuthAPI) {
+    function MainController($log, $location, $anchorScroll, $scope, Idle, Keepalive, commonService, AuthAPI) {
         var vm = this;
 
-        vm.bypassSaml = bypassSaml;
         vm.hasAcf = hasAcf;
         vm.isAuthenticated = isAuthenticated;
+        vm.refreshToken = refreshToken;
         vm.registerHandler = registerHandler;
         vm.scrollTo = scrollTo;
         vm.triggerHandlers = triggerHandlers;
@@ -26,11 +26,9 @@
         function activate () {
             commonService.getToken(true);
             vm.handlers = [];
-        }
-
-        function bypassSaml () {
-            commonService.getSamlUserToken().then(function () {
-                commonService.getToken(true);
+            $scope.$on('Keepalive', function() {
+                $log.info('Keepalive');
+                vm.refreshToken();
             });
         }
 
@@ -40,6 +38,12 @@
 
         function isAuthenticated () {
             return commonService.isAuthenticated();
+        }
+
+        function refreshToken () {
+            commonService.getSamlUserToken().then(function () {
+                commonService.getToken(true);
+            });
         }
 
         function registerHandler (handler) {
