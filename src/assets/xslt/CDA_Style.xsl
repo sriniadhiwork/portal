@@ -22,15 +22,6 @@
   </xsl:template>
   <!-- produce browser rendered, human readable clinical document -->
   <xsl:template match="n1:ClinicalDocument">
-
-
-
-
-
-
-
-
-
         <h1 class="h1center">
           <xsl:value-of select="$title"/>
         </h1>
@@ -58,11 +49,7 @@
         </xsl:if>
         <hr align="left" color="#00008b" size="2" width="80%"/>
         <!-- produce human readable document content -->
-<!--        <xsl:apply-templates select="n1:component/n1:structuredBody|n1:component/n1:nonXMLBody"/>-->
-        <br/>
-        <br/>
-
-
+        <xsl:apply-templates select="n1:component/n1:structuredBody|n1:component/n1:nonXMLBody"/>
   </xsl:template>
   <!-- generate table of contents -->
   <xsl:template name="make-tableofcontents">

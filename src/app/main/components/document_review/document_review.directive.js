@@ -21,7 +21,7 @@
         return directive;
 
         /** @ngInject */
-        function DocumentReviewController() {
+        function DocumentReviewController($filter, $scope) {
             var vm = this;
 
             vm.cancel = cancel;
@@ -31,11 +31,17 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.transformedDocument = '';
                 vm.xslt = loadXMLDoc('assets/xslt/CDA_Style.xsl');
+                $scope.$watch('vm.activeDocument', function (newDoc) {
+                    if (newDoc)
+                        vm.transformedDocument = $filter('xslt')(newDoc.data, vm.xslt);
+                });
             }
 
             function cancel () {
                 vm.activeDocument = undefined;
+                vm.transformedDocument = '';
             }
 
             ////////////////////////////////////////////////////////////////////
