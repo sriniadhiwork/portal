@@ -2,29 +2,28 @@
     'use strict';
 
     describe('review.controller', function() {
-        var vm, scope, commonService, $log, $location;
+        var vm, scope, commonService, $log, location, ctrl;
 
         beforeEach(function () {
             module('portal.review', 'portal.constants', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
-                    $delegate.refreshToken = jasmine.createSpy('refreshToken');
                     $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
                     $delegate.hasAcf = jasmine.createSpy('hasAcf');
-                    $delegate.getToken = jasmine.createSpy('getToken');
                     return $delegate;
                 });
             });
 
-            inject(function (_commonService_, _$log_, _$location_, $controller, $q, $rootScope) {
+            inject(function (_commonService_, _$log_, $controller, $q, $rootScope, _$location_) {
                 commonService = _commonService_;
                 $log = _$log_;
-                $location = _$location_;
+                location = _$location_;
                 commonService.isAuthenticated.and.returnValue(true);
                 commonService.hasAcf.and.returnValue(true);
 
+                ctrl = $controller;
                 scope = $rootScope.$new();
-                vm = $controller('ReviewController', {$scope: scope});
-                //scope.$digest();
+                vm = ctrl('ReviewController');
+                scope.$digest();
             });
         });
 
@@ -44,30 +43,22 @@
             expect(vm.hasAcf()).toBeTruthy();
         });
 
-        it('should have a function to scroll', function () {
-            expect(vm.scrollTo).toBeDefined();
-        });
-
-        it('should set the location', function () {
-            vm.scrollTo('anId');
-            expect($location.hash()).toBe('anId');
-        });
-
-        it('should have a function to refresh the token', function () {
-            expect(vm.refreshToken).toBeDefined();
-        });
-
-        it('should call the refreshToken function on a Keepalive ping', function () {
-            spyOn(vm, 'refreshToken');
-            scope.$emit('Keepalive');
+        it('should redirect the user to home if they\'re not authenticated', function () {
+            commonService.isAuthenticated.and.returnValue(false);
+            spyOn(location, 'path');
+            vm = ctrl('ReviewController');
             scope.$digest();
-            expect(vm.refreshToken).toHaveBeenCalled();
+
+            expect(location.path).toHaveBeenCalledWith('/');
         });
 
-        it('should call commonService.refreshToken on refreshToken', function () {
-            vm.refreshToken();
+        it('should redirect the user to home if they don\'t have an acf', function () {
+            commonService.hasAcf.and.returnValue(false);
+            spyOn(location, 'path');
+            vm = ctrl('ReviewController');
             scope.$digest();
-            expect(commonService.refreshToken).toHaveBeenCalled();
+
+            expect(location.path).toHaveBeenCalledWith('/');
         });
 
         describe('handlers and triggers', function () {

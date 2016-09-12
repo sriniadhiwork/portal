@@ -6,37 +6,28 @@
         .controller('SearchController', SearchController);
 
     /** @ngInject */
-    function SearchController($log, $location, $anchorScroll, $scope, Idle, Keepalive, commonService, AuthAPI) {
+    function SearchController($location, $log, commonService) {
         var vm = this;
 
-        vm.bypassSaml = bypassSaml;
         vm.hasAcf = hasAcf;
         vm.isAuthenticated = isAuthenticated;
-        vm.refreshToken = refreshToken;
         vm.registerHandler = registerHandler;
-        vm.scrollTo = scrollTo;
         vm.triggerHandlers = triggerHandlers;
 
         vm.commonService = commonService;
-        vm.authAction = AuthAPI + '/saml/login?disco=true';
 
         activate();
 
         ////////////////////////////////////////////////////////////////////
 
         function activate () {
-            commonService.getToken(true);
+            if (!vm.isAuthenticated()) {
+                $location.path('/');
+            }
+            if (!vm.hasAcf()) {
+                $location.path('/');
+            }
             vm.handlers = [];
-            $scope.$on('Keepalive', function() {
-                $log.info('Keepalive');
-                vm.refreshToken();
-            });
-        }
-
-        function bypassSaml () {
-            commonService.getSamlUserToken().then(function () {
-                commonService.getToken(true);
-            });
         }
 
         function hasAcf () {
@@ -47,10 +38,6 @@
             return commonService.isAuthenticated();
         }
 
-        function refreshToken () {
-            commonService.refreshToken();
-        }
-
         function registerHandler (handler) {
             vm.handlers.push(handler);
             var removeHandler = function () {
@@ -59,11 +46,6 @@
                 });
             };
             return removeHandler;
-        }
-
-        function scrollTo (target) {
-            $location.hash(target);
-            //$anchorScroll();
         }
 
         function triggerHandlers () {

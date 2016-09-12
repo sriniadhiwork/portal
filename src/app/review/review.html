@@ -1,92 +1,40 @@
 <div class="container-fluid">
   <header>
-    <ai-navbar active="home"></ai-navbar>
+    <ai-navbar active="review"></ai-navbar>
   </header>
-  <div ng-if="!vm.isAuthenticated()" class="fake-login">
-    <div class="row">
-      <div class="col-sm-2 col-sm-offset-5">
-        <form class="" role="log in" method="get" action="{{ vm.authAction }}">
-          <p>We're just going to pretend that this is a page on DHV, and the below button is what let's you "Go to PULSE"</p>
-          <button type="submit" class="btn btn-default btn-block">Go to PULSE</button>
-          <select name="idp" id="idp">
-            <option value="https://idp.ssocircle.com">SSO Circle</option>
-            <option value="https://idp.testshib.org/idp/shibboleth" selected>Shibboleth</option>
-          </select>
-          <!--<input type="hidden" name="idp" id="idp_http://idp.ssocircle.com" value="http://idp.ssocircle.com"></input>-->
-          <!--<input type="hidden" name="idp" id="idp_https://idp.testshib.org/idp/shibboleth" value="https://idp.testshib.org/idp/shibboleth"></input>-->
-        </form>
-        <button type="button" class="btn btn-danger btn-block" ng-click="vm.bypassSaml()">Bypass SAML</button>
-      </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h1><span class="emphasis">PULSE</span> Status</h1>
     </div>
   </div>
-  <div ng-if="vm.isAuthenticated()">
-    <div ng-if="!vm.hasAcf()">
-      <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
-          <ai-acf>
-          </ai-acf>
-        </div>
-      </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <ai-acf>
+      </ai-acf>
     </div>
-    <div ng-if="vm.hasAcf()">
-      <div class="row">
-        <div class="col-sm-1">
-          <button class="btn btn-success btn-block" ng-click="vm.scrollTo('RegisterPatients')"><span class="emphasis">Register</span><br />Patients</button>
-          <button class="btn btn-success btn-block" ng-click="vm.scrollTo('TreatPatients')"><span class="emphasis">Treat</span><br />Patients</button>
-        </div>
-        <div class="col-sm-11">
-          <div class="row">
-            <div class="col-sm-12">
-              <h1><span class="emphasis">PULSE</span> Status</h1>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-4">
-              <ai-acf>
-              </ai-acf>
-            </div>
-            <div class="col-sm-8">
-              <ai-organization-status>
-              </ai-organization-status>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <h1><span class="emphasis">Register</span> Patients<a id="RegisterPatients"></a></h1>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-4">
-              <ai-patient-search trigger-handlers="vm.triggerHandlers()">
-              </ai-patient-search>
-            </div>
-            <div class="col-sm-8">
-              <ai-patient-review trigger-handlers="vm.triggerHandlers()" register-handler="vm.registerHandler(handler)">
-              </ai-patient-review>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <h1><span class="emphasis">Treat</span> Patients<a id="PatientTreatment"></a></h1>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <ai-acf-patient-list
-                 register-handler="vm.registerHandler(handler)"
-                 active-document="vm.activeDocument">
-              </ai-acf-patient-list>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-12">
-              <ai-document-review
-                 active-document="vm.activeDocument">
-              </ai-document-review>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="col-sm-8">
+      <ai-organization-status>
+      </ai-organization-status>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h1><span class="emphasis">Review</span> Patients</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <ai-acf-patient-list
+         register-handler="vm.registerHandler(handler)"
+         active-document="vm.activeDocument">
+      </ai-acf-patient-list>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <ai-document-review
+         active-document="vm.activeDocument">
+      </ai-document-review>
     </div>
   </div>
 </div>
