@@ -37,7 +37,6 @@
 
         it('should have a way to close the document', function () {
             scope.$apply('vm.activeDocument=\'' + mock.fakeDocument + '\'');
-            //vm.activeDocument = mock.fakeDocument;
             vm.cancel();
             expect(vm.activeDocument).toBeUndefined();
             expect(vm.transformedDocument).toBe('');
