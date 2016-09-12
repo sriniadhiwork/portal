@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    describe('main.aiOrganizationStatus', function() {
+    describe('portal.aiOrganizationStatus', function() {
         var vm, el, $log, $q, $interval, commonService, mock;
         mock = {organizations: [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}]};
 

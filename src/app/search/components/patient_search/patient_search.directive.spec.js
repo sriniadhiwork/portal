@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    describe('main.aiPatientSearch', function() {
+    describe('search.aiPatientSearch', function() {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
         mock = {patientSearch: {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]}};
 

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('portal.main')
+        .module('portal.search')
         .controller('PatientStageController', PatientStageController);
 
     /** @ngInject */

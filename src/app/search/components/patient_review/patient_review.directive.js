@@ -2,14 +2,14 @@
     'use strict';
 
     angular
-        .module('portal.main')
+        .module('portal.search')
         .directive('aiPatientReview', aiPatientReview);
 
     /** @ngInject */
     function aiPatientReview() {
         var directive = {
             restrict: 'E',
-            templateUrl: 'app/main/components/patient_review/patient_review.html',
+            templateUrl: 'app/search/components/patient_review/patient_review.html',
             scope: { registerHandler: '&' },
             controller: PatientReviewController,
             controllerAs: 'vm',
@@ -88,7 +88,7 @@
 
             function stagePatient (query) {
                 vm.stagePatientInstance = $uibModal.open({
-                    templateUrl: 'app/main/components/patient_stage/patient_stage.html',
+                    templateUrl: 'app/search/components/patient_stage/patient_stage.html',
                     controller: 'PatientStageController',
                     controllerAs: 'vm',
                     animation: false,

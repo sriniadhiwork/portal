@@ -2,14 +2,14 @@
     'use strict';
 
     angular
-        .module('portal.main')
+        .module('portal.search')
         .directive('aiPatientSearch', aiPatientSearch);
 
     /** @ngInject */
     function aiPatientSearch() {
         var directive = {
             restrict: 'E',
-            templateUrl: 'app/main/components/patient_search/patient_search.html',
+            templateUrl: 'app/search/components/patient_search/patient_search.html',
             scope: { },
             controller: PatientSearchController,
             controllerAs: 'vm',

@@ -2,14 +2,14 @@
     'use strict';
 
     angular
-        .module('portal.main')
+        .module('portal')
         .directive('aiAcf', aiAcf);
 
     /** @ngInject */
     function aiAcf() {
         var directive = {
             restrict: 'E',
-            templateUrl: 'app/main/components/acf/acf.html',
+            templateUrl: 'app/components/acf/acf.html',
             scope: {},
             controller: AcfController,
             controllerAs: 'vm',

@@ -2,14 +2,14 @@
     'use strict';
 
     angular
-        .module('portal.main')
+        .module('portal.review')
         .directive('aiAcfPatientList', aiAcfPatientList);
 
     /** @ngInject */
     function aiAcfPatientList() {
         var directive = {
             restrict: 'E',
-            templateUrl: 'app/main/components/acf_patient_list/acf_patient_list.html',
+            templateUrl: 'app/review/components/acf_patient_list/acf_patient_list.html',
             scope: { registerHandler: '&' },
             controller: AcfPatientListController,
             controllerAs: 'vm',

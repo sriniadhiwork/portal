@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    describe('main.aiAcf', function() {
+    describe('portal.aiAcf', function() {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
         mock = { acfs: [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}]};
 

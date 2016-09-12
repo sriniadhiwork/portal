@@ -2,14 +2,14 @@
     'use strict';
 
     angular
-        .module('portal.main')
+        .module('portal')
         .directive('aiOrganizationStatus', aiOrganizationStatus);
 
     /** @ngInject */
     function aiOrganizationStatus() {
         var directive = {
             restrict: 'E',
-            templateUrl: 'app/main/components/organization_status/organization_status.html',
+            templateUrl: 'app/components/organization_status/organization_status.html',
             scope: {},
             controller: OrganizationStatusController,
             controllerAs: 'vm',

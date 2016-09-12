@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    describe('main.aiAcfPatientList', function() {
+    describe('review.aiAcfPatientList', function() {
         var vm, el, $log, $timeout, $q, commonService, mock;
         mock = {
             patients: [{id:3,orgPatientId:null,givenName:"John",familyName:"Doe",dateOfBirth:null,gender:"M",phoneNumber:null,

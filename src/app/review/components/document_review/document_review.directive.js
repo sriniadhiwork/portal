@@ -2,14 +2,14 @@
     'use strict';
 
     angular
-        .module('portal.main')
+        .module('portal.review')
         .directive('aiDocumentReview', aiDocumentReview);
 
     /** @ngInject */
     function aiDocumentReview($log) {
         var directive = {
             restrict: 'E',
-            templateUrl: 'app/main/components/document_review/document_review.html',
+            templateUrl: 'app/review/components/document_review/document_review.html',
             scope: {},
             controller: DocumentReviewController,
             controllerAs: 'vm',
