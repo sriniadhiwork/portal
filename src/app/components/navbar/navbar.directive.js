@@ -21,7 +21,7 @@
         return directive;
 
         /** @ngInject */
-        function NavbarController($log, commonService) {
+        function NavbarController($log, $scope, Idle, commonService) {
             var vm = this;
 
             vm.isAuthenticated = isAuthenticated;
@@ -36,6 +36,11 @@
 
             function activate () {
                 vm.navCollapse = true;
+                Idle.watch();
+                $scope.$on('Keepalive', function() {
+                    $log.info('Keepalive');
+                    commonService.refreshToken();
+                });
             }
 
             function isAuthenticated () {
