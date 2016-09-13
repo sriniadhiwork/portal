@@ -37,9 +37,9 @@
             function activate () {
                 vm.createNewAcf = false;
                 vm.showFormErrors = false;
+                vm.isEditing = false;
                 vm.getAcfs();
                 vm.acf = vm.getUserAcf();
-                vm.isEditing = false;
             }
 
             function acfSubmit () {

@@ -2,9 +2,13 @@
   <div class="form-horizontal" ng-form="vm.queryForm">
     <div class="panel panel-primary">
       <div class="panel-heading">
+        <div class="pull-right">
+          <button class="btn btn-sm panel-button" ng-click="vm.hidePanel = !vm.hidePanel"><i class="fa fa-lg {{ vm.hidePanel ? 'fa-caret-right' : 'fa-caret-down' }}"></i><span class="sr-only">{{ vm.hidePanel ? 'Show' : 'Hide' }} Panel</span></button>
+        </div>
         <h2 class="panel-title">Patient Query</h2>
+        <div class="clearfix"></div>
       </div>
-      <div class="panel-body">
+      <div class="panel-body" ng-show="!vm.hidePanel">
         <div class="form-group">
           <label for="givenName" class="col-sm-4 control-label">Given Name</label>
           <div class="col-sm-8">
@@ -54,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div class="panel-footer">
+      <div class="panel-footer" ng-show="!vm.hidePanel">
         <div class="form-group">
           <div class="col-sm-4 col-sm-offset-4">
             <button ng-disabled="(vm.queryForm.$invalid || !vm.hasSearchTerm()) && vm.showFormErrors"

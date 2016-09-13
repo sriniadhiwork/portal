@@ -32,6 +32,7 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.hidePanel = true;
                 vm.queryOrganizations();
                 vm.stop = $interval(vm.queryOrganizations,vm.INTERVAL_MILLIS);
             }

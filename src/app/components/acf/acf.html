@@ -3,11 +3,14 @@
     <div class="panel panel-primary">
       <div class="panel-heading">
         <h2 class="panel-title" ng-if="!vm.hasAcf()">Login to an Alternate Care Facility (ACF)</h2>
-        <h2 class="panel-title" ng-if="vm.hasAcf()">Alternate Care Facility (ACF) Information
-          <button class="btn btn-sm pull-right panel-button" ng-click="vm.isEditing = true" ng-if="!vm.isEditing"><i class="fa fa-pencil"></i><span class="sr-only">Edit ACF Information</span></button>
-        </h2>
+        <div class="pull-right" ng-if="vm.hasAcf()">
+          <button class="btn btn-sm panel-button" ng-click="vm.isEditing = true" ng-if="!vm.isEditing"><i class="fa fa-pencil"></i><span class="sr-only">Edit ACF Information</span></button>
+          <button class="btn btn-sm panel-button" ng-click="vm.hidePanel = !vm.hidePanel"><i class="fa fa-lg {{ vm.hidePanel ? 'fa-caret-right' : 'fa-caret-down' }}"></i><span class="sr-only">{{ vm.hidePanel ? 'Show' : 'Hide' }} Panel</span></button>
+        </div>
+        <h2 class="panel-title" ng-if="vm.hasAcf()">Alternate Care Facility (ACF) Information</h2>
+      <div class="clearfix"></div>
       </div>
-      <div class="panel-body">
+      <div class="panel-body" ng-show="!vm.hidePanel">
         <div ng-if="!vm.hasAcf()">
           <div class="col-sm-12"><h3>Select an existing ACF</h3></div>
           <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required }">

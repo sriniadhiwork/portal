@@ -1,9 +1,13 @@
 <div class="container-fluid acf-patient-list">
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h2 class="panel-title">{{ vm.patients.length }} Active Patient<span ng-if="vm.patients.length !== 1">s</span> at {{ vm.getUserAcf().name }}</h3>
+      <div class="pull-right">
+        <button class="btn btn-sm panel-button" ng-click="vm.hidePanel = !vm.hidePanel"><i class="fa fa-lg {{ vm.hidePanel ? 'fa-caret-right' : 'fa-caret-down' }}"></i><span class="sr-only">{{ vm.hidePanel ? 'Show' : 'Hide' }} Panel</span></button>
+      </div>
+      <h2 class="panel-title">{{ vm.patients.length }} Active Patient<span ng-if="vm.patients.length !== 1">s</span> at {{ vm.getUserAcf().name }}</h2>
+      <div class="clearfix"></div>
     </div>
-    <div class="panel-body">
+    <div class="panel-body" ng-show="!vm.hidePanel">
       <div class="row">
         <div class="col-sm-12">
           <table class="table table-striped" st-table="vm.displayedPatients" st-safe-src="vm.patients" ng-if="vm.patients.length > 0">
