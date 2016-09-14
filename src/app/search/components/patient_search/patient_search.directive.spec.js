@@ -8,7 +8,7 @@
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
-                    $delegate.searchForPatient = jasmine.createSpy();
+                    $delegate.searchForPatient = jasmine.createSpy('commonService.searchForPatient');
                     return $delegate;
                 });
             });
@@ -26,7 +26,14 @@
                 $rootScope.$digest();
                 vm = el.isolateScope().vm;
 
-                vm.queryForm = {$error: { required: [1, 2], invalid: [3], notAnError: 4 }};
+                vm.queryForm = {
+                    $error: { required: [1, 2], invalid: [3], notAnError: 4 },
+                    $setDirty: function () { this.$dirty = true;
+                                             this.$pristine = false;
+                                           },
+                    $setPristine: function () { this.$pristine = true; },
+                    $setUntouched: function () { this.$untouched = true; }
+                };
                 vm.query = { givenName: 'fake', familyName: 'name' };
             });
         });
@@ -53,61 +60,62 @@
             expect(vm.searchForPatient).toBeDefined();
         });
 
-        it('should call commonService.searchForPatient on query', function () {
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).toHaveBeenCalled();
+        describe('submitting the search form', function () {
+            beforeEach(function () {
+                vm.queryForm.givenName = 'bob';
+                vm.queryForm.familyName = 'jones';
+                vm.queryForm.dob = new Date();
+                vm.queryForm.gender = 'M';
+                vm.queryForm.$setDirty();
+            });
+
+            it('should call commonService.searchForPatient on query', function () {
+                vm.searchForPatient();
+                expect(commonService.searchForPatient).toHaveBeenCalled();
+            });
+
+            it('should clear the query fields on a search', function () {
+                vm.searchForPatient();
+                expect(vm.query).toEqual({});
+            });
+
+            it('should wipe the form on a search', function () {
+                vm.searchForPatient();
+                expect(vm.queryForm.$pristine).toBe(true);
+            });
+
+            it('should hide errors on a search', function () {
+                vm.searchForPatient();
+                expect(vm.showFormErrors).toBe(false);
+            });
+
+            it('should tell the controller that a search was performed', function () {
+                spyOn(vm,'triggerHandlers');
+                vm.searchForPatient();
+                el.isolateScope().$digest();
+                expect(vm.triggerHandlers).toHaveBeenCalled();
+            });
         });
 
-        it('should clear the query fields on a search', function () {
-            vm.searchForPatient();
-            expect(vm.query).toEqual({});
-        });
-
-        it('should tell the controller that a search was performed', function () {
-            spyOn(vm,'triggerHandlers');
-            vm.searchForPatient();
-            el.isolateScope().$digest();
-            expect(vm.triggerHandlers).toHaveBeenCalled();
-        });
-
-        it('should not let a search be performed with no parameters', function () {
+        it('should not let a search be performed without required parameters', function () {
             vm.query = {};
+            vm.queryForm.$invalid = true;
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
+            vm.queryForm.$setDirty();
             vm.query = { givenName: 'fake' };
             vm.searchForPatient();
-            expect(commonService.searchForPatient).toHaveBeenCalled();
+            expect(commonService.searchForPatient).not.toHaveBeenCalled();
             vm.query = { familyName: 'last' };
             vm.searchForPatient();
-            expect(commonService.searchForPatient).toHaveBeenCalled();
+            expect(commonService.searchForPatient).not.toHaveBeenCalled();
             vm.query = { dob: 'dob' };
             vm.searchForPatient();
-            expect(commonService.searchForPatient).toHaveBeenCalled();
-            vm.query = { gender: 'm' };
+            expect(commonService.searchForPatient).not.toHaveBeenCalled();
+            vm.query = { gender: 'M' };
+            vm.queryForm.$invalid = false;
             vm.searchForPatient();
             expect(commonService.searchForPatient).toHaveBeenCalled();
-            vm.query = { ssn: '1234' };
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).toHaveBeenCalled();
-            vm.query = { homeZip: '12345' };
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).toHaveBeenCalled();
-        });
-
-        it('should have a "isDisabled" based on not having values in the search', function () {
-            expect(vm.hasSearchTerm).toBeDefined();
-            vm.query = { givenName: 'fake' };
-            expect(vm.hasSearchTerm()).toBe(true);
-            vm.query = { familyName: 'last' };
-            expect(vm.hasSearchTerm()).toBe(true);
-            vm.query = { gender: 'm' };
-            expect(vm.hasSearchTerm()).toBe(true);
-            vm.query = { ssn: '1234' };
-            expect(vm.hasSearchTerm()).toBe(true);
-            vm.query = { homeZip: '12345' };
-            expect(vm.hasSearchTerm()).toBe(true);
-            vm.query = {};
-            expect(vm.hasSearchTerm()).toBeFalsy();
         });
     });
 })();

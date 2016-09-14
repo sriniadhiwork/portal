@@ -23,7 +23,6 @@
             var vm = this;
 
             vm.errorCount = errorCount;
-            vm.hasSearchTerm = hasSearchTerm;
             vm.searchForPatient = searchForPatient;
 
             activate();
@@ -46,24 +45,16 @@
                 return count;
             }
 
-            function hasSearchTerm () {
-                var ret = false;
-                ret = ret || (vm.query.givenName && vm.query.givenName.length > 0)
-                    || (vm.query.familyName && vm.query.familyName.length > 0)
-                    || (vm.query.dob)
-                    || (vm.query.gender && vm.query.gender.length > 0)
-                    || (vm.query.ssn && vm.query.ssn.length > 0)
-                    || (vm.query.homeZip && vm.query.homeZip.length > 0);
-                return ret;
-            }
-
             function searchForPatient () {
-                if (hasSearchTerm()) {
+                if (!vm.queryForm.$invalid && vm.queryForm.$dirty) {
                     var queryObj = {query: angular.copy(vm.query)};
                     commonService.searchForPatient(queryObj.query).then(function() {
                         vm.triggerHandlers();
                     });
                     vm.query = {};
+                    vm.queryForm.$setPristine();
+                    vm.queryForm.$setUntouched();
+                    vm.showFormErrors = false;
                 }
             }
         }
