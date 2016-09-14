@@ -28,6 +28,7 @@
         self.isAuthenticated = isAuthenticated;
         self.logout = logout;
         self.queryOrganizations = queryOrganizations;
+        self.refreshToken = refreshToken;
         self.saveToken = saveToken;
         self.searchForPatient = searchForPatient;
         self.searchForPatientDocuments = searchForPatientDocuments;
@@ -221,6 +222,20 @@
             return getApi('/organizations')
                 .then(function (response) {
                     return $q.when(response);
+                }, function (error) {
+                    return $q.reject(error);
+                });
+        }
+
+        function refreshToken () {
+            return getApi('/jwt/keepalive', AuthAPI)
+                .then(function (response) {
+                    if (validTokenFormat(response.token)) {
+                        self.saveToken(response.token);
+                        return $q.when(response.token);
+                    } else {
+                        return $q.when(null);
+                    }
                 }, function (error) {
                     return $q.reject(error);
                 });

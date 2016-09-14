@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('portal.resources', ['portal.common', 'portal.main', 'portal.constants']);
+        .module('portal.resources', ['portal.constants']);
 })();

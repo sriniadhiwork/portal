@@ -2,16 +2,17 @@
     'use strict';
 
     describe('navbar.directive', function() {
-        var vm, el, $log, commonService;
+        var vm, el, scope, $log, commonService;
 
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
-                    $delegate.getUsername = jasmine.createSpy();
-                    $delegate.getUserAcf = jasmine.createSpy();
-                    $delegate.isAuthenticated = jasmine.createSpy();
-                    $delegate.hasAcf = jasmine.createSpy();
-                    $delegate.logout = jasmine.createSpy();
+                    $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
+                    $delegate.getUsername = jasmine.createSpy('getUsername');
+                    $delegate.hasAcf = jasmine.createSpy('hasAcf');
+                    $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
+                    $delegate.logout = jasmine.createSpy('logout');
+                    $delegate.refreshToken = jasmine.createSpy('refreshToken');
                     return $delegate;
                 });
             });
@@ -21,8 +22,9 @@
 
                 el = angular.element('<ai-navbar></ai-navbar>');
 
-                $compile(el)($rootScope.$new());
-                $rootScope.$digest();
+                scope = $rootScope.$new()
+                $compile(el)(scope);
+                scope.$digest();
                 vm = el.isolateScope().vm;
             });
         });
@@ -69,6 +71,12 @@
             expect(vm.logout).toBeDefined();
             vm.logout();
             expect(commonService.logout).toHaveBeenCalled();
+        });
+
+        it('should call the commonService.refreshToken on a Keepalive ping', function () {
+            scope.$broadcast('Keepalive');
+            scope.$digest();
+            expect(commonService.refreshToken).toHaveBeenCalled();
         });
     });
 })();

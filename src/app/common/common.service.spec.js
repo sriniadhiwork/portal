@@ -62,6 +62,7 @@
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
+            requestHandler.refreshToken = $httpBackend.whenGET(AuthAPI + '/jwt/keepalive').respond(200, {token: mock.token});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
             requestHandler.stagePatient = $httpBackend.whenPOST(API + '/queries/1/stage', mock.stagePatient).respond(200, {});
         }));
@@ -152,6 +153,23 @@
                 expect(commonService.getUserIdentity()).not.toEqual(user);
                 commonService.saveToken(mock.token);
                 expect(commonService.getUserIdentity()).toEqual(user);
+            });
+
+            it('should have a way to refresh the token', function () {
+                commonService.refreshToken().then(function (response) {
+                    expect(response).toEqual(mock.token);
+                });
+                $httpBackend.flush();
+                requestHandler.refreshToken.respond(200, {token: 'fake token'});
+                commonService.refreshToken().then(function (response) {
+                    expect(response).toBeNull;
+                });
+                $httpBackend.flush();
+                requestHandler.refreshToken.respond(401, {message: 'test'});
+                commonService.refreshToken().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
             });
         });
 

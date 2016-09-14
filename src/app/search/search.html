@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <header>
+    <ai-navbar active="search"></ai-navbar>
+  </header>
+  <div class="row">
+    <div class="col-sm-12">
+      <h1><span class="emphasis">PULSE</span> Status</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <ai-acf>
+      </ai-acf>
+    </div>
+    <div class="col-sm-8">
+      <ai-organization-status>
+      </ai-organization-status>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h1><span class="emphasis">Search</span> Patients</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <ai-patient-search trigger-handlers="vm.triggerHandlers()">
+      </ai-patient-search>
+    </div>
+    <div class="col-sm-8">
+      <ai-patient-review trigger-handlers="vm.triggerHandlers()" register-handler="vm.registerHandler(handler)">
+      </ai-patient-review>
+    </div>
+  </div>
+</div>
