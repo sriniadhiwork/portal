@@ -96,18 +96,6 @@
                 expect(vm.isStageable()).toBe(false);
             });
 
-            it('should have a way to set the truePatient date of birth', function () {
-                expect(vm.setDob).toBeDefined();
-                vm.setDob(413269200000);
-                expect(vm.patient.dateOfBirth.getTime()).toBe(413269200000);
-            });
-
-            it('should create a patient on setDob if one doesn\'t exist', function () {
-                delete vm.query.patient;
-                vm.setDob(413269200000);
-                expect(vm.patient.dateOfBirth.getTime()).toBe(413269200000);
-            });
-
             it('should have a way to close the modal', function () {
                 expect(vm.cancel).toBeDefined();
                 vm.cancel();
