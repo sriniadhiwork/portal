@@ -11,7 +11,6 @@
 
         vm.cancel = cancel;
         vm.isStageable = isStageable;
-        vm.setDob = setDob;
         vm.stagePatient = stagePatient;
 
         activate();
@@ -37,10 +36,6 @@
                 }
             }
             return ret;
-        }
-
-        function setDob (dob) {
-            vm.patient.dateOfBirth = new Date(dob);
         }
 
         function stagePatient () {
