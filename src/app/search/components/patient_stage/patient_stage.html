@@ -53,7 +53,7 @@
           <td>
             <label for="patientDob" class="control-label sr-only">Date Of Birth</label>
             <div class="input-group">
-              <input class="form-control" type="text" ng-model="vm.patient.dob" uib-datepicker-popup is-open="vm.dobPopup.open" id="patientDob">
+              <input class="form-control" type="text" ng-model="vm.patient.dateOfBirth" uib-datepicker-popup is-open="vm.dobPopup.open" id="patientDob">
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
               </span>
@@ -81,7 +81,7 @@
           <td rowspan="{{ org.results.length }}">{{ org.org.name }}</td>
           <td href ng-click="org.results[0].selected = true; vm.patient.givenName = org.results[0].givenName">{{ org.results[0].givenName }}</td>
           <td href ng-click="org.results[0].selected = true; vm.patient.familyName = org.results[0].familyName">{{ org.results[0].familyName }}</td>
-          <td href ng-click="org.results[0].selected = true; vm.setDob(org.results[0].dob)">{{ org.results[0].dob | date }}</td>
+          <td href ng-click="org.results[0].selected = true; vm.patient.dateOfBirth = org.results[0].dateOfBirth">{{ org.results[0].dateOfBirth | date }}</td>
           <td href ng-click="org.results[0].selected = true; vm.patient.gender = org.results[0].gender">{{ org.results[0].gender }}</td>
           <td href ng-click="org.results[0].selected = true; vm.patient.ssn = org.results[0].ssn">{{ org.results[0].ssn }}</td>
           <td>
@@ -92,7 +92,7 @@
         <tr ng-repeat-end ng-repeat="record in org.results.slice(1)">
           <td href ng-click="record.selected = true; vm.patient.givenName = record.givenName">{{ record.givenName }}</td>
           <td href ng-click="record.selected = true; vm.patient.familyName = record.familyName">{{ record.familyName }}</td>
-          <td href ng-click="record.selected = true; vm.setDob(record.dob)">{{ record.dob | date }}</td>
+          <td href ng-click="record.selected = true; vm.patient.dateOfBirth = record.dateOfBirth">{{ record.dateOfBirth | date }}</td>
           <td href ng-click="record.selected = true; vm.patient.gender = record.gender">{{ record.gender }}</td>
           <td href ng-click="record.selected = true; vm.patient.ssn = record.ssn">{{ record.ssn }}</td>
           <td>
