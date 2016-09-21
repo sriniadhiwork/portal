@@ -7,7 +7,7 @@
       <h2 class="panel-title">{{ vm.patients.length }} Active Patient<span ng-if="vm.patients.length !== 1">s</span> at {{ vm.getUserAcf().name }}</h2>
       <div class="clearfix"></div>
     </div>
-    <div class="panel-body" ng-show="!vm.hidePanel">
+    <div class="panel-body slide" ng-if="!vm.hidePanel">
       <div class="row">
         <div class="col-sm-12">
           <table class="table table-striped" st-table="vm.displayedPatients" st-safe-src="vm.patients" ng-if="vm.patients.length > 0">
@@ -22,7 +22,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="patient in vm.displayedPatients">
+              <tr ng-repeat="patient in vm.displayedPatients track by patient.id" class="fade">
                 <td>{{ patient.givenName }}</td>
                 <td>{{ patient.familyName }}</td>
                 <td>{{ patient.dateOfBirth | date }}</td>
@@ -33,7 +33,7 @@
                     <uib-bar value="patient.documentStatus.total - patient.documentStatus.cached" type="info"><i>{{ patient.documentStatus.total - patient.documentStatus.cached }} document<span ng-if="patient.documentStatus.total - patient.documentStatus.cached !== 1">s</span> available</i></uib-bar>
                     <uib-bar value="vm.countActive(patient)" type="warning"><i>{{ vm.countActive(patient) }} organization<span ng-if="vm.countActive(patient) > 1">s</span> pending</i></uib-bar>
                   </uib-progress>
-                  <ul class="list-unstyled" ng-if="patient.showDocuments">
+                  <ul class="list-unstyled slide" ng-if="patient.showDocuments">
                     <li ng-if="org.documents.length > 0" ng-repeat="org in patient.orgMaps track by org.id">Documents from {{ org.organization.name }}
                       <ul class="list-unstyled">
                         <li ng-if="org.documents.length === 0">No documents found</li>

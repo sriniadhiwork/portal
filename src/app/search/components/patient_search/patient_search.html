@@ -8,7 +8,7 @@
         <h2 class="panel-title">Patient Query</h2>
         <div class="clearfix"></div>
       </div>
-      <div class="panel-body" ng-show="!vm.hidePanel">
+      <div class="panel-body slide" ng-if="!vm.hidePanel">
         <div class="form-group" ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.givenName.$touched) && vm.queryForm.givenName.$error.required }">
           <label for="givenName" class="col-sm-4 control-label">Given Name <span class="text-danger">*</span></label>
           <div class="col-sm-8">
@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-      <div class="panel-footer" ng-show="!vm.hidePanel">
+      <div class="panel-footer slide" ng-if="!vm.hidePanel">
         <div class="form-group">
           <div class="col-sm-4 col-sm-offset-4">
             <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
