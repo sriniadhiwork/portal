@@ -2,7 +2,7 @@
     'use strict';
 
     describe('review.aiAcfPatientList', function() {
-        var vm, el, $log, $timeout, $q, commonService, mock;
+        var vm, el, scope, $log, $timeout, $q, commonService, mock;
         mock = {
             patients: [{id:3,orgPatientId:null,givenName:"John",familyName:"Doe",dateOfBirth:null,gender:"M",phoneNumber:null,
                         address:{id:null,street1:null,street2:null,city:null,state:null,zipcode:null,country:null},
@@ -46,9 +46,11 @@
 
                 el = angular.element('<ai-acf-patient-list></ai-acf-patient-list>');
 
-                $compile(el)($rootScope.$new());
-                $rootScope.$digest();
+                scope = $rootScope.$new();
+                $compile(el)(scope);
+                scope.$digest();
                 vm = el.isolateScope().vm;
+                scope.vm = vm;
             });
         });
 
@@ -192,7 +194,6 @@
                 $timeout.flush();
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(6);
             });
-
         });
     });
 })();

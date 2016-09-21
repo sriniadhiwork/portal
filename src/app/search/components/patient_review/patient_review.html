@@ -7,7 +7,7 @@
       <h2 class="panel-title">Queries ({{ vm.patientQueries.length}})</h2>
       <div class="clearfix"></div>
     </div>
-    <div class="panel-body" ng-show="!vm.hidePanel">
+    <div class="panel-body slide" ng-if="!vm.hidePanel">
       <div class="row">
         <div class="col-sm-12">
           <h3>Queried Patient Information</h3>
@@ -25,7 +25,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="query in vm.displayedQueries">
+              <tr ng-repeat="query in vm.displayedQueries track by query.id" class="fade">
                 <td>{{ query.terms.givenName }}</td>
                 <td>{{ query.terms.familyName }}</td>
                 <td>{{ query.terms.dob | date }}</td>
