@@ -111,7 +111,7 @@
             it('should make the dob object the correct short string', function () {
                 vm.patient.dateOfBirth = new Date('2016-09-01');
                 vm.stagePatient();
-                expect(vm.patient.dateOfBirth).toBe('20160901');
+                expect(vm.patient.dateOfBirth).toBe('2016-09-01');
             });
         });
     });
