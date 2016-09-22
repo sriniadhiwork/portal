@@ -47,8 +47,8 @@
                 };
                 if (vm.patient.dateOfBirth && angular.isObject(vm.patient.dateOfBirth)) {
                     vm.patient.dateOfBirth = '' +
-                        vm.patient.dateOfBirth.getFullYear() +
-                        pad((vm.patient.dateOfBirth.getMonth() + 1) , 2) +
+                        vm.patient.dateOfBirth.getFullYear() + '-' +
+                        pad((vm.patient.dateOfBirth.getMonth() + 1) , 2) + '-' +
                         pad(vm.patient.dateOfBirth.getDate(), 2);
                 }
                 for (var i = 0; i < vm.query.orgStatuses.length; i++) {
