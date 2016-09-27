@@ -1,4 +1,4 @@
-<div class="container-fluid document-review" ng-if="vm.activeDocument" class="animated fadeIn">
+<div class="container-fluid document-review">
   <div class="panel panel-primary">
     <div class="panel-heading">
       <div class="pull-right">
@@ -8,10 +8,15 @@
       <h2 class="panel-title">Document Review</h2>
       <div class="clearfix"></div>
     </div>
-    <div class="panel-body" ng-show="!vm.hidePanel">
-      Showing <button href ng-click="vm.showRaw = !vm.showRaw" class="btn btn-default btn-sm">{{ vm.showRaw ? 'raw' : 'transformed' }}</button> document information
-      <div ng-if="!vm.showRaw" ng-bind-html="vm.transformedDocument"></div>
-      <div ng-if="vm.showRaw"><pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre></div>
+    <div class="panel-body slide" ng-if="!vm.hidePanel">
+      <div ng-if="vm.activeDocument">
+        Showing <button href ng-click="vm.showRaw = !vm.showRaw" class="btn btn-default btn-sm">{{ vm.showRaw ? 'raw' : 'transformed' }}</button> document information
+        <div ng-if="!vm.showRaw" ng-bind-html="vm.transformedDocument"></div>
+        <div ng-if="vm.showRaw"><pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre></div>
+      </div>
+      <div ng-if="!vm.activeDocument">
+        No document currently loaded
+      </div>
     </div>
   </div>
 </div>

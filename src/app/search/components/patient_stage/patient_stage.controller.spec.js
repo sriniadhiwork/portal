@@ -50,7 +50,7 @@
                 vm.query = angular.copy(mock.query);
                 vm.query.orgStatuses[0].results[0].selected = true;
                 vm.query.orgStatuses[0].results[1] = {selected: false};
-                vm.patient = { givenName: 'Bob', familyName: 'Smith' };
+                vm.patient = { givenName: 'Bob', familyName: 'Smith', dateOfBirth: '20130201' };
                 patientStage = {
                     patientRecordIds: [1],
                     patient: vm.patient,
@@ -100,6 +100,18 @@
                 expect(vm.cancel).toBeDefined();
                 vm.cancel();
                 expect(mock.modalInstance.dismiss).toHaveBeenCalled();
+            });
+
+            it('should change the dob to a string if it\'s an object', function () {
+                vm.patient.dateOfBirth = new Date();
+                vm.stagePatient();
+                expect(typeof(vm.patient.dateOfBirth)).toBe('string');
+            });
+
+            it('should make the dob object the correct short string', function () {
+                vm.patient.dateOfBirth = new Date('2016-09-01');
+                vm.stagePatient();
+                expect(vm.patient.dateOfBirth).toBe('2016-09-01');
             });
         });
     });

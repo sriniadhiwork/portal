@@ -3,31 +3,19 @@
     <ai-navbar active="review"></ai-navbar>
   </header>
   <div class="row">
-    <div class="col-sm-12">
-      <h1><span class="emphasis">PULSE</span> Status</h1>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-4">
-      <ai-acf>
-      </ai-acf>
-    </div>
     <div class="col-sm-8">
-      <ai-organization-status>
-      </ai-organization-status>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
       <h1><span class="emphasis">Review</span> Patients</h1>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
       <ai-acf-patient-list
          register-handler="vm.registerHandler(handler)"
          active-document="vm.activeDocument">
       </ai-acf-patient-list>
+    </div>
+    <div class="col-sm-4">
+      <h1><span class="emphasis">PULSE</span> Status</h1>
+      <ai-acf>
+      </ai-acf>
+      <ai-organization-status>
+      </ai-organization-status>
     </div>
   </div>
   <div class="row">
