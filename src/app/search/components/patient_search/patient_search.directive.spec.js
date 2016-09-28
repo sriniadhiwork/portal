@@ -89,6 +89,12 @@
                 expect(vm.showFormErrors).toBe(false);
             });
 
+            it('should set the addresses to blank on a search', function () {
+                vm.query.addresses = [{},{}];
+                vm.searchForPatient();
+                expect(vm.query.addresses).toBeUndefined();
+            });
+
             it('should tell the controller that a search was performed', function () {
                 spyOn(vm,'triggerHandlers');
                 vm.searchForPatient();
