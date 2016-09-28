@@ -26,13 +26,11 @@
         <div class="form-group" ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.dob.$touched) && (vm.queryForm.dob.$error.date || vm.queryForm.dob.$error.required) }">
           <label for="dob" class="col-sm-4 control-label">Date of Birth <span class="text-danger">*</span></label>
           <div class="col-sm-8">
-            <div class="input-group">
-              <input class="input-sm form-control" type="text" ng-model="vm.query.dob" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-sm btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
-              </span>
-            </div>
-            <span class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.date">Improper format (yyyy-mm-dd)</span>
+            <input class="input-sm form-control" type="text" ng-model="vm.query.dob" placeholder="yyyyMMddHHmmss+/-ZZZZ"
+                   ng-pattern="/^\d{4}([01]\d([0-3]\d([0-2]\d([0-5]\d([0-5]\d)?)?)?)?)?([+-][0-2]\d[0-5]\d)?$/"
+                   uib-tooltip="yyyyMMddHHmmss+/-ZZZZ" tooltip-trigger="mouseenter focus click"
+                   id="dob" name="dob" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
+            <span class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.dob.$touched) && !vm.queryForm.dob.$error.required && !vm.queryForm.dob.$valid">Required format: yyyy[MM[dd[hh[mm[ss]]]]][+/-zzzz]</span>
             <span class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required">Field is required</span>
           </div>
         </div>
@@ -48,16 +46,20 @@
           </div>
         </div>
         <div class="form-group" ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern }">
-          <label for="ssn" class="col-sm-4 control-label">SSN (or last 4)</label>
+          <label for="ssn" class="col-sm-4 control-label">SSN</label>
           <div class="col-sm-8">
-            <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn" placeholder="XXX-XX-XXXX or XXXX" pattern="(\d{3}-?\d{2}-?\d{4}|\d{4})" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
-            <div class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX or XXXX)</div>
+            <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn"
+                   uib-tooltip="XXX-XX-XXXX" tooltip-trigger="mouseenter focus click"
+                   placeholder="XXX-XX-XXXX" pattern="(\d{3}-?\d{2}-?\d{4})" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
+            <div class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX)</div>
           </div>
         </div>
         <div class="form-group" ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.homeZip.$touched) && vm.queryForm.homeZip.$error.pattern }">
           <label for="homeZip" class="col-sm-4 control-label">Home Zip Code</label>
           <div class="col-sm-8">
-            <input class="input-sm form-control" type="text" ng-model="vm.query.homeZip" id="homeZip" name="homeZip" placeholder="XXXXX or XXXXX-XXXX" pattern="\d{5}-?(\d{4})?" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
+            <input class="input-sm form-control" type="text" ng-model="vm.query.homeZip" id="homeZip" name="homeZip"
+                   uib-tooltip="XXXXX or XXXXX-XXXX" tooltip-trigger="mouseenter focus click"
+                   placeholder="XXXXX or XXXXX-XXXX" pattern="\d{5}-?(\d{4})?" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
             <div class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.homeZip.$touched) && vm.queryForm.homeZip.$error.pattern">Improper format (XXXXX or XXXXX-XXXX)</div>
           </div>
         </div>
