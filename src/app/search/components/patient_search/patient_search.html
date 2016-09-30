@@ -10,25 +10,18 @@
       </div>
       <div class="panel-body slide" ng-if="!vm.hidePanel">
         <div class="form-group">
-          <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.givenName.$touched) && vm.queryForm.givenName.$error.required }">
-            <label for="givenName" class="col-sm-2 control-label">Given Name <span class="text-danger">*</span></label>
-            <div class="col-sm-4">
-              <input class="input-sm form-control" type="text" ng-model="vm.query.givenName" id="givenName" name="givenName" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
-              <span class="text-danger form-control-static" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.givenName.$touched) && vm.queryForm.givenName.$error.required">Field is required</span>
-            </div>
-          </div>
-          <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.familyName.$touched) && vm.queryForm.familyName.$error.required }">
-            <label for="familyName" class="col-sm-2 control-label">Family Name <span class="text-danger">*</span></label>
-            <div class="col-sm-4">
-              <input class="input-sm form-control" type="text" ng-model="vm.query.familyName" id="familyName" name="familyName" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
-              <span class="text-danger form-control-static" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.familyName.$touched) && vm.queryForm.familyName.$error.required">Field is required</span>
-            </div>
+          <label class="col-sm-2 control-label">Names</label>
+          <div class="col-sm-10">
+            <ai-names names="vm.query.names"
+                      active-form="vm.queryForm"
+                      show-form-errors="vm.showFormErrors"
+                      submit-form="vm.searchForPatient"></ai-names>
           </div>
         </div>
         <div class="form-group">
           <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.dob.$touched) && (vm.queryForm.dob.$error.date || vm.queryForm.dob.$error.required) }">
             <label for="dob" class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
-            <div class="col-sm-2">
+            <div class="col-sm-4">
               <input class="input-sm form-control" type="text" ng-model="vm.query.dob" placeholder="yyyyMMddHHmmss+/-ZZZZ"
                      ng-pattern="/^\d{4}([01]\d([0-3]\d([0-2]\d([0-5]\d([0-5]\d)?)?)?)?)?([+-][0-2]\d[0-5]\d)?$/"
                      uib-tooltip="yyyyMMddHHmmss+/-ZZZZ" tooltip-trigger="mouseenter focus click"
@@ -39,7 +32,7 @@
           </div>
           <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required }">
             <label for="gender" class="col-sm-2 control-label">Gender <span class="text-danger">*</span></label>
-            <div class="col-sm-2">
+            <div class="col-sm-4">
               <select class="input-sm form-control" ng-model="vm.query.gender" id="gender" name="gender" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
@@ -48,21 +41,37 @@
               <span class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required">Field is required</span>
             </div>
           </div>
-          <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern }">
-            <label for="ssn" class="col-sm-2 control-label">SSN</label>
-            <div class="col-sm-2">
-              <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn"
-                     uib-tooltip="XXX-XX-XXXX" tooltip-trigger="mouseenter focus click"
-                     placeholder="XXX-XX-XXXX" pattern="(\d{3}-?\d{2}-?\d{4})" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
-              <div class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX)</div>
-            </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <button type="button" class="btn btn-default" ng-click="vm.showOptional = !vm.showOptional">{{ vm.showOptional ? 'Hide' : 'Show' }} optional search items <i class="fa fa-search"></i></button>
           </div>
         </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Addresses</label>
-          <div class="col-sm-10">
-            <ai-addresses addresses="vm.query.addresses"
-                          submit-form="vm.searchForPatient"></ai-addresses>
+        <div ng-if="vm.showOptional">
+          <div class="form-group">
+            <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern }">
+              <label for="ssn" class="col-sm-2 control-label">SSN</label>
+              <div class="col-sm-4">
+                <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn"
+                       uib-tooltip="XXX-XX-XXXX" tooltip-trigger="mouseenter focus click"
+                       placeholder="XXX-XX-XXXX" pattern="(\d{3}-?\d{2}-?\d{4})" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
+                <div class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX)</div>
+              </div>
+            </div>
+            <div>
+              <label for="telephone" class="col-sm-2 control-label">Telephone</label>
+              <div class="col-sm-4">
+                <input class="input-sm form-control" type="text" ng-model="vm.query.telephone" id="telephone" name="telephone"
+                       ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Addresses</label>
+            <div class="col-sm-10">
+              <ai-addresses addresses="vm.query.addresses"
+                            submit-form="vm.searchForPatient"></ai-addresses>
+            </div>
           </div>
         </div>
       </div>
@@ -85,9 +94,8 @@
               <li ng-if="vm.queryForm.familyName.$error.required">Family Name is required</li>
               <li ng-if="vm.queryForm.dob.$error.required">Date of Birth is required</li>
               <li ng-if="vm.queryForm.gender.$error.required">Gender is required</li>
-              <li ng-if="vm.queryForm.dob.$error.date">Date of Birth is an invalid format (yyyy-mm-dd)</li>
+              <li ng-if="!vm.queryForm.dob.$error.required && !vm.queryForm.dob.$valid">Date of Birth format: yyyy[MM[dd[hh[mm[ss]]]]][+/-zzzz]</span>
               <li ng-if="vm.queryForm.ssn.$error.pattern">Improper SSN format (XXX-XX-XXXX or XXXX)</li>
-              <li ng-if="vm.queryForm.homeZip.$error.pattern">Improper Zip Code format (XXXXX or XXXXX-XXXX)</li>
             </ul>
           </div>
         </div>

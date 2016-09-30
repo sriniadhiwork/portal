@@ -1,6 +1,6 @@
 <div class="container-fluid addresses">
-  <div class="form-horizontal" ng-repeat="address in vm.addresses track by $index">
-    <div class="form-group" ng-repeat="line in address.lines track by $index">
+  <div class="form-horizontal fade" ng-repeat="address in vm.addresses track by $index">
+    <div class="form-group slide" ng-repeat="line in address.lines track by $index">
       <div class="col-sm-12">
         <label for="street{{ $index }}" class="control-label sr-only">Street Line</label>
         <div class="input-group">
@@ -34,8 +34,8 @@
     </div>
     <div class="row">
       <div class="col-sm-12">
-        <button type="button" class="btn btn-default" ng-click="vm.addAddress()" ng-if="vm.addresses.length === $index + 1"><i class="fa fa-plus"></i><span class="sr-only">Add new address</span></button>
-        <button type="button" class="btn btn-default" ng-click="vm.removeAddress($index)" ng-if="vm.addresses.length > 1"><i class="fa fa-trash"></i><span class="sr-only">Remove current address</span></button>
+        <button type="button" class="btn btn-default" ng-click="vm.addAddress()" ng-if="vm.addresses.length === $index + 1">Add new address <i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-default" ng-click="vm.removeAddress($index)" ng-if="vm.addresses.length > 1">Remove this address <i class="fa fa-trash"></i></button>
       </div>
     </div>
   </div>
