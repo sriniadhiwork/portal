@@ -38,39 +38,19 @@
         ////////////////////////////////////////////////////////////////////
 
         function cacheDocument (patientId, documentId) {
-            return getApi('/patients/' + patientId + '/documents/' + documentId)
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/patients/' + patientId + '/documents/' + documentId);
         }
 
         function clearQuery (queryId) {
-            return postApi('/queries/' + queryId + '/delete', {})
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/queries/' + queryId + '/delete', {});
         }
 
         function createAcf (newAcf) {
-            return postApi('/acfs/create', newAcf)
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/acfs/create', newAcf);
         }
 
         function dischargePatient (patientId) {
-            return postApi('/patients/' + patientId + '/delete', {})
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/patients/' + patientId + '/delete', {});
         }
 
         function editAcf (anAcf) {
@@ -84,39 +64,19 @@
         }
 
         function getAcfs () {
-            return getApi('/acfs')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/acfs');
         }
 
         function getDocument (patientId, documentId) {
-            return getApi('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false');
         }
 
         function getQueries () {
-            return getApi('/queries')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/queries');
         }
 
         function getPatientsAtAcf () {
-            return getApi('/patients')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/patients');
         }
 
         function getSamlUserToken () {
@@ -219,12 +179,7 @@
         }
 
         function queryOrganizations () {
-            return getApi('/organizations')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/organizations');
         }
 
         function refreshToken () {
@@ -246,21 +201,11 @@
         }
 
         function searchForPatient (queryObj) {
-            return postApi('/search', queryObj)
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/search', queryObj);
         }
 
         function searchForPatientDocuments (patientId) {
-            return getApi('/patients/' + patientId + '/documents')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/patients/' + patientId + '/documents');
         }
 
         function setAcf (acf) {
@@ -274,19 +219,30 @@
         }
 
         function stagePatient (patient) {
-            return postApi('/queries/' + patient.id + '/stage', patient)
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/queries/' + patient.id + '/stage', patient);
         }
 
         ////////////////////////////////////////////////////////////////////
 
+        function enhancedGet (endpoint) {
+            return $http.get(API + endpoint)
+                .then(function(response) {
+                    return $q.when(response.data);
+                }, function (response) {
+                    return $q.reject(response);
+                });
+        }
+
+        function enhancedPost (endpoint, postObject) {
+            return $http.post(API + endpoint, postObject)
+                .then(function (response) {
+                    return $q.when(response.data);
+                }, function (response) {
+                    return $q.reject(response);
+                });
+        }
+
         function getApi (endpoint, api) {
-            if (api === null || angular.isUndefined(api))
-                api = API;
             return $http.get(api + endpoint)
                 .then(function(response) {
                     return response.data;
