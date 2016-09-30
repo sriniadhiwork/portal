@@ -19,18 +19,18 @@
           </div>
         </div>
         <div class="form-group">
-          <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.dob.$touched) && (vm.queryForm.dob.$error.date || vm.queryForm.dob.$error.required) }">
+          <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dob.$touched) && (!vm.queryForm.dob.$valid || vm.queryForm.dob.$error.required) }">
             <label for="dob" class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
             <div class="col-sm-4">
               <input class="input-sm form-control" type="text" ng-model="vm.query.dob" placeholder="yyyyMMddHHmmss+/-ZZZZ"
                      ng-pattern="/^\d{4}([01]\d([0-3]\d([0-2]\d([0-5]\d([0-5]\d)?)?)?)?)?([+-][0-2]\d[0-5]\d)?$/"
                      uib-tooltip="yyyyMMddHHmmss+/-ZZZZ" tooltip-trigger="mouseenter focus click"
                      id="dob" name="dob" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
-              <span class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.dob.$touched) && !vm.queryForm.dob.$error.required && !vm.queryForm.dob.$valid">Required format: yyyy[MM[dd[hh[mm[ss]]]]][+/-zzzz]</span>
-              <span class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required">Field is required</span>
+              <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.dob.$touched) && !vm.queryForm.dob.$error.required && !vm.queryForm.dob.$valid">Required format: yyyy[MM[dd[hh[mm[ss]]]]][+/-zzzz]</span>
+              <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required">Field is required</span>
             </div>
           </div>
-          <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required }">
+          <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required }">
             <label for="gender" class="col-sm-2 control-label">Gender <span class="text-danger">*</span></label>
             <div class="col-sm-4">
               <select class="input-sm form-control" ng-model="vm.query.gender" id="gender" name="gender" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
@@ -38,7 +38,7 @@
                 <option value="Male">Male</option>
                 <option value="UN">Undifferentiated</option>
               </select>
-              <span class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required">Field is required</span>
+              <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required">Field is required</span>
             </div>
           </div>
         </div>
@@ -84,19 +84,6 @@
                     ng-mouseover="vm.showFormErrors = true"
                     ng-focus="vm.showFormErrors = true"
                     ng-click="vm.searchForPatient()">Search <i class="fa fa-search"></i></button>
-          </div>
-        </div>
-        <div class="form-group" ng-if="vm.queryForm.$invalid && vm.showFormErrors">
-          <div class="col-sm-10 col-sm-offset-2 text-danger">
-            The following error<span ng-if="vm.errorCount() > 1">s</span> must be fixed:
-            <ul>
-              <li ng-if="vm.queryForm.givenName.$error.required">Given Name is required</li>
-              <li ng-if="vm.queryForm.familyName.$error.required">Family Name is required</li>
-              <li ng-if="vm.queryForm.dob.$error.required">Date of Birth is required</li>
-              <li ng-if="vm.queryForm.gender.$error.required">Gender is required</li>
-              <li ng-if="!vm.queryForm.dob.$error.required && !vm.queryForm.dob.$valid">Date of Birth format: yyyy[MM[dd[hh[mm[ss]]]]][+/-zzzz]</span>
-              <li ng-if="vm.queryForm.ssn.$error.pattern">Improper SSN format (XXX-XX-XXXX or XXXX)</li>
-            </ul>
           </div>
         </div>
       </div>

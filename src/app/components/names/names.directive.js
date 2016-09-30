@@ -14,7 +14,6 @@
             controller: NamesController,
             controllerAs: 'vm',
             bindToController: {
-                activeForm: '=?',
                 names: '=?',
                 showFormErrors: '=?',
                 submitForm: '&'
@@ -24,7 +23,7 @@
         return directive;
 
         /** @ngInject */
-        function NamesController($log) {
+        function NamesController() {
             var vm = this;
 
             vm.addGiven = addGiven;
@@ -33,13 +32,13 @@
             vm.removeGiven = removeGiven;
             vm.removeName = removeName;
 
-            vm.defaultName = {givens: [''], nameType: 'L'};
-
             activate();
 
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.defaultName = {givens: [''], nameType: 'L'};
+
                 if (angular.isUndefined(vm.names)) {
                     vm.names = [angular.copy(vm.defaultName)];
                 }
