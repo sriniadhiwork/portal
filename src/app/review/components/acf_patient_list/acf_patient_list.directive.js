@@ -91,10 +91,13 @@
                     for (var i = 0; i < vm.patients.length; i++) {
                         var patient = vm.patients[i];
                         patient.documentStatus = {total: 0, cached: 0};
+                        patient.documents = [];
                         for (var j = 0; j < patient.orgMaps.length; j++) {
                             hasActive = hasActive || (patient.orgMaps[j].documentsQueryStatus === 'ACTIVE');
                             patient.documentStatus.total += patient.orgMaps[j].documents.length;
                             for (var k = 0; k < patient.orgMaps[j].documents.length; k++) {
+                                patient.orgMaps[j].documents[k].organization = patient.orgMaps[j].organization.name;
+                                patient.documents.push(patient.orgMaps[j].documents[k]);
                                 if (patient.orgMaps[j].documents[k].cached) {
                                     patient.documentStatus.cached += 1;
                                 }
