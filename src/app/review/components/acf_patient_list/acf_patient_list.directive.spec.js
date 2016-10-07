@@ -175,6 +175,11 @@
             expect(vm.patients[0].documents[0]).toEqual(mock.documentList[0]);
         });
 
+        it('should have a function to turn yyyymmdd into a parseable date', function () {
+            expect(vm.translateDate).toBeDefined();
+            expect(vm.translateDate(20080515)).toBe('2008-05-15');
+        });
+
         describe('refreshing', function () {
 
             beforeEach(function () {

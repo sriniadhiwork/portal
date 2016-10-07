@@ -39,6 +39,7 @@
             vm.getDocument = getDocument;
             vm.getPatientsAtAcf = getPatientsAtAcf;
             vm.getUserAcf = getUserAcf;
+            vm.translateDate = translateDate;
 
             vm.TIMEOUT_MILLIS = QueryQueryTimeout * 1000;
 
@@ -112,6 +113,12 @@
 
             function getUserAcf () {
                 return commonService.getUserAcf();
+            }
+
+            function translateDate (input) {
+                input = '' + input;
+                var ret = input.substring(0, 4) + '-' + input.substring(4, 6) + '-' + input.substring(6);
+                return ret;
             }
         }
     }
