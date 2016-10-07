@@ -76,7 +76,7 @@
 
             it('should clear the query fields on a search', function () {
                 vm.searchForPatient();
-                expect(vm.query).toEqual({});
+                expect(vm.query).toEqual({names: [{givens: [''],nameType: 'L'}]});
             });
 
             it('should wipe the form on a search', function () {

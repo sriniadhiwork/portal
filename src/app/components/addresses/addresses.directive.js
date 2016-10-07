@@ -22,7 +22,7 @@
         return directive;
 
         /** @ngInject */
-        function AddressesController($log) {
+        function AddressesController() {
             var vm = this;
 
             vm.addAddress = addAddress;

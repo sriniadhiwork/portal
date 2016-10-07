@@ -1,11 +1,6 @@
 <div class="container-fluid names">
   <div class="form-horizontal" ng-form="vm.activeForm">
     <div ng-repeat="name in vm.names track by $index">
-      <div class="row" ng-if="name.family && name.givens[0].length > 0">
-        <div class="col-sm-12">
-          Assembled Name: {{ vm.displayName(name) }}
-        </div>
-      </div>
       <div class="form-group">
         <div class="col-sm-6" ng-class="{ 'has-error' : (vm.showFormErrors || vm.activeForm.given0.$touched) && vm.activeForm.given0.$error.required }">
           <label for="given0" class="control-label col-sm-4">Given <span class="text-danger">*</span></label>
@@ -75,6 +70,11 @@
               <option value="G">Prefix Given Middle Family Suffix</option>
             </select>
           </div>
+        </div>
+      </div>
+      <div class="row" ng-if="name.family && name.givens[0].length > 0">
+        <div class="col-sm-12">
+          Assembled Name: {{ vm.displayName(name) }}
         </div>
       </div>
       <div class="row">

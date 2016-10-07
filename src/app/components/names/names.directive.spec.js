@@ -39,7 +39,7 @@
             expect(vm.names).toEqual(mock.names);
         });
 
-        it('should initiate an array of names if not givens one', function () {
+        it('should initiate an array of names if not given one', function () {
             el = angular.element('<ai-names></ai-names>');
 
             $compile(el)($rootScope.$new());

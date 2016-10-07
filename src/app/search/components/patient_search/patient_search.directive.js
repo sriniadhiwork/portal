@@ -51,7 +51,7 @@
                     commonService.searchForPatient(queryObj.query).then(function() {
                         vm.triggerHandlers();
                     });
-                    vm.query = {};
+                    vm.query = {names: [{givens: [''],nameType: 'L'}]};
                     vm.queryForm.$setPristine();
                     vm.queryForm.$setUntouched();
                     vm.showFormErrors = false;
