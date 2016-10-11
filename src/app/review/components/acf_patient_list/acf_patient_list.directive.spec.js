@@ -7,7 +7,7 @@
             documents: [[{id:"8",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"7",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"5",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"6",name:"VCN CCDA.xml",orgMapId:6,patient:null}],
                         [{id:"8",name:"VCN CCDA.xml",cached:true,orgMapId:6,patient:null}]],
             fakeDocument: {data: "<document><made><of>XML</of></made></document"},
-            userAcf: 'ACF Number 1'
+            userAcf: {name: 'ACF Number 1'}
         };
         mock.documentList = angular.copy([].concat(mock.documents[0]).concat(mock.documents[1]));
         for (var i = 0; i < mock.documentList.length - 1; i++) {
@@ -49,7 +49,7 @@
                 commonService.dischargePatient.and.returnValue($q.when({}));
                 commonService.getDocument.and.returnValue($q.when(angular.copy(mock.fakeDocument)));
                 commonService.getPatientsAtAcf.and.returnValue($q.when(angular.copy(mock.patients)));
-                commonService.getUserAcf.and.returnValue($q.when(mock.userAcf));
+                commonService.getUserAcf.and.returnValue(mock.userAcf);
 
                 el = angular.element('<ai-acf-patient-list></ai-acf-patient-list>');
 
@@ -85,6 +85,15 @@
 
             expect(commonService.cacheDocument).toHaveBeenCalledWith(3, '8');
             expect(vm.patients[0].orgMaps[0].documents[0].cached).toBe(true);
+        });
+
+        it('should not try to cache the same document twice', function () {
+            vm.cacheDocument(vm.patients[0], vm.patients[0].orgMaps[0].documents[0]);
+            el.isolateScope().$digest();
+
+            vm.cacheDocument(vm.patients[0], vm.patients[0].orgMaps[0].documents[0]);
+            el.isolateScope().$digest();
+            expect(commonService.cacheDocument.calls.count()).toBe(1);
         });
 
         it('should have a way to get a document', function () {
@@ -135,9 +144,7 @@
 
         it('should know the user\'s ACF', function () {
             expect(vm.getUserAcf).toBeDefined();
-            vm.getUserAcf().then(function (response) {
-                expect(response).toEqual(mock.userAcf);
-            });
+            expect(vm.getUserAcf()).toEqual(mock.userAcf);
         });
 
         it('should have a function to get patients', function () {
@@ -180,13 +187,65 @@
             expect(vm.translateDate(20080515)).toBe('2008-05-15');
         });
 
+        it('should know what the panel title should be', function () {
+            expect(vm.panelTitle).toBe('1 Active Patient at ' + mock.userAcf.name);
+        });
+
+        it('should have a way to activate a patient', function () {
+            expect(vm.activatePatient).toBeDefined();
+        });
+
+        it('should change the title when a patient is activated', function () {
+            vm.activatePatient(mock.patients[0]);
+            expect(vm.panelTitle).toBe('Patient: John Doe');
+        });
+
+        it('should set the active patient when activated', function () {
+            expect(vm.activePatient).toBeNull();
+            vm.activatePatient(mock.patients[0]);
+            expect(vm.activePatient).not.toBeNull();
+        });
+
+        it('should have a way to deactivate the patient', function () {
+            expect(vm.deactivatePatient).toBeDefined();
+        });
+
+        it('should deactive a patient', function () {
+            vm.activatePatient(mock.patients[0]);
+            vm.deactivatePatient();
+            expect(vm.activePatient).toBeNull();
+        });
+
+        it('should refresh the patient list on deactivation', function () {
+            vm.deactivatePatient();
+            el.isolateScope().$digest();
+            expect(commonService.getPatientsAtAcf).toHaveBeenCalled();
+        });
+
+        it('should reset the title on deactivation', function () {
+            vm.activatePatient(mock.patients[0]);
+            vm.deactivatePatient();
+            expect(vm.panelTitle).toBe('1 Active Patient at ' + mock.userAcf.name);
+        });
+
+        it('should change the title when the number of patients changes', function () {
+            commonService.getPatientsAtAcf.and.returnValue($q.when([]));
+            // when first result is cleared
+            vm.dischargePatient(vm.patients[0]);
+            el.isolateScope().$digest();
+
+            // then expect to have one less patient in the queue
+            expect(vm.panelTitle).toBe('0 Active Patients at ' + mock.userAcf.name);
+        });
+
+        it('should deactivate a patient when a patient is discharged', function () {
+            spyOn(vm,'deactivatePatient');
+            vm.dischargePatient(vm.patients[0]);
+            el.isolateScope().$digest();
+            expect(vm.deactivatePatient).toHaveBeenCalled();
+        });
+
         describe('refreshing', function () {
-
-            beforeEach(function () {
-                //activeProducts = angular.copy(mock.queries);
-                //activeProducts[0].status = 'ACTIVE';
-            });
-
             it('should refresh the queries if there is one marked "ACTIVE"', function () {
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(1);
                 $timeout.flush();
@@ -195,22 +254,33 @@
 
             it('should stop refreshing the queries if all are marked "COMPLETE"', function () {
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(1);
-                $timeout.flush();
+                $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(2);
-                $timeout.flush();
+                $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(3);
-                $timeout.flush();
+                $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(4);
-                $timeout.flush();
+                $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(5);
 
                 var completePatients = angular.copy(vm.patients);
                 completePatients[0].orgMaps[2].documentsQueryStatus = 'COMPLETE';
                 commonService.getPatientsAtAcf.and.returnValue($q.when(completePatients));
-                $timeout.flush();
+                $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(6);
-                $timeout.flush();
+                $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(6);
+            });
+
+            it('should refresh patients on a longer timescale when all are complete', function () {
+                expect(commonService.getPatientsAtAcf.calls.count()).toBe(1);
+                var completePatients = angular.copy(vm.patients);
+                completePatients[0].orgMaps[2].documentsQueryStatus = 'COMPLETE';
+                commonService.getPatientsAtAcf.and.returnValue($q.when(completePatients));
+                $timeout.flush(vm.TIMEOUT_MILLIS);
+                expect(commonService.getPatientsAtAcf.calls.count()).toBe(2);
+                $timeout.flush(vm.TIMEOUT_MILLIS * 10);
+                expect(commonService.getPatientsAtAcf.calls.count()).toBe(3);
             });
         });
     });
