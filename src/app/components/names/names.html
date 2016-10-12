@@ -3,30 +3,30 @@
     <div ng-repeat="name in vm.names track by $index">
       <div class="form-group">
         <div class="col-sm-6" ng-class="{ 'has-error' : (vm.showFormErrors || vm.activeForm.given0.$touched) && vm.activeForm.given0.$error.required }">
-          <label for="given0" class="control-label col-sm-4">Given <span class="text-danger">*</span></label>
+          <label for="given0" class="control-label col-sm-4">First <span class="text-danger">*</span></label>
           <div class="col-sm-8">
             <div class="input-group">
-              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.givens[0]" id="given0" name="given0" placeholder="Given" required></input>
+              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.givens[0]" id="given0" name="given0" placeholder="First" required></input>
               <span class="input-group-btn">
-                <button type="button" class="btn btn-sm btn-default" ng-click="vm.addGiven(name)" ng-if="name.givens.length === 1"><i class="fa fa-plus"></i><span class="sr-only">Add new given name</span></button>
-              <button type="button" class="btn btn-sm btn-default" ng-click="vm.removeGiven(name, 0)" ng-if="name.givens.length > 1"><i class="fa fa-trash"></i><span class="sr-only">Remove current given name</span></button>
+                <button type="button" class="btn btn-sm btn-default" ng-click="vm.addGiven(name)" ng-if="name.givens.length === 1"><i class="fa fa-plus"></i><span class="sr-only">Add new first name</span></button>
+              <button type="button" class="btn btn-sm btn-default" ng-click="vm.removeGiven(name, 0)" ng-if="name.givens.length > 1"><i class="fa fa-trash"></i><span class="sr-only">Remove current first name</span></button>
               </span>
             </div>
             <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.activeForm.given0.$touched) && vm.activeForm.given0.$error.required">Field is required</span>
           </div>
         </div>
         <div class="col-sm-6" ng-class="{ 'has-error' : (vm.showFormErrors || vm.activeForm.family.$touched) && vm.activeForm.family.$error.required }">
-          <label for="family" class="control-label col-sm-4">Family <span class="text-danger">*</span></label>
+          <label for="family" class="control-label col-sm-4">Last <span class="text-danger">*</span></label>
           <div class="col-sm-8">
-            <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.family" id="family" name="family" placeholder="Family" required></input>
+            <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.family" id="family" name="family" placeholder="Last" required></input>
             <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.activeForm.family.$touched) && vm.activeForm.family.$error.required">Field is required</span>
           </div>
         </div>
       </div>
       <div class="form-group" ng-repeat="given in name.givens.slice(1) track by $index">
-        <label for="given{{ $index + 1 }}" class="control-label col-sm-2">Given</label>
+        <label for="given{{ $index + 1 }}" class="control-label col-sm-2">{{ $index + 2 | ordinal }}</label>
         <div class="input-group col-sm-4">
-          <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.givens[$index + 1]" id="given{{ $index + 1 }}" name="given{{ $index + 1 }}" placeholder="Given"></input>
+          <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.givens[$index + 1]" id="given{{ $index + 1 }}" name="given{{ $index + 1 }}" placeholder="{{ $index + 2 | ordinal}}"></input>
           <span class="input-group-btn">
             <button type="button" class="btn btn-sm btn-default" ng-click="vm.addGiven(name)" ng-if="name.givens.length === $index + 2"><i class="fa fa-plus"></i><span class="sr-only">Add new given name</span></button>
             <button type="button" class="btn btn-sm btn-default" ng-click="vm.removeGiven(name, $index + 1)" ng-if="name.givens.length > 1"><i class="fa fa-trash"></i><span class="sr-only">Remove current given name</span></button>
