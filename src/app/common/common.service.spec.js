@@ -72,6 +72,31 @@
             $httpBackend.verifyNoOutstandingRequest();
         });
 
+        describe('utility functions', function () {
+            it('should have a function to assemble names', function () {
+                expect(commonService.displayName).toBeDefined();
+            });
+
+            it('should display names correctly', function () {
+                var name = {
+                    givens: ['John', 'Andrew'],
+                    family: 'Smith',
+                    nameType: 'L'
+                };
+                expect(commonService.displayName(name)).toBe('John Andrew Smith (Legal Name)');
+                name.prefix = 'Mr';
+                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith (Legal Name)');
+                name.suffix = 'III';
+                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III (Legal Name)');
+                name.profSuffix = 'DDS';
+                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III, DDS (Legal Name)');
+                name.nameAssembly = 'F';
+                expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Legal Name)');
+                name.nameType = 'D';
+                expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Display Name)');
+            });
+        });
+
         describe('user authentication issues', function () {
 
             it('should read a jwt to see if the user is authenticated', function () {

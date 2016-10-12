@@ -13,6 +13,7 @@
         self.clearQuery = clearQuery;
         self.createAcf = createAcf;
         self.dischargePatient = dischargePatient;
+        self.displayName = displayName
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
@@ -51,6 +52,31 @@
 
         function dischargePatient (patientId) {
             return enhancedPost('/patients/' + patientId + '/delete', {});
+        }
+
+        function displayName (name) {
+            var ret = '';
+            ret += name.givens.join(' ');
+            if (name.nameAssembly === 'F') {
+                ret = name.family + ' ' + ret;
+            } else {
+                ret += ' ' + name.family;
+            }
+            if (name.prefix) {
+                ret = name.prefix + ' ' + ret;
+            }
+            if (name.suffix) {
+                ret += ' ' + name.suffix;
+            }
+            if (name.profSuffix) {
+                ret += ', ' + name.profSuffix;
+            }
+            for (var i = 0; i < self.nameTypes.length; i++) {
+                if (name.nameType === self.nameTypes[i].code) {
+                    ret += ' (' + self.nameTypes[i].value + ')';
+                }
+            }
+            return ret;
         }
 
         function editAcf (anAcf) {
@@ -274,5 +300,19 @@
         function validTokenFormat(token) {
             return (angular.isString(token) && token.match(/.*\..*\..*/));
         }
+
+        self.nameTypes = [
+            { code: 'A', value: 'Alias Name' },
+            { code: 'B', value: 'Name at Birth' },
+            { code: 'C', value: 'Adopted Name' },
+            { code: 'D', value: 'Display Name' },
+            { code: 'I', value: 'Licensing Name' },
+            { code: 'L', value: 'Legal Name' },
+            { code: 'M', value: 'Maiden Name' },
+            { code: 'N', value: 'Nickname /"Call me" Name/Street Name' },
+            { code: 'S', value: 'Coded Pseudo-Name to ensure anonymity' },
+            { code: 'T', value: 'Indigenous/Tribal/Community Name' },
+            { code: 'U', value: 'Unspecified' }
+        ];
     }
 })();

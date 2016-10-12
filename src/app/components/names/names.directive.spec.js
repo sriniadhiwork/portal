@@ -107,29 +107,5 @@
         it('should have a function to submit the form', function () {
             expect(vm.submitForm).toBeDefined();
         });
-
-        it('should have a function to assemble the name', function () {
-            expect(vm.displayName).toBeDefined();
-        });
-
-        // Apologies to anyone whom I've offended with guesses at "correct" name compilation
-        it('should display names correctly', function () {
-            var name = {
-                givens: ['John', 'Andrew'],
-                family: 'Smith',
-                nameType: 'L'
-            };
-            expect(vm.displayName(name)).toBe('John Andrew Smith (Legal Name)');
-            name.prefix = 'Mr';
-            expect(vm.displayName(name)).toBe('Mr John Andrew Smith (Legal Name)');
-            name.suffix = 'III';
-            expect(vm.displayName(name)).toBe('Mr John Andrew Smith III (Legal Name)');
-            name.profSuffix = 'DDS';
-            expect(vm.displayName(name)).toBe('Mr John Andrew Smith III, DDS (Legal Name)');
-            name.nameAssembly = 'F';
-            expect(vm.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Legal Name)');
-            name.nameType = 'D';
-            expect(vm.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Display Name)');
-        });
     });
 })();

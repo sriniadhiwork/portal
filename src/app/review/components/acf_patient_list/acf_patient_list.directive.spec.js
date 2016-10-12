@@ -34,6 +34,7 @@
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.cacheDocument = jasmine.createSpy('cacheDocument');
                     $delegate.dischargePatient = jasmine.createSpy('dischargePatient');
+                    $delegate.displayName = jasmine.createSpy('displayName');
                     $delegate.getDocument = jasmine.createSpy('getDocument');
                     $delegate.getPatientsAtAcf = jasmine.createSpy('getPatientsAtAcf');
                     $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
@@ -47,6 +48,7 @@
                 commonService = _commonService_;
                 commonService.cacheDocument.and.returnValue($q.when({data: ''}));
                 commonService.dischargePatient.and.returnValue($q.when({}));
+                commonService.displayName.and.returnValue(mock.patients[0].givenName + ' ' + mock.patients[0].familyName);
                 commonService.getDocument.and.returnValue($q.when(angular.copy(mock.fakeDocument)));
                 commonService.getPatientsAtAcf.and.returnValue($q.when(angular.copy(mock.patients)));
                 commonService.getUserAcf.and.returnValue(mock.userAcf);

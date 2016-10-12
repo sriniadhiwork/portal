@@ -38,6 +38,7 @@
             vm.countActive = countActive;
             vm.deactivatePatient = deactivatePatient;
             vm.dischargePatient = dischargePatient;
+            vm.displayName = commonService.displayName;
             vm.getDocument = getDocument;
             vm.getPatientsAtAcf = getPatientsAtAcf;
             vm.getUserAcf = getUserAcf;
@@ -146,6 +147,7 @@
 
             function buildTitle () {
                 if (vm.activePatient) {
+                    //vm.panelTitle = 'Patient: ' + vm.displayName(vm.activePatient.name);
                     vm.panelTitle = 'Patient: ' + vm.activePatient.givenName + ' ' + vm.activePatient.familyName;
                 } else {
                     vm.panelTitle = vm.patients.length + ' Active Patient';
