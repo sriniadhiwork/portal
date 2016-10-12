@@ -134,6 +134,12 @@
             expect(vm.acf).toBe(mock.acfs[0]);
         });
 
+        it('should set acf to a blank-ish acf object if the user doesn\'t have an ACF', function () {
+            commonService.getUserAcf.and.returnValue('');
+            vm.getUserAcf();
+            expect(vm.acf).toEqual({address: {}});
+        });
+
         it('should have a function to edit the current ACF', function () {
             expect(vm.editAcf).toBeDefined();
         });

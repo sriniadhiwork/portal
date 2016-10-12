@@ -39,7 +39,7 @@
                 vm.showFormErrors = false;
                 vm.isEditing = false;
                 vm.getAcfs();
-                vm.acf = vm.getUserAcf();
+                vm.getUserAcf();
             }
 
             function acfSubmit () {
@@ -56,7 +56,7 @@
 
             function cancelEditing () {
                 vm.isEditing = false;
-                vm.acf = vm.getUserAcf();
+                vm.getUserAcf();
             }
 
             function editAcf () {
@@ -80,7 +80,12 @@
             }
 
             function getUserAcf () {
-                return commonService.getUserAcf();
+                var acf = commonService.getUserAcf();
+                if (acf === '') {
+                    vm.acf = {address: {}};
+                } else {
+                    vm.acf = acf;
+                }
             }
 
             function hasAcf () {

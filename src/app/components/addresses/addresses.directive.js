@@ -15,6 +15,8 @@
             controllerAs: 'vm',
             bindToController: {
                 addresses: '=?',
+                fixed: '=?',
+                single: '=?',
                 submitForm: '&'
             }
         };

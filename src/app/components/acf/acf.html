@@ -46,37 +46,12 @@
               <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.phoneNumber" id="acfPhoneNumber" name="acfPhoneNumber" ng-disabled="!vm.createNewAcf && !vm.isEditing" placeholder="(424) 555-1234"></input>
             </div>
           </div>
-          <div class="form-group">
+          <div class="row">
             <label class="col-sm-3 control-label">Address</label>
             <div class="col-sm-9">
-              <label for="acfStreet1" class="control-label sr-only">Street Line 1</label>
-              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.street1" id="acfStreet1" name="acfStreet1" ng-disabled="!vm.createNewAcf && !vm.isEditing" placeholder="Street Line 1"></input>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-9 col-sm-offset-3">
-              <label for="acfStreet2" class="control-label sr-only">Street Line 2</label>
-              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.street2" id="acfStreet2" name="acfStreet2" ng-disabled="!vm.createNewAcf && !vm.isEditing" placeholder="Street Line 2"></input>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-5 col-sm-offset-3">
-              <label for="acfCity" class="control-label sr-only">City</label>
-              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.city" id="acfCity" name="acfCity" ng-disabled="!vm.createNewAcf && !vm.isEditing" placeholder="City"></input>
-            </div>
-            <div class="col-sm-2">
-              <label for="acfState" class="control-label sr-only">State</label>
-              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.state" id="acfState" name="acfState" ng-disabled="!vm.createNewAcf && !vm.isEditing" placeholder="State"></input>
-            </div>
-            <div class="col-sm-2">
-              <label for="acfZip" class="control-label sr-only">Zip</label>
-              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.zipcode" id="acfZip" name="acfZip" ng-disabled="!vm.createNewAcf && !vm.isEditing" placeholder="Zip"></input>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-9 col-sm-offset-3">
-              <label for="acfCountry" class="control-label sr-only">Country</label>
-              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.address.country" id="acfCountry" name="acfCountry" ng-disabled="!vm.createNewAcf && !vm.isEditing" placeholder="Country"></input>
+              <ai-addresses addresses="[vm.acf.address]"
+                            single="true"
+                            submit-form="vm.submitForm"></ai-addresses>
             </div>
           </div>
         </div>
@@ -127,12 +102,7 @@
               <tr>
                 <th scope="rows">Address</th>
                 <td>
-                  <span ng-if="vm.acf.address.street1">{{ vm.acf.address.street1 }}<br /></span>
-                  <span ng-if="vm.acf.address.street2">{{ vm.acf.address.street2 }}<br /></span>
-                  <span ng-if="vm.acf.address.city">{{ vm.acf.address.city }}, </span>
-                  <span ng-if="vm.acf.address.state">{{ vm.acf.address.state }} </span>
-                  <span ng-if="vm.acf.address.zipcode">{{ vm.acf.address.zipcode }}</span>
-                  <span ng-if="vm.acf.address.country"><br />{{ vm.acf.address.country }}</span>
+                  <ai-addresses fixed="true" addresses="[vm.acf.address]"></ai-addresses>
                 </td>
               </tr>
             </tbody>
