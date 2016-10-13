@@ -47,6 +47,13 @@
 
             function searchForPatient () {
                 if (!vm.queryForm.$invalid && vm.queryForm.$dirty) {
+
+                    //////// debug
+                    vm.query.givenName = 'fakegivenname';
+                    vm.query.familyName = 'fakefamilyname';
+                    vm.query.dob = new Date();
+                    //////// end debug
+
                     var queryObj = {query: angular.copy(vm.query)};
                     commonService.searchForPatient(queryObj.query).then(function() {
                         vm.triggerHandlers();

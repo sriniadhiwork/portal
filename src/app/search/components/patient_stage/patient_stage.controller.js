@@ -19,6 +19,7 @@
 
         function activate () {
             vm.query = query;
+            vm.queryForm = {};
             vm.patient = {};
         }
 
@@ -40,6 +41,12 @@
 
         function stagePatient () {
             if (vm.isStageable()) {
+
+                //////// debug
+                vm.patient.givenName = 'fakegivenname';
+                vm.patient.familyName = 'fakefamilyname';
+                //////// end debug
+
                 var newPatient = {
                     patientRecordIds: [],
                     patient: vm.patient,

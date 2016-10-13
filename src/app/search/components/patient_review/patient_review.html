@@ -15,9 +15,9 @@
           <table class="table table-striped" st-table="vm.displayedQueries" st-safe-src="vm.patientQueries" ng-if="vm.patientQueries.length > 0">
             <thead>
               <tr>
-                <th scope="cols" st-sort="givenName" st-skip-natural="true" class="st-sort">Given Name</th>
-                <th scope="cols" st-sort="familyName" st-skip-natural="true" class="st-sort">Family Name</th>
+                <th scope="cols" st-sort="names[0].givenName" st-skip-natural="true" class="st-sort">Name</th>
                 <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
+                <th scope="cols" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
                 <th scope="cols" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Updated</th>
                 <th scope="cols">Status</th>
                 <th scope="cols">Stage</th>
@@ -26,9 +26,9 @@
             </thead>
             <tbody>
               <tr ng-repeat="query in vm.displayedQueries track by query.id" class="fade">
-                <td>{{ query.terms.givenName }}</td>
-                <td>{{ query.terms.familyName }}</td>
+                <td><span ng-repeat="name in query.terms.names track by name.id">{{ commonService.displayName(name) }}<br /></span></td>
                 <td>{{ query.terms.dob | date }}</td>
+                <td>{{ query.terms.gender }}</td>
                 <td>{{ query.lastRead | date : 'medium' }}</td>
                 <td>
                   <uib-progress max="query.orgStatuses.length" ng-if="query.status !== 'COMPLETE'">
