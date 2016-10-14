@@ -10,6 +10,7 @@
         var vm = this;
 
         vm.cancel = cancel;
+        vm.clearQuery = clearQuery;
         vm.isStageable = isStageable;
         vm.stagePatient = stagePatient;
 
@@ -24,7 +25,13 @@
         }
 
         function cancel () {
-            $uibModalInstance.dismiss('Cancelled');
+            $uibModalInstance.dismiss('staging cancelled');
+        }
+
+        function clearQuery () {
+            commonService.clearQuery(vm.query.id).then(function () {
+                $uibModalInstance.dismiss('query cleared');
+            });
         }
 
         function isStageable () {

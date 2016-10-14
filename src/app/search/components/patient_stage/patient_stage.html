@@ -9,9 +9,9 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="cols">Name<span ng-if="vm.query.terms.names.length !== 1">s</span></th>
-          <th scope="cols">Date of Birth</th>
-          <th scope="cols">Gender</th>
+          <th scope="col">Name<span ng-if="vm.query.terms.names.length !== 1">s</span></th>
+          <th scope="col">Date of Birth</th>
+          <th scope="col">Gender</th>
         </tr>
       </thead>
       <tbody>
@@ -26,28 +26,31 @@
     <table class="table table-condensed" st-table="vm.displayedRecords" st-safe-src="vm.query.orgStatuses">
       <thead>
         <tr>
-          <th scope="cols" st-sort="org.name" st-skip-natural="true" class="st-sort">Organization</th>
-          <th scope="cols" st-sort="name.givenName" st-skip-natural="true" class="st-sort">Name</th>
-          <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
-          <th scope="cols" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
-          <th scope="cols">Select</th>
+          <th scope="col" st-sort="org.name" st-skip-natural="true" class="st-sort">Organization</th>
+          <th scope="col" st-sort="name.givenName" st-skip-natural="true" class="st-sort">Name</th>
+          <th scope="col" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
+          <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
+          <th scope="col" st-sort="ssn" st-skip-natural="true" class="st-sort">SSN</th>
+          <th scope="col">Select</th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat-start="org in vm.query.orgStatuses track by org.id" ng-if="org.results && org.results.length > 0">
+        <tr ng-repeat-start="org in vm.query.orgStatuses track by org.id" ng-if="org.results && org.results.length > 0" href ng-click="org.results[0].selected = !org.results[0].selected">
           <td rowspan="{{ org.results.length }}">{{ org.org.name }}</td>
-          <td href ng-click="org.results[0].selected = true; vm.patient.name = org.results[0].name">{{ commonService.displayName(org.results[0].names[0]) }}</td>
-          <td href ng-click="org.results[0].selected = true; vm.patient.dateOfBirth = org.results[0].dateOfBirth">{{ org.results[0].dateOfBirth | date }}</td>
-          <td href ng-click="org.results[0].selected = true; vm.patient.gender = org.results[0].gender">{{ org.results[0].gender }}</td>
+          <td>{{ commonService.displayName(org.results[0].names[0]) }}</td>
+          <td>{{ org.results[0].gender }}</td>
+          <td>{{ org.results[0].dateOfBirth | date }}</td>
+          <td>{{ org.results[0].ssn }}</td>
           <td>
             <label class="sr-only" for="recordSelect-{{ org.results[0].id }}">{{ commonService.displayName(org.results[0].names[0]) }}</label>
             <input id="recordSelect-{{ org.results[0].id }}" type="checkbox" ng-model="org.results[0].selected">
           </td>
         </tr>
-        <tr ng-repeat-end ng-repeat="record in org.results.slice(1)">
-          <td href ng-click="record.selected = true; vm.patient.name = record.name">{{ commonService.displayName(record.names[0]) }}</td>
-          <td href ng-click="record.selected = true; vm.patient.dateOfBirth = record.dateOfBirth">{{ record.dateOfBirth | date }}</td>
-          <td href ng-click="record.selected = true; vm.patient.gender = record.gender">{{ record.gender }}</td>
+        <tr ng-repeat-end ng-repeat="record in org.results.slice(1)" href ng-click="record.selected = !record.selected">
+          <td>{{ commonService.displayName(record.names[0]) }}</td>
+          <td>{{ record.gender }}</td>
+          <td>{{ record.dateOfBirth | date }}</td>
+          <td>{{ record.ssn }}</td>
           <td>
             <label class="sr-only" for="recordSelect-{{ record.id }}">{{ commonService.displayName(record.names[0]) }}</label>
             <input id="recordSelect-{{ record.id }}" type="checkbox" ng-model="record.selected">
@@ -65,37 +68,9 @@
             <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.fullName.$touched) && vm.queryForm.fullName.$error.required">Field is required</span>
           </div>
         </div>
-        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required }">
-          <label for="friendlyName" class="col-sm-2 control-label">Friendly Name <span class="text-danger">*</span></label>
-          <div class="col-sm-4">
-            <input class="form-control" type="text" ng-model="vm.patient.friendlyName" id="friendlyName" name="friendlyName" required>
-            <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required">Field is required</span>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.required }">
-          <label for="ssn" class="col-sm-1 control-label">SSN <span class="text-danger">*</span></label>
-          <div class="col-sm-3">
-            <input class="form-control" type="text" ng-model="vm.patient.ssn" id="ssn" name="ssn" required>
-            <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.required">Field is required</span>
-          </div>
-        </div>
-        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required }">
-          <label for="dob" class="col-sm-1 control-label">Date of Birth <span class="text-danger">*</span></label>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <input class="form-control" type="date" ng-model="vm.patient.dateOfBirth" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" required>
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
-              </span>
-            </div>
-            <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required">Field is required</span>
-          </div>
-        </div>
         <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required }">
-          <label for="gender" class="col-sm-1 control-label">Gender <span class="text-danger">*</span></label>
-          <div class="col-sm-3">
+          <label for="gender" class="col-sm-2 control-label">Gender <span class="text-danger">*</span></label>
+          <div class="col-sm-4">
             <select class="input-sm form-control" ng-model="vm.patient.gender" id="gender" name="gender" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
               <option value="Female">Female</option>
               <option value="Male">Male</option>
@@ -105,9 +80,39 @@
           </div>
         </div>
       </div>
+      <div class="form-group">
+        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required }">
+          <label for="friendlyName" class="col-sm-2 control-label">Friendly Name <span class="text-danger">*</span></label>
+          <div class="col-sm-4">
+            <input class="form-control" type="text" ng-model="vm.patient.friendlyName" id="friendlyName" name="friendlyName" required>
+            <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required">Field is required</span>
+          </div>
+        </div>
+        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required }">
+          <label for="dob" class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <input class="form-control" type="date" ng-model="vm.patient.dateOfBirth" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" required>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
+              </span>
+            </div>
+            <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required">Field is required</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div>
+          <label for="ssn" class="col-sm-2 col-sm-offset-6 control-label">SSN</label>
+          <div class="col-sm-4">
+            <input class="form-control" type="text" ng-model="vm.patient.ssn" id="ssn" name="ssn">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="modal-footer">
+    <button class="btn btn-sm btn-danger pull-left" ng-click="vm.clearQuery()"><span class="sr-only">Clear query for patient</span><i class="fa fa-trash"></i></button>
     <button class="btn btn-sm btn-success pull-right" ng-click="vm.stagePatient()"
             ng-disabled="!vm.isStageable() && vm.queryForm.$valid"
             ng-mouseover="vm.showFormErrors = true"
@@ -115,9 +120,8 @@
     <ul class="list-unstyled text-left text-danger" ng-if="(vm.queryForm.$invalid || !vm.isStageable()) && vm.showFormErrors">
       <li ng-if="vm.queryForm.fullName.$error.required">Full Name is required</li>
       <li ng-if="vm.queryForm.friendlyName.$error.required">Friendly Name is required</li>
-      <li ng-if="vm.queryForm.ssn.$error.required">SSN is required</li>
-      <li ng-if="vm.queryForm.dob.$error.required">Date of Birth is required</li>
       <li ng-if="vm.queryForm.gender.$error.required">Gender is required</li>
+      <li ng-if="vm.queryForm.dob.$error.required">Date of Birth is required</li>
       <li ng-if="!vm.isStageable()">At least one record must be selected</li>
     </ul>
   </div>

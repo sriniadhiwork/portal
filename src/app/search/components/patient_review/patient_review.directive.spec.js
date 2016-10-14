@@ -123,7 +123,6 @@
         });
 
         describe('clearing queries', function () {
-
             beforeEach(function () {
                 vm.patientQueries = angular.copy(mock.queries);
             });
@@ -152,7 +151,6 @@
         });
 
         describe('staging patients', function() {
-
             it('should have a function to stage patients', function () {
                 expect(vm.stagePatient).toBeDefined();
             });
@@ -169,6 +167,13 @@
                 vm.stagePatient(vm.patientQueries[0]);
                 vm.stagePatientInstance.dismiss();
                 expect(vm.triggerHandlers).not.toHaveBeenCalled();
+            });
+
+            it('should refresh the queries if the modal was dismissed with a cleared query', function () {
+                spyOn(vm, 'getQueries');
+                vm.stagePatient(vm.patientQueries[0]);
+                vm.stagePatientInstance.dismiss('query cleared');
+                expect(vm.getQueries).toHaveBeenCalled();
             });
         });
     });

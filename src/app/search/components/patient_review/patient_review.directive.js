@@ -103,6 +103,9 @@
                     vm.triggerHandlers();
                     vm.getQueries();
                 }, function (result) {
+                    if (result === 'query cleared') {
+                        vm.getQueries();
+                    }
                     $log.debug('dismissed', result);
                 });
             }

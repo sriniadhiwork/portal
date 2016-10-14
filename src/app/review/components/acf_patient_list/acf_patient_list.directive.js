@@ -63,9 +63,11 @@
             }
 
             function cacheDocument (patient, doc) {
+                doc.pending = true;
                 if (!doc.cached) {
                     commonService.cacheDocument(patient.id, doc.id).then(function () {
                         doc.cached = true;
+                        doc.pending = false;
                         patient.documentStatus.cached += 1;
                     });
                 }
@@ -147,8 +149,7 @@
 
             function buildTitle () {
                 if (vm.activePatient) {
-                    //vm.panelTitle = 'Patient: ' + vm.displayName(vm.activePatient.name);
-                    vm.panelTitle = 'Patient: ' + vm.activePatient.givenName + ' ' + vm.activePatient.familyName;
+                    vm.panelTitle = 'Patient: ' + vm.activePatient.fullName + ' (' + vm.activePatient.friendlyName + ')';
                 } else {
                     vm.panelTitle = vm.patients.length + ' Active Patient';
                     if (vm.patients.length !== 1)
