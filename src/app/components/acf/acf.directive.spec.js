@@ -3,7 +3,9 @@
 
     describe('portal.aiAcf', function() {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
-        mock = { acfs: [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}]};
+        mock = {};
+        mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
+        mock.fakeAcf = { name: 'fake', address: {city: 'city', lines: ['','123 Main St']}};
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -195,6 +197,25 @@
             vm.isEditing = true;
             vm.submitForm()
             expect(vm.editAcf).not.toHaveBeenCalled();
+        });
+
+        it('should remove empty lines from the address on "create"', function () {
+            var updAcf = angular.copy(mock.fakeAcf);
+            updAcf.address.lines = ['123 Main St'];
+            vm.acf = angular.copy(mock.fakeAcf);
+            vm.createNewAcf = true;
+            vm.acfSubmit();
+            expect(commonService.createAcf).toHaveBeenCalledWith(updAcf);
+        });
+
+        it('should not send an empty array of lines on "create"', function () {
+            var updAcf = angular.copy(mock.fakeAcf);
+            delete updAcf.address.lines
+            vm.acf = angular.copy(mock.fakeAcf);
+            vm.acf.address.lines[1] = '';
+            vm.createNewAcf = true;
+            vm.acfSubmit();
+            expect(commonService.createAcf).toHaveBeenCalledWith(updAcf);
         });
     });
 })();
