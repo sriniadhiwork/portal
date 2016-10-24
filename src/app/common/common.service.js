@@ -56,24 +56,29 @@
 
         function displayName (name) {
             var ret = '';
-            ret += name.givens.join(' ');
-            if (name.nameAssembly === 'F') {
-                ret = name.family + ' ' + ret;
-            } else {
-                ret += ' ' + name.family;
-            }
-            if (name.prefix) {
-                ret = name.prefix + ' ' + ret;
-            }
-            if (name.suffix) {
-                ret += ' ' + name.suffix;
-            }
-            if (name.profSuffix) {
-                ret += ', ' + name.profSuffix;
-            }
-            for (var i = 0; i < self.nameTypes.length; i++) {
-                if (name.nameType === self.nameTypes[i].code) {
-                    ret += ' (' + self.nameTypes[i].value + ')';
+            if (name.givenName &&
+                name.givenName.length > 0 &&
+                name.familyName &&
+                name.nameType) {
+                ret += name.givenName.join(' ');
+                if (name.nameAssembly && name.nameAssembly.code === 'F') {
+                    ret = name.familyName + ' ' + ret;
+                } else {
+                    ret += ' ' + name.familyName;
+                }
+                if (name.prefix) {
+                    ret = name.prefix + ' ' + ret;
+                }
+                if (name.suffix) {
+                    ret += ' ' + name.suffix;
+                }
+                if (name.profSuffix) {
+                    ret += ', ' + name.profSuffix;
+                }
+                for (var i = 0; i < self.nameTypes.length; i++) {
+                    if (name.nameType.code === self.nameTypes[i].code) {
+                        ret += ' (' + self.nameTypes[i].description + ')';
+                    }
                 }
             }
             return ret;
@@ -302,17 +307,29 @@
         }
 
         self.nameTypes = [
-            { code: 'A', value: 'Alias Name' },
-            { code: 'B', value: 'Name at Birth' },
-            { code: 'C', value: 'Adopted Name' },
-            { code: 'D', value: 'Display Name' },
-            { code: 'I', value: 'Licensing Name' },
-            { code: 'L', value: 'Legal Name' },
-            { code: 'M', value: 'Maiden Name' },
-            { code: 'N', value: 'Nickname /"Call me" Name/Street Name' },
-            { code: 'S', value: 'Coded Pseudo-Name to ensure anonymity' },
-            { code: 'T', value: 'Indigenous/Tribal/Community Name' },
-            { code: 'U', value: 'Unspecified' }
+            { code: 'A', description: 'Alias Name' },
+            { code: 'B', description: 'Name at Birth' },
+            { code: 'C', description: 'Adopted Name' },
+            { code: 'D', description: 'Display Name' },
+            { code: 'I', description: 'Licensing Name' },
+            { code: 'L', description: 'Legal Name' },
+            { code: 'M', description: 'Maiden Name' },
+            { code: 'N', description: 'Nickname /"Call me" Name/Street Name' },
+            { code: 'S', description: 'Coded Pseudo-Name to ensure anonymity' },
+            { code: 'T', description: 'Indigenous/Tribal/Community Name' },
+            { code: 'U', description: 'Unspecified' }
         ];
+
+        self.nameAssemblies = [
+            { code: 'F', description: 'Prefix Family Middle Given Suffix' },
+            { code: 'G', description: 'Prefix Given Middle Family Suffix' }
+        ];
+
+        self.nameRepresentations = [
+            { code: 'A', description: 'Alphabetic (i.e. Default or some single-byte)' },
+            { code: 'I', description: 'Ideographic (i.e. Kanji)' },
+            { code: 'P', description: 'Phonetic (i.e. ASCII, Katakana, Hiragana, etc.)'}
+        ];
+
     }
 })();

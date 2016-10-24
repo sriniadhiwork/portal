@@ -49,8 +49,6 @@
                 if (!vm.queryForm.$invalid && vm.queryForm.$dirty) {
 
                     //////// debug
-                    vm.query.givenName = 'fakegivenname';
-                    vm.query.familyName = 'fakefamilyname';
                     vm.query.dob = new Date();
                     //////// end debug
 
@@ -58,7 +56,7 @@
                     commonService.searchForPatient(queryObj.query).then(function() {
                         vm.triggerHandlers();
                     });
-                    vm.query = {names: [{givens: [''],nameType: 'L'}]};
+                    vm.query = {patientNames: [{givenName: [''], nameType: {code: 'L'}}]};
                     vm.queryForm.$setPristine();
                     vm.queryForm.$setUntouched();
                     vm.showFormErrors = false;

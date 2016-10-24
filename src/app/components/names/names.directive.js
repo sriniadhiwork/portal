@@ -37,8 +37,10 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                vm.defaultName = {givens: [''], nameType: 'L'};
+                vm.defaultName = {givenName: [''], nameType: { code: 'L', description: 'Legal Name'} };
                 vm.nameTypes = commonService.nameTypes;
+                vm.nameAssemblies = commonService.nameAssemblies;
+                vm.nameRepresentations = commonService.nameRepresentations;
 
                 if (angular.isUndefined(vm.names)) {
                     vm.names = [angular.copy(vm.defaultName)];
@@ -46,7 +48,7 @@
             }
 
             function addGiven (name) {
-                name.givens.push('');
+                name.givenName.push('');
             }
 
             function addName () {
@@ -54,8 +56,8 @@
             }
 
             function removeGiven (name, index) {
-                if (name.givens.length > 1) {
-                    name.givens.splice(index, 1);
+                if (name.givenName.length > 1) {
+                    name.givenName.splice(index, 1);
                 }
             }
 

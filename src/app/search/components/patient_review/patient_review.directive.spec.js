@@ -14,6 +14,11 @@
             close: function(item) { this.result.confirmCallBack(item); },
             dismiss: function(type) { this.result.cancelCallback(type); }
         };
+        mock.name = {
+            nameType: { code: 'M', description: 'Maiden Name' },
+            familyName: 'Jones',
+            givenName: ['Bob']
+        };
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -85,6 +90,13 @@
                 expect(vm.countComplete(vm.patientQueries[0])).toBe(3);
                 vm.patientQueries[0].orgStatuses[0].status = 'ACTIVE';
                 expect(vm.countComplete(vm.patientQueries[0])).toBe(2);
+            });
+
+            it('should call commonService to display names', function () {
+                spyOn(commonService, 'displayName');
+                expect(vm.displayName).toBeDefined();
+                vm.displayName(mock.name);
+                expect(commonService.displayName).toHaveBeenCalledWith(mock.name);
             });
 
             describe('refreshing', function () {

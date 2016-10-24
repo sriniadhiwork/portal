@@ -10,9 +10,9 @@
       </div>
       <div class="panel-body slide" ng-if="!vm.hidePanel">
         <div class="form-group">
-          <label class="col-sm-2 control-label">Name<span ng-if="vm.query.names && vm.query.names.length !== 1">s</span> <span class="text-danger">*</span></label>
+          <label class="col-sm-2 control-label">Name<span ng-if="vm.query.patientNames && vm.query.patientNames.length !== 1">s</span> <span class="text-danger">*</span></label>
           <div class="col-sm-10">
-            <ai-names names="vm.query.names"
+            <ai-names names="vm.query.patientNames"
                       active-form="vm.queryForm"
                       show-form-errors="vm.showFormErrors"
                       submit-form="vm.searchForPatient"></ai-names>

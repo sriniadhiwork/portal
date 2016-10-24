@@ -15,7 +15,7 @@
           <table class="table table-striped" st-table="vm.displayedQueries" st-safe-src="vm.patientQueries" ng-if="vm.patientQueries.length > 0">
             <thead>
               <tr>
-                <th scope="col" st-sort="names[0].givenName" st-skip-natural="true" class="st-sort">Name</th>
+                <th scope="col" st-sort="patientNames[0].givenName" st-skip-natural="true" class="st-sort">Name</th>
                 <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
                 <th scope="col" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
                 <th scope="col" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Updated</th>
@@ -25,7 +25,7 @@
             </thead>
             <tbody>
               <tr ng-repeat="query in vm.displayedQueries track by query.id" class="fade">
-                <td><span ng-repeat="name in query.terms.names track by name.id">{{ commonService.displayName(name) }}<br /></span></td>
+                <td><span ng-repeat="name in query.terms.patientNames track by $index">{{ vm.displayName(name) }}<br /></span></td>
                 <td>{{ query.terms.dob | date }}</td>
                 <td>{{ query.terms.gender }}</td>
                 <td>{{ query.lastRead | date : 'medium' }}</td>

@@ -8,6 +8,11 @@
             close: jasmine.createSpy('close'),
             dismiss: jasmine.createSpy('dismiss')
         };
+        mock.name = {
+            nameType: { code: 'M', description: 'Maiden Name' },
+            familyName: 'Jones',
+            givenName: ['Bob']
+        };
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -42,6 +47,15 @@
 
         it('should exist', function () {
             expect(vm).toBeDefined();
+        });
+
+        describe('viewing', function () {
+            it('should call commonService to display names', function () {
+                spyOn(commonService, 'displayName');
+                expect(vm.displayName).toBeDefined();
+                vm.displayName(mock.name);
+                expect(commonService.displayName).toHaveBeenCalledWith(mock.name);
+            });
         });
 
         describe('staging a patient', function() {

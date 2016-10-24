@@ -79,9 +79,9 @@
 
             it('should display names correctly', function () {
                 var name = {
-                    givens: ['John', 'Andrew'],
-                    family: 'Smith',
-                    nameType: 'L'
+                    givenName: ['John', 'Andrew'],
+                    familyName: 'Smith',
+                    nameType: {code: 'L', description: 'Legal Name'}
                 };
                 expect(commonService.displayName(name)).toBe('John Andrew Smith (Legal Name)');
                 name.prefix = 'Mr';
@@ -90,11 +90,22 @@
                 expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III (Legal Name)');
                 name.profSuffix = 'DDS';
                 expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III, DDS (Legal Name)');
-                name.nameAssembly = 'F';
+                name.nameAssembly = {code: 'F'};
                 expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Legal Name)');
-                name.nameType = 'D';
+                name.nameType = {code: 'D'};
                 expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Display Name)');
             });
+        });
+
+        it('should display a blank string if required elements aren\'t there', function () {
+            var name = {};
+            expect(commonService.displayName(name)).toBe('');
+            name.givenName = ['John', 'Andrew'];
+            expect(commonService.displayName(name)).toBe('');
+            name.givenName = [];
+            expect(commonService.displayName(name)).toBe('');
+            name.familyName = 'Smith';
+            expect(commonService.displayName(name)).toBe('');
         });
 
         describe('user authentication issues', function () {

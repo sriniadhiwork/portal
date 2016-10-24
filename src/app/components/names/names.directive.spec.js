@@ -4,8 +4,8 @@
     describe('portal.aiNames', function() {
         var $compile, $rootScope, vm, el, $log, mock;
         mock = {
-            names: [ { givens: ['John', 'Frank'], family: 'Smith'} ],
-            defaultName: { givens: [''], nameType: 'L' }
+            names: [ { givenName: ['John', 'Frank'], familyName: 'Smith'} ],
+            defaultName: { givenName: [''], nameType: {code: 'L', description: 'Legal Name'} }
         };
 
         beforeEach(function () {
@@ -85,23 +85,23 @@
 
         it('should add a blank givens when called', function () {
             vm.addGiven(vm.names[0]);
-            expect(vm.names[0].givens.length).toBe(3);
+            expect(vm.names[0].givenName.length).toBe(3);
         });
 
         it('should have a function to remove a street givens', function () {
             expect(vm.removeGiven).toBeDefined();
         });
 
-        it('should remove a street givens when told', function () {
+        it('should remove a given when told', function () {
             vm.addGiven(vm.names[0]);
             vm.removeGiven(vm.names[0],0);
-            expect(vm.names[0].givens.length).toBe(2);
+            expect(vm.names[0].givenName.length).toBe(2);
         });
 
-        it('should not remove a street givens if there are only 1 left', function () {
+        it('should not remove a given if there are only 1 left', function () {
             vm.removeGiven(vm.names[0],0);
             vm.removeGiven(vm.names[0],0);
-            expect(vm.names[0].givens.length).toBe(1);
+            expect(vm.names[0].givenName.length).toBe(1);
         });
 
         it('should have a function to submit the form', function () {
