@@ -13,18 +13,18 @@
           <table class="table table-striped" st-table="vm.displayedPatients" st-safe-src="vm.patients" ng-if="vm.patients.length > 0">
             <thead>
               <tr>
-                <th scope="cols" st-sort="givenName" st-skip-natural="true" class="st-sort">Given Name</th>
-                <th scope="cols" st-sort="familyName" st-skip-natural="true" class="st-sort">Family Name</th>
-                <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
-                <th scope="cols" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Accessed</th>
-                <th scope="cols">Documents</th>
-                <th scope="cols">Inspect</th>
+                <th scope="col" st-sort="fullName" st-skip-natural="true" class="st-sort">Full Name</th>
+                <th scope="col" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
+                <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
+                <th scope="col" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Accessed</th>
+                <th scope="col">Documents</th>
+                <th scope="col">Inspect</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="patient in vm.displayedPatients track by patient.id" class="fade">
-                <td>{{ patient.givenName }}</td>
-                <td>{{ patient.familyName }}</td>
+                <td>{{ patient.fullName }}</td>
+                <td>{{ patient.gender }}</td>
                 <td>{{ patient.dateOfBirth | date }}</td>
                 <td>{{ patient.lastRead | date : 'medium' }}</td>
                 <td>
@@ -34,7 +34,7 @@
                     <uib-bar value="vm.countActive(patient)" type="warning"><i>{{ vm.countActive(patient) }} organization<span ng-if="vm.countActive(patient) > 1">s</span> pending</i></uib-bar>
                   </uib-progress>
                 </td>
-                <td><button class="btn btn-success" ng-click="vm.activatePatient(patient)"><i class="fa fa-search"></i><span class="sr-only">Activate {{ patient.givenName }} {{ patient.familyName }}</span></button></td>
+                <td><button class="btn btn-success" ng-click="vm.activatePatient(patient)"><i class="fa fa-search"></i><span class="sr-only">Activate {{ patient.fullName }}</span></button></td>
               </tr>
             </tbody>
           </table>
@@ -42,27 +42,46 @@
       </div>
       <div class="row" ng-if="vm.activePatient">
         <div class="col-sm-12">
-          <ul>
-            <li>Given Name: {{ vm.activePatient.givenName }}</li>
-            <li>Family Name: {{ vm.activePatient.familyName }}</li>
-            <li>Date of Birth: {{ vm.activePatient.dob | date }}</li>
+          <table class="table table-striped">
+            <tr>
+              <th scope="row">Full Name</th>
+              <td>{{ vm.activePatient.fullName }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Friendly Name</th>
+              <td>{{ vm.activePatient.friendlyName }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Gender</th>
+              <td>{{ vm.activePatient.gender }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Date of Birth</th>
+              <td>{{ vm.activePatient.dob | date }}</td>
+            </tr>
+            <tr>
+              <th scope="row">SSN</th>
+              <td>{{ vm.activePatient.ssn }}</td>
+            </tr>
+          </table>
           </ul>
           <table class="table table-condensed" st-table="vm.activePatient.documents">
             <thead>
               <tr>
-                <th scope="cols" st-sort="cached" st-skip-natural="true" class="st-sort">Status</th>
-                <th scope="cols" st-sort="name" st-skip-natural="true" class="st-sort" st-sort-default="true">Title</th>
-                <th scope="cols" st-sort="className" st-skip-natural="true" class="st-sort">Class Name</th>
-                <th scope="cols" st-sort="confidentiality" st-skip-natural="true" class="st-sort">Confidentiality </th>
-                <th scope="cols" st-sort="creationTime" st-skip-natural="true" class="st-sort">Creation Date</th>
-                <th scope="cols" st-sort="size" st-skip-natural="true" class="st-sort">Size</th>
-                <th scope="cols" st-sort="organization" st-skip-natural="true" class="st-sort">Organization</th>
+                <th scope="col" st-sort="cached" st-skip-natural="true" class="st-sort">Status</th>
+                <th scope="col" st-sort="name" st-skip-natural="true" class="st-sort" st-sort-default="true">Title</th>
+                <th scope="col" st-sort="className" st-skip-natural="true" class="st-sort">Class Name</th>
+                <th scope="col" st-sort="confidentiality" st-skip-natural="true" class="st-sort">Confidentiality </th>
+                <th scope="col" st-sort="creationTime" st-skip-natural="true" class="st-sort">Creation Date</th>
+                <th scope="col" st-sort="size" st-skip-natural="true" class="st-sort">Size</th>
+                <th scope="col" st-sort="organization" st-skip-natural="true" class="st-sort">Organization</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="doc in vm.activePatient.documents track by doc.id">
                 <td>
-                  <button ng-if="!doc.cached" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
+                  <button ng-if="!doc.cached && !doc.pending" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
+                  <button ng-if="doc.pending" disabled class="btn btn-warning btn-sm"><span class="sr-only">Pending </span><i class="fa fa-spinner fa-spin"></i></button>
                   <button ng-if="doc.cached" ng-click="vm.getDocument(vm.activePatient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
                 </td>
                 <td>{{ doc.name }}</td>
@@ -74,8 +93,8 @@
               </tr>
             </tbody>
           </table>
-          <button class="btn btn-danger" ng-click="vm.dischargePatient(vm.activePatient)"><i class="fa fa-sign-out"></i><span class="sr-only">Discharge {{ vm.activePatient.givenName }} {{ vm.activePatient.familyName }}</span></button>
-          <button class="btn btn-warning" ng-click="vm.deactivatePatient()"><i class="fa fa-close"></i><span class="sr-only">Deactivate {{ vm.activePatient.givenName }} {{ vm.activePatient.familyName }}</span></button>
+          <button class="btn btn-danger" ng-click="vm.dischargePatient(vm.activePatient)"><i class="fa fa-sign-out"></i><span class="sr-only">Discharge {{ vm.activePatient.fullName }}</span></button>
+          <button class="btn btn-warning" ng-click="vm.deactivatePatient()"><i class="fa fa-close"></i><span class="sr-only">Deactivate {{ vm.activePatient.fullName }}</span></button>
         </div>
       </div>
     </div>

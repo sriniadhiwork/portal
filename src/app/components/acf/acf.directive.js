@@ -39,11 +39,22 @@
                 vm.showFormErrors = false;
                 vm.isEditing = false;
                 vm.getAcfs();
-                vm.acf = vm.getUserAcf();
+                vm.getUserAcf();
             }
 
             function acfSubmit () {
                 if (vm.createNewAcf) {
+                    var newlines = [];
+                    for (var i = 0; i < vm.acf.address.lines.length; i++) {
+                        if (vm.acf.address.lines[i] !== '') {
+                            newlines.push(vm.acf.address.lines[i]);
+                        }
+                    }
+                    if (newlines.length > 0) {
+                        vm.acf.address.lines = newlines;
+                    } else {
+                        delete vm.acf.address.lines;
+                    }
                     commonService.createAcf(vm.acf).then(function (response) {
                         commonService.setAcf(response);
                     });
@@ -56,7 +67,7 @@
 
             function cancelEditing () {
                 vm.isEditing = false;
-                vm.acf = vm.getUserAcf();
+                vm.getUserAcf();
             }
 
             function editAcf () {
@@ -80,7 +91,12 @@
             }
 
             function getUserAcf () {
-                return commonService.getUserAcf();
+                var acf = commonService.getUserAcf();
+                if (acf === '') {
+                    vm.acf = {address: {}};
+                } else {
+                    vm.acf = acf;
+                }
             }
 
             function hasAcf () {

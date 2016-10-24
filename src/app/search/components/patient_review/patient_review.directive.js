@@ -34,6 +34,7 @@
 
             vm.clearQuery = clearQuery;
             vm.countComplete = countComplete;
+            vm.displayName = displayName;
             vm.getQueries = getQueries;
             vm.getRecordCount = getRecordCount;
             vm.stagePatient = stagePatient;
@@ -62,6 +63,10 @@
                     }
                 }
                 return count;
+            }
+
+            function displayName (name) {
+                return commonService.displayName(name);
             }
 
             function getQueries () {
@@ -103,6 +108,9 @@
                     vm.triggerHandlers();
                     vm.getQueries();
                 }, function (result) {
+                    if (result === 'query cleared') {
+                        vm.getQueries();
+                    }
                     $log.debug('dismissed', result);
                 });
             }

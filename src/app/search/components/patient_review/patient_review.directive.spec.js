@@ -14,6 +14,11 @@
             close: function(item) { this.result.confirmCallBack(item); },
             dismiss: function(type) { this.result.cancelCallback(type); }
         };
+        mock.name = {
+            nameType: { code: 'M', description: 'Maiden Name' },
+            familyName: 'Jones',
+            givenName: ['Bob']
+        };
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -87,6 +92,13 @@
                 expect(vm.countComplete(vm.patientQueries[0])).toBe(2);
             });
 
+            it('should call commonService to display names', function () {
+                spyOn(commonService, 'displayName');
+                expect(vm.displayName).toBeDefined();
+                vm.displayName(mock.name);
+                expect(commonService.displayName).toHaveBeenCalledWith(mock.name);
+            });
+
             describe('refreshing', function () {
 
                 var activeProducts = angular.copy(mock.queries);
@@ -123,7 +135,6 @@
         });
 
         describe('clearing queries', function () {
-
             beforeEach(function () {
                 vm.patientQueries = angular.copy(mock.queries);
             });
@@ -152,7 +163,6 @@
         });
 
         describe('staging patients', function() {
-
             it('should have a function to stage patients', function () {
                 expect(vm.stagePatient).toBeDefined();
             });
@@ -169,6 +179,13 @@
                 vm.stagePatient(vm.patientQueries[0]);
                 vm.stagePatientInstance.dismiss();
                 expect(vm.triggerHandlers).not.toHaveBeenCalled();
+            });
+
+            it('should refresh the queries if the modal was dismissed with a cleared query', function () {
+                spyOn(vm, 'getQueries');
+                vm.stagePatient(vm.patientQueries[0]);
+                vm.stagePatientInstance.dismiss('query cleared');
+                expect(vm.getQueries).toHaveBeenCalled();
             });
         });
     });

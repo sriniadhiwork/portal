@@ -13,6 +13,7 @@
         self.clearQuery = clearQuery;
         self.createAcf = createAcf;
         self.dischargePatient = dischargePatient;
+        self.displayName = displayName
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
@@ -38,39 +39,49 @@
         ////////////////////////////////////////////////////////////////////
 
         function cacheDocument (patientId, documentId) {
-            return getApi('/patients/' + patientId + '/documents/' + documentId)
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/patients/' + patientId + '/documents/' + documentId);
         }
 
         function clearQuery (queryId) {
-            return postApi('/queries/' + queryId + '/delete', {})
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/queries/' + queryId + '/delete', {});
         }
 
         function createAcf (newAcf) {
-            return postApi('/acfs/create', newAcf)
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/acfs/create', newAcf);
         }
 
         function dischargePatient (patientId) {
-            return postApi('/patients/' + patientId + '/delete', {})
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/patients/' + patientId + '/delete', {});
+        }
+
+        function displayName (name) {
+            var ret = '';
+            if (name.givenName &&
+                name.givenName.length > 0 &&
+                name.familyName &&
+                name.nameType) {
+                ret += name.givenName.join(' ');
+                if (name.nameAssembly && name.nameAssembly.code === 'F') {
+                    ret = name.familyName + ' ' + ret;
+                } else {
+                    ret += ' ' + name.familyName;
+                }
+                if (name.prefix) {
+                    ret = name.prefix + ' ' + ret;
+                }
+                if (name.suffix) {
+                    ret += ' ' + name.suffix;
+                }
+                if (name.profSuffix) {
+                    ret += ', ' + name.profSuffix;
+                }
+                for (var i = 0; i < self.nameTypes.length; i++) {
+                    if (name.nameType.code === self.nameTypes[i].code) {
+                        ret += ' (' + self.nameTypes[i].description + ')';
+                    }
+                }
+            }
+            return ret;
         }
 
         function editAcf (anAcf) {
@@ -84,39 +95,19 @@
         }
 
         function getAcfs () {
-            return getApi('/acfs')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/acfs');
         }
 
         function getDocument (patientId, documentId) {
-            return getApi('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false');
         }
 
         function getQueries () {
-            return getApi('/queries')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/queries');
         }
 
         function getPatientsAtAcf () {
-            return getApi('/patients')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/patients');
         }
 
         function getSamlUserToken () {
@@ -219,12 +210,7 @@
         }
 
         function queryOrganizations () {
-            return getApi('/organizations')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/organizations');
         }
 
         function refreshToken () {
@@ -246,21 +232,11 @@
         }
 
         function searchForPatient (queryObj) {
-            return postApi('/search', queryObj)
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/search', queryObj);
         }
 
         function searchForPatientDocuments (patientId) {
-            return getApi('/patients/' + patientId + '/documents')
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedGet('/patients/' + patientId + '/documents');
         }
 
         function setAcf (acf) {
@@ -274,19 +250,30 @@
         }
 
         function stagePatient (patient) {
-            return postApi('/queries/' + patient.id + '/stage', patient)
-                .then(function (response) {
-                    return $q.when(response);
-                }, function (error) {
-                    return $q.reject(error);
-                });
+            return enhancedPost('/queries/' + patient.id + '/stage', patient);
         }
 
         ////////////////////////////////////////////////////////////////////
 
+        function enhancedGet (endpoint) {
+            return $http.get(API + endpoint)
+                .then(function(response) {
+                    return $q.when(response.data);
+                }, function (response) {
+                    return $q.reject(response);
+                });
+        }
+
+        function enhancedPost (endpoint, postObject) {
+            return $http.post(API + endpoint, postObject)
+                .then(function (response) {
+                    return $q.when(response.data);
+                }, function (response) {
+                    return $q.reject(response);
+                });
+        }
+
         function getApi (endpoint, api) {
-            if (api === null || angular.isUndefined(api))
-                api = API;
             return $http.get(api + endpoint)
                 .then(function(response) {
                     return response.data;
@@ -318,5 +305,31 @@
         function validTokenFormat(token) {
             return (angular.isString(token) && token.match(/.*\..*\..*/));
         }
+
+        self.nameTypes = [
+            { code: 'A', description: 'Alias Name' },
+            { code: 'B', description: 'Name at Birth' },
+            { code: 'C', description: 'Adopted Name' },
+            { code: 'D', description: 'Display Name' },
+            { code: 'I', description: 'Licensing Name' },
+            { code: 'L', description: 'Legal Name' },
+            { code: 'M', description: 'Maiden Name' },
+            { code: 'N', description: 'Nickname /"Call me" Name/Street Name' },
+            { code: 'S', description: 'Coded Pseudo-Name to ensure anonymity' },
+            { code: 'T', description: 'Indigenous/Tribal/Community Name' },
+            { code: 'U', description: 'Unspecified' }
+        ];
+
+        self.nameAssemblies = [
+            { code: 'F', description: 'Prefix Family Middle Given Suffix' },
+            { code: 'G', description: 'Prefix Given Middle Family Suffix' }
+        ];
+
+        self.nameRepresentations = [
+            { code: 'A', description: 'Alphabetic (i.e. Default or some single-byte)' },
+            { code: 'I', description: 'Ideographic (i.e. Kanji)' },
+            { code: 'P', description: 'Phonetic (i.e. ASCII, Katakana, Hiragana, etc.)'}
+        ];
+
     }
 })();

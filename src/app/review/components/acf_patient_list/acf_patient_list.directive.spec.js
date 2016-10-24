@@ -14,8 +14,7 @@
             mock.documentList[i].organization = 'OrganizationThreeUpdatedName';
         }
         mock.documentList[4].organization = 'IHE Org';
-        mock.patients = [{id:3,orgPatientId:null,givenName:"John",familyName:"Doe",dateOfBirth:null,gender:"M",phoneNumber:null,
-                        address:{id:null,street1:null,street2:null,city:null,state:null,zipcode:null,country:null},
+        mock.patients = [{id:3,orgPatientId:null,fullName:"John Smith",friendlyName:"John",dateOfBirth:null,gender:"M",
                         ssn:"451674563",lastRead:1471014744607,
                         acf:{id:4,name:"Fake",phoneNumber:null,address:null,lastRead:null},
                         orgMaps:[
@@ -25,8 +24,6 @@
                              documents:mock.documents[1]},
                             {id:4,patientId:3,organization:{name:"IHE Org 2",id:3,organizationId:3,adapter:"eHealth",ipAddress:"127.0.0.1",username:"org3User",password:"password3",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"ACTIVE",documentsQuerySuccess:null,documentsQueryStart:1471014744634,documentsQueryEnd:null,
                              documents:[]}]}
-
-
                         ];
 
         beforeEach(function () {
@@ -34,6 +31,7 @@
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.cacheDocument = jasmine.createSpy('cacheDocument');
                     $delegate.dischargePatient = jasmine.createSpy('dischargePatient');
+                    $delegate.displayName = jasmine.createSpy('displayName');
                     $delegate.getDocument = jasmine.createSpy('getDocument');
                     $delegate.getPatientsAtAcf = jasmine.createSpy('getPatientsAtAcf');
                     $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
@@ -47,6 +45,7 @@
                 commonService = _commonService_;
                 commonService.cacheDocument.and.returnValue($q.when({data: ''}));
                 commonService.dischargePatient.and.returnValue($q.when({}));
+                commonService.displayName.and.returnValue(mock.patients[0].givenName + ' ' + mock.patients[0].familyName);
                 commonService.getDocument.and.returnValue($q.when(angular.copy(mock.fakeDocument)));
                 commonService.getPatientsAtAcf.and.returnValue($q.when(angular.copy(mock.patients)));
                 commonService.getUserAcf.and.returnValue(mock.userAcf);
@@ -197,7 +196,7 @@
 
         it('should change the title when a patient is activated', function () {
             vm.activatePatient(mock.patients[0]);
-            expect(vm.panelTitle).toBe('Patient: John Doe');
+            expect(vm.panelTitle).toBe('Patient: John Smith (John)');
         });
 
         it('should set the active patient when activated', function () {

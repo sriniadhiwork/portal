@@ -15,30 +15,31 @@
           <table class="table table-striped" st-table="vm.displayedQueries" st-safe-src="vm.patientQueries" ng-if="vm.patientQueries.length > 0">
             <thead>
               <tr>
-                <th scope="cols" st-sort="givenName" st-skip-natural="true" class="st-sort">Given Name</th>
-                <th scope="cols" st-sort="familyName" st-skip-natural="true" class="st-sort">Family Name</th>
-                <th scope="cols" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
-                <th scope="cols" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Updated</th>
-                <th scope="cols">Status</th>
-                <th scope="cols">Stage</th>
-                <th scope="cols">Clear</th>
+                <th scope="col" st-sort="patientNames[0].givenName" st-skip-natural="true" class="st-sort">Name</th>
+                <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
+                <th scope="col" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
+                <th scope="col" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Updated</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="query in vm.displayedQueries track by query.id" class="fade">
-                <td>{{ query.terms.givenName }}</td>
-                <td>{{ query.terms.familyName }}</td>
+                <td><span ng-repeat="name in query.terms.patientNames track by $index">{{ vm.displayName(name) }}<br /></span></td>
                 <td>{{ query.terms.dob | date }}</td>
+                <td>{{ query.terms.gender }}</td>
                 <td>{{ query.lastRead | date : 'medium' }}</td>
                 <td>
                   <uib-progress max="query.orgStatuses.length" ng-if="query.status !== 'COMPLETE'">
                     <uib-bar class="progress-striped active" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} organization<span ng-if="vm.countComplete(query) > 1">s</span> reporting</i></uib-bar>
                     <uib-bar class="progress-striped active" value="query.orgStatuses.length - vm.countComplete(query)" type="info"><i>{{ query.orgStatuses.length - vm.countComplete(query) }} organization<span ng-if="query.orgStatuses.length - vm.countComplete(query) > 1">s</span> pending</i></uib-bar>
                   </uib-progress>
-                  <uib-progressbar class="progress-striped-no" ng-if="query.status === 'COMPLETE'" value="100" type="success"><i>{{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> found</i></uib-progressbar>
+                  <uib-progressbar class="progress-striped-no" ng-if="query.status === 'COMPLETE'" value="100" type="{{ query.recordCount > 0 ? 'success' : 'danger' }}"><i>{{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> found</i></uib-progressbar>
                 </td>
-                <td><button class="btn btn-success btn-sm" ng-click="vm.stagePatient(query)" ng-disabled="query.status !== 'COMPLETE'"><i class="fa fa-plus"></i><span class="sr-only">Stage {{ query.terms.givenName }} {{ query.terms.familyName }}</span></button></td>
-                <td><button class="btn btn-danger btn-sm" ng-click="vm.clearQuery(query)"><i class="fa fa-trash"></i><span class="sr-only">Clear Query</span></button></td>
+                <td>
+                  <button ng-if="query.status === 'COMPLETE' && query.recordCount !== 0" class="btn btn-success btn-sm" ng-click="vm.stagePatient(query)"><i class="fa fa-plus"></i><span class="sr-only">Stage {{ commonService.displayName(query.terms.name) }}</span></button>
+                  <button ng-if="query.status !== 'COMPLETE' || query.recordCount === 0" class="btn btn-danger btn-sm" ng-click="vm.clearQuery(query)"><i class="fa fa-trash"></i><span class="sr-only">Clear query for {{ commonService.displayName(query.terms.name) }}</span></button>
+                </td>
               </tr>
             </tbody>
           </table>
