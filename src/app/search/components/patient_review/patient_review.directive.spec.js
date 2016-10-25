@@ -23,6 +23,7 @@
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
+                    $delegate.cancelQueryOrganization = jasmine.createSpy('cancelQueryOrganization');
                     $delegate.clearQuery = jasmine.createSpy('clearQuery');
                     $delegate.getQueries = jasmine.createSpy('getQueries');
                     $delegate.stagePatient = jasmine.createSpy('stagePatient');
@@ -38,6 +39,7 @@
                 spyOn($uibModal, 'open').and.returnValue(mock.fakeModal);
                 $q = _$q_;
                 commonService = _commonService_;
+                commonService.cancelQueryOrganization.and.returnValue($q.when({}));
                 commonService.clearQuery.and.returnValue($q.when({}));
                 commonService.getQueries.and.returnValue($q.when(mock.queries));
                 commonService.stagePatient.and.returnValue($q.when({}));
@@ -159,6 +161,25 @@
             it('should call commonService.clearQuery', function () {
                 vm.clearQuery(vm.patientQueries[0]);
                 expect(commonService.clearQuery).toHaveBeenCalledWith(vm.patientQueries[0].id);
+            });
+
+            it('should have a way to cancel an organization of a query', function () {
+                expect(vm.patientQueries[0].orgStatuses.length).toBe(3);
+                commonService.getQueries.and.returnValue($q.when((angular.copy(mock.queries)[0].orgStatuses.splice(0,1))));
+
+                vm.cancelQueryOrganization(vm.patientQueries[0].orgStatuses[0]);
+                el.isolateScope().$digest();
+                expect(vm.patientQueries[0].orgStatuses.length).toBe(3);
+            });
+
+            it('should call commonServcie.clearOrganizationQuery', function () {
+                vm.cancelQueryOrganization(vm.patientQueries[0].orgStatuses[0]);
+                expect(commonService.cancelQueryOrganization).toHaveBeenCalledWith(vm.patientQueries[0].id, vm.patientQueries[0].orgStatuses[0].id);
+            });
+
+            it('should set the organization status to "pending" when clearing', function () {
+                vm.cancelQueryOrganization(vm.patientQueries[0].orgStatuses[0]);
+                expect(vm.patientQueries[0].orgStatuses[0].isClearing).toBe(true);
             });
         });
 
