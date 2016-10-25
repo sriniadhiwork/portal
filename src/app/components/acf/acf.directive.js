@@ -99,7 +99,6 @@
                     vm.acf = {address: {lines: ['']}};
                 } else {
                     vm.acf = acf;
-                    $log.debug(angular.toJson(vm.acf));
                     if (angular.isUndefined(vm.acf.address) || vm.acf.address === null) {
                         vm.acf.address = {lines: ['']};
                     }
