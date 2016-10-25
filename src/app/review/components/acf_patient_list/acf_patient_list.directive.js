@@ -33,12 +33,16 @@
         function AcfPatientListController($log, $timeout, commonService, QueryQueryTimeout) {
             var vm = this;
 
+            vm.activatePatient = activatePatient;
             vm.cacheDocument = cacheDocument;
             vm.countActive = countActive;
+            vm.deactivatePatient = deactivatePatient;
             vm.dischargePatient = dischargePatient;
+            vm.displayName = commonService.displayName;
             vm.getDocument = getDocument;
             vm.getPatientsAtAcf = getPatientsAtAcf;
             vm.getUserAcf = getUserAcf;
+            vm.translateDate = translateDate;
 
             vm.TIMEOUT_MILLIS = QueryQueryTimeout * 1000;
 
@@ -47,15 +51,26 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.activePatient = null;
                 vm.patients = [];
                 vm.getPatientsAtAcf();
+                vm.userAcf = commonService.getUserAcf();
+            }
+
+            function activatePatient (patient) {
+                vm.activePatient = angular.copy(patient);
+                buildTitle();
             }
 
             function cacheDocument (patient, doc) {
-                commonService.cacheDocument(patient.id, doc.id).then(function () {
-                    doc.cached = true;
-                    patient.documentStatus.cached += 1;
-                });
+                doc.pending = true;
+                if (!doc.cached) {
+                    commonService.cacheDocument(patient.id, doc.id).then(function () {
+                        doc.cached = true;
+                        doc.pending = false;
+                        patient.documentStatus.cached += 1;
+                    });
+                }
             }
 
             function countActive (patient) {
@@ -67,10 +82,17 @@
                 return active;
             }
 
+            function deactivatePatient () {
+                vm.activePatient = null;
+                vm.getPatientsAtAcf();
+                buildTitle();
+            }
+
             function dischargePatient (patient) {
                 commonService.dischargePatient(patient.id).then(function () {
                     vm.getPatientsAtAcf();
                 });
+                vm.deactivatePatient();
             }
 
             function getDocument (patient, doc) {
@@ -91,24 +113,49 @@
                     for (var i = 0; i < vm.patients.length; i++) {
                         var patient = vm.patients[i];
                         patient.documentStatus = {total: 0, cached: 0};
+                        patient.documents = [];
                         for (var j = 0; j < patient.orgMaps.length; j++) {
                             hasActive = hasActive || (patient.orgMaps[j].documentsQueryStatus === 'ACTIVE');
                             patient.documentStatus.total += patient.orgMaps[j].documents.length;
                             for (var k = 0; k < patient.orgMaps[j].documents.length; k++) {
+                                patient.orgMaps[j].documents[k].organization = patient.orgMaps[j].organization.name;
+                                patient.documents.push(patient.orgMaps[j].documents[k]);
                                 if (patient.orgMaps[j].documents[k].cached) {
                                     patient.documentStatus.cached += 1;
                                 }
                             }
                         }
                     }
+                    buildTitle();
                     if (hasActive) {
                         $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS);
+                    } else {
+                        $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS * 10);
                     }
                 });
             }
 
             function getUserAcf () {
-                return commonService.getUserAcf();
+                return vm.userAcf;
+            }
+
+            function translateDate (input) {
+                input = '' + input;
+                var ret = input.substring(0, 4) + '-' + input.substring(4, 6) + '-' + input.substring(6);
+                return ret;
+            }
+
+            ////////////////////////////////////////////////////////////////////
+
+            function buildTitle () {
+                if (vm.activePatient) {
+                    vm.panelTitle = 'Patient: ' + vm.activePatient.fullName + ' (' + vm.activePatient.friendlyName + ')';
+                } else {
+                    vm.panelTitle = vm.patients.length + ' Active Patient';
+                    if (vm.patients.length !== 1)
+                        vm.panelTitle += 's';
+                    vm.panelTitle += ' at ' + vm.userAcf.name;
+                }
             }
         }
     }

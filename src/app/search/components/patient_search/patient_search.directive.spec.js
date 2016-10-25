@@ -76,7 +76,7 @@
 
             it('should clear the query fields on a search', function () {
                 vm.searchForPatient();
-                expect(vm.query).toEqual({});
+                expect(vm.query).toEqual({patientNames: [{givenName: [''], nameType: {code: 'L'}}]});
             });
 
             it('should wipe the form on a search', function () {
@@ -87,6 +87,12 @@
             it('should hide errors on a search', function () {
                 vm.searchForPatient();
                 expect(vm.showFormErrors).toBe(false);
+            });
+
+            it('should set the addresses to blank on a search', function () {
+                vm.query.addresses = [{},{}];
+                vm.searchForPatient();
+                expect(vm.query.addresses).toBeUndefined();
             });
 
             it('should tell the controller that a search was performed', function () {

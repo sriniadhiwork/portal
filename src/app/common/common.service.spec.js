@@ -51,6 +51,7 @@
 
             spyOn($window.location, 'replace');
             requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
+            requestHandler.cancelQueryOrganization = $httpBackend.whenPOST(API + '/queries/1/2/cancel', {}).respond(200, true);
             requestHandler.clearQuery = $httpBackend.whenPOST(API + '/queries/1/delete', {}).respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
             requestHandler.dischargePatient = $httpBackend.whenPOST(API + '/patients/1/delete', {}).respond(200, true);
@@ -70,6 +71,42 @@
         afterEach(function () {
             $httpBackend.verifyNoOutstandingExpectation();
             $httpBackend.verifyNoOutstandingRequest();
+        });
+
+        describe('utility functions', function () {
+            it('should have a function to assemble names', function () {
+                expect(commonService.displayName).toBeDefined();
+            });
+
+            it('should display names correctly', function () {
+                var name = {
+                    givenName: ['John', 'Andrew'],
+                    familyName: 'Smith',
+                    nameType: {code: 'L', description: 'Legal Name'}
+                };
+                expect(commonService.displayName(name)).toBe('John Andrew Smith (Legal Name)');
+                name.prefix = 'Mr';
+                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith (Legal Name)');
+                name.suffix = 'III';
+                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III (Legal Name)');
+                name.profSuffix = 'DDS';
+                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III, DDS (Legal Name)');
+                name.nameAssembly = {code: 'F'};
+                expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Legal Name)');
+                name.nameType = {code: 'D'};
+                expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Display Name)');
+            });
+        });
+
+        it('should display a blank string if required elements aren\'t there', function () {
+            var name = {};
+            expect(commonService.displayName(name)).toBe('');
+            name.givenName = ['John', 'Andrew'];
+            expect(commonService.displayName(name)).toBe('');
+            name.givenName = [];
+            expect(commonService.displayName(name)).toBe('');
+            name.familyName = 'Smith';
+            expect(commonService.displayName(name)).toBe('');
         });
 
         describe('user authentication issues', function () {
@@ -204,6 +241,16 @@
                 $httpBackend.flush();
                 requestHandler.clearQuery.respond(401, {message: 'test'});
                 commonService.clearQuery(1).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /queries/orgid/queryid/cancel', function () {
+                commonService.cancelQueryOrganization(1,2);
+                $httpBackend.flush();
+                requestHandler.cancelQueryOrganization.respond(401, {message: 'test'});
+                commonService.cancelQueryOrganization(1,2).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();

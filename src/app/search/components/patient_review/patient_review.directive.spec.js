@@ -14,10 +14,16 @@
             close: function(item) { this.result.confirmCallBack(item); },
             dismiss: function(type) { this.result.cancelCallback(type); }
         };
+        mock.name = {
+            nameType: { code: 'M', description: 'Maiden Name' },
+            familyName: 'Jones',
+            givenName: ['Bob']
+        };
 
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
+                    $delegate.cancelQueryOrganization = jasmine.createSpy('cancelQueryOrganization');
                     $delegate.clearQuery = jasmine.createSpy('clearQuery');
                     $delegate.getQueries = jasmine.createSpy('getQueries');
                     $delegate.stagePatient = jasmine.createSpy('stagePatient');
@@ -33,6 +39,7 @@
                 spyOn($uibModal, 'open').and.returnValue(mock.fakeModal);
                 $q = _$q_;
                 commonService = _commonService_;
+                commonService.cancelQueryOrganization.and.returnValue($q.when({}));
                 commonService.clearQuery.and.returnValue($q.when({}));
                 commonService.getQueries.and.returnValue($q.when(mock.queries));
                 commonService.stagePatient.and.returnValue($q.when({}));
@@ -87,6 +94,13 @@
                 expect(vm.countComplete(vm.patientQueries[0])).toBe(2);
             });
 
+            it('should call commonService to display names', function () {
+                spyOn(commonService, 'displayName');
+                expect(vm.displayName).toBeDefined();
+                vm.displayName(mock.name);
+                expect(commonService.displayName).toHaveBeenCalledWith(mock.name);
+            });
+
             describe('refreshing', function () {
 
                 var activeProducts = angular.copy(mock.queries);
@@ -123,7 +137,6 @@
         });
 
         describe('clearing queries', function () {
-
             beforeEach(function () {
                 vm.patientQueries = angular.copy(mock.queries);
             });
@@ -149,10 +162,28 @@
                 vm.clearQuery(vm.patientQueries[0]);
                 expect(commonService.clearQuery).toHaveBeenCalledWith(vm.patientQueries[0].id);
             });
+
+            it('should have a way to cancel an organization of a query', function () {
+                expect(vm.patientQueries[0].orgStatuses.length).toBe(3);
+                commonService.getQueries.and.returnValue($q.when((angular.copy(mock.queries)[0].orgStatuses.splice(0,1))));
+
+                vm.cancelQueryOrganization(vm.patientQueries[0].orgStatuses[0]);
+                el.isolateScope().$digest();
+                expect(vm.patientQueries[0].orgStatuses.length).toBe(3);
+            });
+
+            it('should call commonServcie.clearOrganizationQuery', function () {
+                vm.cancelQueryOrganization(vm.patientQueries[0].orgStatuses[0]);
+                expect(commonService.cancelQueryOrganization).toHaveBeenCalledWith(vm.patientQueries[0].id, vm.patientQueries[0].orgStatuses[0].id);
+            });
+
+            it('should set the organization status to "pending" when clearing', function () {
+                vm.cancelQueryOrganization(vm.patientQueries[0].orgStatuses[0]);
+                expect(vm.patientQueries[0].orgStatuses[0].isClearing).toBe(true);
+            });
         });
 
         describe('staging patients', function() {
-
             it('should have a function to stage patients', function () {
                 expect(vm.stagePatient).toBeDefined();
             });
@@ -169,6 +200,13 @@
                 vm.stagePatient(vm.patientQueries[0]);
                 vm.stagePatientInstance.dismiss();
                 expect(vm.triggerHandlers).not.toHaveBeenCalled();
+            });
+
+            it('should refresh the queries if the modal was dismissed with a cleared query', function () {
+                spyOn(vm, 'getQueries');
+                vm.stagePatient(vm.patientQueries[0]);
+                vm.stagePatientInstance.dismiss('query cleared');
+                expect(vm.getQueries).toHaveBeenCalled();
             });
         });
     });

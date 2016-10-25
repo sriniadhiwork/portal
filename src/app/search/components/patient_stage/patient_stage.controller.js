@@ -10,6 +10,8 @@
         var vm = this;
 
         vm.cancel = cancel;
+        vm.clearQuery = clearQuery;
+        vm.displayName = displayName;
         vm.isStageable = isStageable;
         vm.stagePatient = stagePatient;
 
@@ -19,11 +21,22 @@
 
         function activate () {
             vm.query = query;
+            vm.queryForm = {};
             vm.patient = {};
         }
 
         function cancel () {
-            $uibModalInstance.dismiss('Cancelled');
+            $uibModalInstance.dismiss('staging cancelled');
+        }
+
+        function clearQuery () {
+            commonService.clearQuery(vm.query.id).then(function () {
+                $uibModalInstance.dismiss('query cleared');
+            });
+        }
+
+        function displayName (name) {
+            return commonService.displayName(name);
         }
 
         function isStageable () {
@@ -40,6 +53,12 @@
 
         function stagePatient () {
             if (vm.isStageable()) {
+
+                //////// debug
+                vm.patient.givenName = 'fakegivenname';
+                vm.patient.familyName = 'fakefamilyname';
+                //////// end debug
+
                 var newPatient = {
                     patientRecordIds: [],
                     patient: vm.patient,

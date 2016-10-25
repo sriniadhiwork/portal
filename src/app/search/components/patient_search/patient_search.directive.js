@@ -47,11 +47,16 @@
 
             function searchForPatient () {
                 if (!vm.queryForm.$invalid && vm.queryForm.$dirty) {
+
+                    //////// debug
+                    vm.query.dob = new Date();
+                    //////// end debug
+
                     var queryObj = {query: angular.copy(vm.query)};
                     commonService.searchForPatient(queryObj.query).then(function() {
                         vm.triggerHandlers();
                     });
-                    vm.query = {};
+                    vm.query = {patientNames: [{givenName: [''], nameType: {code: 'L'}}]};
                     vm.queryForm.$setPristine();
                     vm.queryForm.$setUntouched();
                     vm.showFormErrors = false;
