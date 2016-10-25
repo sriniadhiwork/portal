@@ -35,6 +35,7 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.acf = { address: {} };
                 vm.createNewAcf = false;
                 vm.showFormErrors = false;
                 vm.isEditing = false;
@@ -93,9 +94,18 @@
             function getUserAcf () {
                 var acf = commonService.getUserAcf();
                 if (acf === '') {
-                    vm.acf = {address: {}};
+                    vm.acf = {address: {lines: ['']}};
+                } else if (acf === null) {
+                    vm.acf = {address: {lines: ['']}};
                 } else {
                     vm.acf = acf;
+                    $log.debug(angular.toJson(vm.acf));
+                    if (angular.isUndefined(vm.acf.address) || vm.acf.address === null) {
+                        vm.acf.address = {lines: ['']};
+                    }
+                    if (angular.isUndefined(vm.acf.address.lines)) {
+                        vm.acf.address.lines = [''];
+                    }
                 }
             }
 
