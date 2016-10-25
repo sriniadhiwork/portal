@@ -139,7 +139,43 @@
         it('should set acf to a blank-ish acf object if the user doesn\'t have an ACF', function () {
             commonService.getUserAcf.and.returnValue('');
             vm.getUserAcf();
-            expect(vm.acf).toEqual({address: {}});
+            expect(vm.acf).toEqual({address: {lines: ['']}});
+        });
+
+        it('should add an address object if it doesn\'t have one', function () {
+            var full = angular.copy(mock.acfs[0]);
+            var empty = angular.copy(full);
+            delete(empty.address);
+            commonService.getUserAcf.and.returnValue(empty);
+            vm.getUserAcf();
+            expect(vm.acf).toEqual(full);
+        });
+
+        it('should add an address object if the acf is null', function () {
+            var newAcf = angular.copy(mock.acfs[0]);
+            delete(newAcf.id);
+            delete(newAcf.name);
+            commonService.getUserAcf.and.returnValue(null);
+            vm.getUserAcf();
+            expect(vm.acf).toEqual(newAcf);
+        });
+
+        it('should add an address object if the address is null', function () {
+            var full = angular.copy(mock.acfs[0]);
+            var empty = angular.copy(full);
+            empty.address = null;
+            commonService.getUserAcf.and.returnValue(empty);
+            vm.getUserAcf();
+            expect(vm.acf).toEqual(full);
+        });
+
+        it('should put a lines object in the acf address if it doesn\'t have one', function () {
+            var fullLines = angular.copy(mock.acfs[0]);
+            var emptyLines = angular.copy(fullLines);
+            delete(emptyLines.address.lines);
+            commonService.getUserAcf.and.returnValue(emptyLines);
+            vm.getUserAcf();
+            expect(vm.acf).toEqual(fullLines);
         });
 
         it('should have a function to edit the current ACF', function () {
