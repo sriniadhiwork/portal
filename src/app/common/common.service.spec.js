@@ -51,6 +51,7 @@
 
             spyOn($window.location, 'replace');
             requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
+            requestHandler.cancelQueryOrganization = $httpBackend.whenPOST(API + '/queries/1/2/cancel', {}).respond(200, true);
             requestHandler.clearQuery = $httpBackend.whenPOST(API + '/queries/1/delete', {}).respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
             requestHandler.dischargePatient = $httpBackend.whenPOST(API + '/patients/1/delete', {}).respond(200, true);
@@ -240,6 +241,16 @@
                 $httpBackend.flush();
                 requestHandler.clearQuery.respond(401, {message: 'test'});
                 commonService.clearQuery(1).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /queries/orgid/queryid/cancel', function () {
+                commonService.cancelQueryOrganization(1,2);
+                $httpBackend.flush();
+                requestHandler.cancelQueryOrganization.respond(401, {message: 'test'});
+                commonService.cancelQueryOrganization(1,2).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();

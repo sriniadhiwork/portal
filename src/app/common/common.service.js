@@ -10,6 +10,7 @@
         var self = this;
 
         self.cacheDocument = cacheDocument;
+        self.cancelQueryOrganization = cancelQueryOrganization;
         self.clearQuery = clearQuery;
         self.createAcf = createAcf;
         self.dischargePatient = dischargePatient;
@@ -40,6 +41,10 @@
 
         function cacheDocument (patientId, documentId) {
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId);
+        }
+
+        function cancelQueryOrganization (queryId, orgId) {
+            return enhancedPost('/queries/' + queryId + '/' + orgId + '/cancel', {});
         }
 
         function clearQuery (queryId) {

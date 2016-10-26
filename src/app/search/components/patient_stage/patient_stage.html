@@ -28,7 +28,7 @@
         <tr>
           <th scope="col" st-sort="org.name" st-skip-natural="true" class="st-sort">Organization</th>
           <th scope="col" st-sort="name.givenName" st-skip-natural="true" class="st-sort">Name</th>
-          <th scope="col" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
+          <th scope="col" st-sort="gender.description" st-skip-natural="true" class="st-sort">Gender</th>
           <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
           <th scope="col" st-sort="ssn" st-skip-natural="true" class="st-sort">SSN</th>
           <th scope="col">Select</th>
@@ -38,7 +38,7 @@
         <tr ng-repeat-start="org in vm.query.orgStatuses track by org.id" ng-if="org.results && org.results.length > 0">
           <td rowspan="{{ org.results.length }}" href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.org.name }}</td>
           <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ vm.displayName(org.results[0].names[0]) }}</td>
-          <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].gender }}</td>
+          <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].gender.description }}</td>
           <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].dateOfBirth | date }}</td>
           <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].ssn }}</td>
           <td>
@@ -48,7 +48,7 @@
         </tr>
         <tr ng-repeat-end ng-repeat="record in org.results.slice(1)">
           <td href ng-click="record.selected = !record.selected">{{ vm.displayName(record.names[0]) }}</td>
-          <td href ng-click="record.selected = !record.selected">{{ record.gender }}</td>
+          <td href ng-click="record.selected = !record.selected">{{ record.gender.description }}</td>
           <td href ng-click="record.selected = !record.selected">{{ record.dateOfBirth | date }}</td>
           <td href ng-click="record.selected = !record.selected">{{ record.ssn }}</td>
           <td>
