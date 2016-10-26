@@ -52,7 +52,7 @@
 
             function cancelQueryOrganization (orgStatus) {
                 orgStatus.isClearing = true;
-                commonService.cancelQueryOrganization(orgStatus.queryId, orgStatus.id);
+                commonService.cancelQueryOrganization(orgStatus.queryId, orgStatus.org.id);
             }
 
             function clearQuery (query) {
@@ -64,7 +64,7 @@
             function countComplete (query) {
                 var count = 0;
                 for (var i = 0; i < query.orgStatuses.length; i++) {
-                    if (query.orgStatuses[i].status === 'COMPLETE') {
+                    if (query.orgStatuses[i].status !== 'Active') {
                         count += 1;
                     }
                 }
