@@ -3,8 +3,8 @@
 
     describe('search.aiPatientReview', function() {
         var $compile, $rootScope, $timeout, $uibModal, vm, el, $log, $q, commonService, mock;
-        mock = {queries: [{id:7,userToken:'superego@testshib.org',status:'COMPLETE',terms:"{\"id\":null,\"orgPatientId\":null,\"givenName\":\"d\",\"familyName\":null,\"dateOfBirth\":null,\"gender\":null,\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"orgMaps\":[]}",      orgStatuses:[{id:14,queryId:7,orgId:2,status:'COMPLETE',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,orgId:3,status:'COMPLETE',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,orgId:1,status:'COMPLETE',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]},
-                          {id:5,userToken:'superego@testshib.org',status:'COMPLETE',terms:"{\"id\":null,\"orgPatientId\":null,\"givenName\":null,\"familyName\":null,\"dateOfBirth\":null,\"gender\":\"Unknown\",\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"orgMaps\":[]}",orgStatuses:[{id:8, queryId:5,orgId:2,status:'COMPLETE',startDate:1469128801455,endDate:1469130535943,success:true,results:[]},{id: 7,queryId:5,orgId:3,status:'COMPLETE',startDate:1469128801443,endDate:1469130535940,success:false,results:[]},{id:9, queryId:5,orgId:1,status:'COMPLETE',startDate:1469128801462,endDate:1469130535936,success:false,results:[]}]}]};
+        mock = {queries: [{id:7,userToken:'superego@testshib.org',status:'COMPLETE',terms:"{\"id\":null,\"orgPatientId\":null,\"givenName\":\"d\",\"familyName\":null,\"dateOfBirth\":null,\"gender\":null,\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"orgMaps\":[]}",      orgStatuses:[{id:14,queryId:7,"org":{"name":"Dignity Health","id":3,"organizationId":3,"adapter":"eHealth","ipAddress":"127.0.0.1","username":"org1User","password":"password1","certificationKey":null,"endpointUrl":"http://localhost:9080","active":true},status:'COMPLETE',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,"org":{"name":"Dignity Health","id":3,"organizationId":3,"adapter":"eHealth","ipAddress":"127.0.0.1","username":"org1User","password":"password1","certificationKey":null,"endpointUrl":"http://localhost:9080","active":true},status:'COMPLETE',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,"org":{"name":"Dignity Health","id":3,"organizationId":3,"adapter":"eHealth","ipAddress":"127.0.0.1","username":"org1User","password":"password1","certificationKey":null,"endpointUrl":"http://localhost:9080","active":true},status:'COMPLETE',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]},
+                          {id:5,userToken:'superego@testshib.org',status:'COMPLETE',terms:"{\"id\":null,\"orgPatientId\":null,\"givenName\":null,\"familyName\":null,\"dateOfBirth\":null,\"gender\":\"Unknown\",\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"orgMaps\":[]}",orgStatuses:[{id:8, queryId:5,"org":{"name":"Dignity Health","id":3,"organizationId":3,"adapter":"eHealth","ipAddress":"127.0.0.1","username":"org1User","password":"password1","certificationKey":null,"endpointUrl":"http://localhost:9080","active":true},status:'COMPLETE',startDate:1469128801455,endDate:1469130535943,success:true,results:[]},{id: 7,queryId:5,"org":{"name":"Dignity Health","id":3,"organizationId":3,"adapter":"eHealth","ipAddress":"127.0.0.1","username":"org1User","password":"password1","certificationKey":null,"endpointUrl":"http://localhost:9080","active":true},status:'COMPLETE',startDate:1469128801443,endDate:1469130535940,success:false,results:[]},{id:9, queryId:5,"org":{"name":"Dignity Health","id":3,"organizationId":3,"adapter":"eHealth","ipAddress":"127.0.0.1","username":"org1User","password":"password1","certificationKey":null,"endpointUrl":"http://localhost:9080","active":true},status:'COMPLETE',startDate:1469128801462,endDate:1469130535936,success:false,results:[]}]}]};
         mock.fakeModal = {
             result: {
                 then: function(confirmCallback, cancelCallback) {
@@ -90,8 +90,10 @@
             it('should know how many organizations are complete for a query', function () {
                 expect(vm.countComplete).toBeDefined();
                 expect(vm.countComplete(vm.patientQueries[0])).toBe(3);
-                vm.patientQueries[0].orgStatuses[0].status = 'ACTIVE';
+                vm.patientQueries[0].orgStatuses[0].status = 'Active';
                 expect(vm.countComplete(vm.patientQueries[0])).toBe(2);
+                vm.patientQueries[0].orgStatuses[0].status = 'Cancelled';
+                expect(vm.countComplete(vm.patientQueries[0])).toBe(3);
             });
 
             it('should call commonService to display names', function () {
@@ -172,9 +174,9 @@
                 expect(vm.patientQueries[0].orgStatuses.length).toBe(3);
             });
 
-            it('should call commonServcie.clearOrganizationQuery', function () {
+            it('should call commonService.clearOrganizationQuery', function () {
                 vm.cancelQueryOrganization(vm.patientQueries[0].orgStatuses[0]);
-                expect(commonService.cancelQueryOrganization).toHaveBeenCalledWith(vm.patientQueries[0].id, vm.patientQueries[0].orgStatuses[0].id);
+                expect(commonService.cancelQueryOrganization).toHaveBeenCalledWith(vm.patientQueries[0].id, vm.patientQueries[0].orgStatuses[0].org.id);
             });
 
             it('should set the organization status to "pending" when clearing', function () {
