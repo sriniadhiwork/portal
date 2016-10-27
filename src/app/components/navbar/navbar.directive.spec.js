@@ -2,7 +2,7 @@
     'use strict';
 
     describe('navbar.directive', function() {
-        var vm, el, scope, $log, commonService;
+        var vm, el, scope, $log, $q, commonService;
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -12,13 +12,16 @@
                     $delegate.hasAcf = jasmine.createSpy('hasAcf');
                     $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
                     $delegate.logout = jasmine.createSpy('logout');
+                    $delegate.queryOrganizations = jasmine.createSpy('queryOrganizations');
                     $delegate.refreshToken = jasmine.createSpy('refreshToken');
                     return $delegate;
                 });
             });
-            inject(function($compile, $rootScope, _$log_, _commonService_) {
+            inject(function($compile, $rootScope, _$log_, _$q_, _commonService_) {
                 $log = _$log_;
+                $q = _$q_;
                 commonService = _commonService_;
+                commonService.queryOrganizations.and.returnValue($q.when({}));
 
                 el = angular.element('<ai-navbar></ai-navbar>');
 

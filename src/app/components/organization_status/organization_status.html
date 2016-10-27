@@ -1,29 +1,23 @@
-<div class="container-fluid organization-status">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <div class="pull-right">
-        <button class="btn btn-sm panel-button" ng-click="vm.hidePanel = !vm.hidePanel"><i class="fa fa-lg {{ vm.hidePanel ? 'fa-caret-right' : 'fa-caret-down' }}"></i><span class="sr-only">{{ vm.hidePanel ? 'Show' : 'Hide' }} Panel</span></button>
-      </div>
-      <h2 class="panel-title">Organization Status</h2>
-      <div class="clearfix"></div>
-    </div>
-    <div class="panel-body slide" ng-if="!vm.hidePanel">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="cols">Organization</th>
-            <th scope="cols">Phone</th>
-            <th scope="cols">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="org in vm.organizations track by $index">
-            <td>{{ org.name }}</td>
-            <td>123-123-1234</td>
-            <td>{{ org.id > 2 ? 'Average 2 minute delay' : 'Connected' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+<div class="organization-status">
+  <span uib-dropdown on-toggle="vm.hidePanel = !vm.hidePanel">
+    <a href id="organization-status-toggle" uib-dropdown-toggle is-open="!vm.hidePanel">
+      {{ vm.hidePanel ? 'Show' : 'Hide' }} Organization Status
+    </a>
+    <table class="table fade dropdown-menu pull-right" uib-dropdown-menu aria-labelledby="organization-status-toggle">
+      <thead>
+        <tr>
+          <th scope="cols">Organization</th>
+          <th scope="cols">Phone</th>
+          <th scope="cols">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="org in vm.organizations track by $index">
+          <td>{{ org.name }}</td>
+          <td>123-123-1234</td>
+          <td>{{ org.id > 2 ? 'Average 2 minute delay' : 'Connected' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </span>
 </div>
