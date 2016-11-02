@@ -33,9 +33,9 @@
       </div>
     </div>
     <div class="row" ng-if="!vm.single">
-      <div class="col-sm-12">
-        <button type="button" class="btn btn-default" ng-click="vm.addAddress()" ng-if="vm.addresses.length === $index + 1">Add new address <i class="fa fa-plus"></i></button>
-        <button type="button" class="btn btn-default" ng-click="vm.removeAddress($index)" ng-if="vm.addresses.length > 1">Remove this address <i class="fa fa-trash"></i></button>
+      <div class="col-sm-12 text-right">
+        <button type="button" class="btn btn-default" ng-click="vm.addAddress()" ng-if="vm.addresses.length === $index + 1"><span class="sr-only">Add new address </span><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-default" ng-click="vm.removeAddress($index)" ng-if="vm.addresses.length > 1"><span class="sr-only">Remove this address </span><i class="fa fa-trash"></i></button>
       </div>
     </div>
   </div>
