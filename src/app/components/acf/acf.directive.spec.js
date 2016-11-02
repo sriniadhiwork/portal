@@ -298,5 +298,13 @@
             vm = el.isolateScope().vm;
             expect(vm.mode).toBe('display');
         });
+
+        it('should know if the entered new ACF name matches one that already exists', function () {
+            vm.acf = angular.copy(mock.fakeAcf);
+            vm.mode = 'enter';
+            expect(vm.validName()).toBe(true);
+            vm.acf.name = 'ACF 1';
+            expect(vm.validName()).toBe(false);
+        });
     });
 })();

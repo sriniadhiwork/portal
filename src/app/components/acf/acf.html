@@ -48,6 +48,7 @@
             <div class="col-sm-9">
               <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.name" id="acfName" name="acfName" ng-required="vm.mode === 'enter' || vm.mode === 'edit'"></input>
               <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.acfName.$touched) && vm.queryForm.acfName.$error.required">Field is required</span>
+              <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.acfName.$touched) && !vm.validName()">ACF already exists</span>
             </div>
           </div>
           <div class="form-group">
@@ -66,7 +67,7 @@
           </div>
           <div class="form-group" ng-if="vm.mode === 'enter'">
             <div class="col-sm-4 col-sm-offset-4">
-              <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
+              <button ng-disabled="(vm.queryForm.$invalid || !vm.validName()) && vm.showFormErrors"
                       class="btn btn-success btn-block"
                       id="acfSubmit"
                       ng-mouseover="vm.showFormErrors = true"
@@ -98,10 +99,11 @@
                       ng-click="vm.cancelEditing()">Cancel editing</button>
             </div>
           </div>
-          <div class="form-group" ng-if="vm.queryForm.$invalid && vm.showFormErrors">
+          <div class="form-group" ng-if="(vm.queryForm.$invalid || !vm.validName()) && vm.showFormErrors">
             <div class="col-sm-10 col-sm-offset-1 text-danger">
-              The following error<span ng-if="vm.errorCount() > 1">(s)</span> must be fixed:
+              The following error must be fixed:
               <ul>
+                <li ng-if="!vm.validName()">ACF already exists</span>
                 <li ng-if="vm.queryForm.acfName.$error.required">ACF Name is required</li>
               </ul>
             </div>

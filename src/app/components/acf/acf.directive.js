@@ -31,6 +31,7 @@
             vm.getUserAcf = getUserAcf;
             vm.hasAcf = hasAcf;
             vm.submitForm = submitForm;
+            vm.validName = validName;
 
             activate();
 
@@ -57,13 +58,15 @@
                         delete vm.acf.address.lines;
                     }
                     commonService.createAcf(vm.acf).then(function (response) {
-                        commonService.setAcf(response);
-                        $location.path('/search');
+                        commonService.setAcf(response).then(function () {
+                            $location.path('/search');
+                        });
                     });
                 } else {
                     if (vm.selectAcf) {
-                        commonService.setAcf(vm.selectAcf);
-                        $location.path('/search');
+                        commonService.setAcf(vm.selectAcf).then(function () {
+                            $location.path('/search');
+                        });
                     }
                 }
             }
@@ -126,6 +129,15 @@
                         vm.acfSubmit();
                     }
                 }
+            }
+
+            function validName () {
+                for (var i = 0; i < vm.acfs.length; i++) {
+                    if (vm.acfs[i].name === vm.acf.name) {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     }
