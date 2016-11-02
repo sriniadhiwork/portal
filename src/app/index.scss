@@ -27,6 +27,36 @@ body {
     background-size: cover;
 }
 
+.inner-nav {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    vertical-align: middle;
+}
+
+.no-background {
+    padding-top: 10px;
+    background-color: #f8f8f8;
+}
+
+.btn-active-nav {
+	position: relative;
+    background: $brand-success;
+}
+
+.btn-active-nav:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-top-color: $brand-success;
+	border-width: 15px;
+	margin-left: -15px;
+}
+
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
