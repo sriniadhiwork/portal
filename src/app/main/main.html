@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid main-page">
   <header>
     <ai-navbar active="home"></ai-navbar>
   </header>
@@ -21,14 +21,13 @@
   </div>
   <div ng-if="vm.isAuthenticated()">
     <div class="row">
-      <div class="col-sm-6">
-        <ai-acf>
+      <div class="col-sm-6 col-sm-offset-3">
+        <ai-acf mode="select">
         </ai-acf>
-      </div>
-      <div class="col-sm-6">
-        <ai-organization-status>
-        </ai-organization-status>
       </div>
     </div>
   </div>
+  <footer>
+    <ai-footer></ai-footer>
+  </footer>
 </div>

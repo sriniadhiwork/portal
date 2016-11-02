@@ -6,7 +6,7 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, commonService, AuthAPI) {
+    function MainController($log, $location, commonService, AuthAPI) {
         var vm = this;
 
         vm.bypassSaml = bypassSaml;
@@ -22,6 +22,9 @@
 
         function activate () {
             commonService.getToken(true);
+            if (vm.hasAcf()) {
+                $location.path('/search');
+            }
         }
 
         function bypassSaml () {

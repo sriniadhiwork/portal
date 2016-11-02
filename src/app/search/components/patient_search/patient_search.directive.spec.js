@@ -4,6 +4,23 @@
     describe('search.aiPatientSearch', function() {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
         mock = {patientSearch: {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]}};
+        mock.dob = {
+            year: '1999',
+            month: '03',
+            day: '19',
+            hour: '11',
+            minute: '01',
+            second: '03',
+            z: '-0800'
+        };
+        mock.query = {}
+        mock.query.patientNames = [{
+            givenName: ['bob'],
+            familyName: 'jones',
+            nameType: {code: 'L'}
+        }];
+        mock.query.dob = mock.dob;
+        mock.query.gender = 'M';
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -34,7 +51,7 @@
                     $setPristine: function () { this.$pristine = true; },
                     $setUntouched: function () { this.$untouched = true; }
                 };
-                vm.query = { givenName: 'fake', familyName: 'name' };
+                vm.query = { };
             });
         });
 
@@ -62,10 +79,7 @@
 
         describe('submitting the search form', function () {
             beforeEach(function () {
-                vm.queryForm.givenName = 'bob';
-                vm.queryForm.familyName = 'jones';
-                vm.queryForm.dob = new Date();
-                vm.queryForm.gender = 'M';
+                vm.query = angular.copy(mock.query);
                 vm.queryForm.$setDirty();
             });
 
@@ -101,6 +115,70 @@
                 el.isolateScope().$digest();
                 expect(vm.triggerHandlers).toHaveBeenCalled();
             });
+
+            it('should compile the date of birth fields on search', function () {
+                var compiled = angular.copy(vm.query);
+                compiled.dob = '19990319110103-0800'
+                vm.searchForPatient();
+                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
+            });
+
+            it('should handle dob fields without all the parameters', function () {
+                var compiled = angular.copy(vm.query);
+                delete vm.query.dob.second;
+                compiled.dob = '199903191101-0800'
+                vm.searchForPatient();
+                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
+
+                vm.query = angular.copy(mock.query);
+                delete vm.query.dob.second;
+                delete vm.query.dob.minute;
+                compiled.dob = '1999031911-0800'
+                vm.searchForPatient();
+                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
+
+                vm.query = angular.copy(mock.query);
+                delete vm.query.dob.second;
+                delete vm.query.dob.minute;
+                delete vm.query.dob.hour;
+                compiled.dob = '19990319-0800'
+                vm.searchForPatient();
+                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
+
+                vm.query = angular.copy(mock.query);
+                delete vm.query.dob.second;
+                delete vm.query.dob.minute;
+                delete vm.query.dob.hour;
+                delete vm.query.dob.day;
+                compiled.dob = '199903-0800'
+                vm.searchForPatient();
+                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
+
+                vm.query = angular.copy(mock.query);
+                delete vm.query.dob.second;
+                delete vm.query.dob.minute;
+                delete vm.query.dob.hour;
+                delete vm.query.dob.day;
+                delete vm.query.dob.month;
+                compiled.dob = '1999-0800'
+                vm.searchForPatient();
+                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
+
+                vm.query = angular.copy(mock.query);
+                delete vm.query.dob.second;
+                delete vm.query.dob.minute;
+                delete vm.query.dob.hour;
+                delete vm.query.dob.day;
+                delete vm.query.dob.month;
+                delete vm.query.dob.z;
+                compiled.dob = '1999'
+                vm.searchForPatient();
+                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
+            });
+
+            it('should have a way to assemble the DOB', function () {
+                expect(vm.assembledDob()).toBe('19990319110103-0800');
+            });
         });
 
         it('should not let a search be performed without required parameters', function () {
@@ -112,13 +190,13 @@
             vm.query = { givenName: 'fake' };
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query = { familyName: 'last' };
+            vm.query.familyName =  'last';
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query = { dob: 'dob' };
+            vm.query.dob = mock.dob;
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query = { gender: 'M' };
+            vm.query.gender= 'M' ;
             vm.queryForm.$invalid = false;
             vm.searchForPatient();
             expect(commonService.searchForPatient).toHaveBeenCalled();

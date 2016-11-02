@@ -9,7 +9,6 @@ $fa-font-path: "../../bower_components/font-awesome/fonts";
 @import "../../bower_components/font-awesome/scss/font-awesome.scss";
 /*@import url(https://fonts.googleapis.com/css?family=Heebo:400,800|Source+Sans+Pro:700italic,700);*/
 @import "https://fonts.googleapis.com/css?family=Heebo:400,800,900|Source+Sans+Pro:700italic,700";
-$body-bg: #efede6;
 $font-family-sans-serif:  "Heebo", Helvetica, Arial, sans-serif !default;
 $brand-success: #3cb878;
 $btn-font-weight: 800;
@@ -19,6 +18,44 @@ $btn-font-weight: 800;
  */
 // bower:scss
 // endbower
+
+body {
+    background-image: url('../assets/images/PULSE_background.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.inner-nav {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    vertical-align: middle;
+}
+
+.no-background {
+    padding-top: 10px;
+    background-color: #f8f8f8;
+}
+
+.btn-active-nav {
+	position: relative;
+    background: $brand-success;
+}
+
+.btn-active-nav:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-top-color: $brand-success;
+	border-width: 15px;
+	margin-left: -15px;
+}
 
 .browsehappy {
     margin: 0.2em 0;

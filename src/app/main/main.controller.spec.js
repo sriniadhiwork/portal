@@ -2,7 +2,7 @@
     'use strict';
 
     describe('main.controller', function() {
-        var vm, scope, commonService, $log;
+        var vm, scope, commonService, $log, location, ctrl;
 
         beforeEach(function () {
             module('portal.main', 'portal.constants', function ($provide) {
@@ -14,11 +14,13 @@
                 });
             });
 
-            inject(function (_commonService_, _$log_, $controller, $q, $rootScope) {
+            inject(function (_commonService_, _$log_, $controller, $q, $rootScope, _$location_) {
                 commonService = _commonService_;
                 $log = _$log_;
+                ctrl = $controller;
+                location = _$location_;
                 commonService.isAuthenticated.and.returnValue(true);
-                commonService.hasAcf.and.returnValue(true);
+                commonService.hasAcf.and.returnValue(false);
 
                 scope = $rootScope.$new();
                 vm = $controller('MainController');
@@ -39,7 +41,18 @@
 
         it('should know if the user has an ACF', function () {
             expect(vm.hasAcf).toBeDefined();
+            commonService.hasAcf.and.returnValue(true);
+            scope.$digest();
             expect(vm.hasAcf()).toBeTruthy();
+        });
+
+        it('should redirect the user to search if they have an acf', function () {
+            commonService.hasAcf.and.returnValue(true);
+            spyOn(location, 'path');
+            vm = ctrl('MainController');
+            scope.$digest();
+
+            expect(location.path).toHaveBeenCalledWith('/search');
         });
     });
 })();
