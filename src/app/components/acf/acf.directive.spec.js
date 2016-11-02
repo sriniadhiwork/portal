@@ -2,7 +2,7 @@
     'use strict';
 
     describe('portal.aiAcf', function() {
-        var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
+        var $compile, $rootScope, vm, el, $log, $q, commonService, mock, $location;
         mock = {};
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
         mock.fakeAcf = { name: 'fake', address: {city: 'city', lines: ['','123 Main St']}};
@@ -19,11 +19,12 @@
                     return $delegate;
                 });
             });
-            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
+            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_, _$location_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;
                 $q = _$q_;
+                $location = _$location_;
                 commonService = _commonService_;
                 commonService.createAcf.and.returnValue($q.when({response: {name: 'new acf', address: {}, id: 3}}));
                 commonService.editAcf.and.returnValue($q.when(mock.acfs[1]));
@@ -32,7 +33,7 @@
                 commonService.hasAcf.and.returnValue(true);
                 commonService.setAcf.and.returnValue($q.when({}));
 
-                el = angular.element('<ai-acf></ai-acf>');
+                el = angular.element('<ai-acf mode="select"></ai-acf>');
 
                 $compile(el)($rootScope.$new());
                 $rootScope.$digest();
@@ -63,45 +64,33 @@
             expect(vm.acfs.length).toBe(2);
         });
 
-        it('should set createNewAcf to true if getAcfs has 0 acfs', function () {
-            commonService.getAcfs.and.returnValue($q.when([]));
-            vm.getAcfs();
-            el.isolateScope().$digest();
-            expect(commonService.getAcfs).toHaveBeenCalled();
-            expect(vm.acfs.length).toBe(0);
-            expect(vm.createNewAcf).toBe(true);
-        });
-
         it('should set acfs to an empty array if the server fails', function () {
             commonService.getAcfs.and.returnValue($q.reject({}));
             vm.getAcfs();
             el.isolateScope().$digest();
             expect(commonService.getAcfs).toHaveBeenCalled();
             expect(vm.acfs.length).toBe(0);
-            expect(vm.createNewAcf).toBe(true);
         });
 
         it('should have a function to submit the active ACF', function () {
             expect(vm.acfSubmit).toBeDefined();
         });
 
-        it('should call commonService.createAcf if one is in the newAcf field', function () {
-            vm.newAcf = 'New Acf';
-            vm.createNewAcf = true;
+        it('should call commonService.createAcf if one is in the acf.name field', function () {
+            vm.acf = angular.copy(mock.fakeAcf);
+            vm.mode = 'enter';
             vm.acfSubmit();
             expect(commonService.createAcf).toHaveBeenCalled();
         });
 
-        it('should not call commonService.createAcf if there isn\'t one in the newAcf field', function () {
-            vm.newAcf = '';
-            vm.createNewAcf = false;
+        it('should not call commonService.createAcf if there isn\'t one in the acf.name field', function () {
+            vm.acf = {};
+            vm.mode = 'enter';
             vm.acfSubmit();
             expect(commonService.createAcf).not.toHaveBeenCalled();
         });
 
         it('should call commonService.setAcf if there is one selected', function () {
-            vm.newAcf = '';
-            vm.createNewAcf = false;
             vm.selectAcf = vm.acfs[0];
             vm.acfSubmit();
             expect(commonService.setAcf).toHaveBeenCalled();
@@ -109,14 +98,13 @@
 
         it('should not call commonService.setAcf if the checkbox isnt\'t checked', function () {
             vm.selectAcf = null;
-            vm.createNewAcf = false;
             vm.acfSubmit();
             expect(commonService.setAcf).not.toHaveBeenCalled();
         });
 
         it('should call setAcf after createAcf', function () {
-            vm.newAcf = 'New Acf';
-            vm.createNewAcf = true;
+            vm.acf = angular.copy(mock.fakeAcf);
+            vm.mode = 'enter';
             vm.acfSubmit();
             el.isolateScope().$digest();
             expect(commonService.setAcf).toHaveBeenCalled();
@@ -188,9 +176,9 @@
         });
 
         it('should turn off editing after editAcf is called', function () {
-            vm.isEditing = true;
+            vm.mode = 'edit';
             vm.editAcf();
-            expect(vm.isEditing).toBe(false);
+            expect(vm.mode).toBe('view');
         });
 
         it('should set the local acf to the edited acf', function () {
@@ -213,13 +201,15 @@
         });
 
         it('should call the edit form function on enter if user has acf', function () {
-            vm.isEditing = true;
+            vm.queryForm.$invalid = false;
+            vm.mode = 'edit';
             spyOn(vm, 'editAcf');
             vm.submitForm();
             expect(vm.editAcf).toHaveBeenCalled();
         });
 
         it('should call acfSubmit on enter if the user has no acf', function () {
+            vm.queryForm.$invalid = false;
             commonService.hasAcf.and.returnValue(false);
             spyOn(vm, 'acfSubmit');
             vm.submitForm();
@@ -230,7 +220,7 @@
         it('should not allow submitForm to be called if the form is invalid', function () {
             spyOn(vm, 'editAcf');
             vm.queryForm.$invalid = true;
-            vm.isEditing = true;
+            vm.mode = 'edit';
             vm.submitForm()
             expect(vm.editAcf).not.toHaveBeenCalled();
         });
@@ -239,7 +229,7 @@
             var updAcf = angular.copy(mock.fakeAcf);
             updAcf.address.lines = ['123 Main St'];
             vm.acf = angular.copy(mock.fakeAcf);
-            vm.createNewAcf = true;
+            vm.mode = 'enter';
             vm.acfSubmit();
             expect(commonService.createAcf).toHaveBeenCalledWith(updAcf);
         });
@@ -249,9 +239,72 @@
             delete updAcf.address.lines
             vm.acf = angular.copy(mock.fakeAcf);
             vm.acf.address.lines[1] = '';
-            vm.createNewAcf = true;
+            vm.mode = 'enter';
             vm.acfSubmit();
             expect(commonService.createAcf).toHaveBeenCalledWith(updAcf);
+        });
+
+        it('should redirect the user to /search on acf creation', function () {
+            vm.acf = angular.copy(mock.fakeAcf);
+            vm.mode = 'enter';
+            spyOn($location, 'path');
+
+            vm.acfSubmit();
+            el.isolateScope().$digest();
+
+            expect($location.path).toHaveBeenCalledWith('/search');
+        });
+
+        it('should redirect the user to /search on acf selection', function () {
+            vm.selectAcf = vm.acfs[0];
+            spyOn($location, 'path');
+
+            vm.acfSubmit();
+            el.isolateScope().$digest();
+
+            expect($location.path).toHaveBeenCalledWith('/search');
+        });
+
+        it('should know what mode the user is in', function () {
+            expect(vm.mode).toBe('select');
+        });
+
+        it('should switch to "enter" if there are no ACFs', function () {
+            commonService.getAcfs.and.returnValue($q.when([]));
+            $compile(el)($rootScope.$new());
+            $rootScope.$digest();
+            vm = el.isolateScope().vm;
+            expect(vm.mode).toBe('enter');
+        });
+
+        it('should switch to "enter" if getAcfs fails', function () {
+            commonService.getAcfs.and.returnValue($q.reject({}));
+            $compile(el)($rootScope.$new());
+            $rootScope.$digest();
+            vm = el.isolateScope().vm;
+            expect(vm.mode).toBe('enter');
+        });
+
+        it('should not switch to "enter" if mode is "display"', function () {
+            el = angular.element('<ai-acf mode="display"></ai-acf>');
+            commonService.getAcfs.and.returnValue($q.when([]));
+            $compile(el)($rootScope.$new());
+            $rootScope.$digest();
+            vm = el.isolateScope().vm;
+            expect(vm.mode).toBe('display');
+            commonService.getAcfs.and.returnValue($q.reject({}));
+            $compile(el)($rootScope.$new());
+            $rootScope.$digest();
+            vm = el.isolateScope().vm;
+            expect(vm.mode).toBe('display');
+        });
+
+        it('should know if the entered new ACF name matches one that already exists', function () {
+            vm.acf = angular.copy(mock.fakeAcf);
+            vm.mode = 'enter';
+            expect(vm.validName()).toBe(true);
+            vm.acf.name = 'ACF 1';
+            expect(vm.validName()).toBe(false);
         });
     });
 })();

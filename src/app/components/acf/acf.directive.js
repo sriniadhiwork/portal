@@ -13,13 +13,15 @@
             scope: {},
             controller: AcfController,
             controllerAs: 'vm',
-            bindToController: {}
+            bindToController: {
+                mode: '@'
+            }
         };
 
         return directive;
 
         /** @ngInject */
-        function AcfController($log, commonService) {
+        function AcfController($log, $location, commonService) {
             var vm = this;
 
             vm.acfSubmit = acfSubmit;
@@ -29,6 +31,7 @@
             vm.getUserAcf = getUserAcf;
             vm.hasAcf = hasAcf;
             vm.submitForm = submitForm;
+            vm.validName = validName;
 
             activate();
 
@@ -36,15 +39,13 @@
 
             function activate () {
                 vm.acf = { address: {} };
-                vm.createNewAcf = false;
                 vm.showFormErrors = false;
-                vm.isEditing = false;
                 vm.getAcfs();
                 vm.getUserAcf();
             }
 
             function acfSubmit () {
-                if (vm.createNewAcf) {
+                if (vm.mode === 'enter' && vm.acf && vm.acf.name) {
                     var newlines = [];
                     for (var i = 0; i < vm.acf.address.lines.length; i++) {
                         if (vm.acf.address.lines[i] !== '') {
@@ -57,17 +58,21 @@
                         delete vm.acf.address.lines;
                     }
                     commonService.createAcf(vm.acf).then(function (response) {
-                        commonService.setAcf(response);
+                        commonService.setAcf(response).then(function () {
+                            $location.path('/search');
+                        });
                     });
                 } else {
                     if (vm.selectAcf) {
-                        commonService.setAcf(vm.selectAcf);
+                        commonService.setAcf(vm.selectAcf).then(function () {
+                            $location.path('/search');
+                        });
                     }
                 }
             }
 
             function cancelEditing () {
-                vm.isEditing = false;
+                vm.mode = 'view';
                 vm.getUserAcf();
             }
 
@@ -75,7 +80,7 @@
                 commonService.editAcf(vm.acf).then(function (response) {
                     vm.acf = response;
                 });
-                vm.isEditing = false;
+                vm.mode = 'view';
             }
 
             function getAcfs () {
@@ -83,11 +88,15 @@
                 commonService.getAcfs().then(function (response) {
                     vm.acfs = vm.acfs.concat(response);
                     if (vm.acfs.length === 0) {
-                        vm.createNewAcf = true;
+                        if (vm.mode === 'select') {
+                            vm.mode = 'enter';
+                        }
                     }
                 },function () {
                     vm.acfs = [];
-                    vm.createNewAcf = true;
+                    if (vm.mode === 'select') {
+                        vm.mode = 'enter';
+                    }
                 });
             }
 
@@ -120,6 +129,15 @@
                         vm.acfSubmit();
                     }
                 }
+            }
+
+            function validName () {
+                for (var i = 0; i < vm.acfs.length; i++) {
+                    if (vm.acfs[i].name === vm.acf.name) {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     }

@@ -23,8 +23,8 @@
             <label for="gender" class="col-sm-2 control-label">Gender <span class="text-danger">*</span></label>
             <div class="col-sm-4">
               <select class="input-sm form-control" ng-model="vm.query.gender" id="gender" name="gender" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
-                <option value="Female">Female</option>
-                <option value="Male">Male</option>
+                <option value="F">Female</option>
+                <option value="M">Male</option>
                 <option value="UN">Undifferentiated</option>
               </select>
               <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required">Field is required</span>
