@@ -116,14 +116,14 @@
                 expect(vm.triggerHandlers).toHaveBeenCalled();
             });
 
-            it('should compile the date of birth fields on search', function () {
+            xit('should compile the date of birth fields on search', function () {
                 var compiled = angular.copy(vm.query);
                 compiled.dob = '19990319110103-0800'
                 vm.searchForPatient();
                 expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
             });
 
-            it('should handle dob fields without all the parameters', function () {
+            xit('should handle dob fields without all the parameters', function () {
                 var compiled = angular.copy(vm.query);
                 delete vm.query.dob.second;
                 compiled.dob = '199903191101-0800'

@@ -72,11 +72,11 @@
             function searchForPatient () {
                 if (!vm.queryForm.$invalid && vm.queryForm.$dirty) {
 
-                    //////// debug
-                    //vm.query.dob = new Date();
-                    //////// end debug
-
                     vm.query.dob = vm.assembledDob();
+
+                    //////// debug
+                    vm.query.dob = new Date();
+                    //////// end debug
 
                     var queryObj = {query: angular.copy(vm.query)};
                     commonService.searchForPatient(queryObj.query).then(function() {
