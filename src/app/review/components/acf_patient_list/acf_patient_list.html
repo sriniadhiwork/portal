@@ -10,14 +10,16 @@
     <div class="panel-body slide" ng-if="!vm.hidePanel">
       <div class="row" ng-repeat="patient in vm.patients | orderBy : 'lastRead' : 'reverse' track by patient.id" ng-if="!vm.activePatient">
         <div class="col-sm-12">
-          <button class="btn btn-sm btn-primary pull-right" ng-click="vm.activatePatient(patient)"><i class="fa fa-search"></i><span class="sr-only">Activate {{ patient.fullName }}</span></button>
-          <h3>{{ patient.fullName }}</h3>
-          {{ patient.lastRead | date : 'medium' }}
+          <h3>{{ patient.fullName }}
+            <button class="btn btn-sm btn-primary pull-right" ng-click="vm.activatePatient(patient)"><i class="fa fa-search"></i><span class="sr-only">Activate {{ patient.fullName }}</span></button>
+          </h3>
           <uib-progress max="patient.documentStatus.total + vm.countActive(patient)">
             <uib-bar value="patient.documentStatus.cached" type="success"><i>{{ patient.documentStatus.cached }} / {{ patient.documentStatus.total }} document<span ng-if="patient.documentStatus.total !== 1">s</span> cached</i></uib-bar>
             <uib-bar value="patient.documentStatus.total - patient.documentStatus.cached" type="info"><i>{{ patient.documentStatus.total - patient.documentStatus.cached }} document<span ng-if="patient.documentStatus.total - patient.documentStatus.cached !== 1">s</span> available</i></uib-bar>
             <uib-bar value="vm.countActive(patient)" type="warning"><i>{{ vm.countActive(patient) }} organization<span ng-if="vm.countActive(patient) > 1">s</span> pending</i></uib-bar>
           </uib-progress>
+          Last accessed: {{ patient.lastRead | date : 'medium' }}
+          <hr ng-if="!$last" />
         </div>
       </div>
       <div class="row" ng-if="vm.activePatient">

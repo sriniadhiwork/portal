@@ -215,6 +215,15 @@
             expect(vm.activePatient).toBeNull();
         });
 
+        it('should clear active documents on deactivation', function () {
+            vm.activatePatient(mock.patients[0]);
+            vm.deactivatePatient();
+            vm.activeDocument = {document: 'text'};
+            vm.deactivatePatient();
+
+            expect(vm.activeDocument).toBe(undefined);
+        });
+
         it('should refresh the patient list on deactivation', function () {
             vm.deactivatePatient();
             el.isolateScope().$digest();

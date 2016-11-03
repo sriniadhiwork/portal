@@ -84,6 +84,7 @@
 
             function deactivatePatient () {
                 vm.activePatient = null;
+                delete vm.activeDocument;
                 vm.getPatientsAtAcf();
                 buildTitle();
             }
