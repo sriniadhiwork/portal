@@ -18,11 +18,11 @@
                         ssn:"451674563",lastRead:1471014744607,
                         acf:{id:4,name:"Fake",phoneNumber:null,address:null,lastRead:null},
                         orgMaps:[
-                            {id:6,patientId:3,organization:{name:"OrganizationThreeUpdatedName",id:1,organizationId:4,adapter:"eHealth",ipAddress:"127.0.0.14",username:"org1User",password:"password1",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ehealthexchange",active:true},documentsQueryStatus:"COMPLETE",documentsQuerySuccess:true,documentsQueryStart:1471014744718,documentsQueryEnd:1471014744880,
+                            {id:6,patientId:3,organization:{name:"OrganizationThreeUpdatedName",id:1,organizationId:4,adapter:"eHealth",ipAddress:"127.0.0.14",username:"org1User",password:"password1",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ehealthexchange",active:true},documentsQueryStatus:"Complete",documentsQuerySuccess:true,documentsQueryStart:1471014744718,documentsQueryEnd:1471014744880,
                              documents:mock.documents[0]},
-                            {id:5,patientId:3,organization:{name:"IHE Org",id:2,organizationId:2,adapter:"IHE",ipAddress:"127.0.0.1",username:null,password:null,certificationKey:"1234567",endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"COMPLETE",documentsQuerySuccess:true,documentsQueryStart:1471014744707,documentsQueryEnd:1471014744753,
+                            {id:5,patientId:3,organization:{name:"IHE Org",id:2,organizationId:2,adapter:"IHE",ipAddress:"127.0.0.1",username:null,password:null,certificationKey:"1234567",endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"Complete",documentsQuerySuccess:true,documentsQueryStart:1471014744707,documentsQueryEnd:1471014744753,
                              documents:mock.documents[1]},
-                            {id:4,patientId:3,organization:{name:"IHE Org 2",id:3,organizationId:3,adapter:"eHealth",ipAddress:"127.0.0.1",username:"org3User",password:"password3",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"ACTIVE",documentsQuerySuccess:null,documentsQueryStart:1471014744634,documentsQueryEnd:null,
+                            {id:4,patientId:3,organization:{name:"IHE Org 2",id:3,organizationId:3,adapter:"eHealth",ipAddress:"127.0.0.1",username:"org3User",password:"password3",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"Active",documentsQuerySuccess:null,documentsQueryStart:1471014744634,documentsQueryEnd:null,
                              documents:[]}]}
                         ];
 
@@ -171,7 +171,7 @@
         it('should know how many document queries are active', function () {
             expect(vm.countActive).toBeDefined();
             expect(vm.countActive(vm.patients[0])).toBe(1);
-            vm.patients[0].orgMaps[2].documentsQueryStatus = 'COMPLETE';
+            vm.patients[0].orgMaps[2].documentsQueryStatus = 'Complete';
             expect(vm.countActive(vm.patients[0])).toBe(0);
         });
 
@@ -254,13 +254,13 @@
         });
 
         describe('refreshing', function () {
-            it('should refresh the queries if there is one marked "ACTIVE"', function () {
+            it('should refresh the queries if there is one marked "Active"', function () {
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(1);
                 $timeout.flush();
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(2);
             });
 
-            it('should stop refreshing the queries if all are marked "COMPLETE"', function () {
+            it('should stop refreshing the queries if all are marked "Complete"', function () {
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(1);
                 $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(2);
@@ -272,7 +272,7 @@
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(5);
 
                 var completePatients = angular.copy(vm.patients);
-                completePatients[0].orgMaps[2].documentsQueryStatus = 'COMPLETE';
+                completePatients[0].orgMaps[2].documentsQueryStatus = 'Complete';
                 commonService.getPatientsAtAcf.and.returnValue($q.when(completePatients));
                 $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(6);
@@ -283,7 +283,7 @@
             it('should refresh patients on a longer timescale when all are complete', function () {
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(1);
                 var completePatients = angular.copy(vm.patients);
-                completePatients[0].orgMaps[2].documentsQueryStatus = 'COMPLETE';
+                completePatients[0].orgMaps[2].documentsQueryStatus = 'Complete';
                 commonService.getPatientsAtAcf.and.returnValue($q.when(completePatients));
                 $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(2);

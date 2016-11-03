@@ -97,15 +97,15 @@
                 expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Display Name)');
             });
 
-            it('should display a blank string if required elements aren\'t there', function () {
+            it('should display a message on names with missing required elements', function () {
                 var name = {};
-                expect(commonService.displayName(name)).toBe('');
+                expect(commonService.displayName(name)).toBe('(improper)');
                 name.givenName = ['John', 'Andrew'];
-                expect(commonService.displayName(name)).toBe('');
+                expect(commonService.displayName(name)).toBe('John Andrew (improper)');
                 name.givenName = [];
-                expect(commonService.displayName(name)).toBe('');
+                expect(commonService.displayName(name)).toBe('(improper)');
                 name.familyName = 'Smith';
-                expect(commonService.displayName(name)).toBe('');
+                expect(commonService.displayName(name)).toBe('Smith (improper)');
             });
 
             it('should have a function to join names', function () {

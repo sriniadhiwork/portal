@@ -76,7 +76,7 @@
             function countActive (patient) {
                 var active = 0;
                 for (var i = 0; i < patient.orgMaps.length; i++) {
-                    if (patient.orgMaps[i].documentsQueryStatus === 'ACTIVE')
+                    if (patient.orgMaps[i].documentsQueryStatus === 'Active')
                         active += 1;
                 }
                 return active;
@@ -116,7 +116,7 @@
                         patient.documentStatus = {total: 0, cached: 0};
                         patient.documents = [];
                         for (var j = 0; j < patient.orgMaps.length; j++) {
-                            hasActive = hasActive || (patient.orgMaps[j].documentsQueryStatus === 'ACTIVE');
+                            hasActive = hasActive || (patient.orgMaps[j].documentsQueryStatus === 'Active');
                             patient.documentStatus.total += patient.orgMaps[j].documents.length;
                             for (var k = 0; k < patient.orgMaps[j].documents.length; k++) {
                                 patient.orgMaps[j].documents[k].organization = patient.orgMaps[j].organization.name;
