@@ -96,17 +96,39 @@
                 name.nameType = {code: 'D'};
                 expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Display Name)');
             });
-        });
 
-        it('should display a blank string if required elements aren\'t there', function () {
-            var name = {};
-            expect(commonService.displayName(name)).toBe('');
-            name.givenName = ['John', 'Andrew'];
-            expect(commonService.displayName(name)).toBe('');
-            name.givenName = [];
-            expect(commonService.displayName(name)).toBe('');
-            name.familyName = 'Smith';
-            expect(commonService.displayName(name)).toBe('');
+            it('should display a blank string if required elements aren\'t there', function () {
+                var name = {};
+                expect(commonService.displayName(name)).toBe('');
+                name.givenName = ['John', 'Andrew'];
+                expect(commonService.displayName(name)).toBe('');
+                name.givenName = [];
+                expect(commonService.displayName(name)).toBe('');
+                name.familyName = 'Smith';
+                expect(commonService.displayName(name)).toBe('');
+            });
+
+            it('should have a function to join names', function () {
+                expect(commonService.displayNames).toBeDefined();
+            });
+
+            it('should display names correctly', function () {
+                var names = [{
+                    givenName: ['John', 'Andrew'],
+                    familyName: 'Smith',
+                    nameType: {code: 'L', description: 'Legal Name'}
+                },{
+                    givenName: ['Sue', 'Mary'],
+                    familyName: 'Smith',
+                    nameType: {code: 'L', description: 'Legal Name'}
+                }];
+                expect(commonService.displayNames(names, '-')).toBe('John Andrew Smith (Legal Name)-Sue Mary Smith (Legal Name)');
+            });
+
+            it('should display names correctly', function () {
+                var names = undefined;
+                expect(commonService.displayNames(names, '-')).toBe('');
+            });
         });
 
         describe('user authentication issues', function () {

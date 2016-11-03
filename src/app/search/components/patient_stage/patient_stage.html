@@ -10,15 +10,15 @@
       <thead>
         <tr>
           <th scope="col">Name<span ng-if="vm.query.terms.patientNames.length !== 1">s</span></th>
-          <th scope="col">Date of Birth</th>
           <th scope="col">Gender</th>
+          <th scope="col">Date of Birth</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><span ng-repeat="name in vm.query.terms.patientNames track by $index">{{ vm.displayName(name) }}<br /></span></td>
-          <td>{{ vm.query.terms.dob | date }}</td>
+          <td ng-bind-html="vm.displayNames(vm.query.terms.patientNames)"></td>
           <td>{{ vm.query.terms.gender }}</td>
+          <td>{{ vm.query.terms.dob }}</td>
         </tr>
       </tbody>
     </table>
@@ -31,28 +31,35 @@
           <th scope="col" st-sort="gender.description" st-skip-natural="true" class="st-sort">Gender</th>
           <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
           <th scope="col" st-sort="ssn" st-skip-natural="true" class="st-sort">SSN</th>
+          <th scope="col">View Details</th>
           <th scope="col">Select</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat-start="org in vm.query.orgStatuses track by org.id" ng-if="org.results && org.results.length > 0">
           <td rowspan="{{ org.results.length }}" href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.org.name }}</td>
-          <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ vm.displayName(org.results[0].names[0]) }}</td>
+          <td href ng-click="org.results[0].selected = !org.results[0].selected" ng-bind-html="vm.displayNames(org.results[0].patientRecordName)"></td>
           <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].gender.description }}</td>
           <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].dateOfBirth | date }}</td>
           <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].ssn }}</td>
           <td>
-            <label class="sr-only" for="recordSelect-{{ org.results[0].id }}">{{ vm.displayName(org.results[0].names[0]) }}</label>
+            <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(org.results[0])"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
+          </td>
+          <td>
+            <label class="sr-only" for="recordSelect-{{ org.results[0].id }}" ng-bind-html="vm.displayNames(org.results[0].patientRecordName)"></label>
             <input id="recordSelect-{{ org.results[0].id }}" type="checkbox" ng-model="org.results[0].selected">
           </td>
         </tr>
         <tr ng-repeat-end ng-repeat="record in org.results.slice(1)">
-          <td href ng-click="record.selected = !record.selected">{{ vm.displayName(record.names[0]) }}</td>
+          <td href ng-click="record.selected = !record.selected" ng-bind-html="vm.displayNames(record.patientRecordName)"></td>
           <td href ng-click="record.selected = !record.selected">{{ record.gender.description }}</td>
           <td href ng-click="record.selected = !record.selected">{{ record.dateOfBirth | date }}</td>
           <td href ng-click="record.selected = !record.selected">{{ record.ssn }}</td>
           <td>
-            <label class="sr-only" for="recordSelect-{{ record.id }}">{{ vm.displayName(record.names[0]) }}</label>
+            <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(record)"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
+          </td>
+          <td>
+            <label class="sr-only" for="recordSelect-{{ record.id }}" ng-bind-html="vm.displayNames(record.patientRecordName)"></label>
             <input id="recordSelect-{{ record.id }}" type="checkbox" ng-model="record.selected">
           </td>
         </tr>
@@ -68,6 +75,15 @@
             <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.fullName.$touched) && vm.queryForm.fullName.$error.required">Field is required</span>
           </div>
         </div>
+        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required }">
+          <label for="friendlyName" class="col-sm-2 control-label">Friendly Name <span class="text-danger">*</span></label>
+          <div class="col-sm-4">
+            <input class="form-control" type="text" ng-model="vm.patient.friendlyName" id="friendlyName" name="friendlyName" required>
+            <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required">Field is required</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
         <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required }">
           <label for="gender" class="col-sm-2 control-label">Gender <span class="text-danger">*</span></label>
           <div class="col-sm-4">
@@ -77,15 +93,6 @@
               <option value="UN">Undifferentiated</option>
             </select>
             <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required">Field is required</span>
-          </div>
-        </div>
-      </div>
-      <div class="form-group">
-        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required }">
-          <label for="friendlyName" class="col-sm-2 control-label">Friendly Name <span class="text-danger">*</span></label>
-          <div class="col-sm-4">
-            <input class="form-control" type="text" ng-model="vm.patient.friendlyName" id="friendlyName" name="friendlyName" required>
-            <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required">Field is required</span>
           </div>
         </div>
         <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required }">
