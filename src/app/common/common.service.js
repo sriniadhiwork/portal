@@ -14,7 +14,8 @@
         self.clearQuery = clearQuery;
         self.createAcf = createAcf;
         self.dischargePatient = dischargePatient;
-        self.displayName = displayName
+        self.displayName = displayName;
+        self.displayNames = displayNames;
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
@@ -87,6 +88,15 @@
                 }
             }
             return ret;
+        }
+
+        function displayNames (array, separator) {
+            if (angular.isArray(array)) {
+                var ret = array.map(self.displayName);
+                return ret.join(separator);
+            } else {
+                return '';
+            }
         }
 
         function editAcf (anAcf) {
