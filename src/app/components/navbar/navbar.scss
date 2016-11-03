@@ -5,38 +5,39 @@ body {
 }
 
 header {
-    .dropdown-menu {
-        left: inherit;
-        right: 0;
-    }
-
     .navbar-default {
-        background-color: rgba(255,255,255,.5);
-
-        .navbar-toggle {
-            border: 0px;
-
-            button:hover,
-            button:focus {
-                background-color: #bbb;
-            }
-        }
-
-        .navbar-toggle:hover,
-        .navbar-toggle:focus {
-            background-color: transparent;
-        }
+        background-color: rgb(255,255,255);
     }
 
     .navbar {
         min-height: $top-nav-height;
         height: $top-nav-height;
         border-bottom: 4px solid #3e7685;
-    }
+        width: 100%;
 
-    .navbar-brand {
-        transform: translateX(-50%);
-        left: 50%;
-        position: absolute;
+        .container-fluid {
+            min-height: $top-nav-height;
+
+            .col-sm-2 {
+                min-height: $top-nav-height;
+                position: relative;
+
+                button {
+                    position: absolute;
+                    margin-right: 15px;
+                    right: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+
+                ai-organization-status {
+                    position: absolute;
+                    margin-right: 15px;
+                    margin-bottom: 5px;
+                    right: 0px;
+                    bottom: 0px;
+                }
+            }
+        }
     }
 }

@@ -2,24 +2,25 @@
   <header>
     <ai-navbar active="search"></ai-navbar>
   </header>
-  <div class="row">
-    <div class="col-sm-8">
-      <h1><span class="emphasis">Search</span> Patients</h1>
+  <div class="row inner-nav">
+    <div class="col-sm-1 col-sm-offset-5">
+      <a class="btn btn-lg btn-block btn-success btn-active-nav" href="#/search">Search</a>
+    </div>
+    <div class="col-sm-1">
+      <a class="btn btn-lg btn-block btn-primary" href="#/review">Review</a>
+    </div>
+  </div>
+  <div class="row no-background">
+    <div class="col-sm-4">
       <ai-patient-search trigger-handlers="vm.triggerHandlers()">
       </ai-patient-search>
     </div>
-    <div class="col-sm-4">
-      <h1><span class="emphasis">PULSE</span> Status</h1>
-      <ai-acf>
-      </ai-acf>
-      <ai-organization-status>
-      </ai-organization-status>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-8">
       <ai-patient-review trigger-handlers="vm.triggerHandlers()" register-handler="vm.registerHandler(handler)">
       </ai-patient-review>
     </div>
   </div>
+  <footer>
+    <ai-footer></ai-footer>
+  </footer>
 </div>

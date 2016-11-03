@@ -1,0 +1,25 @@
+$bottom-nav-height: 120px;
+
+body {
+    margin-bottom: $bottom-nav-height;
+}
+
+footer {
+    h1 {
+        font-size: 12pt;
+    }
+
+    .navbar-default {
+        background-color: rgb(225,225,225);
+    }
+
+    .navbar {
+        min-height: $bottom-nav-height;
+        height: $bottom-nav-height;
+    }
+
+    .navbar-brand {
+        height: 100%;
+        max-height: $bottom-nav-height
+    }
+}

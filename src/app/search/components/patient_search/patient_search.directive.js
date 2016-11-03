@@ -22,6 +22,7 @@
         function PatientSearchController($log, commonService) {
             var vm = this;
 
+            vm.assembledDob = assembledDob;
             vm.errorCount = errorCount;
             vm.searchForPatient = searchForPatient;
 
@@ -31,6 +32,29 @@
 
             function activate () {
                 vm.query = {};
+            }
+
+            function assembledDob () {
+                var newDob = vm.query.dob.year;
+                if (vm.query.dob.month) {
+                    newDob += vm.query.dob.month;
+                    if (vm.query.dob.day) {
+                        newDob += vm.query.dob.day;
+                        if (vm.query.dob.hour) {
+                            newDob += vm.query.dob.hour;
+                            if (vm.query.dob.minute) {
+                                newDob += vm.query.dob.minute;
+                                if (vm.query.dob.second) {
+                                    newDob += vm.query.dob.second;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (vm.query.dob.z) {
+                    newDob += vm.query.dob.z;
+                }
+                return newDob;
             }
 
             function errorCount () {
@@ -49,8 +73,10 @@
                 if (!vm.queryForm.$invalid && vm.queryForm.$dirty) {
 
                     //////// debug
-                    vm.query.dob = new Date();
+                    //vm.query.dob = new Date();
                     //////// end debug
+
+                    vm.query.dob = vm.assembledDob();
 
                     var queryObj = {query: angular.copy(vm.query)};
                     commonService.searchForPatient(queryObj.query).then(function() {

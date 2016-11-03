@@ -2,7 +2,7 @@
     'use strict';
 
     describe('portal.aiOrganizationStatus', function() {
-        var vm, el, $log, $q, $interval, commonService, mock;
+        var $compile, $rootScope, vm, el, $log, $q, $interval, commonService, mock;
         mock = {organizations: [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}]};
 
         beforeEach(function () {
@@ -12,7 +12,9 @@
                     return $delegate;
                 });
             });
-            inject(function($compile, $rootScope, _$log_, _$q_, _$interval_, _commonService_) {
+            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _$interval_, _commonService_) {
+                $compile = _$compile_;
+                $rootScope = _$rootScope_;
                 $log = _$log_;
                 $q = _$q_;
                 $interval = _$interval_;

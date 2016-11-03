@@ -1,5 +1,5 @@
-<div class="container-fluid addresses">
-  <div class="form-horizontal fade" ng-repeat="address in vm.addresses track by $index" ng-if="!vm.fixed">
+<div class="container-fluid addresses" ng-if="!vm.fixed">
+  <div class="form-horizontal fade" ng-repeat="address in vm.addresses track by $index">
     <div class="form-group slide" ng-repeat="line in address.lines track by $index">
       <div class="col-sm-12">
         <label for="street{{ $index }}" class="control-label sr-only">Street Line</label>
@@ -33,19 +33,20 @@
       </div>
     </div>
     <div class="row" ng-if="!vm.single">
-      <div class="col-sm-12">
-        <button type="button" class="btn btn-default" ng-click="vm.addAddress()" ng-if="vm.addresses.length === $index + 1">Add new address <i class="fa fa-plus"></i></button>
-        <button type="button" class="btn btn-default" ng-click="vm.removeAddress($index)" ng-if="vm.addresses.length > 1">Remove this address <i class="fa fa-trash"></i></button>
+      <div class="col-sm-12 text-right">
+        <button type="button" class="btn btn-default" ng-click="vm.addAddress()" ng-if="vm.addresses.length === $index + 1"><span class="sr-only">Add new address </span><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-default" ng-click="vm.removeAddress($index)" ng-if="vm.addresses.length > 1"><span class="sr-only">Remove this address </span><i class="fa fa-trash"></i></button>
       </div>
     </div>
   </div>
-  <div class="fade row" ng-repeat="address in vm.addresses track by $index" ng-if="vm.fixed">
-    <div class="col-sm-12">
-      <span ng-repeat="line in address.lines" ng-if="line && line.length > 0">{{ line }}<br /></span>
-      <span ng-if="address.city">{{ address.city }}</span><span ng-if="address.city && address.state">, </span>
-      <span ng-if="address.state">{{ address.state }} </span>
-      <span ng-if="address.zipcode">{{ address.zipcode }}</span>
-      <span ng-if="address.country"><br />{{ address.country }}</span>
-    </div>
-  </div>
 </div>
+<span ng-if="vm.fixed">
+  <span class="fade" ng-repeat="address in vm.addresses track by $index">
+    <span ng-repeat="line in address.lines" ng-if="line && line.length > 0">{{ line }}<br /></span>
+    <span ng-if="address.city">{{ address.city }}</span><span ng-if="address.city && address.state">, </span>
+    <span ng-if="address.state">{{ address.state }} </span>
+    <span ng-if="address.zipcode">{{ address.zipcode }}</span>
+    <span ng-if="address.country"><br />{{ address.country }}</span>
+    <br ng-if="!$last" />
+  </span>
+</span>
