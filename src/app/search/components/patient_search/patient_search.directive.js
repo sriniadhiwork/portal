@@ -61,7 +61,7 @@
                 var count = 0,
                     errors = vm.queryForm.$error;
 
-                angular.forEach(errors, function(val){
+                angular.forEach(errors, function(val) {
                     if (angular.isArray(val)) {
                         count += val.length;
                     }
@@ -71,16 +71,13 @@
 
             function searchForPatient () {
                 if (!vm.queryForm.$invalid && vm.queryForm.$dirty) {
-
                     vm.query.dob = vm.assembledDob();
-
-                    //////// debug
-                    vm.query.dob = new Date();
-                    //////// end debug
 
                     var queryObj = {query: angular.copy(vm.query)};
                     commonService.searchForPatient(queryObj.query).then(function() {
                         vm.triggerHandlers();
+                    }, function (error) {
+                        vm.errorMessage = error.data.message;
                     });
                     vm.query = {patientNames: [{givenName: [''], nameType: {code: 'L'}}]};
                     vm.queryForm.$setPristine();

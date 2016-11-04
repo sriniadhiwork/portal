@@ -8,6 +8,9 @@
       <div class="clearfix"></div>
     </div>
     <div class="panel-body slide" ng-if="!vm.hidePanel">
+      <div class="row" ng-if="!vm.patients || vm.patients.length === 0">
+        <div class="col-sm-12">No active patients currently at <strong>{{ vm.userAcf.name }}</strong></div>
+      </div>
       <div class="row" ng-repeat="patient in vm.patients | orderBy : 'lastRead' : 'reverse' track by patient.id" ng-if="!vm.activePatient">
         <div class="col-sm-12">
           <h3>{{ patient.fullName }}
