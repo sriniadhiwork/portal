@@ -6,14 +6,15 @@
         .controller('PatientStageController', PatientStageController);
 
     /** @ngInject */
-    function PatientStageController($log, $uibModalInstance, commonService, query) {
+    function PatientStageController($log, $uibModal, $uibModalInstance, commonService, query) {
         var vm = this;
 
         vm.cancel = cancel;
         vm.clearQuery = clearQuery;
-        vm.displayName = displayName;
+        vm.displayNames = displayNames;
         vm.isStageable = isStageable;
         vm.stagePatient = stagePatient;
+        vm.viewRecordDetails = viewRecordDetails;
 
         activate();
 
@@ -35,8 +36,8 @@
             });
         }
 
-        function displayName (name) {
-            return commonService.displayName(name);
+        function displayNames (names) {
+            return commonService.displayNames(names, '<br />');
         }
 
         function isStageable () {
@@ -81,6 +82,26 @@
                     $uibModalInstance.close()
                 });
             }
+        }
+
+        function viewRecordDetails (record) {
+            vm.viewRecordDetailsInstance = $uibModal.open({
+                templateUrl: 'app/search/components/patient_stage_details/patient_stage_details.html',
+                controller: 'PatientStageDetailsController',
+                controllerAs: 'vm',
+                animation: false,
+                backdrop: 'static',
+                keyboard: false,
+                size: 'md',
+                resolve: {
+                    record: function () { return record; }
+                }
+            });
+            vm.viewRecordDetailsInstance.result.then(function (response) {
+                $log.info(response);
+            }, function (result) {
+                $log.info(result)
+            });
         }
 
         ////////////////////////////////////////////////////////////////////

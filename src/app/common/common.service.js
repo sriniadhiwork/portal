@@ -12,9 +12,11 @@
         self.cacheDocument = cacheDocument;
         self.cancelQueryOrganization = cancelQueryOrganization;
         self.clearQuery = clearQuery;
+        self.clearToken = clearToken;
         self.createAcf = createAcf;
         self.dischargePatient = dischargePatient;
-        self.displayName = displayName
+        self.displayName = displayName;
+        self.displayNames = displayNames;
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
@@ -51,6 +53,10 @@
             return enhancedPost('/queries/' + queryId + '/delete', {});
         }
 
+        function clearToken () {
+            delete($localStorage.jwtToken);
+        }
+
         function createAcf (newAcf) {
             return enhancedPost('/acfs/create', newAcf);
         }
@@ -61,32 +67,48 @@
 
         function displayName (name) {
             var ret = '';
-            if (name.givenName &&
-                name.givenName.length > 0 &&
-                name.familyName &&
-                name.nameType) {
+            if (angular.isArray(name.givenName)) {
                 ret += name.givenName.join(' ');
+            }
+            if (name.familyName) {
                 if (name.nameAssembly && name.nameAssembly.code === 'F') {
                     ret = name.familyName + ' ' + ret;
                 } else {
                     ret += ' ' + name.familyName;
                 }
-                if (name.prefix) {
-                    ret = name.prefix + ' ' + ret;
-                }
-                if (name.suffix) {
-                    ret += ' ' + name.suffix;
-                }
-                if (name.profSuffix) {
-                    ret += ', ' + name.profSuffix;
-                }
+            }
+            if (name.prefix) {
+                ret = name.prefix + ' ' + ret;
+            }
+            if (name.suffix) {
+                ret += ' ' + name.suffix;
+            }
+            if (name.profSuffix) {
+                ret += ', ' + name.profSuffix;
+            }
+            if (name.nameType) {
                 for (var i = 0; i < self.nameTypes.length; i++) {
                     if (name.nameType.code === self.nameTypes[i].code) {
                         ret += ' (' + self.nameTypes[i].description + ')';
                     }
                 }
             }
-            return ret;
+            if (!name.givenName ||
+                name.givenName.length === 0 ||
+                !name.familyName ||
+                !name.nameType) {
+                ret += ' (improper)'
+            }
+            return ret.trim();
+        }
+
+        function displayNames (array, separator) {
+            if (angular.isArray(array)) {
+                var ret = array.map(self.displayName);
+                return ret.join(separator);
+            } else {
+                return '';
+            }
         }
 
         function editAcf (anAcf) {
@@ -202,7 +224,7 @@
                 else
                     valid = false;
                 if (!valid)
-                    delete($localStorage.jwtToken);
+                    self.clearToken();
             } else {
                 valid = false;
             }
@@ -210,7 +232,7 @@
         }
 
         function logout () {
-            delete($localStorage.jwtToken);
+            self.clearToken();
             $window.location.replace(LogoutRedirect);
         }
 
@@ -265,6 +287,10 @@
                 .then(function(response) {
                     return $q.when(response.data);
                 }, function (response) {
+                    $log.debug(angular.toJson(response));
+                    if (response.data.error && response.data.error.match(/ACF.*does not exist!/)) {
+                        self.clearToken();
+                    }
                     return $q.reject(response);
                 });
         }

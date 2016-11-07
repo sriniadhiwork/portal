@@ -103,6 +103,13 @@
                 expect(commonService.displayName).toHaveBeenCalledWith(mock.name);
             });
 
+            it('should call commonService to display names', function () {
+                spyOn(commonService, 'displayNames');
+                expect(vm.displayNames).toBeDefined();
+                vm.displayNames([mock.name]);
+                expect(commonService.displayNames).toHaveBeenCalledWith([mock.name],'<br />');
+            });
+
             describe('refreshing', function () {
 
                 var activeProducts = angular.copy(mock.queries);

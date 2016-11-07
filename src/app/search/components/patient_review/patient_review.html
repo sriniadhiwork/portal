@@ -25,8 +25,8 @@
             </thead>
             <tbody>
               <tr ng-repeat="query in vm.displayedQueries track by query.id" class="fade">
-                <td><span ng-repeat="name in query.terms.patientNames track by $index">{{ vm.displayName(name) }}<br /></span></td>
-                <td>{{ query.terms.dob | date }}</td>
+                <td ng-bind-html="vm.displayNames(query.terms.patientNames)"></td>
+                <td>{{ query.terms.dob | ehealthdate }}</td>
                 <td>{{ query.terms.gender }}</td>
                 <td>{{ query.lastRead | date : 'medium' }}</td>
                 <td>
