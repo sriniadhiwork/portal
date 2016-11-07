@@ -62,32 +62,39 @@
 
         function displayName (name) {
             var ret = '';
-            if (name.givenName &&
-                name.givenName.length > 0 &&
-                name.familyName &&
-                name.nameType) {
+            if (angular.isArray(name.givenName)) {
                 ret += name.givenName.join(' ');
+            }
+            if (name.familyName) {
                 if (name.nameAssembly && name.nameAssembly.code === 'F') {
                     ret = name.familyName + ' ' + ret;
                 } else {
                     ret += ' ' + name.familyName;
                 }
-                if (name.prefix) {
-                    ret = name.prefix + ' ' + ret;
-                }
-                if (name.suffix) {
-                    ret += ' ' + name.suffix;
-                }
-                if (name.profSuffix) {
-                    ret += ', ' + name.profSuffix;
-                }
+            }
+            if (name.prefix) {
+                ret = name.prefix + ' ' + ret;
+            }
+            if (name.suffix) {
+                ret += ' ' + name.suffix;
+            }
+            if (name.profSuffix) {
+                ret += ', ' + name.profSuffix;
+            }
+            if (name.nameType) {
                 for (var i = 0; i < self.nameTypes.length; i++) {
                     if (name.nameType.code === self.nameTypes[i].code) {
                         ret += ' (' + self.nameTypes[i].description + ')';
                     }
                 }
             }
-            return ret;
+            if (!name.givenName ||
+                name.givenName.length === 0 ||
+                !name.familyName ||
+                !name.nameType) {
+                ret += ' (improper)'
+            }
+            return ret.trim();
         }
 
         function displayNames (array, separator) {
