@@ -59,6 +59,7 @@
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
+            requestHandler.getOrganizationStatistics = $httpBackend.whenGET(API + '/organizations/statistics').respond(200, {results: mock.organizations});
             requestHandler.getQueries = $httpBackend.whenGET(API + '/queries').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
@@ -188,7 +189,7 @@
             it('should call the saml SP to find the Spring Boot User Object', function () {
                 commonService.getSamlUserToken();
                 $httpBackend.flush();
-                requestHandler.getSamlUserToken.respond(401, {message: 'test'});
+                requestHandler.getSamlUserToken.respond(401, {error: 'test'});
                 commonService.getSamlUserToken().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
@@ -224,11 +225,17 @@
                     expect(response).toBeNull;
                 });
                 $httpBackend.flush();
-                requestHandler.refreshToken.respond(401, {message: 'test'});
+                requestHandler.refreshToken.respond(401, {error: 'test'});
                 commonService.refreshToken().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
+            });
+
+            it('should be able to clear the user\'s ACF', function () {
+                commonService.saveToken(mock.token);
+                commonService.clearToken();
+                expect(commonService.hasAcf()).toBeFalsy();
             });
         });
 
@@ -241,7 +248,7 @@
             });
 
             it('should reject a call that doesn\'t return an object', function () {
-                $httpBackend.expectPOST(API + '/search', {}).respond(401, {message: 'a rejection'});
+                $httpBackend.expectPOST(API + '/search', {}).respond(401, {error: 'a rejection'});
                 commonService.searchForPatient({}).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
@@ -251,7 +258,7 @@
             it('should call /queries', function () {
                 commonService.getQueries();
                 $httpBackend.flush();
-                requestHandler.getQueries.respond(401, {message: 'test'});
+                requestHandler.getQueries.respond(401, {error: 'test'});
                 commonService.getQueries().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
@@ -261,7 +268,7 @@
             it('should call /queries/id/delete', function () {
                 commonService.clearQuery(1);
                 $httpBackend.flush();
-                requestHandler.clearQuery.respond(401, {message: 'test'});
+                requestHandler.clearQuery.respond(401, {error: 'test'});
                 commonService.clearQuery(1).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
@@ -271,7 +278,7 @@
             it('should call /queries/orgid/queryid/cancel', function () {
                 commonService.cancelQueryOrganization(1,2);
                 $httpBackend.flush();
-                requestHandler.cancelQueryOrganization.respond(401, {message: 'test'});
+                requestHandler.cancelQueryOrganization.respond(401, {error: 'test'});
                 commonService.cancelQueryOrganization(1,2).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
@@ -281,7 +288,7 @@
             it('should call /patients/id/delete', function () {
                 commonService.dischargePatient(1);
                 $httpBackend.flush();
-                requestHandler.dischargePatient.respond(401, {message: 'test'});
+                requestHandler.dischargePatient.respond(401, {error: 'test'});
                 commonService.dischargePatient(1).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
@@ -291,7 +298,7 @@
             it('should call /query/patientDocuments', function () {
                 commonService.searchForPatientDocuments(3);
                 $httpBackend.flush();
-                requestHandler.getRestQueryPatientDocuments.respond(401, {message: 'test'});
+                requestHandler.getRestQueryPatientDocuments.respond(401, {error: 'test'});
                 commonService.searchForPatientDocuments(3).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
@@ -301,7 +308,7 @@
             it('should return data of a document', function () {
                 commonService.getDocument(3,2);
                 $httpBackend.flush();
-                requestHandler.getDocument.respond(401, {message: 'test'});
+                requestHandler.getDocument.respond(401, {error: 'test'});
                 commonService.getDocument(3,2).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
@@ -311,7 +318,7 @@
             it('should cache documents', function () {
                 commonService.cacheDocument(3,2);
                 $httpBackend.flush();
-                requestHandler.cacheDocument.respond(401, {message: 'test'});
+                requestHandler.cacheDocument.respond(401, {error: 'test'});
                 commonService.cacheDocument(3,2).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
@@ -321,8 +328,18 @@
             it('should call /organizations', function () {
                 commonService.queryOrganizations();
                 $httpBackend.flush();
-                requestHandler.getOrganizations.respond(401, {message: 'test'});
+                requestHandler.getOrganizations.respond(401, {error: 'test'});
                 commonService.queryOrganizations().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /organizations/statistics', function () {
+                commonService.getOrganizationStatistics();
+                $httpBackend.flush();
+                requestHandler.getOrganizationStatistics.respond(401, {error: 'test'});
+                commonService.getOrganizationStatistics().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
@@ -331,17 +348,25 @@
             it('should call /acfs', function () {
                 commonService.getAcfs();
                 $httpBackend.flush();
-                requestHandler.getAcfs.respond(401, {message: 'test'});
+                requestHandler.getAcfs.respond(401, {error: 'test'});
                 commonService.getAcfs().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
             });
 
+            it('should clear the token if an error comes back saying the ACF doesn\'t exist', function () {
+                spyOn(commonService, 'clearToken');
+                requestHandler.getAcfs.respond(401, {error: 'ACF something does not exist!'});
+                commonService.getAcfs();
+                $httpBackend.flush();
+                expect(commonService.clearToken).toHaveBeenCalled();
+            });
+
             it('should call /acfs/set', function () {
                 commonService.setAcf({});
                 $httpBackend.flush();
-                requestHandler.setAcf.respond(401, {message: 'a rejection'});
+                requestHandler.setAcf.respond(401, {error: 'a rejection'});
                 commonService.setAcf({}).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
@@ -351,7 +376,7 @@
             it('should call /acfs/create', function () {
                 commonService.createAcf(mock.newAcf);
                 $httpBackend.flush();
-                requestHandler.createAcf.respond(401, {message: 'a rejection'});
+                requestHandler.createAcf.respond(401, {error: 'a rejection'});
                 commonService.createAcf(mock.newAcf).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
@@ -363,7 +388,7 @@
                 $httpBackend.expectPOST(AuthAPI + '/jwt/setAcf', {acf: mock.newAcf}).respond(200, {});
                 commonService.editAcf(mock.newAcf);
                 $httpBackend.flush();
-                requestHandler.editAcf.respond(401, {message: 'a rejection'});
+                requestHandler.editAcf.respond(401, {error: 'a rejection'});
                 commonService.editAcf(mock.newAcf).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
@@ -381,7 +406,7 @@
             it('should call /queries/{{id}}/stage', function () {
                 commonService.stagePatient(mock.stagePatient);
                 $httpBackend.flush();
-                requestHandler.stagePatient.respond(401, {message: 'a rejection'});
+                requestHandler.stagePatient.respond(401, {error: 'a rejection'});
                 commonService.stagePatient(mock.stagePatient).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
@@ -392,7 +417,7 @@
                 expect(commonService.getPatientsAtAcf).toBeDefined();
                 commonService.getPatientsAtAcf();
                 $httpBackend.flush();
-                requestHandler.getPatientsAtAcf.respond(401, {message: 'a rejection'});
+                requestHandler.getPatientsAtAcf.respond(401, {error: 'a rejection'});
                 commonService.getPatientsAtAcf().then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
