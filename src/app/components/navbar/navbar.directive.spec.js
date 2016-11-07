@@ -7,12 +7,12 @@
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
+                    $delegate.getOrganizationStatistics = jasmine.createSpy('getOrganizationStatistics');
                     $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
                     $delegate.getUsername = jasmine.createSpy('getUsername');
                     $delegate.hasAcf = jasmine.createSpy('hasAcf');
                     $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
                     $delegate.logout = jasmine.createSpy('logout');
-                    $delegate.queryOrganizations = jasmine.createSpy('queryOrganizations');
                     $delegate.refreshToken = jasmine.createSpy('refreshToken');
                     return $delegate;
                 });
@@ -21,7 +21,7 @@
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
-                commonService.queryOrganizations.and.returnValue($q.when({}));
+                commonService.getOrganizationStatistics.and.returnValue($q.when({}));
 
                 el = angular.element('<ai-navbar></ai-navbar>');
 

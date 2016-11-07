@@ -20,6 +20,7 @@
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
+        self.getOrganizationStatistics = getOrganizationStatistics;
         self.getQueries = getQueries;
         self.getPatientsAtAcf = getPatientsAtAcf;
         self.getSamlUserToken = getSamlUserToken;
@@ -127,6 +128,10 @@
 
         function getDocument (patientId, documentId) {
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false');
+        }
+
+        function getOrganizationStatistics () {
+            return enhancedGet('/organizations/statistics');
         }
 
         function getQueries () {

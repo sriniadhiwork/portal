@@ -59,6 +59,7 @@
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
+            requestHandler.getOrganizationStatistics = $httpBackend.whenGET(API + '/organizations/statistics').respond(200, {results: mock.organizations});
             requestHandler.getQueries = $httpBackend.whenGET(API + '/queries').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
@@ -329,6 +330,16 @@
                 $httpBackend.flush();
                 requestHandler.getOrganizations.respond(401, {error: 'test'});
                 commonService.queryOrganizations().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /organizations/statistics', function () {
+                commonService.getOrganizationStatistics();
+                $httpBackend.flush();
+                requestHandler.getOrganizationStatistics.respond(401, {error: 'test'});
+                commonService.getOrganizationStatistics().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();

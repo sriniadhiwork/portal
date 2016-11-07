@@ -18,7 +18,7 @@
         <tr>
           <td ng-bind-html="vm.displayNames(vm.query.terms.patientNames)"></td>
           <td>{{ vm.query.terms.gender }}</td>
-          <td>{{ vm.query.terms.dob }}</td>
+          <td>{{ vm.query.terms.dob | ehealthdate }}</td>
         </tr>
       </tbody>
     </table>
@@ -40,7 +40,7 @@
           <td rowspan="{{ org.results.length }}" href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.org.name }}</td>
           <td href ng-click="org.results[0].selected = !org.results[0].selected" ng-bind-html="vm.displayNames(org.results[0].patientRecordName)"></td>
           <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].gender.description }}</td>
-          <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].dateOfBirth | date }}</td>
+          <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].dateOfBirth | ehealthdate }}</td>
           <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].ssn }}</td>
           <td>
             <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(org.results[0])"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
@@ -53,7 +53,7 @@
         <tr ng-repeat-end ng-repeat="record in org.results.slice(1)">
           <td href ng-click="record.selected = !record.selected" ng-bind-html="vm.displayNames(record.patientRecordName)"></td>
           <td href ng-click="record.selected = !record.selected">{{ record.gender.description }}</td>
-          <td href ng-click="record.selected = !record.selected">{{ record.dateOfBirth | date }}</td>
+          <td href ng-click="record.selected = !record.selected">{{ record.dateOfBirth | ehealthdate }}</td>
           <td href ng-click="record.selected = !record.selected">{{ record.ssn }}</td>
           <td>
             <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(record)"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
