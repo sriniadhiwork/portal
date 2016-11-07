@@ -36,6 +36,7 @@
             vm.clearQuery = clearQuery;
             vm.countComplete = countComplete;
             vm.displayName = displayName;
+            vm.displayNames = displayNames;
             vm.getQueries = getQueries;
             vm.getRecordCount = getRecordCount;
             vm.stagePatient = stagePatient;
@@ -73,6 +74,10 @@
 
             function displayName (name) {
                 return commonService.displayName(name);
+            }
+
+            function displayNames (names) {
+                return commonService.displayNames(names, '<br />');
             }
 
             function getQueries () {

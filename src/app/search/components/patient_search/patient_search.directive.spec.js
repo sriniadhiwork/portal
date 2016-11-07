@@ -4,6 +4,11 @@
     describe('search.aiPatientSearch', function() {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
         mock = {patientSearch: {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]}};
+        mock.badRequest = {
+            status:400,
+            error:'Bad Request',
+            message:'One of the following search parameters was blank or improperly formed: Name, Date of Birth, Gender'
+        };
         mock.dob = {
             year: '1999',
             month: '03',
@@ -45,9 +50,10 @@
 
                 vm.queryForm = {
                     $error: { required: [1, 2], invalid: [3], notAnError: 4 },
-                    $setDirty: function () { this.$dirty = true;
-                                             this.$pristine = false;
-                                           },
+                    $setDirty: function () {
+                        this.$dirty = true;
+                        this.$pristine = false;
+                    },
                     $setPristine: function () { this.$pristine = true; },
                     $setUntouched: function () { this.$untouched = true; }
                 };
@@ -116,68 +122,42 @@
                 expect(vm.triggerHandlers).toHaveBeenCalled();
             });
 
-            xit('should compile the date of birth fields on search', function () {
+            it('should compile the date of birth fields on search', function () {
                 var compiled = angular.copy(vm.query);
                 compiled.dob = '19990319110103-0800'
                 vm.searchForPatient();
                 expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
             });
 
-            xit('should handle dob fields without all the parameters', function () {
-                var compiled = angular.copy(vm.query);
-                delete vm.query.dob.second;
-                compiled.dob = '199903191101-0800'
-                vm.searchForPatient();
-                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
-
-                vm.query = angular.copy(mock.query);
-                delete vm.query.dob.second;
-                delete vm.query.dob.minute;
-                compiled.dob = '1999031911-0800'
-                vm.searchForPatient();
-                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
-
-                vm.query = angular.copy(mock.query);
-                delete vm.query.dob.second;
-                delete vm.query.dob.minute;
-                delete vm.query.dob.hour;
-                compiled.dob = '19990319-0800'
-                vm.searchForPatient();
-                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
-
-                vm.query = angular.copy(mock.query);
-                delete vm.query.dob.second;
-                delete vm.query.dob.minute;
-                delete vm.query.dob.hour;
-                delete vm.query.dob.day;
-                compiled.dob = '199903-0800'
-                vm.searchForPatient();
-                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
-
-                vm.query = angular.copy(mock.query);
-                delete vm.query.dob.second;
-                delete vm.query.dob.minute;
-                delete vm.query.dob.hour;
-                delete vm.query.dob.day;
-                delete vm.query.dob.month;
-                compiled.dob = '1999-0800'
-                vm.searchForPatient();
-                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
-
-                vm.query = angular.copy(mock.query);
-                delete vm.query.dob.second;
-                delete vm.query.dob.minute;
-                delete vm.query.dob.hour;
-                delete vm.query.dob.day;
-                delete vm.query.dob.month;
-                delete vm.query.dob.z;
-                compiled.dob = '1999'
-                vm.searchForPatient();
-                expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
-            });
-
             it('should have a way to assemble the DOB', function () {
                 expect(vm.assembledDob()).toBe('19990319110103-0800');
+            });
+
+            it('should handle dob fields without all the parameters', function () {
+                delete vm.query.dob.second;
+                expect(vm.assembledDob()).toBe('199903191101-0800');
+
+                delete vm.query.dob.minute;
+                expect(vm.assembledDob()).toBe('1999031911-0800');
+
+                delete vm.query.dob.hour;
+                expect(vm.assembledDob()).toBe('19990319-0800');
+
+                delete vm.query.dob.day;
+                expect(vm.assembledDob()).toBe('199903-0800');
+
+                delete vm.query.dob.month;
+                expect(vm.assembledDob()).toBe('1999-0800');
+
+                delete vm.query.dob.z;
+                expect(vm.assembledDob()).toBe('1999');
+            });
+
+            it('should show an error if the search is bad', function () {
+                commonService.searchForPatient.and.returnValue($q.reject({data: mock.badRequest}));
+                vm.searchForPatient();
+                el.isolateScope().$digest();
+                expect(vm.errorMessage).toBe(mock.badRequest.message);
             });
         });
 
