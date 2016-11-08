@@ -12,6 +12,7 @@
         self.cacheDocument = cacheDocument;
         self.cancelQueryOrganization = cancelQueryOrganization;
         self.clearQuery = clearQuery;
+        self.clearToken = clearToken;
         self.createAcf = createAcf;
         self.dischargePatient = dischargePatient;
         self.displayName = displayName;
@@ -19,6 +20,7 @@
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
+        self.getOrganizationStatistics = getOrganizationStatistics;
         self.getQueries = getQueries;
         self.getPatientsAtAcf = getPatientsAtAcf;
         self.getSamlUserToken = getSamlUserToken;
@@ -50,6 +52,10 @@
 
         function clearQuery (queryId) {
             return enhancedPost('/queries/' + queryId + '/delete', {});
+        }
+
+        function clearToken () {
+            delete($localStorage.jwtToken);
         }
 
         function createAcf (newAcf) {
@@ -122,6 +128,10 @@
 
         function getDocument (patientId, documentId) {
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false');
+        }
+
+        function getOrganizationStatistics () {
+            return enhancedGet('/organizations/statistics');
         }
 
         function getQueries () {
@@ -219,7 +229,7 @@
                 else
                     valid = false;
                 if (!valid)
-                    delete($localStorage.jwtToken);
+                    self.clearToken();
             } else {
                 valid = false;
             }
@@ -227,7 +237,7 @@
         }
 
         function logout () {
-            delete($localStorage.jwtToken);
+            self.clearToken();
             $window.location.replace(LogoutRedirect);
         }
 
@@ -282,6 +292,10 @@
                 .then(function(response) {
                     return $q.when(response.data);
                 }, function (response) {
+                    $log.debug(angular.toJson(response));
+                    if (response.data.error && response.data.error.match(/ACF.*does not exist!/)) {
+                        self.clearToken();
+                    }
                     return $q.reject(response);
                 });
         }

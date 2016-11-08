@@ -3,21 +3,9 @@
     <a href id="organization-status-toggle" uib-dropdown-toggle is-open="!vm.hidePanel">
       {{ vm.hidePanel ? 'Show' : 'Hide' }} Organization Status
     </a>
-    <table class="table fade dropdown-menu pull-right" uib-dropdown-menu aria-labelledby="organization-status-toggle">
-      <thead>
-        <tr>
-          <th scope="cols">Organization</th>
-          <th scope="cols">Phone</th>
-          <th scope="cols">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="org in vm.organizations track by $index">
-          <td>{{ org.name }}</td>
-          <td>123-123-1234</td>
-          <td>{{ org.id > 2 ? 'Average 2 minute delay' : 'Connected' }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="row fade dropdown-menu pull-right" uib-dropdown-menu aria-labelledby="organization-status-toggle">
+      <div class="col-sm-12" ng-repeat="org in vm.organizationStatistics track by $index">
+        <div google-chart chart="org.statistics"></div>
+    </div>
   </span>
 </div>
