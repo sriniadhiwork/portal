@@ -3,5 +3,7 @@
 
     .dropdown-menu {
         min-width: 400px;
+        overflow: auto;
+        max-height: 400px;
     }
 }

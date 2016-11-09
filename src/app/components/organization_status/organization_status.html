@@ -4,8 +4,9 @@
       {{ vm.hidePanel ? 'Show' : 'Hide' }} Organization Status
     </a>
     <div class="row fade dropdown-menu pull-right" uib-dropdown-menu aria-labelledby="organization-status-toggle">
-      <div class="col-sm-12" ng-repeat="org in vm.organizationStatistics track by $index">
-        <div google-chart chart="org.statistics"></div>
+      <div class="col-sm-12" ng-repeat="org in vm.organizationStatistics | orderBy:'org.name' track by $index">
+        <div ng-if="org.statistics" google-chart chart="org.statistics"></div>
+        <div ng-if="!org.statistics"><strong>{{ org.org.name }}</strong>: No status at this time</div>
     </div>
   </span>
 </div>
