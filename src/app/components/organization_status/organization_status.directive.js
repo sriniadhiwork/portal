@@ -41,16 +41,20 @@
                 commonService.getOrganizationStatistics().then(function (response) {
                     vm.organizationStatistics = response;
                     for (var i = 0; i < vm.organizationStatistics.length; i++) {
-                        vm.organizationStatistics[i].statistics = { type: 'PieChart'};
-                        vm.organizationStatistics[i].statistics.options = {
-                            title: vm.organizationStatistics[i].org.name + ' (average response time: ' + vm.organizationStatistics[i].patientDiscoveryStats.requestAvgCompletionSeconds + 's)',
-                            is3D: true
-                        };
-                        vm.organizationStatistics[i].statistics.data = { cols: [{ id: 's', label: 'Status', type: 'string' },
-                                                                                { id: 'c', label: 'Count', type: 'number' }],
-                                                                         rows: [{ c: [{ v: 'Success'}, { v: vm.organizationStatistics[i].patientDiscoveryStats.requestSuccessCount}]},
-                                                                                { c: [{ v: 'Failed'}, { v: vm.organizationStatistics[i].patientDiscoveryStats.requestFailureCount}]},
-                                                                                { c: [{ v: 'Cancelled'}, { v: vm.organizationStatistics[i].patientDiscoveryStats.requestCancelledCount}]}]};
+                        if (vm.organizationStatistics[i].patientDiscoveryStats.requestCount > 0) {
+                            vm.organizationStatistics[i].statistics = { type: 'PieChart'};
+                            vm.organizationStatistics[i].statistics.options = {
+                                title: vm.organizationStatistics[i].org.name + ' (average response time: ' + vm.organizationStatistics[i].patientDiscoveryStats.requestAvgCompletionSeconds + 's)',
+                                is3D: true
+                            };
+                            vm.organizationStatistics[i].statistics.data = { cols: [{ id: 's', label: 'Status', type: 'string' },
+                                                                                    { id: 'c', label: 'Count', type: 'number' }],
+                                                                             rows: [{ c: [{ v: 'Success'}, { v: vm.organizationStatistics[i].patientDiscoveryStats.requestSuccessCount}]},
+                                                                                    { c: [{ v: 'Failed'}, { v: vm.organizationStatistics[i].patientDiscoveryStats.requestFailureCount}]},
+                                                                                    { c: [{ v: 'Cancelled'}, { v: vm.organizationStatistics[i].patientDiscoveryStats.requestCancelledCount}]}]};
+                        } else {
+                            vm.organizationStatistics[i].statistics = null;
+                        }
                     }
                 });
             }

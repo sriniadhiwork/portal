@@ -60,6 +60,13 @@
             expect(vm.organizationStatistics[0].statistics).toEqual(mock.chart);
         });
 
+        it('should leave statistics as null if the organization has no requests', function () {
+            expect(vm.organizationStatistics[0].statistics).toBeDefined();
+            mock.statistics[0].patientDiscoveryStats.requestCount = 0;
+            $interval.flush(vm.INTERVAL_MILLIS);
+            expect(vm.organizationStatistics[0].statistics).toBe(null);
+        });
+
         it('should re-query the organization statistics on a regular interval', function () {
             expect(commonService.getOrganizationStatistics.calls.count()).toBe(1);
             $interval.flush(vm.INTERVAL_MILLIS);
