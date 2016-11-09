@@ -363,6 +363,13 @@
                 expect(commonService.clearToken).toHaveBeenCalled();
             });
 
+            it('should redirect the user if an error comes back saying the ACF doesn\'t exist', function () {
+                requestHandler.getAcfs.respond(401, {error: 'ACF something does not exist!'});
+                commonService.getAcfs();
+                $httpBackend.flush();
+                expect($window.location.replace).toHaveBeenCalledWith('#/');
+            });
+
             it('should call /acfs/set', function () {
                 commonService.setAcf({});
                 $httpBackend.flush();
