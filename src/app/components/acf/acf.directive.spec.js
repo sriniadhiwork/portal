@@ -6,6 +6,10 @@
         mock = {};
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
         mock.fakeAcf = { name: 'fake', address: {city: 'city', lines: ['','123 Main St']}};
+        mock.badRequest = {
+            status: 400,
+            error: 'ACF name is required.'
+        };
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -100,6 +104,15 @@
             vm.selectAcf = null;
             vm.acfSubmit();
             expect(commonService.setAcf).not.toHaveBeenCalled();
+        });
+
+        it('should show an error if create goes wrong', function () {
+            vm.acf = angular.copy(mock.fakeAcf);
+            vm.mode = 'enter';
+            commonService.createAcf.and.returnValue($q.reject({data: mock.badRequest}));
+            vm.acfSubmit();
+            el.isolateScope().$digest();
+            expect(vm.errorMessage).toBe(mock.badRequest.error);
         });
 
         it('should call setAcf after createAcf', function () {
