@@ -131,5 +131,8 @@
       <li ng-if="vm.queryForm.dob.$error.required">Date of Birth is required</li>
       <li ng-if="!vm.isStageable()">At least one record must be selected</li>
     </ul>
+    <div class="row" ng-if="vm.errorMessage">
+      <div class="col-sm-12 bg-danger text-left">{{ vm.errorMessage }}</div>
+    </div>
   </div>
 </div>
