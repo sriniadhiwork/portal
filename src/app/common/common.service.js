@@ -20,6 +20,7 @@
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
+        self.getOrganizationStatistics = getOrganizationStatistics;
         self.getQueries = getQueries;
         self.getPatientsAtAcf = getPatientsAtAcf;
         self.getSamlUserToken = getSamlUserToken;
@@ -127,6 +128,10 @@
 
         function getDocument (patientId, documentId) {
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false');
+        }
+
+        function getOrganizationStatistics () {
+            return enhancedGet('/organizations/statistics');
         }
 
         function getQueries () {
@@ -287,9 +292,9 @@
                 .then(function(response) {
                     return $q.when(response.data);
                 }, function (response) {
-                    $log.debug(angular.toJson(response));
                     if (response.data.error && response.data.error.match(/ACF.*does not exist!/)) {
                         self.clearToken();
+                        $window.location.replace('#/');
                     }
                     return $q.reject(response);
                 });

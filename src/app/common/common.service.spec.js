@@ -59,6 +59,7 @@
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
             requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
+            requestHandler.getOrganizationStatistics = $httpBackend.whenGET(API + '/organizations/statistics').respond(200, {results: mock.organizations});
             requestHandler.getQueries = $httpBackend.whenGET(API + '/queries').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
@@ -334,6 +335,16 @@
                 $httpBackend.flush();
             });
 
+            it('should call /organizations/statistics', function () {
+                commonService.getOrganizationStatistics();
+                $httpBackend.flush();
+                requestHandler.getOrganizationStatistics.respond(401, {error: 'test'});
+                commonService.getOrganizationStatistics().then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
             it('should call /acfs', function () {
                 commonService.getAcfs();
                 $httpBackend.flush();
@@ -350,6 +361,13 @@
                 commonService.getAcfs();
                 $httpBackend.flush();
                 expect(commonService.clearToken).toHaveBeenCalled();
+            });
+
+            it('should redirect the user if an error comes back saying the ACF doesn\'t exist', function () {
+                requestHandler.getAcfs.respond(401, {error: 'ACF something does not exist!'});
+                commonService.getAcfs();
+                $httpBackend.flush();
+                expect($window.location.replace).toHaveBeenCalledWith('#/');
             });
 
             it('should call /acfs/set', function () {
