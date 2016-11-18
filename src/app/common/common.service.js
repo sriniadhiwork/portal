@@ -292,7 +292,6 @@
                 .then(function(response) {
                     return $q.when(response.data);
                 }, function (response) {
-                    $log.debug(angular.toJson(response));
                     if (response.data.error && response.data.error.match(/ACF.*does not exist!/)) {
                         self.clearToken();
                         $window.location.replace('#/');

@@ -103,10 +103,13 @@
             <div class="col-sm-10 col-sm-offset-1 text-danger">
               The following error must be fixed:
               <ul>
-                <li ng-if="!vm.validName() && vm.mode === 'enter'">ACF already exists</span>
+                <li ng-if="!vm.validName() && vm.mode === 'enter'">ACF already exists</li>
                 <li ng-if="vm.queryForm.acfName.$error.required">ACF Name is required</li>
               </ul>
             </div>
+          </div>
+          <div class="row" ng-if="vm.errorMessage">
+            <div class="col-sm-12 bg-danger">{{ vm.errorMessage }}</div>
           </div>
         </div>
       </div>

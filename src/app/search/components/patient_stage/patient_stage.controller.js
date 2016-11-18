@@ -56,8 +56,8 @@
             if (vm.isStageable()) {
 
                 //////// debug
-                vm.patient.givenName = 'fakegivenname';
-                vm.patient.familyName = 'fakefamilyname';
+                //vm.patient.givenName = 'fakegivenname';
+                //vm.patient.familyName = 'fakefamilyname';
                 //////// end debug
 
                 var newPatient = {
@@ -80,6 +80,8 @@
                 }
                 commonService.stagePatient(newPatient).then(function() {
                     $uibModalInstance.close()
+                }, function (error) {
+                    vm.errorMessage = error.data.error;
                 });
             }
         }

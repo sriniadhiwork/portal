@@ -61,6 +61,8 @@
                         commonService.setAcf(response).then(function () {
                             $location.path('/search');
                         });
+                    }, function (error) {
+                        vm.errorMessage = error.data.error;
                     });
                 } else {
                     if (vm.selectAcf) {
