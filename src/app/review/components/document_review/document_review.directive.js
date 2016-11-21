@@ -21,10 +21,12 @@
         return directive;
 
         /** @ngInject */
-        function DocumentReviewController($filter, $scope) {
+        function DocumentReviewController($filter, $scope, x2js, commonService) {
             var vm = this;
 
             vm.cancel = cancel;
+            vm.displayName = commonService.displayName;
+            vm.whatSLeft = whatSLeft;
 
             activate();
 
@@ -32,16 +34,26 @@
 
             function activate () {
                 vm.transformedDocument = '';
+                vm.doc = {};
+                vm.displayType = 'html';
                 vm.xslt = loadXMLDoc('assets/xslt/CDA_Style.xsl');
                 $scope.$watch('vm.activeDocument', function (newDoc) {
-                    if (newDoc)
+                    if (newDoc) {
                         vm.transformedDocument = $filter('xslt')(newDoc.data, vm.xslt);
+                        vm.doc = x2js.xml_str2json(vm.activeDocument.data);
+                    }
                 });
             }
 
             function cancel () {
                 vm.activeDocument = undefined;
                 vm.transformedDocument = '';
+            }
+
+            function whatSLeft () {
+                var ret = angular.copy (vm.doc);
+                if (ret && ret.ClinicalDocument) delete ret.ClinicalDocument.recordTarget;
+                return ret;
             }
 
             ////////////////////////////////////////////////////////////////////

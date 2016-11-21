@@ -10,9 +10,106 @@
     </div>
     <div class="panel-body slide" ng-if="!vm.hidePanel">
       <div ng-if="vm.activeDocument">
-        Showing <button href ng-click="vm.showRaw = !vm.showRaw" class="btn btn-default btn-sm">{{ vm.showRaw ? 'raw' : 'transformed' }}</button> document information
-        <div ng-if="!vm.showRaw" ng-bind-html="vm.transformedDocument"></div>
-        <div ng-if="vm.showRaw"><pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre></div>
+        Showing
+        <select ng-model="vm.displayType">
+          <option value="raw">Raw</option>
+          <option value="json">Json</option>
+          <option value="xslt">XSLT transformed</option>
+          <option value="html">HTML transformed</option>
+        </select>
+        document information
+        <div ng-if="vm.displayType === 'raw'"><pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre></div>
+        <div ng-if="vm.displayType === 'json'"><pre>{{ vm.doc | json }}</pre></div>
+        <table>
+          <tr valign="top">
+            <td>
+              <div ng-bind-html="vm.transformedDocument"></div>
+            </td>
+            <td>
+              <div>
+                <h3>{{ vm.doc.ClinicalDocument.title }}</h3>
+                <table class="table table-condensed">
+                  <tr>
+                    <th scope="row">Patient</th>
+                    <td>{{ vm.doc.ClinicalDocument.recordTarget.patientRole.patient.name }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Date of Birth</th>
+                    <td>{{ vm.doc.ClinicalDocument.recordTarget.patientRole.patient.birthTime['_value'] }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Sex</th>
+                    <td>{{ vm.doc.ClinicalDocument.recordTarget.patientRole.patient.administrativeGenderCode.originalText }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Language</th>
+                    <td>{{ vm.doc.ClinicalDocument.recordTarget.patientRole.patient.languageCommunication.languageCode._code }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Race</th>
+                    <td>{{ vm.doc.ClinicalDocument.recordTarget.patientRole.patient.raceCode.originalText }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Ethnic Group</th>
+                    <td>{{ vm.doc.ClinicalDocument.recordTarget.patientRole.patient.ethnicGroupCode.originalText }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Contact Information</th>
+                    <td>
+                      {{ vm.doc.ClinicalDocument.recordTarget.patientRole.addr }}<br />
+                      {{ vm.doc.ClinicalDocument.recordTarget.patientRole.telecom._value }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Confidentiality</th>
+                    <td>{{ vm.doc.ClinicalDocument.confidentialityCode._displayName }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Document Id</th>
+                    <td>{{ vm.doc.ClinicalDocument.id._extension }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Document Created</th>
+                    <td>{{ vm.doc.ClinicalDocument.effectiveTime._value }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Author</th>
+                    <td>{{ vm.doc.ClinicalDocument.author.assignedAuthor.assignedAuthoringDevice.softwareName }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Contact Information</th>
+                    <td>
+                      {{ vm.doc.ClinicalDocument.author.assignedAuthor.addr }}<br />
+                      {{ vm.doc.ClinicalDocument.author.assignedAuthor.telecom }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Document Mainted By</th>
+                    <td>{{ vm.doc.ClinicalDocument.recordTarget.patientRole.providerOrganization.name }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Contact Information</th>
+                    <td>
+                      {{ vm.doc.ClinicalDocument.recordTarget.patientRole.providerOrganization.addr }}<br />
+                      {{ vm.doc.ClinicalDocument.recordTarget.patientRole.providerOrganization.telecom._value }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Care Members</th>
+                    <td>
+                      {{ vm.doc.ClinicalDocument.documentationOf.serviceEvent.performer.assignedEntity.assignedPerson.name }}<br />
+                      {{ vm.doc.ClinicalDocument.documentationOf.serviceEvent.performer.assignedEntity.addr }}<br />
+                      {{ vm.doc.ClinicalDocument.documentationOf.serviceEvent.performer.assignedEntity.telecom._value }}<br />
+                    </td>
+                  </tr>
+                </table>
+                <h4 id="toc">Table of Contents</h4>
+                <pre>{{ vm.doc.ClinicalDocument.component | json }}</pre>
+                <pre>{{ vm.whatSLeft(vm.doc.ClinicalDocument)  }}</pre>
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
       <div ng-if="!vm.activeDocument">
         No document currently loaded
