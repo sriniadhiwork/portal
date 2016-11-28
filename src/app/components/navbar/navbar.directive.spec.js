@@ -4,14 +4,14 @@
     describe('navbar.directive', function() {
         var vm, el, scope, $log, $q, commonService;
         var mock = {statistics: [
-            {org:{name:'Santa Cruz',id:1,organizationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:78,requestSuccessAvgCompletionSeconds:78,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}},
-            {org:{name:'Sutter Health',id:2,organizationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:69,requestSuccessAvgCompletionSeconds:69,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}},
-            {org:{name:'Dignity Health',id:3,organizationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:63,requestSuccessAvgCompletionSeconds:63,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}}]};
+            {location:{name:'Santa Cruz',id:1,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:78,requestSuccessAvgCompletionSeconds:78,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}},
+            {location:{name:'Sutter Health',id:2,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:69,requestSuccessAvgCompletionSeconds:69,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}},
+            {location:{name:'Dignity Health',id:3,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:63,requestSuccessAvgCompletionSeconds:63,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}}]};
 
         beforeEach(function () {
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
-                    $delegate.getOrganizationStatistics = jasmine.createSpy('getOrganizationStatistics');
+                    $delegate.getLocationStatistics = jasmine.createSpy('getLocationStatistics');
                     $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
                     $delegate.getUsername = jasmine.createSpy('getUsername');
                     $delegate.hasAcf = jasmine.createSpy('hasAcf');
@@ -25,7 +25,7 @@
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;
-                commonService.getOrganizationStatistics.and.returnValue($q.when(mock.statistics));
+                commonService.getLocationStatistics.and.returnValue($q.when(mock.statistics));
 
                 el = angular.element('<ai-navbar></ai-navbar>');
 

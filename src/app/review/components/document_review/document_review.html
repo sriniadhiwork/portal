@@ -85,13 +85,13 @@
                   </tr>
                   <tr>
                     <th scope="row">Document Mainted By</th>
-                    <td>{{ vm.doc.ClinicalDocument.recordTarget.patientRole.providerOrganization.name }}</td>
+                    <td>{{ vm.doc.ClinicalDocument.recordTarget.patientRole.providerLocation.name }}</td>
                   </tr>
                   <tr>
                     <th scope="row">Contact Information</th>
                     <td>
-                      {{ vm.doc.ClinicalDocument.recordTarget.patientRole.providerOrganization.addr }}<br />
-                      {{ vm.doc.ClinicalDocument.recordTarget.patientRole.providerOrganization.telecom._value }}
+                      {{ vm.doc.ClinicalDocument.recordTarget.patientRole.providerLocation.addr }}<br />
+                      {{ vm.doc.ClinicalDocument.recordTarget.patientRole.providerLocation.telecom._value }}
                     </td>
                   </tr>
                   <tr>

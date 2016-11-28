@@ -4,25 +4,25 @@
     describe('review.aiAcfPatientList', function() {
         var vm, el, scope, $log, $timeout, $q, commonService, mock;
         mock = {
-            documents: [[{id:"8",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"7",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"5",name:"VCN CCDA.xml",orgMapId:6,patient:null},{id:"6",name:"VCN CCDA.xml",orgMapId:6,patient:null}],
-                        [{id:"8",name:"VCN CCDA.xml",cached:true,orgMapId:6,patient:null}]],
+            documents: [[{id:"8",name:"VCN CCDA.xml",locationMapId:6,patient:null},{id:"7",name:"VCN CCDA.xml",locationMapId:6,patient:null},{id:"5",name:"VCN CCDA.xml",locationMapId:6,patient:null},{id:"6",name:"VCN CCDA.xml",locationMapId:6,patient:null}],
+                        [{id:"8",name:"VCN CCDA.xml",cached:true,locationMapId:6,patient:null}]],
             fakeDocument: {data: "<document><made><of>XML</of></made></document"},
             userAcf: {name: 'ACF Number 1'}
         };
         mock.documentList = angular.copy([].concat(mock.documents[0]).concat(mock.documents[1]));
         for (var i = 0; i < mock.documentList.length - 1; i++) {
-            mock.documentList[i].organization = 'OrganizationThreeUpdatedName';
+            mock.documentList[i].location = 'LocationThreeUpdatedName';
         }
-        mock.documentList[4].organization = 'IHE Org';
-        mock.patients = [{id:3,orgPatientId:null,fullName:"John Smith",friendlyName:"John",dateOfBirth:null,gender:"M",
+        mock.documentList[4].location = 'IHE location';
+        mock.patients = [{id:3,locationPatientId:null,fullName:"John Smith",friendlyName:"John",dateOfBirth:null,gender:"M",
                         ssn:"451674563",lastRead:1471014744607,
                         acf:{id:4,name:"Fake",phoneNumber:null,address:null,lastRead:null},
-                        orgMaps:[
-                            {id:6,patientId:3,organization:{name:"OrganizationThreeUpdatedName",id:1,organizationId:4,adapter:"eHealth",ipAddress:"127.0.0.14",username:"org1User",password:"password1",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ehealthexchange",active:true},documentsQueryStatus:"Complete",documentsQuerySuccess:true,documentsQueryStart:1471014744718,documentsQueryEnd:1471014744880,
+                        locationMaps:[
+                            {id:6,patientId:3,location:{name:"LocationThreeUpdatedName",id:1,locationId:4,adapter:"eHealth",ipAddress:"127.0.0.14",username:"location1User",password:"password1",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ehealthexchange",active:true},documentsQueryStatus:"Complete",documentsQuerySuccess:true,documentsQueryStart:1471014744718,documentsQueryEnd:1471014744880,
                              documents:mock.documents[0]},
-                            {id:5,patientId:3,organization:{name:"IHE Org",id:2,organizationId:2,adapter:"IHE",ipAddress:"127.0.0.1",username:null,password:null,certificationKey:"1234567",endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"Complete",documentsQuerySuccess:true,documentsQueryStart:1471014744707,documentsQueryEnd:1471014744753,
+                            {id:5,patientId:3,location:{name:"IHE location",id:2,locationId:2,adapter:"IHE",ipAddress:"127.0.0.1",username:null,password:null,certificationKey:"1234567",endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"Complete",documentsQuerySuccess:true,documentsQueryStart:1471014744707,documentsQueryEnd:1471014744753,
                              documents:mock.documents[1]},
-                            {id:4,patientId:3,organization:{name:"IHE Org 2",id:3,organizationId:3,adapter:"eHealth",ipAddress:"127.0.0.1",username:"org3User",password:"password3",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"Active",documentsQuerySuccess:null,documentsQueryStart:1471014744634,documentsQueryEnd:null,
+                            {id:4,patientId:3,location:{name:"IHE location 2",id:3,locationId:3,adapter:"eHealth",ipAddress:"127.0.0.1",username:"location3User",password:"password3",certificationKey:null,endpointUrl:"http://localhost:9080/mock/ihe",active:true},documentsQueryStatus:"Active",documentsQuerySuccess:null,documentsQueryStart:1471014744634,documentsQueryEnd:null,
                              documents:[]}]}
                         ];
 
@@ -76,43 +76,43 @@
         });
 
         it('should have a way to cache a document', function () {
-            expect(vm.patients[0].orgMaps[0].documents[0].cached).toBeUndefined();
+            expect(vm.patients[0].locationMaps[0].documents[0].cached).toBeUndefined();
             expect(vm.cacheDocument).toBeDefined();
 
-            vm.cacheDocument(vm.patients[0], vm.patients[0].orgMaps[0].documents[0]);
+            vm.cacheDocument(vm.patients[0], vm.patients[0].locationMaps[0].documents[0]);
             el.isolateScope().$digest();
 
             expect(commonService.cacheDocument).toHaveBeenCalledWith(3, '8');
-            expect(vm.patients[0].orgMaps[0].documents[0].cached).toBe(true);
+            expect(vm.patients[0].locationMaps[0].documents[0].cached).toBe(true);
         });
 
         it('should not try to cache the same document twice', function () {
-            vm.cacheDocument(vm.patients[0], vm.patients[0].orgMaps[0].documents[0]);
+            vm.cacheDocument(vm.patients[0], vm.patients[0].locationMaps[0].documents[0]);
             el.isolateScope().$digest();
 
-            vm.cacheDocument(vm.patients[0], vm.patients[0].orgMaps[0].documents[0]);
+            vm.cacheDocument(vm.patients[0], vm.patients[0].locationMaps[0].documents[0]);
             el.isolateScope().$digest();
             expect(commonService.cacheDocument.calls.count()).toBe(1);
         });
 
         it('should have a way to get a document', function () {
             var patient = vm.patients[0];
-            vm.cacheDocument(patient, patient.orgMaps[0].documents[0]);
+            vm.cacheDocument(patient, patient.locationMaps[0].documents[0]);
             el.isolateScope().$digest();
 
-            vm.getDocument(patient, patient.orgMaps[0].documents[0]);
+            vm.getDocument(patient, patient.locationMaps[0].documents[0]);
             el.isolateScope().$digest();
 
             expect(commonService.getDocument).toHaveBeenCalledWith(3, '8');
-            expect(vm.activeDocument).toEqual(patient.orgMaps[0].documents[0]);
+            expect(vm.activeDocument).toEqual(patient.locationMaps[0].documents[0]);
         });
 
         it('should not re-call the service if the document is already cached', function () {
             var patient = vm.patients[0];
-            vm.getDocument(patient, patient.orgMaps[0].documents[0]);
+            vm.getDocument(patient, patient.locationMaps[0].documents[0]);
             el.isolateScope().$digest();
 
-            vm.getDocument(patient, patient.orgMaps[0].documents[0]);
+            vm.getDocument(patient, patient.locationMaps[0].documents[0]);
             el.isolateScope().$digest();
             expect(commonService.getDocument.calls.count()).toBe(1);
         });
@@ -163,7 +163,7 @@
 
         it('should know how many documents a patient has', function () {
             var patient = vm.patients[0];
-            vm.cacheDocument(patient, patient.orgMaps[0].documents[0]);
+            vm.cacheDocument(patient, patient.locationMaps[0].documents[0]);
             el.isolateScope().$digest();
             expect(patient.documentStatus).toEqual({total: 5, cached: 2});
         });
@@ -171,7 +171,7 @@
         it('should know how many document queries are active', function () {
             expect(vm.countActive).toBeDefined();
             expect(vm.countActive(vm.patients[0])).toBe(1);
-            vm.patients[0].orgMaps[2].documentsQueryStatus = 'Complete';
+            vm.patients[0].locationMaps[2].documentsQueryStatus = 'Complete';
             expect(vm.countActive(vm.patients[0])).toBe(0);
         });
 
@@ -272,7 +272,7 @@
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(5);
 
                 var completePatients = angular.copy(vm.patients);
-                completePatients[0].orgMaps[2].documentsQueryStatus = 'Complete';
+                completePatients[0].locationMaps[2].documentsQueryStatus = 'Complete';
                 commonService.getPatientsAtAcf.and.returnValue($q.when(completePatients));
                 $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(6);
@@ -283,7 +283,7 @@
             it('should refresh patients on a longer timescale when all are complete', function () {
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(1);
                 var completePatients = angular.copy(vm.patients);
-                completePatients[0].orgMaps[2].documentsQueryStatus = 'Complete';
+                completePatients[0].locationMaps[2].documentsQueryStatus = 'Complete';
                 commonService.getPatientsAtAcf.and.returnValue($q.when(completePatients));
                 $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(2);
