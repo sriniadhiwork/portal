@@ -42,10 +42,10 @@
 
         function isStageable () {
             var ret = false;
-            if (vm.query && vm.query.orgStatuses) {
-                for (var i = 0; i < vm.query.orgStatuses.length; i++) {
-                    for (var j = 0; j < vm.query.orgStatuses[i].results.length; j++) {
-                        ret = ret || vm.query.orgStatuses[i].results[j].selected;
+            if (vm.query && vm.query.locationStatuses) {
+                for (var i = 0; i < vm.query.locationStatuses.length; i++) {
+                    for (var j = 0; j < vm.query.locationStatuses[i].results.length; j++) {
+                        ret = ret || vm.query.locationStatuses[i].results[j].selected;
                     }
                 }
             }
@@ -71,10 +71,10 @@
                         pad((vm.patient.dateOfBirth.getMonth() + 1) , 2) + '-' +
                         pad(vm.patient.dateOfBirth.getDate(), 2);
                 }
-                for (var i = 0; i < vm.query.orgStatuses.length; i++) {
-                    for (var j = 0; j < vm.query.orgStatuses[i].results.length; j++) {
-                        if (vm.query.orgStatuses[i].results[j].selected) {
-                            newPatient.patientRecordIds.push(vm.query.orgStatuses[i].results[j].id);
+                for (var i = 0; i < vm.query.locationStatuses.length; i++) {
+                    for (var j = 0; j < vm.query.locationStatuses[i].results.length; j++) {
+                        if (vm.query.locationStatuses[i].results[j].selected) {
+                            newPatient.patientRecordIds.push(vm.query.locationStatuses[i].results[j].id);
                         }
                     }
                 }

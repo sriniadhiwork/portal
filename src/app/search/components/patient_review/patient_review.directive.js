@@ -32,7 +32,7 @@
         function PatientReviewController($log, $scope, $timeout, $uibModal, commonService, QueryQueryTimeout) {
             var vm = this;
 
-            vm.cancelQueryOrganization = cancelQueryOrganization;
+            vm.cancelQueryLocation = cancelQueryLocation;
             vm.clearQuery = clearQuery;
             vm.countComplete = countComplete;
             vm.displayName = displayName;
@@ -51,9 +51,9 @@
                 vm.getQueries();
             }
 
-            function cancelQueryOrganization (orgStatus) {
-                orgStatus.isClearing = true;
-                commonService.cancelQueryOrganization(orgStatus.queryId, orgStatus.org.id);
+            function cancelQueryLocation (locationStatus) {
+                locationStatus.isClearing = true;
+                commonService.cancelQueryLocation(locationStatus.queryId, locationStatus.location.id);
             }
 
             function clearQuery (query) {
@@ -64,8 +64,8 @@
 
             function countComplete (query) {
                 var count = 0;
-                for (var i = 0; i < query.orgStatuses.length; i++) {
-                    if (query.orgStatuses[i].status !== 'Active') {
+                for (var i = 0; i < query.locationStatuses.length; i++) {
+                    if (query.locationStatuses[i].status !== 'Active') {
                         count += 1;
                     }
                 }
@@ -96,8 +96,8 @@
 
             function getRecordCount (query) {
                 var recordCount = 0;
-                for (var i = 0; i < query.orgStatuses.length; i++) {
-                    recordCount += query.orgStatuses[i].results.length;
+                for (var i = 0; i < query.locationStatuses.length; i++) {
+                    recordCount += query.locationStatuses[i].results.length;
                 }
                 return recordCount;
             }

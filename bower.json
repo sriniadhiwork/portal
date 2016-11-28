@@ -24,7 +24,8 @@
     "ng-idle": "^1.3.0",
     "ng-filters": "^1.3.1",
     "angularjs-ordinal-filter": "^2.1.3",
-    "angular-google-chart": "^0.1.0"
+    "angular-google-chart": "^0.1.0",
+    "angular-x2js": "^0.2.0"
   },
   "devDependencies": {},
   "overrides": {
@@ -36,6 +37,6 @@
     }
   },
   "resolutions": {
-    "angular": "~1.5.3"
+    "angular": "1.5.8"
   }
 }

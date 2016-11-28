@@ -21,7 +21,7 @@
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
         mock.fakeDocument = {data: '<document><made><of>XML</of></made></document'};
         mock.newAcf = {name: 'New ACF'};
-        mock.organizations = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
+        mock.locations = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
         mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
         mock.patientQueryResponse = {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]};
         mock.stagePatient = { patientRecords: [0,1], id: 1, patient: { givenName: 'Joe', familyName: 'Watson' } };
@@ -51,15 +51,15 @@
 
             spyOn($window.location, 'replace');
             requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
-            requestHandler.cancelQueryOrganization = $httpBackend.whenPOST(API + '/queries/1/2/cancel', {}).respond(200, true);
+            requestHandler.cancelQueryLocation = $httpBackend.whenPOST(API + '/queries/1/2/cancel', {}).respond(200, true);
             requestHandler.clearQuery = $httpBackend.whenPOST(API + '/queries/1/delete', {}).respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
             requestHandler.dischargePatient = $httpBackend.whenPOST(API + '/patients/1/delete', {}).respond(200, true);
             requestHandler.editAcf = $httpBackend.whenPOST(API + '/acfs/1/edit', mock.newAcf).respond(200, {acf: mock.newAcf});
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
-            requestHandler.getOrganizations = $httpBackend.whenGET(API + '/organizations').respond(200, {results: mock.organizations});
-            requestHandler.getOrganizationStatistics = $httpBackend.whenGET(API + '/organizations/statistics').respond(200, {results: mock.organizations});
+            requestHandler.getLocations = $httpBackend.whenGET(API + '/locations').respond(200, {results: mock.locations});
+            requestHandler.getLocationStatistics = $httpBackend.whenGET(API + '/locations/statistics').respond(200, {results: mock.locations});
             requestHandler.getQueries = $httpBackend.whenGET(API + '/queries').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
@@ -275,11 +275,11 @@
                 $httpBackend.flush();
             });
 
-            it('should call /queries/orgid/queryid/cancel', function () {
-                commonService.cancelQueryOrganization(1,2);
+            it('should call /queries/locationid/queryid/cancel', function () {
+                commonService.cancelQueryLocation(1,2);
                 $httpBackend.flush();
-                requestHandler.cancelQueryOrganization.respond(401, {error: 'test'});
-                commonService.cancelQueryOrganization(1,2).then(function (response) {
+                requestHandler.cancelQueryLocation.respond(401, {error: 'test'});
+                commonService.cancelQueryLocation(1,2).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
@@ -325,21 +325,21 @@
                 $httpBackend.flush();
             });
 
-            it('should call /organizations', function () {
-                commonService.queryOrganizations();
+            it('should call /locations', function () {
+                commonService.queryLocations();
                 $httpBackend.flush();
-                requestHandler.getOrganizations.respond(401, {error: 'test'});
-                commonService.queryOrganizations().then(function (response) {
+                requestHandler.getLocations.respond(401, {error: 'test'});
+                commonService.queryLocations().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
             });
 
-            it('should call /organizations/statistics', function () {
-                commonService.getOrganizationStatistics();
+            it('should call /locations/statistics', function () {
+                commonService.getLocationStatistics();
                 $httpBackend.flush();
-                requestHandler.getOrganizationStatistics.respond(401, {error: 'test'});
-                commonService.getOrganizationStatistics().then(function (response) {
+                requestHandler.getLocationStatistics.respond(401, {error: 'test'});
+                commonService.getLocationStatistics().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
