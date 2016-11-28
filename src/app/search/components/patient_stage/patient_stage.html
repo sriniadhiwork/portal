@@ -23,10 +23,10 @@
       </tbody>
     </table>
     <h3>Possible Patient Records</h3>
-    <table class="table table-condensed" st-table="vm.displayedRecords" st-safe-src="vm.query.orgStatuses">
+    <table class="table table-condensed" st-table="vm.displayedRecords" st-safe-src="vm.query.locationStatuses">
       <thead>
         <tr>
-          <th scope="col" st-sort="org.name" st-skip-natural="true" class="st-sort">Organization</th>
+          <th scope="col" st-sort="location.name" st-skip-natural="true" class="st-sort">Location</th>
           <th scope="col" st-sort="name.givenName" st-skip-natural="true" class="st-sort">Name</th>
           <th scope="col" st-sort="gender.description" st-skip-natural="true" class="st-sort">Gender</th>
           <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
@@ -36,21 +36,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat-start="org in vm.query.orgStatuses track by org.id" ng-if="org.results && org.results.length > 0">
-          <td rowspan="{{ org.results.length }}" href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.org.name }}</td>
-          <td href ng-click="org.results[0].selected = !org.results[0].selected" ng-bind-html="vm.displayNames(org.results[0].patientRecordName)"></td>
-          <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].gender.description }}</td>
-          <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].dateOfBirth | ehealthdate }}</td>
-          <td href ng-click="org.results[0].selected = !org.results[0].selected">{{ org.results[0].ssn }}</td>
+        <tr ng-repeat-start="location in vm.query.locationStatuses track by location.id" ng-if="location.results && location.results.length > 0">
+          <td rowspan="{{ location.results.length }}" href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.location.name }}</td>
+          <td href ng-click="location.results[0].selected = !location.results[0].selected" ng-bind-html="vm.displayNames(location.results[0].patientRecordName)"></td>
+          <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].gender.description }}</td>
+          <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].dateOfBirth | ehealthdate }}</td>
+          <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].ssn }}</td>
           <td>
-            <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(org.results[0])"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
+            <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(location.results[0])"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
           </td>
           <td>
-            <label class="sr-only" for="recordSelect-{{ org.results[0].id }}" ng-bind-html="vm.displayNames(org.results[0].patientRecordName)"></label>
-            <input id="recordSelect-{{ org.results[0].id }}" type="checkbox" ng-model="org.results[0].selected">
+            <label class="sr-only" for="recordSelect-{{ location.results[0].id }}" ng-bind-html="vm.displayNames(location.results[0].patientRecordName)"></label>
+            <input id="recordSelect-{{ location.results[0].id }}" type="checkbox" ng-model="location.results[0].selected">
           </td>
         </tr>
-        <tr ng-repeat-end ng-repeat="record in org.results.slice(1)">
+        <tr ng-repeat-end ng-repeat="record in location.results.slice(1)">
           <td href ng-click="record.selected = !record.selected" ng-bind-html="vm.displayNames(record.patientRecordName)"></td>
           <td href ng-click="record.selected = !record.selected">{{ record.gender.description }}</td>
           <td href ng-click="record.selected = !record.selected">{{ record.dateOfBirth | ehealthdate }}</td>

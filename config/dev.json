@@ -4,7 +4,7 @@
     'IdleTimeout': 20,
     'KeepaliveInterval': 1,
     'LogoutRedirect': 'http://www.google.com',
-    'OrganizationQueryInterval': 60,
+    'LocationQueryInterval': 60,
     'QueryQueryTimeout': 5,
     'SwaggerUrl': 'http://52.32.239.69/rest/api-docs'
 }

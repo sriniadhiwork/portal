@@ -3,7 +3,7 @@
 
     describe('search.aiPatientStage', function() {
         var vm, scope, $log, $uibModal, $q, commonService, mock;
-        mock = {query: {id:7,userToken:'superego@testshib.org',status:'COMPLETE',terms:"{\"id\":null,\"orgPatientId\":null,\"givenName\":\"d\",\"familyName\":null,\"dateOfBirth\":null,\"gender\":null,\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"orgMaps\":[]}",      orgStatuses:[{id:14,queryId:7,orgId:2,status:'COMPLETE',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,orgId:3,status:'COMPLETE',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,orgId:1,status:'COMPLETE',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]}};
+        mock = {query: {id:7,userToken:'superego@testshib.org',status:'COMPLETE',terms:"{\"id\":null,\"locationPatientId\":null,\"givenName\":\"d\",\"familyName\":null,\"dateOfBirth\":null,\"gender\":null,\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"locationMaps\":[]}",      locationStatuses:[{id:14,queryId:7,locationId:2,status:'COMPLETE',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,locationId:3,status:'COMPLETE',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,locationId:1,status:'COMPLETE',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]}};
         mock.badRequest = {
             status: 500,
             error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement'
@@ -79,8 +79,8 @@
 
             beforeEach(function () {
                 vm.query = angular.copy(mock.query);
-                vm.query.orgStatuses[0].results[0].selected = true;
-                vm.query.orgStatuses[0].results[1] = {selected: false};
+                vm.query.locationStatuses[0].results[0].selected = true;
+                vm.query.locationStatuses[0].results[1] = {selected: false};
                 vm.patient = { givenName: 'Bob', familyName: 'Smith', dateOfBirth: '20130201' };
                 patientStage = {
                     patientRecordIds: [1],
@@ -95,14 +95,14 @@
                 });
 
                 it('should call commonService.stagePatient when stagePatient is called', function () {
-                    vm.query.orgStatuses[0].results[0].selected = true;
+                    vm.query.locationStatuses[0].results[0].selected = true;
                     vm.stagePatient();
                     scope.$digest();
                     expect(commonService.stagePatient).toHaveBeenCalledWith(patientStage);
                 });
 
                 it('should show an error if stage goes wrong', function () {
-                    vm.query.orgStatuses[0].results[0].selected = true;
+                    vm.query.locationStatuses[0].results[0].selected = true;
                     commonService.stagePatient.and.returnValue($q.reject({data: mock.badRequest}));
                     vm.stagePatient();
                     scope.$digest();
@@ -110,13 +110,13 @@
                 });
 
                 it('should close the modal after staging the patient', function () {
-                    vm.query.orgStatuses[0].results[0].selected = true;
+                    vm.query.locationStatuses[0].results[0].selected = true;
                     vm.stagePatient();
                     expect(mock.modalInstance.close).toHaveBeenCalled();
                 });
 
                 it('should not call commonService.stagePatient if there are no selected records', function () {
-                    vm.query.orgStatuses[0].results[0].selected = false;
+                    vm.query.locationStatuses[0].results[0].selected = false;
                     vm.stagePatient();
                     expect(commonService.stagePatient).not.toHaveBeenCalled();
                 });
@@ -127,12 +127,12 @@
 
                 it('should only be stageable if at least one record is selected', function () {
                     expect(vm.isStageable()).toBe(true);
-                    vm.query.orgStatuses[0].results[0].selected = false;
+                    vm.query.locationStatuses[0].results[0].selected = false;
                     expect(vm.isStageable()).toBe(false);
                 });
 
-                it('should not be stageable if there are no orgStatuses', function () {
-                    delete vm.query.orgStatuses;
+                it('should not be stageable if there are no locationStatuses', function () {
+                    delete vm.query.locationStatuses;
                     expect(vm.isStageable()).toBe(false);
                 });
             });
@@ -157,14 +157,14 @@
 
                 it('should log that the details was closed', function () {
                     var initialCount = $log.info.logs.length;
-                    vm.viewRecordDetails(vm.query.orgStatuses[0].results[0]);
+                    vm.viewRecordDetails(vm.query.locationStatuses[0].results[0]);
                     vm.viewRecordDetailsInstance.close('closed');
                     expect($log.info.logs.length).toBe(initialCount + 1);
                 });
 
                 it('should log that the details was closed', function () {
                     var initialCount = $log.info.logs.length;
-                    vm.viewRecordDetails(vm.query.orgStatuses[0].results[0]);
+                    vm.viewRecordDetails(vm.query.locationStatuses[0].results[0]);
                     vm.viewRecordDetailsInstance.dismiss('dismissed');
                     expect($log.info.logs.length).toBe(initialCount + 1);
                 });

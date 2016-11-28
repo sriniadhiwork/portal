@@ -10,7 +10,7 @@
         var self = this;
 
         self.cacheDocument = cacheDocument;
-        self.cancelQueryOrganization = cancelQueryOrganization;
+        self.cancelQueryLocation = cancelQueryLocation;
         self.clearQuery = clearQuery;
         self.clearToken = clearToken;
         self.createAcf = createAcf;
@@ -20,7 +20,7 @@
         self.editAcf = editAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
-        self.getOrganizationStatistics = getOrganizationStatistics;
+        self.getLocationStatistics = getLocationStatistics;
         self.getQueries = getQueries;
         self.getPatientsAtAcf = getPatientsAtAcf;
         self.getSamlUserToken = getSamlUserToken;
@@ -32,7 +32,7 @@
         self.hasAcf = hasAcf;
         self.isAuthenticated = isAuthenticated;
         self.logout = logout;
-        self.queryOrganizations = queryOrganizations;
+        self.queryLocations = queryLocations;
         self.refreshToken = refreshToken;
         self.saveToken = saveToken;
         self.searchForPatient = searchForPatient;
@@ -46,8 +46,8 @@
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId);
         }
 
-        function cancelQueryOrganization (queryId, orgId) {
-            return enhancedPost('/queries/' + queryId + '/' + orgId + '/cancel', {});
+        function cancelQueryLocation (queryId, locationId) {
+            return enhancedPost('/queries/' + queryId + '/' + locationId + '/cancel', {});
         }
 
         function clearQuery (queryId) {
@@ -130,8 +130,8 @@
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false');
         }
 
-        function getOrganizationStatistics () {
-            return enhancedGet('/organizations/statistics');
+        function getLocationStatistics () {
+            return enhancedGet('/locations/statistics');
         }
 
         function getQueries () {
@@ -241,8 +241,8 @@
             $window.location.replace(LogoutRedirect);
         }
 
-        function queryOrganizations () {
-            return enhancedGet('/organizations');
+        function queryLocations () {
+            return enhancedGet('/locations');
         }
 
         function refreshToken () {

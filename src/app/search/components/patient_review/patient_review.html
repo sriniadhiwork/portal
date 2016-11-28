@@ -30,15 +30,15 @@
                 <td>{{ query.terms.gender }}</td>
                 <td>{{ query.lastRead | date : 'medium' }}</td>
                 <td>
-                  <uib-progress max="query.orgStatuses.length" ng-if="query.status !== 'COMPLETE'">
-                    <uib-bar class="progress-striped active" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} organization<span ng-if="vm.countComplete(query) > 1">s</span> complete</i></uib-bar>
-                    <uib-bar class="progress-striped active" value="query.orgStatuses.length - vm.countComplete(query)" type="info"><i>{{ query.orgStatuses.length - vm.countComplete(query) }} organization<span ng-if="query.orgStatuses.length - vm.countComplete(query) > 1">s</span> pending</i></uib-bar>
+                  <uib-progress max="query.locationStatuses.length" ng-if="query.status !== 'COMPLETE'">
+                    <uib-bar class="progress-striped active" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} location<span ng-if="vm.countComplete(query) > 1">s</span> complete</i></uib-bar>
+                    <uib-bar class="progress-striped active" value="query.locationStatuses.length - vm.countComplete(query)" type="info"><i>{{ query.locationStatuses.length - vm.countComplete(query) }} location<span ng-if="query.locationStatuses.length - vm.countComplete(query) > 1">s</span> pending</i></uib-bar>
                   </uib-progress>
                   <uib-progressbar ng-click="query.viewDetails = !query.viewDetails" class="progress-striped-no" ng-if="query.status === 'COMPLETE'" value="100" type="{{ query.recordCount > 0 ? 'success' : 'danger' }}"><i>{{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> found</i></uib-progressbar>
                   <div ng-if="query.status !== 'COMPLETE' || query.viewDetails">
-                    <div ng-repeat="org in query.orgStatuses | orderBy:'org.name' track by org.id">
-                      {{ org.org.name }}: {{ org.status }}
-                      <button ng-if="org.status === 'Active'" class="btn btn-sm pull-right" ng-class="org.isClearing ? 'btn-warning' : 'btn-danger'" ng-click="vm.cancelQueryOrganization(org)"><i class="fa" ng-class="org.isClearing ? 'fa-spinner fa-spin' : 'fa-ban'"></i><span class="sr-only">Cancel query for {{ org.org.name }}</span></button>
+                    <div ng-repeat="location in query.locationStatuses | orderBy:'location.name' track by location.id">
+                      {{ location.location.name }}: {{ location.status }}
+                      <button ng-if="location.status === 'Active'" class="btn btn-sm pull-right" ng-class="location.isClearing ? 'btn-warning' : 'btn-danger'" ng-click="vm.cancelQueryLocation(location)"><i class="fa" ng-class="location.isClearing ? 'fa-spinner fa-spin' : 'fa-ban'"></i><span class="sr-only">Cancel query for {{ location.location.name }}</span></button>
                       <div class="clearfix"></div>
                     </div>
                   </div>

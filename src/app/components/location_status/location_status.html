@@ -1,0 +1,12 @@
+<div class="location-status">
+  <span uib-dropdown on-toggle="vm.hidePanel = !vm.hidePanel">
+    <a href id="location-status-toggle" uib-dropdown-toggle is-open="!vm.hidePanel">
+      {{ vm.hidePanel ? 'Show' : 'Hide' }} Location Status
+    </a>
+    <div class="row fade dropdown-menu pull-right" uib-dropdown-menu aria-labelledby="location-status-toggle">
+      <div class="col-sm-12" ng-repeat="location in vm.locationStatistics | orderBy:'location.name' track by $index">
+        <div ng-if="location.statistics" google-chart chart="location.statistics"></div>
+        <div ng-if="!location.statistics"><strong>{{ location.location.name }}</strong>: No status at this time</div>
+    </div>
+  </span>
+</div>
