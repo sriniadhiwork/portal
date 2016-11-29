@@ -19,7 +19,7 @@
           <uib-progress max="patient.documentStatus.total + vm.countActive(patient)">
             <uib-bar value="patient.documentStatus.cached" type="success"><i>{{ patient.documentStatus.cached }} / {{ patient.documentStatus.total }} document<span ng-if="patient.documentStatus.total !== 1">s</span> cached</i></uib-bar>
             <uib-bar value="patient.documentStatus.total - patient.documentStatus.cached" type="info"><i>{{ patient.documentStatus.total - patient.documentStatus.cached }} document<span ng-if="patient.documentStatus.total - patient.documentStatus.cached !== 1">s</span> available</i></uib-bar>
-            <uib-bar value="vm.countActive(patient)" type="warning"><i>{{ vm.countActive(patient) }} organization<span ng-if="vm.countActive(patient) > 1">s</span> pending</i></uib-bar>
+            <uib-bar value="vm.countActive(patient)" type="warning"><i>{{ vm.countActive(patient) }} location<span ng-if="vm.countActive(patient) > 1">s</span> pending</i></uib-bar>
           </uib-progress>
           Last accessed: {{ patient.lastRead | date : 'medium' }}
           <hr ng-if="!$last" />
@@ -56,7 +56,7 @@
                 <th scope="col" st-sort="confidentiality" st-skip-natural="true" class="st-sort">Confidentiality </th>
                 <th scope="col" st-sort="creationTime" st-skip-natural="true" class="st-sort">Creation Date</th>
                 <th scope="col" st-sort="size" st-skip-natural="true" class="st-sort">Size</th>
-                <th scope="col" st-sort="organization" st-skip-natural="true" class="st-sort">Organization</th>
+                <th scope="col" st-sort="location" st-skip-natural="true" class="st-sort">Location</th>
               </tr>
             </thead>
             <tbody>
@@ -71,7 +71,7 @@
                 <td>{{ doc.confidentiality }}</td>
                 <td>{{ vm.translateDate(doc.creationTime) | date : 'mediumDate' : 'UTC' }}</td>
                 <td>{{ doc.size | bytes }}</td>
-                <td>{{ doc.organization }}</td>
+                <td>{{ doc.location }}</td>
               </tr>
             </tbody>
           </table>

@@ -75,8 +75,8 @@
 
             function countActive (patient) {
                 var active = 0;
-                for (var i = 0; i < patient.orgMaps.length; i++) {
-                    if (patient.orgMaps[i].documentsQueryStatus === 'Active')
+                for (var i = 0; i < patient.locationMaps.length; i++) {
+                    if (patient.locationMaps[i].documentsQueryStatus === 'Active')
                         active += 1;
                 }
                 return active;
@@ -115,13 +115,13 @@
                         var patient = vm.patients[i];
                         patient.documentStatus = {total: 0, cached: 0};
                         patient.documents = [];
-                        for (var j = 0; j < patient.orgMaps.length; j++) {
-                            hasActive = hasActive || (patient.orgMaps[j].documentsQueryStatus === 'Active');
-                            patient.documentStatus.total += patient.orgMaps[j].documents.length;
-                            for (var k = 0; k < patient.orgMaps[j].documents.length; k++) {
-                                patient.orgMaps[j].documents[k].organization = patient.orgMaps[j].organization.name;
-                                patient.documents.push(patient.orgMaps[j].documents[k]);
-                                if (patient.orgMaps[j].documents[k].cached) {
+                        for (var j = 0; j < patient.locationMaps.length; j++) {
+                            hasActive = hasActive || (patient.locationMaps[j].documentsQueryStatus === 'Active');
+                            patient.documentStatus.total += patient.locationMaps[j].documents.length;
+                            for (var k = 0; k < patient.locationMaps[j].documents.length; k++) {
+                                patient.locationMaps[j].documents[k].location = patient.locationMaps[j].location.name;
+                                patient.documents.push(patient.locationMaps[j].documents[k]);
+                                if (patient.locationMaps[j].documents[k].cached) {
                                     patient.documentStatus.cached += 1;
                                 }
                             }
