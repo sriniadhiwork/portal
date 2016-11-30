@@ -1,4 +1,5 @@
 {
+    'acfWritesAllowed': true,
     'API': 'http://52.32.239.69/rest',
     'AuthAPI':  'http://52.32.239.69/auth',
     'IdleTimeout': 20,
