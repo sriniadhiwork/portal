@@ -178,13 +178,13 @@
                 });
 
                 it('should change the dob to a string if it\'s an object', function () {
-                    vm.patient.dateOfBirth = new Date();
+                    vm.patient.dateOfBirthObject = new Date();
                     vm.stagePatient();
                     expect(typeof(vm.patient.dateOfBirth)).toBe('string');
                 });
 
                 it('should make the dob object the correct short string', function () {
-                    vm.patient.dateOfBirth = new Date('2016-09-01');
+                    vm.patient.dateOfBirthObject = new Date('2016-09-01');
                     vm.stagePatient();
                     expect(vm.patient.dateOfBirth).toBe('2016-09-01');
                 });

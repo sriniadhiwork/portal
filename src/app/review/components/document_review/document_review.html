@@ -104,12 +104,12 @@
                   </tr>
                 </table>
                 <h4 id="toc">Table of Contents</h4>
-                <pre>{{ vm.doc.ClinicalDocument.component | json }}</pre>
-                <pre>{{ vm.whatSLeft(vm.doc.ClinicalDocument)  }}</pre>
               </div>
             </td>
           </tr>
         </table>
+        <pre>{{ vm.doc.ClinicalDocument.component | json }}</pre>
+        <pre>{{ vm.whatSLeft(vm.doc.ClinicalDocument)  }}</pre>
       </div>
       <div ng-if="!vm.activeDocument">
         No document currently loaded

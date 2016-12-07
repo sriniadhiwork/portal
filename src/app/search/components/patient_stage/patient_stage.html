@@ -99,7 +99,7 @@
           <label for="dob" class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input class="form-control" type="date" ng-model="vm.patient.dateOfBirth" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" required>
+              <input class="form-control" type="date" ng-model="vm.patient.dateOfBirthObject" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" required>
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
               </span>
@@ -119,7 +119,13 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-sm btn-danger pull-left" ng-click="vm.clearQuery()"><span class="sr-only">Clear query for patient</span><i class="fa fa-trash"></i></button>
+    <button class="btn btn-sm btn-danger pull-left"
+            confirm="Are you sure you'd like to clear this Patient Query?"
+            confirm-title="Confirmation"
+            confirm-ok="Yes"
+            confirm-cancel="No"
+            confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
+            ng-click="vm.clearQuery()"><span class="sr-only">Clear query for patient</span><i class="fa fa-trash"></i></button>
     <button class="btn btn-sm btn-success pull-right" ng-click="vm.stagePatient()"
             ng-disabled="!vm.isStageable() && vm.queryForm.$valid"
             ng-mouseover="vm.showFormErrors = true"
