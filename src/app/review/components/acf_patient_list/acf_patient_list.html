@@ -28,7 +28,13 @@
       <div class="row" ng-if="vm.activePatient">
         <div class="col-sm-12">
           <div class="pull-right">
-            <button class="btn btn-sm btn-danger" ng-click="vm.dischargePatient(vm.activePatient)"><i class="fa fa-sign-out"></i><span class="sr-only">Discharge {{ vm.activePatient.fullName }}</span></button>
+            <button class="btn btn-sm btn-danger"
+                    confirm="Are you sure you'd like to discharge this Patient?"
+                    confirm-title="Confirmation"
+                    confirm-ok="Yes"
+                    confirm-cancel="No"
+                    confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
+                    ng-click="vm.dischargePatient(vm.activePatient)"><i class="fa fa-sign-out"></i><span class="sr-only">Discharge {{ vm.activePatient.fullName }}</span></button>
             <button class="btn btn-sm btn-warning" ng-click="vm.deactivatePatient()"><i class="fa fa-close"></i><span class="sr-only">Deactivate {{ vm.activePatient.fullName }}</span></button>
           </div>
           <h3>{{ vm.activePatient.fullName }} ({{ vm.activePatient.friendlyName }})</h3>

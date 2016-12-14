@@ -6,7 +6,7 @@
         <div class="input-group">
           <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="address.lines[$index]" id="street{{ $index }}" name="street{{ $index }}" placeholder="Street Line {{ $index + 1 }}"></input>
           <span class="input-group-btn">
-            <button type="button" class="btn btn-sm btn-default" ng-click="vm.addLine(address)" ng-if="address.lines.length === $index + 1"><i class="fa fa-plus"></i><span class="sr-only">Add new street line</span></button>
+            <button type="button" class="btn btn-sm btn-default" ng-click="vm.addLine(address)" ng-if="address.lines.length === $index + 1 && vm.canAddLines(address)"><i class="fa fa-plus"></i><span class="sr-only">Add new street line</span></button>
             <button type="button" class="btn btn-sm btn-default" ng-click="vm.removeLine(address, $index)" ng-if="address.lines.length > 1"><i class="fa fa-trash"></i><span class="sr-only">Remove current street line</span></button>
           </span>
         </div>
@@ -26,12 +26,6 @@
         <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="address.zipcode" id="zip" name="zip" placeholder="Zip"></input>
       </div>
     </div>
-    <div class="form-group">
-      <div class="col-sm-12">
-        <label for="country" class="control-label sr-only">Country</label>
-        <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="address.country" id="country" name="country" placeholder="Country"></input>
-      </div>
-    </div>
     <div class="row" ng-if="!vm.single">
       <div class="col-sm-12 text-right">
         <button type="button" class="btn btn-default" ng-click="vm.addAddress()" ng-if="vm.addresses.length === $index + 1"><span class="sr-only">Add new address </span><i class="fa fa-plus"></i></button>
@@ -46,7 +40,6 @@
     <span ng-if="address.city">{{ address.city }}</span><span ng-if="address.city && address.state">, </span>
     <span ng-if="address.state">{{ address.state }} </span>
     <span ng-if="address.zipcode">{{ address.zipcode }}</span>
-    <span ng-if="address.country"><br />{{ address.country }}</span>
     <br ng-if="!$last" />
   </span>
 </span>

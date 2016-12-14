@@ -6,21 +6,24 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, $location, commonService, AuthAPI) {
+    function MainController($log, $location, $window, commonService, AuthAPI, IntegratedWithDHV, LogoutRedirect) {
         var vm = this;
 
         vm.bypassSaml = bypassSaml;
         vm.hasAcf = hasAcf;
         vm.isAuthenticated = isAuthenticated;
+        vm.redirectToDhv = redirectToDhv;
 
         vm.commonService = commonService;
         vm.authAction = AuthAPI + '/saml/login?disco=true';
+        vm.integratedWithDHV = IntegratedWithDHV;
 
         activate();
 
         ////////////////////////////////////////////////////////////////////
 
         function activate () {
+            vm.redirectToDhv();
             commonService.getToken(true);
             if (vm.hasAcf()) {
                 $location.path('/search');
@@ -39,6 +42,12 @@
 
         function isAuthenticated () {
             return commonService.isAuthenticated();
+        }
+
+        function redirectToDhv () {
+            if (vm.integratedWithDHV) {
+                $window.location.replace(LogoutRedirect);
+            }
         }
     }
 })();

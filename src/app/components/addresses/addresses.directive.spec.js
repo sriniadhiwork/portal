@@ -4,7 +4,7 @@
     describe('portal.aiAddresses', function() {
         var $compile, $rootScope, vm, el, $log, mock;
         mock = {
-            addresses: [ { lines: ['line 1', 'line 2'], city: 'city', state: 'state', zipcode: 'zip', country: 'country'} ]
+            addresses: [ { lines: ['line 1', 'line 2'], city: 'city', state: 'state', zipcode: 'zip'} ]
         };
 
         beforeEach(function () {
@@ -105,6 +105,14 @@
 
         it('should have a function to submit the form', function () {
             expect(vm.submitForm).toBeDefined();
+        });
+
+        it('should know if more lines can be added', function () {
+            expect(vm.canAddLines(vm.addresses[0])).toBe(true);
+            vm.maxLines = 2;
+            expect(vm.canAddLines(vm.addresses[0])).toBe(false);
+            vm.maxLines = 3;
+            expect(vm.canAddLines(vm.addresses[0])).toBe(true);
         });
     });
 })();
