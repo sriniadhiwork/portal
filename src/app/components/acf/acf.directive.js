@@ -17,7 +17,6 @@
                 mode: '@'
             }
         };
-
         return directive;
 
         /** @ngInject */
