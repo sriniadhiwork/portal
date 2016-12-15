@@ -23,10 +23,12 @@
         ////////////////////////////////////////////////////////////////////
 
         function activate () {
-            vm.redirectToDhv();
             commonService.getToken(true);
             if (vm.hasAcf()) {
                 $location.path('/search');
+            }
+            if (!vm.isAuthenticated()) {
+                vm.redirectToDhv();
             }
         }
 

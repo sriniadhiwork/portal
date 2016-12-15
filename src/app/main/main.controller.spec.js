@@ -59,6 +59,8 @@
         });
 
         it('should not redirect the user to DHV if they\'re not logged in and we\'re not integrated with DHV', function () {
+            commonService.isAuthenticated.and.returnValue(false);
+            scope.$digest();
             vm.integratedWithDHV = false;
             vm.redirectToDhv();
 
@@ -66,10 +68,20 @@
         });
 
         it('should redirect the user to DHV if they\'re not logged in and we\'re integrated with DHV', function () {
+            commonService.isAuthenticated.and.returnValue(false);
+            scope.$digest();
             vm.integratedWithDHV = true;
             vm.redirectToDhv();
 
             expect($window.location.replace).toHaveBeenCalledWith(LogoutRedirect);
+        });
+
+        it('should not redirect the user to DHV if they\'re logged in and we\'re integrated with DHV', function () {
+            commonService.isAuthenticated.and.returnValue(true);
+            vm.integratedWithDHV = true;
+            scope.$digest();
+
+            expect($window.location.replace).not.toHaveBeenCalledWith(LogoutRedirect);
         });
     });
 })();
