@@ -28,7 +28,7 @@
                 $location.path('/search');
             }
             if (!vm.isAuthenticated()) {
-                //vm.redirectToDhv();
+                vm.redirectToDhv();
             }
         }
 
