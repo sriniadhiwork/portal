@@ -5,16 +5,6 @@
   <div ng-if="!vm.isAuthenticated()" class="fake-login">
     <div class="row">
       <div class="col-sm-2 col-sm-offset-5">
-        <form class="" role="log in" method="get" action="{{ vm.authAction }}">
-          <p>We're just going to pretend that this is a page on DHV, and the below button is what let's you "Go to PULSE"</p>
-          <button type="submit" class="btn btn-default btn-block">Go to PULSE</button>
-          <select name="idp" id="idp">
-            <option value="https://idp.ssocircle.com">SSO Circle</option>
-            <option value="https://idp.testshib.org/idp/shibboleth" selected>Shibboleth</option>
-          </select>
-          <!--<input type="hidden" name="idp" id="idp_http://idp.ssocircle.com" value="http://idp.ssocircle.com"></input>-->
-          <!--<input type="hidden" name="idp" id="idp_https://idp.testshib.org/idp/shibboleth" value="https://idp.testshib.org/idp/shibboleth"></input>-->
-        </form>
         <button id="bypassSaml" type="button" class="btn btn-danger btn-block" ng-click="vm.bypassSaml()">Bypass SAML</button>
       </div>
     </div>

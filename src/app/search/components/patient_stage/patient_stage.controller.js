@@ -54,7 +54,6 @@
 
         function stagePatient () {
             if (vm.isStageable()) {
-
                 var newPatient = {
                     patientRecordIds: [],
                     patient: vm.patient,

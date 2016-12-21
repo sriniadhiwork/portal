@@ -67,7 +67,7 @@
             expect($window.location.replace).not.toHaveBeenCalledWith(LogoutRedirect);
         });
 
-        xit('should redirect the user to DHV if they\'re not logged in and we\'re integrated with DHV', function () {
+        it('should redirect the user to DHV if they\'re not logged in and we\'re integrated with DHV', function () {
             commonService.isAuthenticated.and.returnValue(false);
             scope.$digest();
             vm.integratedWithDHV = true;
