@@ -27,20 +27,22 @@
     </h1>
     <!-- START display top portion of clinical document -->
     <table class="table table-condensed">
-      <xsl:call-template name="recordTarget"/>
-      <xsl:call-template name="confidentiality"/>
-      <xsl:call-template name="documentGeneral"/>
+      <tbody>
+        <xsl:call-template name="recordTarget"/>
+        <xsl:call-template name="confidentiality"/>
+        <xsl:call-template name="documentGeneral"/>
 
-      <xsl:call-template name="author"/>
-      <xsl:call-template name="componentof"/>
-      <xsl:call-template name="participant"/>
-      <xsl:call-template name="dataEnterer"/>
-      <xsl:call-template name="authenticator"/>
-      <xsl:call-template name="informant"/>
-      <xsl:call-template name="informationRecipient"/>
-      <xsl:call-template name="legalAuthenticator"/>
-      <xsl:call-template name="custodian"/>
-      <xsl:call-template name="documentationOf"/>
+        <xsl:call-template name="author"/>
+        <xsl:call-template name="componentof"/>
+        <xsl:call-template name="participant"/>
+        <xsl:call-template name="dataEnterer"/>
+        <xsl:call-template name="authenticator"/>
+        <xsl:call-template name="informant"/>
+        <xsl:call-template name="informationRecipient"/>
+        <xsl:call-template name="legalAuthenticator"/>
+        <xsl:call-template name="custodian"/>
+        <xsl:call-template name="documentationOf"/>
+      </tbody>
     </table>
     <!-- END display top portion of clinical document -->
     <!-- produce human readable document content -->
