@@ -1,6 +1,6 @@
 <div class="patient-stage" role="modal" aria-labeled-by="titleLabel">
   <div class="modal-header">
-    <button type="btn btn-default" class="pull-right" aria-label="Cancel edits"
+    <button class="btn btn-default pull-right" aria-label="Cancel edits"
             ng-click="vm.cancel()"><i class="fa fa-close"></i><span class="sr-only">Close modal</span></button>
     <h2 class="modal-title" id="titleLabel">Patient Staging</h2>
   </div>
@@ -76,10 +76,9 @@
           </div>
         </div>
         <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required }">
-          <label for="friendlyName" class="col-sm-2 control-label">Friendly Name <span class="text-danger">*</span></label>
+          <label for="friendlyName" class="col-sm-2 control-label">Friendly Name</label>
           <div class="col-sm-4">
-            <input class="form-control" type="text" ng-model="vm.patient.friendlyName" id="friendlyName" name="friendlyName" required>
-            <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.friendlyName.$touched) && vm.queryForm.friendlyName.$error.required">Field is required</span>
+            <input class="form-control" type="text" ng-model="vm.patient.friendlyName" id="friendlyName" name="friendlyName">
           </div>
         </div>
       </div>
@@ -99,7 +98,7 @@
           <label for="dob" class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input class="form-control" type="date" ng-model="vm.patient.dateOfBirth" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" required>
+              <input class="form-control" type="text" ng-model="vm.patient.dateOfBirthObject" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" required>
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
               </span>
@@ -119,20 +118,33 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-sm btn-danger pull-left" ng-click="vm.clearQuery()"><span class="sr-only">Clear query for patient</span><i class="fa fa-trash"></i></button>
-    <button class="btn btn-sm btn-success pull-right" ng-click="vm.stagePatient()"
-            ng-disabled="!vm.isStageable() && vm.queryForm.$valid"
-            ng-mouseover="vm.showFormErrors = true"
-            ng-focus="vm.showFormErrors = true"><span class="sr-only">Select record(s) for patient</span><i class="fa fa-save"></i></button>
-    <ul class="list-unstyled text-left text-danger" ng-if="(vm.queryForm.$invalid || !vm.isStageable()) && vm.showFormErrors">
-      <li ng-if="vm.queryForm.fullName.$error.required">Full Name is required</li>
-      <li ng-if="vm.queryForm.friendlyName.$error.required">Friendly Name is required</li>
-      <li ng-if="vm.queryForm.gender.$error.required">Gender is required</li>
-      <li ng-if="vm.queryForm.dob.$error.required">Date of Birth is required</li>
-      <li ng-if="!vm.isStageable()">At least one record must be selected</li>
-    </ul>
-    <div class="row" ng-if="vm.errorMessage">
-      <div class="col-sm-12 bg-danger text-left">{{ vm.errorMessage }}</div>
+    <div class="row">
+      <div class="col-sm-1">
+        <button class="btn btn-sm btn-danger"
+                confirm="Are you sure you'd like to clear this Patient Query?"
+                confirm-title="Confirmation"
+                confirm-ok="Yes"
+                confirm-cancel="No"
+                confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
+                ng-click="vm.clearQuery()"><span class="sr-only">Clear query for patient</span><i class="fa fa-trash"></i></button>
+      </div>
+      <div class="col-sm-10">
+        <ul class="list-unstyled text-left text-danger" ng-if="(vm.queryForm.$invalid || !vm.isStageable()) && vm.showFormErrors">
+          <li ng-if="vm.queryForm.fullName.$error.required">Full Name is required</li>
+          <li ng-if="vm.queryForm.gender.$error.required">Gender is required</li>
+          <li ng-if="vm.queryForm.dob.$error.required">Date of Birth is required</li>
+          <li ng-if="!vm.isStageable()">At least one record must be selected</li>
+        </ul>
+        <div class="row" ng-if="vm.errorMessage">
+          <div class="col-sm-12 bg-danger text-left">{{ vm.errorMessage }}</div>
+        </div>
+      </div>
+      <div class="col-sm-1">
+        <button class="btn btn-sm btn-success pull-right" ng-click="vm.stagePatient()"
+                ng-disabled="vm.showFormErrors && (!vm.isStageable() || vm.queryForm.$invalid)"
+                ng-mouseover="vm.showFormErrors = true"
+                ng-focus="vm.showFormErrors = true"><span class="sr-only">Select record(s) for patient</span><i class="fa fa-save"></i></button>
+      </div>
     </div>
   </div>
 </div>

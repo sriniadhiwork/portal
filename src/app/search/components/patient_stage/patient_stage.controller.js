@@ -54,22 +54,20 @@
 
         function stagePatient () {
             if (vm.isStageable()) {
-
-                //////// debug
-                //vm.patient.givenName = 'fakegivenname';
-                //vm.patient.familyName = 'fakefamilyname';
-                //////// end debug
-
                 var newPatient = {
                     patientRecordIds: [],
                     patient: vm.patient,
                     id: vm.query.id
                 };
-                if (vm.patient.dateOfBirth && angular.isObject(vm.patient.dateOfBirth)) {
-                    vm.patient.dateOfBirth = '' +
-                        vm.patient.dateOfBirth.getFullYear() + '-' +
-                        pad((vm.patient.dateOfBirth.getMonth() + 1) , 2) + '-' +
-                        pad(vm.patient.dateOfBirth.getDate(), 2);
+                if (vm.patient.dateOfBirthObject) {
+                    if (angular.isObject(vm.patient.dateOfBirthObject)) {
+                        vm.patient.dateOfBirth = '' +
+                            vm.patient.dateOfBirthObject.getFullYear() + '-' +
+                            pad((vm.patient.dateOfBirthObject.getMonth() + 1) , 2) + '-' +
+                            pad(vm.patient.dateOfBirthObject.getDate(), 2);
+                    } else {
+                        vm.patient.dateOfBirth = vm.patient.dateOfBirthObject;
+                    }
                 }
                 for (var i = 0; i < vm.query.locationStatuses.length; i++) {
                     for (var j = 0; j < vm.query.locationStatuses[i].results.length; j++) {

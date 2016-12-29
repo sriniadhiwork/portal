@@ -2,9 +2,11 @@
     'API': '/rest',
     'AuthAPI':  '/auth',
     'IdleTimeout': 20,
+    'IntegratedWithDHV': false,
     'KeepaliveInterval': 1,
-    'LogoutRedirect': 'http://localhost:3000',
     'LocationQueryInterval': 60,
+    'LogoutRedirect': 'http://www.google.com',
     'QueryQueryTimeout': 5,
-    'SwaggerUrl': 'http://localhost:9090/api-docs'
+    'SwaggerUrl': 'http://localhost:9090/api-docs',
+    'acfWritesAllowed': false
 }

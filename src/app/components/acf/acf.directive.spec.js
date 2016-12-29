@@ -4,7 +4,7 @@
     describe('portal.aiAcf', function() {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock, $location;
         mock = {};
-        mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
+        mock.acfs = [{id: 1, name: 'ACF-1', address: {}}, {id: 2, name: 'ACF-2', address: {}}, {id: 3, name: 'FAC-1', address: {}}];
         mock.fakeAcf = { name: 'fake', address: {city: 'city', lines: ['','123 Main St']}};
         mock.badRequest = {
             status: 400,
@@ -22,6 +22,7 @@
                     $delegate.setAcf = jasmine.createSpy('setAcf');
                     return $delegate;
                 });
+                $provide.constant('acfWritesAllowed', true);
             });
             inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_, _$location_) {
                 $compile = _$compile_;
@@ -65,7 +66,7 @@
 
         it('should call commonService.getAcfs on load', function () {
             expect(commonService.getAcfs).toHaveBeenCalled();
-            expect(vm.acfs.length).toBe(2);
+            expect(vm.acfs.length).toBe(3);
         });
 
         it('should set acfs to an empty array if the server fails', function () {
@@ -100,7 +101,7 @@
             expect(commonService.setAcf).toHaveBeenCalled();
         });
 
-        it('should not call commonService.setAcf if the checkbox isnt\'t checked', function () {
+        it('should not call commonService.setAcf if an acf isnt\'t selected', function () {
             vm.selectAcf = null;
             vm.acfSubmit();
             expect(commonService.setAcf).not.toHaveBeenCalled();
@@ -316,8 +317,45 @@
             vm.acf = angular.copy(mock.fakeAcf);
             vm.mode = 'enter';
             expect(vm.validName()).toBe(true);
-            vm.acf.name = 'ACF 1';
+            vm.acf.name = 'ACF-1';
             expect(vm.validName()).toBe(false);
         });
+
+        it('should split ACF names into prefix/suffix if !acfWritesAllowed', function () {
+            vm.acfWritesAllowed = false;
+            vm.splitAcfNames();
+            expect(vm.acfPrefixes).toBeDefined();
+            expect(vm.acfSuffixes).toBeDefined();
+        });
+
+        it('should split ACF names into prefix/suffix if !acfWritesAllowed', function () {
+            vm.acfWritesAllowed = false;
+            vm.acfs = mock.acfs;
+            vm.splitAcfNames();
+            expect(vm.acfPrefixes).toEqual(['ACF','FAC']);
+            expect(vm.acfSuffixes).toEqual(['1','2']);
+        });
+
+        it('should not split ACF names into prefix/suffix if acfWritesAllowed', function () {
+            vm.acfWritesAllowed = true;
+            vm.splitAcfNames();
+            expect(vm.acfPrefixes).toBeUndefined();
+            expect(vm.acfSuffixes).toBeUndefined();
+        });
+
+        it('should compose an ACF if !acfWritesAllowed', function () {
+            vm.acfWritesAllowed = false;
+            vm.acfs = mock.acfs;
+            vm.selectAcfPrefix = 'ACF';
+            vm.selectAcfSuffix = '2';
+            vm.findAcf();
+            expect(vm.selectAcf).toEqual(mock.acfs[1]);
+        });
+
+        it('should not compose an ACF if acfWritesAllowed', function () {
+            vm.findAcf();
+            expect(vm.selectAcf).toBeUndefined();
+        });
+
     });
 })();

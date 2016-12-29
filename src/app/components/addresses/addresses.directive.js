@@ -16,6 +16,7 @@
             bindToController: {
                 addresses: '=?',
                 fixed: '=?',
+                maxLines: '=?',
                 single: '=?',
                 submitForm: '&'
             }
@@ -29,6 +30,7 @@
 
             vm.addAddress = addAddress;
             vm.addLine = addLine;
+            vm.canAddLines = canAddLines;
             vm.removeAddress = removeAddress;
             vm.removeLine = removeLine;
 
@@ -53,6 +55,13 @@
 
             function addLine (address) {
                 address.lines.push('');
+            }
+
+            function canAddLines (address) {
+                if (!vm.maxLines) {
+                    return true;
+                }
+                return address.lines.length < vm.maxLines;
             }
 
             function removeAddress (index) {

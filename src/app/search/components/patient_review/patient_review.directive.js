@@ -86,7 +86,7 @@
                     vm.patientQueries = response;
                     for (var i = 0; i < vm.patientQueries.length; i++) {
                         vm.patientQueries[i].recordCount = vm.getRecordCount(vm.patientQueries[i]);
-                        hasActive = hasActive || (vm.patientQueries[i].status === 'ACTIVE');
+                        hasActive = hasActive || (vm.patientQueries[i].status === 'Active');
                     }
                     if (hasActive) {
                         $timeout(vm.getQueries, vm.TIMEOUT_MILLIS);

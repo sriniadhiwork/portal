@@ -2,7 +2,7 @@
     'use strict';
 
     describe('main.controller', function() {
-        var vm, scope, commonService, $log, location, ctrl;
+        var vm, scope, commonService, $log, $window, location, ctrl, LogoutRedirect;
 
         beforeEach(function () {
             module('portal.main', 'portal.constants', function ($provide) {
@@ -14,13 +14,17 @@
                 });
             });
 
-            inject(function (_commonService_, _$log_, $controller, $q, $rootScope, _$location_) {
+            inject(function (_commonService_, _$log_, $controller, $q, $rootScope, _$location_, _$window_, _LogoutRedirect_) {
                 commonService = _commonService_;
                 $log = _$log_;
                 ctrl = $controller;
                 location = _$location_;
+                $window = _$window_;
+                LogoutRedirect = _LogoutRedirect_;
                 commonService.isAuthenticated.and.returnValue(true);
                 commonService.hasAcf.and.returnValue(false);
+
+                spyOn($window.location, 'replace');
 
                 scope = $rootScope.$new();
                 vm = $controller('MainController');
@@ -51,8 +55,33 @@
             spyOn(location, 'path');
             vm = ctrl('MainController');
             scope.$digest();
-
             expect(location.path).toHaveBeenCalledWith('/search');
+        });
+
+        it('should not redirect the user to DHV if they\'re not logged in and we\'re not integrated with DHV', function () {
+            commonService.isAuthenticated.and.returnValue(false);
+            scope.$digest();
+            vm.integratedWithDHV = false;
+            vm.redirectToDhv();
+
+            expect($window.location.replace).not.toHaveBeenCalledWith(LogoutRedirect);
+        });
+
+        it('should redirect the user to DHV if they\'re not logged in and we\'re integrated with DHV', function () {
+            commonService.isAuthenticated.and.returnValue(false);
+            scope.$digest();
+            vm.integratedWithDHV = true;
+            vm.redirectToDhv();
+
+            expect($window.location.replace).toHaveBeenCalledWith(LogoutRedirect);
+        });
+
+        it('should not redirect the user to DHV if they\'re logged in and we\'re integrated with DHV', function () {
+            commonService.isAuthenticated.and.returnValue(true);
+            vm.integratedWithDHV = true;
+            scope.$digest();
+
+            expect($window.location.replace).not.toHaveBeenCalledWith(LogoutRedirect);
         });
     });
 })();

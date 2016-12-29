@@ -3,20 +3,38 @@
     <div class="panel panel-primary">
       <div class="panel-heading">
         <h2 class="panel-title" ng-if="vm.mode === 'select' || vm.mode === 'enter'">Login to an Alternate Care Facility (ACF)</h2>
+        <h2 class="panel-title" ng-if="vm.mode === 'enter'">Create a new ACF</h2>
+        <h2 class="panel-title" ng-if="vm.mode === 'edit'">Edit current ACF</h2>
       </div>
       <div class="panel-body">
         <div ng-if="vm.mode === 'select'">
           <div class="row">
-            <div class="col-sm-12"><h3>Select an existing ACF</h3></div>
+            <div class="col-sm-12"><h3>Select an ACF</h3></div>
           </div>
-          <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required }">
+          <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required }" ng-if="vm.acfWritesAllowed">
             <label for="selectAcf" class="control-label sr-only">ACF Selection</label>
             <div class="col-sm-12">
               <select class="input-sm form-control" ng-model="vm.selectAcf" id="selectAcf" name="selectAcf" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
-                      ng-options="acf.name for acf in vm.acfs"
+                      ng-options="acf.name for acf in vm.acfs | orderBy:'name'"
                       ng-keyup="$event.keyCode == 13 && vm.submitForm()">
               </select>
               <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required">An ACF must be selected</span>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required }" ng-if="!vm.acfWritesAllowed">
+            <div class="col-sm-6">
+              <label for="selectAcfPrefix" class="control-label sr-only">ACF County Selection</label>
+              <select class="input-sm form-control" ng-model="vm.selectAcfPrefix" id="selectAcfPrefix" name="selectAcfPrefix" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
+                      ng-options="acfPref for acfPref in vm.acfPrefixes | orderBy:'toString()'">
+              </select>
+              <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcfPrefix.$touched) && vm.queryForm.selectAcfPrefix.$error.required">An ACF county must be selected</span>
+            </div>
+            <div class="col-sm-6">
+              <label for="selectAcfSuffix" class="control-label sr-only">ACF Suffix Selection</label>
+              <select class="input-sm form-control" ng-model="vm.selectAcfSuffix" id="selectAcfSuffix" name="selectAcfSuffix" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
+                      ng-options="acfSuff for acfSuff in vm.acfSuffixes | orderBy:'toString()'">
+              </select>
+              <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcfSuffix.$touched) && vm.queryForm.selectAcfSuffix.$error.required">An ACF suffix must be selected</span>
             </div>
           </div>
           <div class="form-group">
@@ -29,24 +47,22 @@
                       ng-click="vm.acfSubmit()">Submit</button>
             </div>
           </div>
-          <div class="row">
-            <div class="col-sm-12"><hr /><h3>ACF not found?</h3></div>
-          </div>
-          <div class="row">
-            <div class="col-sm-4 col-sm-offset-4">
-              <button class="btn btn-success btn-block" ng-click="vm.mode = 'enter'">Create a new ACF</button>
+          <div ng-if="vm.acfWritesAllowed">
+            <div class="row">
+              <div class="col-sm-12"><hr /><h3>ACF not found?</h3></div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 col-sm-offset-4">
+                <button class="btn btn-success btn-block" ng-click="vm.mode = 'enter'">Create a new ACF</button>
+              </div>
             </div>
           </div>
         </div>
         <div ng-if="vm.mode === 'enter' || vm.mode === 'edit'">
-          <div class="row">
-            <div class="col-sm-12" ng-if="vm.mode === 'enter'"><h3>Create a new ACF</h3></div>
-            <div class="col-sm-12" ng-if="vm.mode === 'edit'"><h3>Edit current ACF</h3></div>
-          </div>
           <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.acfName.$touched) && vm.queryForm.acfName.$error.required }">
-            <label for="acfName" class="col-sm-3 control-label">Name <span class="text-danger">*</span></label>
+            <label for="acfName" class="col-sm-3 control-label">Name <span class="text-danger" ng-if="vm.acfWritesAllowed">*</span></label>
             <div class="col-sm-9">
-              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.name" id="acfName" name="acfName" ng-required="vm.mode === 'enter' || vm.mode === 'edit'"></input>
+              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.name" id="acfName" name="acfName" ng-required="(vm.mode === 'enter' || vm.mode === 'edit') && vm.acfWritesAllowed" ng-disabled="!vm.acfWritesAllowed"></input>
               <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.acfName.$touched) && vm.queryForm.acfName.$error.required">Field is required</span>
               <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.acfName.$touched) && (!vm.validName() && vm.mode === 'enter')">ACF already exists</span>
             </div>
@@ -61,6 +77,7 @@
             <label class="col-sm-3 control-label">Address</label>
             <div class="col-sm-9">
               <ai-addresses addresses="[vm.acf.address]"
+                            max-lines="2"
                             single="true"
                             submit-form="vm.submitForm"></ai-addresses>
             </div>
@@ -87,6 +104,11 @@
               <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
                       class="btn btn-success btn-block"
                       id="acfEdit"
+                      confirm="Only EMSA authorized personnel are permitted to modify an ACF's information."
+                      confirm-title="ACF editing authorization check"
+                      confirm-ok="I attest to being an EMSA-authorized user"
+                      confirm-cancel="Cancel"
+                      confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
                       ng-mouseover="vm.showFormErrors = true"
                       ng-focus="vm.showFormErrors = true"
                       ng-click="vm.editAcf()">Save changes</button>
@@ -117,8 +139,10 @@
   </div>
   <div ng-if="vm.mode === 'view'">
     <span class="pull-right">
+      <span class="pull-right">
+        <a href ng-click="vm.mode = 'edit'"><span class="sr-only">Edit information</span><i class="fa fa-pencil"></i></a>
+      </span>
       <div ng-if="vm.acf.address && vm.acf.address"><ai-addresses fixed="true" addresses="[vm.acf.address]"></ai-addresses></div>
-      <a href ng-click="vm.mode = 'edit'">Edit information</a>
     </span>
     <h3>{{ vm.acf.name }}</h3>
     <span ng-if="vm.acf.phoneNumber">{{ vm.acf.phoneNumber }}</span>

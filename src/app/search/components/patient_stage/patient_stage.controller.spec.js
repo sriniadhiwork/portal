@@ -3,7 +3,7 @@
 
     describe('search.aiPatientStage', function() {
         var vm, scope, $log, $uibModal, $q, commonService, mock;
-        mock = {query: {id:7,userToken:'superego@testshib.org',status:'COMPLETE',terms:"{\"id\":null,\"locationPatientId\":null,\"givenName\":\"d\",\"familyName\":null,\"dateOfBirth\":null,\"gender\":null,\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"locationMaps\":[]}",      locationStatuses:[{id:14,queryId:7,locationId:2,status:'COMPLETE',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,locationId:3,status:'COMPLETE',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,locationId:1,status:'COMPLETE',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]}};
+        mock = {query: {id:7,userToken:'superego@testshib.org',status:'Complete',terms:"{\"id\":null,\"locationPatientId\":null,\"givenName\":\"d\",\"familyName\":null,\"dateOfBirth\":null,\"gender\":null,\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"locationMaps\":[]}",      locationStatuses:[{id:14,queryId:7,locationId:2,status:'Complete',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,locationId:3,status:'Complete',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,locationId:1,status:'Complete',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]}};
         mock.badRequest = {
             status: 500,
             error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement'
@@ -178,13 +178,13 @@
                 });
 
                 it('should change the dob to a string if it\'s an object', function () {
-                    vm.patient.dateOfBirth = new Date();
+                    vm.patient.dateOfBirthObject = new Date();
                     vm.stagePatient();
                     expect(typeof(vm.patient.dateOfBirth)).toBe('string');
                 });
 
                 it('should make the dob object the correct short string', function () {
-                    vm.patient.dateOfBirth = new Date('2016-09-01');
+                    vm.patient.dateOfBirthObject = new Date('2016-09-01');
                     vm.stagePatient();
                     expect(vm.patient.dateOfBirth).toBe('2016-09-01');
                 });

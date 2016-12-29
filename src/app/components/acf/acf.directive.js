@@ -17,19 +17,20 @@
                 mode: '@'
             }
         };
-
         return directive;
 
         /** @ngInject */
-        function AcfController($log, $location, commonService) {
+        function AcfController($log, $location, commonService, acfWritesAllowed) {
             var vm = this;
 
             vm.acfSubmit = acfSubmit;
             vm.cancelEditing = cancelEditing;
             vm.editAcf = editAcf;
+            vm.findAcf = findAcf;
             vm.getAcfs = getAcfs;
             vm.getUserAcf = getUserAcf;
             vm.hasAcf = hasAcf;
+            vm.splitAcfNames = splitAcfNames;
             vm.submitForm = submitForm;
             vm.validName = validName;
 
@@ -39,6 +40,7 @@
 
             function activate () {
                 vm.acf = { address: {} };
+                vm.acfWritesAllowed = acfWritesAllowed;
                 vm.showFormErrors = false;
                 vm.getAcfs();
                 vm.getUserAcf();
@@ -65,6 +67,7 @@
                         vm.errorMessage = error.data.error;
                     });
                 } else {
+                    vm.findAcf();
                     if (vm.selectAcf) {
                         commonService.setAcf(vm.selectAcf).then(function () {
                             $location.path('/search');
@@ -85,10 +88,23 @@
                 vm.mode = 'view';
             }
 
+            function findAcf () {
+                if (!vm.acfWritesAllowed) {
+                    var name = vm.selectAcfPrefix + '-' + vm.selectAcfSuffix;
+                    for (var i = 0; i < vm.acfs.length; i++) {
+                        if (vm.acfs[i].name === name) {
+                            vm.selectAcf = vm.acfs[i];
+                            break;
+                        }
+                    }
+                }
+            }
+
             function getAcfs () {
                 vm.acfs = [];
                 commonService.getAcfs().then(function (response) {
                     vm.acfs = vm.acfs.concat(response);
+                    vm.splitAcfNames();
                     if (vm.acfs.length === 0) {
                         if (vm.mode === 'select') {
                             vm.mode = 'enter';
@@ -121,6 +137,21 @@
 
             function hasAcf () {
                 return commonService.hasAcf();
+            }
+
+            function splitAcfNames () {
+                if (!vm.acfWritesAllowed) {
+                    vm.acfPrefixes = [];
+                    vm.acfSuffixes = [];
+                    var parts;
+                    for (var i = 0; i < vm.acfs.length; i++) {
+                        parts = vm.acfs[i].name.split('-');
+                        if (vm.acfPrefixes.indexOf(parts[0]) < 0)
+                            vm.acfPrefixes.push(parts[0]);
+                        if (vm.acfSuffixes.indexOf(parts[1]) < 0)
+                            vm.acfSuffixes.push(parts[1]);
+                    }
+                }
             }
 
             function submitForm () {
