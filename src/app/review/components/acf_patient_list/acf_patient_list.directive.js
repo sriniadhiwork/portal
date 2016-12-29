@@ -57,18 +57,21 @@
                 vm.userAcf = commonService.getUserAcf();
             }
 
-            function activatePatient (patient) {
-                vm.activePatient = angular.copy(patient);
+            function activatePatient (id) {
+                for (var i = 0; i < vm.patients.length; i++) {
+                    if (vm.patients[i].id === id) {
+                        vm.activePatient = i;
+                        break;
+                    }
+                }
                 buildTitle();
             }
 
             function cacheDocument (patient, doc) {
-                doc.pending = true;
                 if (!doc.cached) {
+                    doc.status = 'Active';
                     commonService.cacheDocument(patient.id, doc.id).then(function () {
-                        doc.cached = true;
-                        doc.pending = false;
-                        patient.documentStatus.cached += 1;
+                        vm.getPatientsAtAcf();
                     });
                 }
             }
@@ -113,7 +116,7 @@
                     vm.patients = response;
                     for (var i = 0; i < vm.patients.length; i++) {
                         var patient = vm.patients[i];
-                        patient.documentStatus = {total: 0, cached: 0};
+                        patient.documentStatus = {total: 0, active: 0, cached: 0};
                         patient.documents = [];
                         for (var j = 0; j < patient.locationMaps.length; j++) {
                             hasActive = hasActive || (patient.locationMaps[j].documentsQueryStatus === 'Active');
@@ -123,6 +126,10 @@
                                 patient.documents.push(patient.locationMaps[j].documents[k]);
                                 if (patient.locationMaps[j].documents[k].cached) {
                                     patient.documentStatus.cached += 1;
+                                }
+                                if (patient.locationMaps[j].documents[k].status === 'Active') {
+                                    patient.documentStatus.active += 1;
+                                    hasActive = true;
                                 }
                             }
                         }
@@ -149,8 +156,8 @@
             ////////////////////////////////////////////////////////////////////
 
             function buildTitle () {
-                if (vm.activePatient) {
-                    vm.panelTitle = 'Patient: ' + vm.activePatient.fullName + ' (' + vm.activePatient.friendlyName + ')';
+                if (vm.activePatient !== null) {
+                    vm.panelTitle = 'Patient: ' + vm.patients[vm.activePatient].fullName + ' (' + vm.patients[vm.activePatient].friendlyName + ')';
                 } else {
                     vm.panelTitle = vm.patients.length + ' Active Patient';
                     if (vm.patients.length !== 1)
