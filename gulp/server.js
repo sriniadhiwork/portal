@@ -31,12 +31,13 @@ function browserSyncInit(baseDir, browser) {
      */
     server.middleware = [
         proxyMiddleware('/rest', {
-            target: 'http://localhost:9090/',
+            target: 'https://localhost:9090/',
             pathRewrite: { '^/rest' : '/' },
-            changeOrigin: true
+            changeOrigin: true,
+            secure: false // TODO want to change this when we get an SSL cert thats not self signed
         }),
         proxyMiddleware('/auth', {
-            target: 'http://localhost:8080/',
+            target: 'https://localhost:8080/',
             pathRewrite: { '^/auth' : '' },
             changeOrigin: true
         })
