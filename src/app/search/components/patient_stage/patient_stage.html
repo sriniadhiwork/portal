@@ -86,15 +86,16 @@
         <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required }">
           <label for="gender" class="col-sm-2 control-label">Gender <span class="text-danger">*</span></label>
           <div class="col-sm-4">
-            <select class="input-sm form-control" ng-model="vm.patient.gender" id="gender" name="gender" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
-              <option value="Female">Female</option>
-              <option value="Male">Male</option>
+            <select class="form-control" ng-model="vm.patient.gender" id="gender" name="gender" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
+              <option value="F">Female</option>
+              <option value="M">Male</option>
               <option value="UN">Undifferentiated</option>
             </select>
             <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required">Field is required</span>
           </div>
         </div>
         <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required }">
+          <pre>{{ vm.patient.dateOfBirthObject | json }}</pre>
           <label for="dob" class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
@@ -120,13 +121,13 @@
   <div class="modal-footer">
     <div class="row">
       <div class="col-sm-1">
-        <button class="btn btn-sm btn-danger"
+        <button class="btn btn-danger"
                 confirm="Are you sure you'd like to clear this Patient Query?"
                 confirm-title="Confirmation"
                 confirm-ok="Yes"
                 confirm-cancel="No"
                 confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
-                ng-click="vm.clearQuery()"><span class="sr-only">Clear query for patient</span><i class="fa fa-trash"></i></button>
+                ng-click="vm.clearQuery()"><i class="fa fa-trash"></i> Dismiss<span class="sr-only"> query for patient</span></button>
       </div>
       <div class="col-sm-10">
         <ul class="list-unstyled text-left text-danger" ng-if="(vm.queryForm.$invalid || !vm.isStageable()) && vm.showFormErrors">
@@ -140,10 +141,10 @@
         </div>
       </div>
       <div class="col-sm-1">
-        <button class="btn btn-sm btn-success pull-right" ng-click="vm.stagePatient()"
+        <button class="btn btn-success pull-right" ng-click="vm.stagePatient()"
                 ng-disabled="vm.showFormErrors && (!vm.isStageable() || vm.queryForm.$invalid)"
                 ng-mouseover="vm.showFormErrors = true"
-                ng-focus="vm.showFormErrors = true"><span class="sr-only">Select record(s) for patient</span><i class="fa fa-save"></i></button>
+                ng-focus="vm.showFormErrors = true">Save <span class="sr-only"> and select record(s) for patient</span> <i class="fa fa-save"></i></button>
       </div>
     </div>
   </div>

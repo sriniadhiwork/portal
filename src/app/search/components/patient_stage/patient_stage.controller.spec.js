@@ -3,7 +3,8 @@
 
     describe('search.aiPatientStage', function() {
         var vm, scope, $log, $uibModal, $q, commonService, mock;
-        mock = {query: {id:7,userToken:'superego@testshib.org',status:'Complete',terms:"{\"id\":null,\"locationPatientId\":null,\"givenName\":\"d\",\"familyName\":null,\"dateOfBirth\":null,\"gender\":null,\"phoneNumber\":null,\"address\":null,\"ssn\":null,\"acf\":null,\"locationMaps\":[]}",      locationStatuses:[{id:14,queryId:7,locationId:2,status:'Complete',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,locationId:3,status:'Complete',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,locationId:1,status:'Complete',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]}};
+
+        mock = {query: {"id":13,"userToken":"fake@sample.com","status":"Complete","terms":{"dob":"1999","ssn":"123-12-1234","gender":"M","zip":null,"telephone":null,"addresses":null,"patientNames":[{"id":null,"suffix":null,"prefix":null,"profSuffix":null,"nameType":{"id":null,"code":"L","description":"Legal Name"},"nameRepresentation":null,"nameAssembly":null,"effectiveDate":null,"expirationDate":null,"familyName":"Doe","givenName":["John"]}]},"lastRead":1483642184101,"locationStatuses":[{id:14,queryId:7,locationId:2,status:'Complete',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,locationId:3,status:'Complete',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,locationId:1,status:'Complete',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]}};
         mock.badRequest = {
             status: 500,
             error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement'
@@ -64,12 +65,49 @@
             expect(vm).toBeDefined();
         });
 
+        describe('setup', function () {
+            it('should prepopulate patient name and gender from query terms', function () {
+                expect(vm.patient).toEqual({
+                    fullName: 'John Doe',
+                    gender: 'M',
+                    ssn: '123-12-1234',
+                    dateOfBirthObject: null
+                });
+            });
+
+            xit('should populate dob if the dob has exactly 8 characters', function () {
+                vm.query.terms.dob = '19990325';
+                vm.prepopulate();
+                expect(vm.patient).toEqual({
+                    fullName: 'John Doe',
+                    gender: 'M',
+                    ssn: '123-12-1234',
+                    dateOfBirthObject: new Date('1999-03-25')
+                });
+                vm.query.terms.dob = '1999';
+                vm.prepopulate();
+                expect(vm.patient).toEqual({
+                    fullName: 'John Doe',
+                    gender: 'M',
+                    ssn: '123-12-1234',
+                    dateOfBirthObject: null
+                });
+            });
+        });
+
         describe('viewing', function () {
             it('should call commonService to display names', function () {
                 spyOn(commonService, 'displayNames');
                 expect(vm.displayNames).toBeDefined();
                 vm.displayNames([mock.name]);
                 expect(commonService.displayNames).toHaveBeenCalledWith([mock.name],'<br />');
+            });
+
+            it('should call commonService to get the guessed patient name', function () {
+                spyOn(commonService, 'friendlyFullName');
+                expect(vm.friendlyFullName).toBeDefined();
+                vm.friendlyFullName([mock.name]);
+                expect(commonService.friendlyFullName).toHaveBeenCalledWith([mock.name]);
             });
         });
 
@@ -84,7 +122,7 @@
                 vm.patient = { givenName: 'Bob', familyName: 'Smith', dateOfBirth: '20130201' };
                 patientStage = {
                     patientRecordIds: [1],
-                    patient: vm.patient,
+                    patient: angular.copy(vm.patient),
                     id: vm.query.id
                 }
             });
@@ -187,6 +225,12 @@
                     vm.patient.dateOfBirthObject = new Date('2016-09-01');
                     vm.stagePatient();
                     expect(vm.patient.dateOfBirth).toBe('2016-09-01');
+                });
+
+                it('should set the dob to the dobObject if the dobObject is just a string', function () {
+                    vm.patient.dateOfBirthObject = '2015-03-01';
+                    vm.stagePatient();
+                    expect(vm.patient.dateOfBirth).toBe('2015-03-01');
                 });
             });
         });

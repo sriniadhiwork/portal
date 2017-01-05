@@ -18,6 +18,7 @@
         self.displayName = displayName;
         self.displayNames = displayNames;
         self.editAcf = editAcf;
+        self.friendlyFullName = friendlyFullName;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
         self.getLocationStatistics = getLocationStatistics;
@@ -120,6 +121,10 @@
                 }, function (error) {
                     return $q.reject(error);
                 });
+        }
+
+        function friendlyFullName (name) {
+            return self.displayName(name).split('(')[0].trim();
         }
 
         function getAcfs () {
