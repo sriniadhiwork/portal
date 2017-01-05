@@ -1,12 +1,12 @@
 {
-    'API': 'http://52.32.239.69/rest',
-    'AuthAPI':  'http://52.32.239.69/auth',
+    'API': 'https://52.32.239.69/rest',
+    'AuthAPI':  'https://52.32.239.69/auth',
     'IdleTimeout': 20,
     'IntegratedWithDHV': false,
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
     'LogoutRedirect': 'http://www.google.com',
     'QueryQueryTimeout': 5,
-    'SwaggerUrl': 'http://52.32.239.69/rest/api-docs',
+    'SwaggerUrl': 'https://52.32.239.69/rest/api-docs',
     'acfWritesAllowed': true
 }
