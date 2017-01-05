@@ -23,7 +23,7 @@
             <label for="gender" class="col-sm-12 control-label">Gender <span class="text-danger">*</span></label>
             <div class="col-sm-12">
               <select class="input-sm form-control" ng-model="vm.query.gender" id="gender" name="gender" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
-                <option value="" selected="true" disabled="disabled">Pick from the selection below</option>
+                <option value="" selected="true" disabled="disabled">Choose from the selection</option>
                 <option value="F">Female</option>
                 <option value="M">Male</option>
                 <option value="UN">Undifferentiated</option>
@@ -44,9 +44,9 @@
               <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.dobYear.$touched) && vm.queryForm.dobYear.$error.required">Field is required</span>
             </div>
           </div>
-          <div class="col-sm-4" ng-if="vm.query.dob.year && vm.query.dob.year.length > 0">
+          <div class="col-sm-4">
             <label class="sr-only" for="dobMonth">Month</label>
-            <select class="input-sm form-control" ng-model="vm.query.dob.month"
+            <select class="input-sm form-control" ng-model="vm.query.dob.month" ng-disabled="vm.query.dob.year.length !== 4"
                     id="dobMonth" name="dobMonth" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
               <option value="" selected="true">Month</option>
               <option value="01">January</option>
@@ -63,9 +63,9 @@
               <option value="12">December</option>
             </select>
           </div>
-          <div class="col-sm-4" ng-if="vm.query.dob.year && vm.query.dob.year.length > 0 && vm.query.dob.month && vm.query.dob.month.length > 0">
+          <div class="col-sm-4">
             <label class="sr-only" for="dobDay">Day</label>
-            <select class="input-sm form-control" ng-model="vm.query.dob.day"
+            <select class="input-sm form-control" ng-model="vm.query.dob.day" ng-disabled="vm.query.dob.month.length !== 2"
                     id="dobDay" name="dobDay" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
               <option value="" selected="true">Day</option>
               <option value="01">1</option>
@@ -101,7 +101,7 @@
               <option value="31">31</option>
             </select>
           </div>
-          <div class="col-sm-4" ng-if="vm.query.dob.year && vm.query.dob.year.length > 0 && vm.query.dob.month && vm.query.dob.month.length > 0 && vm.query.dob.day && vm.query.dob.day.length > 0">
+          <div class="col-sm-4" ng-if="vm.showOptional && vm.query.dob.year && vm.query.dob.year.length > 0 && vm.query.dob.month && vm.query.dob.month.length > 0 && vm.query.dob.day && vm.query.dob.day.length > 0">
             <label class="sr-only" for="dobHour">Hour</label>
             <select class="input-sm form-control" ng-model="vm.query.dob.hour"
                     id="dobHour" name="dobHour" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
@@ -132,7 +132,7 @@
               <option value="23">23</option>
             </select>
           </div>
-          <div class="col-sm-4" ng-if="vm.query.dob.year && vm.query.dob.year.length > 0 && vm.query.dob.month && vm.query.dob.month.length > 0 && vm.query.dob.day && vm.query.dob.day.length > 0 && vm.query.dob.hour && vm.query.dob.hour.length > 0">
+          <div class="col-sm-4" ng-if="vm.showOptional && vm.query.dob.year && vm.query.dob.year.length > 0 && vm.query.dob.month && vm.query.dob.month.length > 0 && vm.query.dob.day && vm.query.dob.day.length > 0 && vm.query.dob.hour && vm.query.dob.hour.length > 0">
             <label class="sr-only" for="dobMinute">Minute</label>
             <select class="input-sm form-control" ng-model="vm.query.dob.minute"
                     id="dobMinute" name="dobMinute" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
@@ -199,7 +199,7 @@
               <option value="59">59</option>
             </select>
           </div>
-          <div class="col-sm-4" ng-if="vm.query.dob.year && vm.query.dob.year.length > 0 && vm.query.dob.month && vm.query.dob.month.length > 0 && vm.query.dob.day && vm.query.dob.day.length > 0 && vm.query.dob.hour && vm.query.dob.hour.length > 0 && vm.query.dob.minute && vm.query.dob.minute.length > 0">
+          <div class="col-sm-4" ng-if="vm.showOptional && vm.query.dob.year && vm.query.dob.year.length > 0 && vm.query.dob.month && vm.query.dob.month.length > 0 && vm.query.dob.day && vm.query.dob.day.length > 0 && vm.query.dob.hour && vm.query.dob.hour.length > 0 && vm.query.dob.minute && vm.query.dob.minute.length > 0">
             <label class="sr-only" for="dobSecond">Second</label>
             <select class="input-sm form-control" ng-model="vm.query.dob.second"
                     id="dobSecond" name="dobSecond" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
@@ -266,11 +266,11 @@
               <option value="59">59</option>
             </select>
           </div>
-          <div class="col-sm-12">
+          <div class="col-sm-12" ng-if="vm.showOptional">
             <label class="sr-only" for="dobTimeZone">Time Zone</label>
             <select class="input-sm form-control" ng-model="vm.query.dob.z"
                     id="dobTimeZone" name="dobTimeZone" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
-              <option value="" selected="true">Unknown</option>
+              <option value="" selected="true">Time Zone Unknown</option>
               <option value="-1200">UTC−12:00</option>
               <option value="-1100">UTC−11:00</option>
               <option value="-1000">UTC−10:00 (Honolulu)</option>
@@ -314,30 +314,30 @@
           </div>
           <div class="col-sm-12" ng-if="vm.query.dob.year && vm.query.dob.year.length > 0">Assembled Birth Date/Time: {{ vm.assembledDob() }}</div>
         </div>
-        <div ng-if="vm.showOptional">
-          <div class="form-group">
-            <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern }">
-              <label for="ssn" class="col-sm-12 control-label">SSN</label>
-              <div class="col-sm-12">
-                <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn"
-                       uib-tooltip="XXX-XX-XXXX" tooltip-trigger="mouseenter focus click"
-                       placeholder="XXX-XX-XXXX" pattern="(\d{3}-?\d{2}-?\d{4})" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
-                <div class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX)</div>
-              </div>
+        <div class="form-group">
+          <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern }">
+            <label for="ssn" class="col-sm-12 control-label">SSN</label>
+            <div class="col-sm-12">
+              <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn"
+                     uib-tooltip="XXX-XX-XXXX" tooltip-trigger="mouseenter focus click"
+                     placeholder="XXX-XX-XXXX" pattern="(\d{3}-?\d{2}-?\d{4})" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
+              <div class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX)</div>
             </div>
-            <div>
+          </div>
+          <div ng-if="vm.showOptional">
+            <div class="form-group">
               <label for="telephone" class="col-sm-12 control-label">Telephone</label>
               <div class="col-sm-12">
                 <input class="input-sm form-control" type="text" ng-model="vm.query.telephone" id="telephone" name="telephone"
                        ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
               </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-12 control-label">Addresses</label>
-            <div class="col-sm-12">
-              <ai-addresses addresses="vm.query.addresses"
-                            submit-form="vm.searchForPatient"></ai-addresses>
+            <div class="form-group">
+              <label class="col-sm-12 control-label">Addresses</label>
+              <div class="col-sm-12">
+                <ai-addresses addresses="vm.query.addresses"
+                              submit-form="vm.searchForPatient"></ai-addresses>
+              </div>
             </div>
           </div>
         </div>
