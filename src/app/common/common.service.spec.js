@@ -130,6 +130,19 @@
                 var names = undefined;
                 expect(commonService.displayNames(names, '-')).toBe('');
             });
+
+            it('should have a function to get a friendly full name', function () {
+                expect(commonService.friendlyFullName).toBeDefined();
+            });
+
+            it('should return a friendly full name', function () {
+                var name = {
+                    givenName: ['John', 'Andrew'],
+                    familyName: 'Smith',
+                    nameType: {code: 'L', description: 'Legal Name'}
+                };
+                expect(commonService.friendlyFullName(name)).toEqual('John Andrew Smith');
+            });
         });
 
         describe('user authentication issues', function () {
