@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid no-background">
   <header>
     <ai-navbar active="review"></ai-navbar>
   </header>
@@ -10,14 +10,16 @@
       <a class="btn btn-lg btn-block btn-success btn-active-nav" href="#/review">Review</a>
     </div>
   </div>
-  <div class="row no-background">
-    <div class="col-sm-4">
+  <div class="row">
+    <div class="col-sm-12">
       <ai-acf-patient-list
          register-handler="vm.registerHandler(handler)"
          active-document="vm.activeDocument">
       </ai-acf-patient-list>
     </div>
-    <div class="col-sm-8">
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
       <ai-document-review
          active-document="vm.activeDocument">
       </ai-document-review>

@@ -3,9 +3,8 @@
     <div class="panel-heading">
       <div class="pull-right">
         <button class="btn btn-sm panel-button" ng-click="vm.cancel()" ng-if="vm.activeDocument"><span class="sr-only">Close document</span><i class="fa fa-close"></i></button>
-        <button class="btn btn-sm panel-button" ng-click="vm.hidePanel = !vm.hidePanel"><i class="fa fa-lg {{ vm.hidePanel ? 'fa-caret-right' : 'fa-caret-down' }}"></i><span class="sr-only">{{ vm.hidePanel ? 'Show' : 'Hide' }} Panel</span></button>
       </div>
-      <h2 class="panel-title">Document Review</h2>
+      <h2 class="panel-title">Document Review<span ng-if="vm.activeDocument">: {{ vm.activeDocument.className }}</span></h2>
       <div class="clearfix"></div>
     </div>
     <div class="panel-body slide" ng-if="!vm.hidePanel">
