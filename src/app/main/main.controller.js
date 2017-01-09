@@ -14,21 +14,21 @@
         vm.isAuthenticated = isAuthenticated;
         vm.redirectToDhv = redirectToDhv;
 
-        vm.commonService = commonService;
-        vm.authAction = AuthAPI + '/saml/login?disco=true';
-        vm.integratedWithDHV = IntegratedWithDHV;
-
         activate();
 
         ////////////////////////////////////////////////////////////////////
 
         function activate () {
+            vm.commonService = commonService;
+            vm.authAction = AuthAPI + '/saml/login?disco=true';
+            vm.integratedWithDHV = IntegratedWithDHV;
+
             commonService.getToken(true);
             if (vm.hasAcf()) {
                 $location.path('/search');
             }
             if (!vm.isAuthenticated()) {
-                vm.redirectToDhv();
+                //vm.redirectToDhv();
             }
         }
 

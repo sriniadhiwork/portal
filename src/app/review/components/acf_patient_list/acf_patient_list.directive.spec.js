@@ -225,6 +225,12 @@
             expect(vm.panelTitle).toBe('Patient: Jane Doe (Jane)');
         });
 
+        it('should handle a missing friendly name', function () {
+            vm.patients[1].friendlyName = null;
+            vm.activatePatient(1);
+            expect(vm.panelTitle).toBe('Patient: Jane Doe');
+        });
+
         it('should set the active patient when activated', function () {
             expect(vm.activePatient).toBeNull();
             vm.activatePatient(2);

@@ -157,7 +157,11 @@
 
             function buildTitle () {
                 if (vm.activePatient !== null) {
-                    vm.panelTitle = 'Patient: ' + vm.patients[vm.activePatient].fullName + ' (' + vm.patients[vm.activePatient].friendlyName + ')';
+                    vm.panelTitle = 'Patient: ' + vm.patients[vm.activePatient].fullName;
+
+                    if (vm.patients[vm.activePatient].friendlyName) {
+                        vm.panelTitle += ' (' + vm.patients[vm.activePatient].friendlyName + ')';
+                    }
                 } else {
                     vm.panelTitle = vm.patients.length + ' Active Patient';
                     if (vm.patients.length !== 1)
