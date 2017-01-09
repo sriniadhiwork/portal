@@ -225,8 +225,8 @@
             }
         }
         function isAuthenticated () {
-            var valid;
-            var token = self.getToken();
+            var valid, token;
+            token = self.getToken();
             if (token) {
                 var params = parseJwt(token);
                 if (params)

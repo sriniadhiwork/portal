@@ -9,12 +9,12 @@
     </div>
     <div class="panel-body slide" ng-if="!vm.hidePanel">
       <div ng-if="vm.activeDocument">
-        Showing
+        Showing&nbsp;
         <select ng-model="vm.displayType">
           <option value="raw">raw</option>
           <option value="xslt">transformed</option>
         </select>
-        document information
+        &nbsp;document information
         <div ng-if="vm.displayType === 'raw'"><pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre></div>
         <div ng-if="vm.displayType === 'xslt'" ng-bind-html="vm.transformedDocument"></div>
       </div>
