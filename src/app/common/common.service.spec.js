@@ -8,14 +8,26 @@
 
         requestHandler = {};
 
-        var user = { givenName: 'Bob', familyName: 'Jones', email: 'email@sample.org', username: 'aUsername', authorities: ['ROLE_ADMIN'] }
+        var user = {
+            user_id: 'user_id',
+            username: 'username',
+            auth_source: 'auth_source',
+            full_name: 'full_name',
+            organization: 'organization',
+            purpose_for_use: 'purpose_for_use',
+            role: 'role',
+            authorities: ['ROLE_ADMIN']
+        };
         var iatDate = new Date();
         var expDate = new Date();
         expDate.setDate(expDate.getDate() + 1);
-        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.givenName, user.familyName, user.email, {name: 'ACF Number 1', address: {}, id: 0}], Authorities: user.authorities});
-        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.givenName, user.familyName, user.email, {}], Authorities: user.authorities});
+        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, {name: 'ACF Number 1', address: {}, id: 0}], Authorities: user.authorities});
+        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, {}], Authorities: user.authorities});
+
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
+//        var tokenPrefix = 'eyJhbGciOiJSUzI1NiJ9';//'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
+//        var tokenSuffix = '.AS4hEjlI7o5aYFEnMPpbtrQENmKm8UHAj7_jKroCfR3Nx9_0No2ZoYEx2z1f2L328Ml0V54uxg8NvFUpzfxQ4ktxzJdmK3VBEs9eq_QoEAYosYHql-So0zwsgnVjYLtFLtsUk5cyV5ElSQ6R3DloF1z6fOyBgfJ3976ayjxoYuTKM6q8sZOdJfBrtNA-2qDoikC9n5R1flD3GnwVWyFTbUzfN7GsDUf7r8VU1Qiffqi5rIMyRqC5ECs2Fu4W0Ku9KcBPcByxuj4A2JQqrqwoBsY95u0fSoFAbQ3_iGpXrFhoyIy0zztiRlyeBvN_sZ8Ssr_nsXFoRwEZyFiBp-2mEg';//'.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
 
         var mock = {};
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
@@ -163,7 +175,7 @@
 
             it('should know the logged in user\'s name', function () {
                 commonService.saveToken(mock.token);
-                expect(commonService.getUsername()).toEqual('Bob Jones');
+                expect(commonService.getUsername()).toEqual('username');
             });
 
             it('should know the logged in user\'s ACF', function () {

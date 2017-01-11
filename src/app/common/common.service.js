@@ -9,6 +9,8 @@
     function commonService ($http, $q, API, AuthAPI, LogoutRedirect, $log, $localStorage, $window) {
         var self = this;
 
+        var ACF_LOCATION_IN_IDENTITY = 7;
+
         self.cacheDocument = cacheDocument;
         self.cancelQueryLocation = cancelQueryLocation;
         self.clearQuery = clearQuery;
@@ -180,7 +182,7 @@
             if (self.hasAcf()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                var acf = angular.fromJson(identity[3]);
+                var acf = angular.fromJson(identity[ACF_LOCATION_IN_IDENTITY]);
                 return acf;
             } else {
                 return '';
@@ -188,16 +190,20 @@
         }
 
         function getUserIdentity () {
-            var user = { givenName: null, familyName: null, email: null, username: null, authorities: [] };
+            authorities: ['ROLE_ADMIN']
+            var user = { };
             if (self.isAuthenticated()) {
                 var token = parseJwt(self.getToken());
                 var identity = token.Identity;
                 var authorities = token.Authorities;
-                user.givenName = identity[0];
-                user.familyName = identity[1];
-                user.email = identity[2];
+                user.user_id = identity[0];
+                user.username = identity[1];
+                user.auth_source = identity[2];
+                user.full_name = identity[3];
+                user.organization = identity[4];
+                user.purpose_for_use = identity[5];
+                user.role = identity[6];
                 user.authorities = authorities;
-                user.username = token.sub;
             }
             return user;
         }
@@ -206,7 +212,7 @@
             if (self.isAuthenticated()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                return identity[0] + ' ' + identity[1];
+                return identity[1];
             } else {
                 return '';
             }
@@ -216,7 +222,7 @@
             if (self.isAuthenticated()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                if (identity[3] && angular.fromJson(identity[3]) && angular.isString(angular.fromJson(identity[3]).name))
+                if (identity[ACF_LOCATION_IN_IDENTITY] && angular.fromJson(identity[ACF_LOCATION_IN_IDENTITY]) && angular.isString(angular.fromJson(identity[ACF_LOCATION_IN_IDENTITY]).name))
                     return true;
                 else
                     return false;
