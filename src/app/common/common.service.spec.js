@@ -8,6 +8,8 @@
 
         requestHandler = {};
 
+        var mock = {};
+        mock.userAcf = {name: 'ACF Number 1', address: {}, id: 0};
         var user = {
             user_id: 'user_id',
             username: 'username',
@@ -16,20 +18,18 @@
             organization: 'organization',
             purpose_for_use: 'purpose_for_use',
             role: 'role',
+            acf: mock.userAcf,
             authorities: ['ROLE_ADMIN']
         };
         var iatDate = new Date();
         var expDate = new Date();
         expDate.setDate(expDate.getDate() + 1);
-        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, {name: 'ACF Number 1', address: {}, id: 0}], Authorities: user.authorities});
+        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, mock.userAcf], Authorities: user.authorities});
         var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, {}], Authorities: user.authorities});
 
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
-//        var tokenPrefix = 'eyJhbGciOiJSUzI1NiJ9';//'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
-//        var tokenSuffix = '.AS4hEjlI7o5aYFEnMPpbtrQENmKm8UHAj7_jKroCfR3Nx9_0No2ZoYEx2z1f2L328Ml0V54uxg8NvFUpzfxQ4ktxzJdmK3VBEs9eq_QoEAYosYHql-So0zwsgnVjYLtFLtsUk5cyV5ElSQ6R3DloF1z6fOyBgfJ3976ayjxoYuTKM6q8sZOdJfBrtNA-2qDoikC9n5R1flD3GnwVWyFTbUzfN7GsDUf7r8VU1Qiffqi5rIMyRqC5ECs2Fu4W0Ku9KcBPcByxuj4A2JQqrqwoBsY95u0fSoFAbQ3_iGpXrFhoyIy0zztiRlyeBvN_sZ8Ssr_nsXFoRwEZyFiBp-2mEg';//'.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
 
-        var mock = {};
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
         mock.fakeDocument = {data: '<document><made><of>XML</of></made></document'};
         mock.newAcf = {name: 'New ACF'};
@@ -175,7 +175,7 @@
 
             it('should know the logged in user\'s name', function () {
                 commonService.saveToken(mock.token);
-                expect(commonService.getUsername()).toEqual('username');
+                expect(commonService.getUserName()).toEqual('full_name');
             });
 
             it('should know the logged in user\'s ACF', function () {
@@ -196,7 +196,7 @@
 
             it('should not have a username if the user isn\'t logged in', function () {
                 commonService.logout();
-                expect(commonService.getUsername()).toEqual('');
+                expect(commonService.getUserName()).toEqual('');
             });
 
             it('should allow the user to log out', function () {

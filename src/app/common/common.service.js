@@ -31,7 +31,7 @@
         self.getTokenVals = getTokenVals;
         self.getUserAcf = getUserAcf;
         self.getUserIdentity = getUserIdentity;
-        self.getUsername = getUsername;
+        self.getUserName = getUserName;
         self.hasAcf = hasAcf;
         self.isAuthenticated = isAuthenticated;
         self.logout = logout;
@@ -203,16 +203,19 @@
                 user.organization = identity[4];
                 user.purpose_for_use = identity[5];
                 user.role = identity[6];
+                if (identity[7]) {
+                    user.acf = identity[7];
+                }
                 user.authorities = authorities;
             }
             return user;
         }
 
-        function getUsername () {
+        function getUserName () {
             if (self.isAuthenticated()) {
                 var token = self.getToken();
                 var identity = parseJwt(token).Identity;
-                return identity[1];
+                return identity[3];
             } else {
                 return '';
             }

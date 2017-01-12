@@ -26,7 +26,7 @@
 
             vm.isAuthenticated = isAuthenticated;
             vm.getUserAcf = getUserAcf;
-            vm.getUsername = getUsername;
+            vm.getUserName = getUserName;
             vm.hasAcf = hasAcf;
             vm.logout = logout;
 
@@ -35,6 +35,7 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
+                vm.commonService = commonService;
                 vm.navCollapse = true;
                 Idle.watch();
                 $scope.$on('Keepalive', function() {
@@ -51,8 +52,8 @@
                 return commonService.getUserAcf();
             }
 
-            function getUsername () {
-                return commonService.getUsername();
+            function getUserName () {
+                return commonService.getUserName();
             }
 
             function hasAcf () {
