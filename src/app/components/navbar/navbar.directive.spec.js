@@ -13,7 +13,7 @@
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.getLocationStatistics = jasmine.createSpy('getLocationStatistics');
                     $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
-                    $delegate.getUsername = jasmine.createSpy('getUsername');
+                    $delegate.getUserName = jasmine.createSpy('getUserName');
                     $delegate.hasAcf = jasmine.createSpy('hasAcf');
                     $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
                     $delegate.logout = jasmine.createSpy('logout');
@@ -57,9 +57,9 @@
         });
 
         it('should know the user\'s username', function () {
-            expect(vm.getUsername).toBeDefined();
-            vm.getUsername();
-            expect(commonService.getUsername).toHaveBeenCalled();
+            expect(vm.getUserName).toBeDefined();
+            vm.getUserName();
+            expect(commonService.getUserName).toHaveBeenCalled();
         });
 
         it('should know if the user has an ACF', function () {
