@@ -35,7 +35,6 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                vm.commonService = commonService;
                 vm.navCollapse = true;
                 Idle.watch();
                 $scope.$on('Keepalive', function() {
