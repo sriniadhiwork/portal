@@ -6,7 +6,7 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, $location, $window, commonService, AuthAPI, IntegratedWithDHV, LogoutRedirect) {
+    function MainController($log, $location, $window, commonService, AuthAPI, IntegratedWithDHV) {
         var vm = this;
 
         vm.bypassSaml = bypassSaml;
@@ -28,7 +28,7 @@
                 $location.path('/search');
             }
             if (!vm.isAuthenticated()) {
-                //vm.redirectToDhv();
+                vm.redirectToDhv();
             }
         }
 
@@ -48,7 +48,7 @@
 
         function redirectToDhv () {
             if (vm.integratedWithDHV) {
-                $window.location.replace(LogoutRedirect);
+                vm.dhvForm.submit();
             }
         }
     }
