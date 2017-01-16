@@ -95,7 +95,6 @@
           </div>
         </div>
         <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required }">
-          <pre>{{ vm.patient.dateOfBirthObject | json }}</pre>
           <label for="dob" class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">

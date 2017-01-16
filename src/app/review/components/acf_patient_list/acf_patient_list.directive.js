@@ -159,7 +159,7 @@
                 if (vm.activePatient !== null) {
                     vm.panelTitle = 'Patient: ' + vm.patients[vm.activePatient].fullName;
 
-                    if (vm.patients[vm.activePatient].friendlyName) {
+                    if (vm.patients[vm.activePatient].friendlyName && vm.patients[vm.activePatient].friendlyName.length > 0) {
                         vm.panelTitle += ' (' + vm.patients[vm.activePatient].friendlyName + ')';
                     }
                 } else {
