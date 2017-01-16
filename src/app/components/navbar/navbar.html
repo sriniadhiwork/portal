@@ -6,7 +6,7 @@
     <div class="col-sm-5">
       <ai-acf mode="view" ng-if="vm.hasAcf()"></ai-acf>
     </div>
-    <div class="col-sm-2 pull-right">
+    <div class="col-sm-2 text-right">
       <span ng-if="vm.getUserName()">{{ vm.getUserName() }}<br /></span>
       <button class="btn btn-sm btn-primary pull-right" id="logoutButton" ng-click="vm.logout()">Log Out</button>
       <ai-location-status></ai-location-status>

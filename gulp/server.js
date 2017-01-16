@@ -23,6 +23,7 @@ function browserSyncInit(baseDir, browser) {
 
     var server = {
         baseDir: baseDir,
+        https: true,
         routes: routes
     };
 
@@ -34,12 +35,15 @@ function browserSyncInit(baseDir, browser) {
             target: 'https://localhost:9090/',
             pathRewrite: { '^/rest' : '/' },
             changeOrigin: true,
-            secure: false // TODO want to change this when we get an SSL cert thats not self signed
+            secure: false, // TODO want to change this when we get an SSL cert thats not self signed,
+            rejectUnauthorized: false
         }),
         proxyMiddleware('/auth', {
             target: 'https://localhost:8080/',
             pathRewrite: { '^/auth' : '' },
-            changeOrigin: true
+            changeOrigin: true,
+            secure: false,
+            rejectUnauthorized: false
         })
     ];
 

@@ -37,7 +37,7 @@
                     ng-click="vm.dischargePatient(vm.activePatient)"><i class="fa fa-sign-out"></i> Discharge<span class="sr-only"> {{ vm.patients[vm.activePatient].fullName }}</span></button>
             <button class="btn btn-sm btn-warning" ng-click="vm.deactivatePatient()"><i class="fa fa-close"></i> Deactivate<span class="sr-only"> {{ vm.patients[vm.activePatient].fullName }}</span></button>
           </div>
-          <h3>{{ vm.patients[vm.activePatient].fullName }} ({{ vm.patients[vm.activePatient].friendlyName }})</h3>
+          <h3>{{ vm.patients[vm.activePatient].fullName }}<span ng-if="vm.patients[vm.activePatient].friendlyName && vm.patients[vm.activePatient].friendlyName.length > 0"> ({{ vm.patients[vm.activePatient].friendlyName }})</span></h3>
           <table class="table table-striped">
             <tr>
               <th scope="row">Gender</th>
