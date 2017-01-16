@@ -1,12 +1,12 @@
 {
-    'API': 'http://52.40.244.116/rest',
-    'AuthAPI':  'http://52.40.244.116/auth',
+    'API': 'https://52.40.244.116/rest',
+    'AuthAPI':  'https://52.40.244.116/auth',
     'IdleTimeout': 20,
     'IntegratedWithDHV': true,
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
     'LogoutRedirect': 'https://california.demo.collaborativefusion.com/',
     'QueryQueryTimeout': 5,
-    'SwaggerUrl': 'http://52.40.244.116/rest/api-docs',
+    'SwaggerUrl': 'https://52.40.244.116/rest/api-docs',
     'acfWritesAllowed': false
 }
