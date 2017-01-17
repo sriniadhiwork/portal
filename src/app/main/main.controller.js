@@ -6,7 +6,7 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, $location, $window, commonService, AuthAPI, IntegratedWithDHV) {
+    function MainController($log, $location, $http, $window, commonService, AuthAPI, IntegratedWithDHV) {
         var vm = this;
 
         vm.bypassSaml = bypassSaml;
@@ -48,7 +48,13 @@
 
         function redirectToDhv () {
             if (vm.integratedWithDHV) {
-                vm.dhvForm.submit();
+                $http({
+                    method  : 'POST',
+                    url     : vm.authAction,
+                    data    : {'idp': 'https://california.demo.collaborativefusion.com/sso/saml2/idp/'},//$.param($scope.formData),  // pass in data as strings
+                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+                })
+                //            vm.dhvForm.submit();
             }
         }
     }

@@ -71,7 +71,7 @@
             expect(vm.dhvForm.submit).not.toHaveBeenCalled();
         });
 
-        it('should redirect the user to DHV if they\'re not logged in and we\'re integrated with DHV', function () {
+        xit('should redirect the user to DHV if they\'re not logged in and we\'re integrated with DHV', function () {
             spyOn(vm.dhvForm, 'submit');
             commonService.isAuthenticated.and.returnValue(false);
             scope.$digest();

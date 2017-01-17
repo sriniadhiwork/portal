@@ -5,15 +5,17 @@
   <div ng-if="!vm.isAuthenticated()" class="fake-login">
     <div class="row">
       <div class="col-sm-2 col-sm-offset-5">
-        <form class="" role="log in" method="get" action="{{ vm.authAction }}" name="vm.dhvForm">
+        <form class="" role="log in" method="get" action="{{ vm.authAction }}" name="dhvForm">
           <button type="submit" class="btn btn-default btn-block">Go to PULSE</button>
           <select name="idp" id="idp">
             <option value="https://california.demo.collaborativefusion.com/sso/saml2/idp/" selected="true">DHV</option>
           </select>
         </form>
+        <button id="autoSubmit" type="button" class="btn btn-warning btn-block" ng-click="vm.redirectToDhv()">Redirect to DHV</button>
         <button id="bypassSaml" type="button" class="btn btn-danger btn-block" ng-click="vm.bypassSaml()">Bypass SAML</button>
       </div>
     </div>
+    <pre>{{ vm.dhvForm | json }}</pre>
   </div>
   <div ng-if="vm.isAuthenticated()">
     <div class="row">
