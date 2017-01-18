@@ -228,3 +228,4 @@ gradle-app.setting
 ### Project specific ###
 /src/app/index.constants.js
 test_reports/
+/src/app/templateCacheHtml.js

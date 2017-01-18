@@ -11,11 +11,8 @@
             <option value="https://california.demo.collaborativefusion.com/sso/saml2/idp/" selected="true">DHV</option>
           </select>
         </form>
-        <button id="autoSubmit" type="button" class="btn btn-warning btn-block" ng-click="vm.redirectToDhv()">Redirect to DHV</button>
-        <button id="bypassSaml" type="button" class="btn btn-danger btn-block" ng-click="vm.bypassSaml()">Bypass SAML</button>
       </div>
     </div>
-    <pre>{{ vm.dhvForm | json }}</pre>
   </div>
   <div ng-if="vm.isAuthenticated()">
     <div class="row">

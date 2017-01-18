@@ -2,7 +2,6 @@
     'API': 'https://52.32.239.69/rest',
     'AuthAPI':  'https://52.32.239.69/auth',
     'IdleTimeout': 20,
-    'IntegratedWithDHV': false,
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
     'LogoutRedirect': 'http://www.google.com',

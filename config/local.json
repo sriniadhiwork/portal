@@ -2,7 +2,6 @@
     'API': '/rest',
     'AuthAPI':  '/auth',
     'IdleTimeout': 20,
-    'IntegratedWithDHV': false,
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
     'LogoutRedirect': 'http://www.google.com',
