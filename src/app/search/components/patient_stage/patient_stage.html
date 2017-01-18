@@ -128,16 +128,13 @@
                 confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
                 ng-click="vm.clearQuery()"><i class="fa fa-trash"></i> Dismiss<span class="sr-only"> query for patient</span></button>
       </div>
-      <div class="col-sm-10">
+      <div class="col-sm-9 col-sm-offset-1">
         <ul class="list-unstyled text-left text-danger" ng-if="(vm.queryForm.$invalid || !vm.isStageable()) && vm.showFormErrors">
           <li ng-if="vm.queryForm.fullName.$error.required">Full Name is required</li>
           <li ng-if="vm.queryForm.gender.$error.required">Gender is required</li>
           <li ng-if="vm.queryForm.dob.$error.required">Date of Birth is required</li>
           <li ng-if="!vm.isStageable()">At least one record must be selected</li>
         </ul>
-        <div class="row" ng-if="vm.errorMessage">
-          <div class="col-sm-12 bg-danger text-left">{{ vm.errorMessage }}</div>
-        </div>
       </div>
       <div class="col-sm-1">
         <button class="btn btn-success pull-right" ng-click="vm.stagePatient()"
@@ -145,6 +142,9 @@
                 ng-mouseover="vm.showFormErrors = true"
                 ng-focus="vm.showFormErrors = true">Save <span class="sr-only"> and select record(s) for patient</span> <i class="fa fa-save"></i></button>
       </div>
+    </div>
+    <div class="row" ng-if="vm.errorMessage">
+      <div class="col-sm-12 bg-danger text-left">{{ vm.errorMessage }}</div>
     </div>
   </div>
 </div>

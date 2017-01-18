@@ -2,36 +2,39 @@
     'use strict';
 
     describe('main.controller', function() {
-        var vm, scope, commonService, $log, $window, location, ctrl;
+        var vm, scope, commonService, $log, $window, location, ctrl, mock, $q;
+        mock = {
+            token: 'a token here'
+        };
 
         beforeEach(function () {
             module('portal.main', 'portal.constants', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
                     $delegate.hasAcf = jasmine.createSpy('hasAcf');
+                    $delegate.getSamlUserToken = jasmine.createSpy('getSamlUserToken');
                     $delegate.getToken = jasmine.createSpy('getToken');
                     return $delegate;
                 });
             });
 
-            inject(function (_commonService_, _$log_, $controller, $q, $rootScope, _$location_, _$window_) {
-                commonService = _commonService_;
+            inject(function (_commonService_, _$log_, $controller, $rootScope, _$location_, _$window_, _$q_) {
                 $log = _$log_;
                 ctrl = $controller;
                 location = _$location_;
                 $window = _$window_;
+                $q = _$q_;
+                commonService = _commonService_;
                 commonService.isAuthenticated.and.returnValue(true);
                 commonService.hasAcf.and.returnValue(false);
+                commonService.getSamlUserToken.and.returnValue($q.when(mock.token));
+                commonService.getToken.and.returnValue(mock.token);
 
                 spyOn($window.location, 'replace');
 
                 scope = $rootScope.$new();
                 vm = $controller('MainController');
                 scope.$digest();
-
-                vm.dhvForm = {
-                    submit: function () { }
-                };
             });
         });
 
@@ -53,41 +56,35 @@
             expect(vm.hasAcf()).toBeTruthy();
         });
 
+        it('should call for a SAML based user token', function () {
+            expect(commonService.getSamlUserToken).toHaveBeenCalled();
+        });
+
+        it('should call for the PULSE token if the SAML request returns a token', function () {
+            expect(commonService.getToken).toHaveBeenCalledWith(true);
+        });
+
         it('should redirect the user to search if they have an acf', function () {
             commonService.hasAcf.and.returnValue(true);
-            spyOn(location, 'path');
             vm = ctrl('MainController');
+            spyOn(location, 'path');
             scope.$digest();
             expect(location.path).toHaveBeenCalledWith('/search');
         });
 
-        it('should not redirect the user to DHV if they\'re not logged in and we\'re not integrated with DHV', function () {
-            spyOn(vm.dhvForm, 'submit');
-            commonService.isAuthenticated.and.returnValue(false);
+        it('should not redirect the user to search if they do not have an acf', function () {
+            vm = ctrl('MainController');
+            spyOn(location, 'path');
             scope.$digest();
-            vm.integratedWithDHV = false;
-            vm.redirectToDhv();
-
-            expect(vm.dhvForm.submit).not.toHaveBeenCalled();
+            expect(location.path).not.toHaveBeenCalledWith('/search');
         });
 
-        xit('should redirect the user to DHV if they\'re not logged in and we\'re integrated with DHV', function () {
-            spyOn(vm.dhvForm, 'submit');
-            commonService.isAuthenticated.and.returnValue(false);
+        it('should redirect the user to DHV if they don\'t have a SAML based token', function () {
+            commonService.getSamlUserToken.and.returnValue($q.reject('no token'));
+            vm = ctrl('MainController');
+            spyOn(vm,'redirectToDhv');
             scope.$digest();
-            vm.integratedWithDHV = true;
-            vm.redirectToDhv();
-
-            expect(vm.dhvForm.submit).toHaveBeenCalled();
-        });
-
-        it('should not redirect the user to DHV if they\'re logged in and we\'re integrated with DHV', function () {
-            spyOn(vm.dhvForm, 'submit');
-            commonService.isAuthenticated.and.returnValue(true);
-            vm.integratedWithDHV = true;
-            scope.$digest();
-
-            expect(vm.dhvForm.submit).not.toHaveBeenCalled();
+            expect(vm.redirectToDhv).toHaveBeenCalled();
         });
     });
 })();

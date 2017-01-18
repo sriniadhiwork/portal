@@ -6,10 +6,9 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, $location, $http, $window, commonService, AuthAPI, IntegratedWithDHV) {
+    function MainController($log, $location, $http, $window, commonService, AuthAPI) {
         var vm = this;
 
-        vm.bypassSaml = bypassSaml;
         vm.hasAcf = hasAcf;
         vm.isAuthenticated = isAuthenticated;
         vm.redirectToDhv = redirectToDhv;
@@ -21,20 +20,15 @@
         function activate () {
             vm.commonService = commonService;
             vm.authAction = AuthAPI + '/saml/login?disco=true';
-            vm.integratedWithDHV = IntegratedWithDHV;
 
-            commonService.getToken(true);
-            if (vm.hasAcf()) {
-                $location.path('/search');
-            }
-            if (!vm.isAuthenticated()) {
-                vm.redirectToDhv();
-            }
-        }
-
-        function bypassSaml () {
             commonService.getSamlUserToken().then(function () {
                 commonService.getToken(true);
+                if (vm.hasAcf()) {
+                    $location.path('/search');
+                }
+            }, function (error) {
+                $log.info('need to redirect', error);
+                vm.redirectToDhv();
             });
         }
 
@@ -47,6 +41,9 @@
         }
 
         function redirectToDhv () {
+            /*
+             * can't redirect this way until CORS is fixed
+             *
             if (vm.integratedWithDHV) {
                 $http({
                     method  : 'POST',
@@ -56,6 +53,7 @@
                 })
                 //            vm.dhvForm.submit();
             }
+            */
         }
     }
 })();

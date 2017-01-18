@@ -2,7 +2,6 @@
     'API': 'https://52.40.244.116/rest',
     'AuthAPI':  'https://52.40.244.116/auth',
     'IdleTimeout': 20,
-    'IntegratedWithDHV': true,
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
     'LogoutRedirect': 'https://california.demo.collaborativefusion.com/',
