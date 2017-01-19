@@ -79,12 +79,12 @@
             expect(location.path).not.toHaveBeenCalledWith('/search');
         });
 
-        it('should redirect the user to DHV if they don\'t have a SAML based token', function () {
+        it('should be ready to redirect the user to DHV if they don\'t have a SAML based token', function () {
+            expect(vm.willRedirect).toBe(false);
             commonService.getSamlUserToken.and.returnValue($q.reject('no token'));
             vm = ctrl('MainController');
-            spyOn(vm,'redirectToDhv');
             scope.$digest();
-            expect(vm.redirectToDhv).toHaveBeenCalled();
+            expect(vm.willRedirect).toBe(true);
         });
     });
 })();

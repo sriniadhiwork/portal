@@ -11,6 +11,7 @@
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.getLocationStatistics = jasmine.createSpy('getLocationStatistics');
+                    $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
                     return $delegate;
                 });
             });
@@ -22,6 +23,7 @@
                 $interval = _$interval_;
                 commonService = _commonService_;
                 commonService.getLocationStatistics.and.returnValue($q.when(mock.statistics));
+                commonService.isAuthenticated.and.returnValue(true);
 
                 el = angular.element('<ai-location-status></ai-location-status>');
 
@@ -41,42 +43,55 @@
             expect(el.html()).not.toEqual(null);
         });
 
-        it('should have isolate scope object with instanciate members', function () {
-            expect(vm).toEqual(jasmine.any(Object));
-        });
-
-        it('should load the queried Locations on load', function () {
-            expect(vm.locationStatistics.length).toBe(4);
-        });
-
-        it('should call commonService.queryLocationStatistics on load', function () {
-            expect(commonService.getLocationStatistics).toHaveBeenCalled();
-        });
-
-        it('should make the statistics arrays', function () {
-            expect(vm.locationStatistics[0].statistics).toEqual(mock.chart);
-        });
-
-        it('should leave statistics as null if the location has no requests', function () {
-            expect(vm.locationStatistics[0].statistics).toBeDefined();
-            mock.statistics[0].patientDiscoveryStats.requestCount = 0;
+        it('should not call commonService.queryLocationStatistics on load if not authenticated', function () {
+            commonService.isAuthenticated.and.returnValue(false);
+            el.isolateScope().$digest();
             $interval.flush(vm.INTERVAL_MILLIS);
-            expect(vm.locationStatistics[0].statistics).toBe(null);
+            expect(commonService.getLocationStatistics).not.toHaveBeenCalled();
         });
 
-        it('should re-query the location statistics on a regular interval', function () {
-            expect(commonService.getLocationStatistics.calls.count()).toBe(1);
-            $interval.flush(vm.INTERVAL_MILLIS);
-            expect(commonService.getLocationStatistics.calls.count()).toBe(2);
-            $interval.flush(vm.INTERVAL_MILLIS);
-            expect(commonService.getLocationStatistics.calls. count()).toBe(3);
-        });
+        describe('after first interval', function () {
+            beforeEach(function() {
+                $interval.flush(vm.INTERVAL_MILLIS);
+            });
 
-        it('should be able to stop the statistics interval', function () {
-            expect(vm.stopIntervalStatistics).toBeDefined();
-            expect(vm.stopStatistics).toBeDefined();
-            vm.stopIntervalStatistics();
-            expect(vm.stopStatistics).not.toBeDefined();
+            it('should have isolate scope object with instanciate members', function () {
+                expect(vm).toEqual(jasmine.any(Object));
+            });
+
+            it('should load the queried Locations on load', function () {
+                expect(vm.locationStatistics.length).toBe(4);
+            });
+
+            it('should call commonService.queryLocationStatistics on load', function () {
+                expect(commonService.getLocationStatistics).toHaveBeenCalled();
+            });
+
+            it('should make the statistics arrays', function () {
+                expect(vm.locationStatistics[0].statistics).toEqual(mock.chart);
+            });
+
+            it('should leave statistics as null if the location has no requests', function () {
+                expect(vm.locationStatistics[0].statistics).toBeDefined();
+                mock.statistics[0].patientDiscoveryStats.requestCount = 0;
+                $interval.flush(vm.INTERVAL_MILLIS);
+                expect(vm.locationStatistics[0].statistics).toBe(null);
+            });
+
+            it('should re-query the location statistics on a regular interval', function () {
+                expect(commonService.getLocationStatistics.calls.count()).toBe(1);
+                $interval.flush(vm.INTERVAL_MILLIS);
+                expect(commonService.getLocationStatistics.calls.count()).toBe(2);
+                $interval.flush(vm.INTERVAL_MILLIS);
+                expect(commonService.getLocationStatistics.calls. count()).toBe(3);
+            });
+
+            it('should be able to stop the statistics interval', function () {
+                expect(vm.stopIntervalStatistics).toBeDefined();
+                expect(vm.stopStatistics).toBeDefined();
+                vm.stopIntervalStatistics();
+                expect(vm.stopStatistics).not.toBeDefined();
+            });
         });
     });
 })();
