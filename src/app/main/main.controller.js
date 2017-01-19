@@ -6,7 +6,7 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, $location, commonService, AuthAPI) {
+    function MainController($log, $location, $timeout, commonService, AuthAPI) {
         var vm = this;
 
         vm.hasAcf = hasAcf;
@@ -22,12 +22,19 @@
             vm.authAction = AuthAPI + '/saml/login?disco=true';
             vm.willRedirect = false;
 
-            commonService.getSamlUserToken().then(function () {
-                commonService.getToken(true);
-                if (vm.hasAcf()) {
-                    $location.path('/search');
+            commonService.getSamlUserToken().then(function (response) {
+                if (angular.isDefined(response)) {
+                    $log.info('response is defined', response);
+                    commonService.getToken(true);
+                    if (vm.hasAcf()) {
+                        $location.path('/search');
+                    }
+                } else {
+                    $log.info('response is not defined', response);
+                    vm.willRedirect = true;
                 }
-            }, function () {
+            }, function (error) {
+                $log.info('log in error', error);
                 vm.willRedirect = true;
             });
         }
@@ -41,11 +48,13 @@
         }
 
         function redirectToDhv () {
-            if (vm.willRedirect) {
-                /* eslint-disable angular/document-service */
-                document.getElementById('dhvForm').submit();
-                /* eslint-enable angular/document-service */
-            }
+            $timeout(function () {
+                if (vm.willRedirect) {
+                    /* eslint-disable angular/document-service */
+                    document.getElementById('dhvForm').submit();
+                    /* eslint-enable angular/document-service */
+                }
+            },1000);
         }
     }
 })();
