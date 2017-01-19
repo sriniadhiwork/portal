@@ -5,11 +5,9 @@
   <div ng-if="!vm.isAuthenticated()" class="fake-login">
     <div class="row">
       <div class="col-sm-2 col-sm-offset-5">
-        <form class="" role="log in" method="get" action="{{ vm.authAction }}" name="dhvForm">
-          <button type="submit" class="btn btn-default btn-block">Go to PULSE</button>
-          <select name="idp" id="idp">
-            <option value="https://california.demo.collaborativefusion.com/sso/saml2/idp/" selected="true">DHV</option>
-          </select>
+        <form role="log in" method="get" action="{{ vm.authAction }}" id="dhvForm" name="dhvForm">
+          <button type="submit" class="btn btn-default btn-block" dom-on-create="vm.redirectToDhv()">Go to PULSE</button>
+          <input type="hidden" name="idp" id="idp" value="https://california.demo.collaborativefusion.com/sso/saml2/idp/"></input>
         </form>
       </div>
     </div>
