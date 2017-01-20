@@ -34,6 +34,7 @@
 
             function activate () {
                 vm.hidePanel = true;
+                vm.getLocationStatistics();
                 vm.stopStatistics = $interval(vm.getLocationStatistics,vm.INTERVAL_MILLIS);
             }
 
