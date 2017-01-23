@@ -20,6 +20,7 @@
         self.displayName = displayName;
         self.displayNames = displayNames;
         self.editAcf = editAcf;
+        self.editPatient = editPatient;
         self.friendlyFullName = friendlyFullName;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
@@ -123,6 +124,10 @@
                 }, function (error) {
                     return $q.reject(error);
                 });
+        }
+
+        function editPatient (patient) {
+            return enhancedPost('/patients/' + patient.id + '/edit', patient);
         }
 
         function friendlyFullName (name) {

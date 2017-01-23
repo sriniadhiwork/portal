@@ -2,10 +2,19 @@
     'use strict';
 
     describe('review.aiAcfPatientList', function() {
-        var vm, el, scope, $log, $timeout, $q, commonService, mock;
+        var vm, el, scope, $log, $timeout, $uibModal, $q, commonService, mock;
         mock = {
             fakeDocument: {data: "<document><made><of>XML</of></made></document"},
             userAcf: {name: 'ACF Number 1'}
+        };
+        mock.fakeModal = {
+            result: {
+                then: function(confirmCallback, cancelCallback) {
+                    this.confirmCallBack = confirmCallback;
+                    this.cancelCallback = cancelCallback;
+                }},
+            close: function(item) { this.result.confirmCallBack(item); },
+            dismiss: function(type) { this.result.cancelCallback(type); }
         };
         mock.patients = [{"id":2,"locationPatientId":null,"fullName":"John Smith","friendlyName":"John","dateOfBirth":"2016-11-30","gender":"Male","phoneNumber":null,"ssn":null,"lastRead":1482942445639,"acf":{"id":178,"name":"Del Norte-03","phoneNumber":null,"address":null,"lastRead":1482942622025},
                           "locationMaps":[{"id":4,"patientId":2,"location":{"id":2,"externalId":"2","status":{"id":1,"name":"Active"},"parentOrgName":"John Muir Health Foundation","name":"John Muir Medical Center (Walnut Creek)","description":"Primary Walnut Creek-based hospital facility within the John Muir Health healthcare provider organization","type":"Hospital","address":{"id":null,"lines":["1601 Ygnacio Valley Rd"],"city":"Walnut Creek","state":"CA","zipcode":"94598","country":null},"externalLastUpdateDate":1478294180000,"creationDate":1482937059621,"lastModifiedDate":1482937059621,"endpoints":[{"id":114,"externalId":"12","endpointType":{"id":3,"name":"Retrieve Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":114,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/retrieveDocumentSet","externalLastUpdateDate":1478623432000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":112,"externalId":"11","endpointType":{"id":2,"name":"Query for Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":112,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/documentQuery","externalLastUpdateDate":1478623421000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":113,"externalId":"10","endpointType":{"id":1,"name":"Patient Discovery"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":113,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/patientDiscovery","externalLastUpdateDate":1478623380000,"creationDate":1482942461119,"lastModifiedDate":1482942461119}]},"documentsQueryStatus":"Successful","documentsQueryStart":1482942461118,"documentsQueryEnd":1482942487857,
@@ -36,10 +45,12 @@
                     return $delegate;
                 });
             });
-            inject(function($compile, $rootScope, _$log_, _$timeout_, _$q_, _commonService_) {
+            inject(function($compile, $rootScope, _$log_, _$timeout_, _$q_, _$uibModal_, _commonService_) {
                 $log = _$log_;
                 $timeout = _$timeout_;
                 $q = _$q_;
+                $uibModal = _$uibModal_;
+                spyOn($uibModal, 'open').and.returnValue(mock.fakeModal);
                 commonService = _commonService_;
                 commonService.cacheDocument.and.returnValue($q.when({data: ''}));
                 commonService.dischargePatient.and.returnValue($q.when({}));
@@ -321,6 +332,26 @@
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(2);
                 $timeout.flush(vm.TIMEOUT_MILLIS * 10);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(3);
+            });
+        });
+
+        describe('editing patients', function() {
+            it('should have a function to edit patients', function () {
+                expect(vm.editPatient).toBeDefined();
+            });
+
+            it('should refresh the patient list if one was edited', function () {
+                spyOn(vm,'getPatientsAtAcf');
+                vm.editPatient(vm.patients[0]);
+                vm.editPatientInstance.close();
+                expect(vm.getPatientsAtAcf).toHaveBeenCalled();
+            });
+
+            it('should not trigger the controller if the modal is dismissed', function () {
+                spyOn(vm,'getPatientsAtAcf');
+                vm.editPatient(vm.patients[0]);
+                vm.editPatientInstance.dismiss();
+                expect(vm.getPatientsAtAcf).not.toHaveBeenCalled();
             });
         });
     });

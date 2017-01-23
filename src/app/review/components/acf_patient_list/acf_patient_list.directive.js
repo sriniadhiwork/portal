@@ -30,7 +30,7 @@
         return directive;
 
         /** @ngInject */
-        function AcfPatientListController($log, $timeout, commonService, QueryQueryTimeout) {
+        function AcfPatientListController($log, $timeout, $uibModal, commonService, QueryQueryTimeout) {
             var vm = this;
 
             vm.activatePatient = activatePatient;
@@ -39,6 +39,7 @@
             vm.deactivatePatient = deactivatePatient;
             vm.dischargePatient = dischargePatient;
             vm.displayName = commonService.displayName;
+            vm.editPatient = editPatient;
             vm.getDocument = getDocument;
             vm.getPatientsAtAcf = getPatientsAtAcf;
             vm.getUserAcf = getUserAcf;
@@ -97,6 +98,26 @@
                     vm.getPatientsAtAcf();
                 });
                 vm.deactivatePatient();
+            }
+
+            function editPatient (patient) {
+                vm.editPatientInstance = $uibModal.open({
+                    templateUrl: 'app/review/components/patient_edit/patient_edit.html',
+                    controller: 'PatientEditController',
+                    controllerAs: 'vm',
+                    animation: false,
+                    backdrop: 'static',
+                    keyboard: false,
+                    size: 'lg',
+                    resolve: {
+                        patient: function () { return patient; }
+                    }
+                });
+                vm.editPatientInstance.result.then(function () {
+                    vm.getPatientsAtAcf();
+                }, function (result) {
+                    $log.debug('dismissed', result);
+                });
             }
 
             function getDocument (patient, doc) {
