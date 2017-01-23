@@ -4,7 +4,7 @@
   </header>
   <div ng-if="!vm.isAuthenticated()" class="fake-login">
     <div class="row">
-      <div class="col-sm-2 col-sm-offset-5">
+      <div class="col-sm-6 col-sm-offset-3">
         <form role="log in" method="get" action="{{ vm.authAction }}" id="dhvForm" name="dhvForm">
           <input type="hidden" name="idp" id="idp" value="https://california.demo.collaborativefusion.com/sso/saml2/idp/" dom-on-create="vm.redirectToDhv()"></input>
         </form>
