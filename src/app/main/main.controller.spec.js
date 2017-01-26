@@ -2,7 +2,7 @@
     'use strict';
 
     describe('main.controller', function () {
-        var vm, scope, commonService, $log, $window, location, ctrl, mock, $q;
+        var vm, scope, commonService, $log, $timeout, $window, location, ctrl, mock, $q;
         mock = {
             token: 'a token here'
         };
@@ -18,9 +18,10 @@
                 });
             });
 
-            inject(function (_commonService_, _$log_, $controller, $rootScope, _$location_, _$window_, _$q_) {
+            inject(function (_commonService_, _$log_, $controller, $rootScope, _$timeout_, _$location_, _$window_, _$q_) {
                 $log = _$log_;
                 ctrl = $controller;
+                $timeout = _$timeout_;
                 location = _$location_;
                 $window = _$window_;
                 $q = _$q_;
@@ -85,6 +86,32 @@
             vm = ctrl('MainController');
             scope.$digest();
             expect(vm.willRedirect).toBe(true);
+        });
+
+        it('should be ready to redirect the user to DHV if they have an undefined SAML based token', function () {
+            expect(vm.willRedirect).toBe(false);
+            commonService.getSamlUserToken.and.returnValue($q.when(undefined));
+            vm = ctrl('MainController');
+            scope.$digest();
+            expect(vm.willRedirect).toBe(true);
+        });
+
+        it('should submit the form if it redirect', function () {
+            var submitSpy = jasmine.createSpy('submit');
+            spyOn(document,'getElementById').and.returnValue({submit: submitSpy});
+            vm.willRedirect = true;
+            vm.redirectToDhv();
+            $timeout.flush();
+            expect(submitSpy).toHaveBeenCalled();
+        });
+
+        it('should not submit the form if it shouldn\'t redirect', function () {
+            var submitSpy = jasmine.createSpy('submit');
+            spyOn(document,'getElementById').and.returnValue({submit: submitSpy});
+            vm.willRedirect = false;
+            vm.redirectToDhv();
+            $timeout.flush();
+            expect(submitSpy).not.toHaveBeenCalled();
         });
     });
 })();
