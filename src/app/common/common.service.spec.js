@@ -37,6 +37,7 @@
         mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
         mock.patientQueryResponse = {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]};
         mock.stagePatient = { patientRecords: [0,1], id: 1, patient: { givenName: 'Joe', familyName: 'Watson' } };
+        mock.patient = { id: 1, fullName: 'John Doe', friendlyName: 'John', gender: 'M', dateOfBirth: 1484629200000 };
 
         beforeEach(module('portal.common', 'portal.constants'));
 
@@ -68,6 +69,7 @@
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
             requestHandler.dischargePatient = $httpBackend.whenPOST(API + '/patients/1/delete', {}).respond(200, true);
             requestHandler.editAcf = $httpBackend.whenPOST(API + '/acfs/1/edit', mock.newAcf).respond(200, {acf: mock.newAcf});
+            requestHandler.editPatient = $httpBackend.whenPOST(API + '/patients/1/edit', mock.patient).respond(200, {acf: mock.patient});
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
             requestHandler.getLocations = $httpBackend.whenGET(API + '/locations').respond(200, {results: mock.locations});
@@ -451,6 +453,17 @@
                 $httpBackend.flush();
                 requestHandler.getPatientsAtAcf.respond(401, {error: 'a rejection'});
                 commonService.getPatientsAtAcf().then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /patients/{{id}}/edit', function () {
+                expect(commonService.editPatient).toBeDefined();
+                commonService.editPatient(mock.patient);
+                $httpBackend.flush();
+                requestHandler.editPatient.respond(401, {error: 'a rejection'});
+                commonService.editPatient(mock.patient).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();

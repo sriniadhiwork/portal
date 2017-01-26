@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('main.controller', function() {
+    describe('main.controller', function () {
         var vm, scope, commonService, $log, $window, location, ctrl, mock, $q;
         mock = {
             token: 'a token here'

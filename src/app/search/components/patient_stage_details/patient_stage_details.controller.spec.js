@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('search.aiPatientStageDetails', function() {
+    describe('search.aiPatientStageDetails', function () {
         var vm, scope, $log, mock;
         mock = {record: {id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}};
         mock.modalInstance = {

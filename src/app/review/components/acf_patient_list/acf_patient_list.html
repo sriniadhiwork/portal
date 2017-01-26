@@ -14,7 +14,10 @@
       <div class="row" ng-if="vm.activePatient === null">
         <div class="col-sm-4" ng-repeat="patient in vm.patients | orderBy : 'lastRead' : 'reverse' track by patient.id">
           <h3>{{ patient.fullName }}
-            <button class="btn btn-sm btn-primary pull-right" ng-click="vm.activatePatient(patient.id)"><i class="fa fa-search"></i><span class="sr-only">Activate {{ patient.fullName }}</span></button>
+            <div class="btn-group btn-group-sm pull-right">
+              <button class="btn btn-success" ng-click="vm.activatePatient(patient.id)"><i class="fa fa-search"></i><span class="sr-only">Activate {{ patient.fullName }}</span></button>
+              <button class="btn btn-primary" ng-click="vm.editPatient(patient)"><i class="fa fa-pencil-square-o"></i><span class="sr-only">Edit {{ patient.fullName }}</span></button>
+            </div>
           </h3>
           <uib-progress max="patient.documentStatus.total + vm.countActive(patient)">
             <uib-bar value="patient.documentStatus.cached" type="success"><i>{{ patient.documentStatus.cached }} / {{ patient.documentStatus.total }} document<span ng-if="patient.documentStatus.total !== 1">s</span> cached</i></uib-bar>
@@ -27,15 +30,16 @@
       </div>
       <div class="row" ng-if="vm.activePatient !== null">
         <div class="col-sm-12">
-          <div class="pull-right">
-            <button class="btn btn-sm btn-danger"
+          <div class="btn-group btn-group-sm pull-right">
+            <button class="btn btn-primary" ng-click="vm.editPatient(vm.patients[vm.activePatient])"><i class="fa fa-pencil-square-o"></i> Edit<span class="sr-only"> {{ vm.patients[vm.activePatient] }}</span></button>
+            <button class="btn btn-danger"
                     confirm="Are you sure you'd like to discharge this Patient?"
                     confirm-title="Confirmation"
                     confirm-ok="Yes"
                     confirm-cancel="No"
                     confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
                     ng-click="vm.dischargePatient(vm.activePatient)"><i class="fa fa-sign-out"></i> Discharge<span class="sr-only"> {{ vm.patients[vm.activePatient].fullName }}</span></button>
-            <button class="btn btn-sm btn-warning" ng-click="vm.deactivatePatient()"><i class="fa fa-close"></i> Deactivate<span class="sr-only"> {{ vm.patients[vm.activePatient].fullName }}</span></button>
+            <button class="btn btn-warning" ng-click="vm.deactivatePatient()"><i class="fa fa-close"></i> Deactivate<span class="sr-only"> {{ vm.patients[vm.activePatient].fullName }}</span></button>
           </div>
           <h3>{{ vm.patients[vm.activePatient].fullName }}<span ng-if="vm.patients[vm.activePatient].friendlyName && vm.patients[vm.activePatient].friendlyName.length > 0"> ({{ vm.patients[vm.activePatient].friendlyName }})</span></h3>
           <table class="table table-striped">

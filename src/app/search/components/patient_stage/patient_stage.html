@@ -23,21 +23,21 @@
       </tbody>
     </table>
     <h3>Possible Patient Records</h3>
-    <table class="table table-condensed" st-table="vm.displayedRecords" st-safe-src="vm.query.locationStatuses">
+    <table class="table table-condensed">
       <thead>
         <tr>
-          <th scope="col" st-sort="location.name" st-skip-natural="true" class="st-sort">Location</th>
-          <th scope="col" st-sort="name.givenName" st-skip-natural="true" class="st-sort">Name</th>
-          <th scope="col" st-sort="gender.description" st-skip-natural="true" class="st-sort">Gender</th>
-          <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
-          <th scope="col" st-sort="ssn" st-skip-natural="true" class="st-sort">SSN</th>
+          <th scope="col">Location</th>
+          <th scope="col">Name</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Date of Birth</th>
+          <th scope="col">SSN</th>
           <th scope="col">View Details</th>
           <th scope="col">Select</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat-start="location in vm.query.locationStatuses track by location.id" ng-if="location.results && location.results.length > 0">
-          <td rowspan="{{ location.results.length }}" href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.location.name }}</td>
+          <td rowspan="{{ location.results.length }}" href ng-click="vm.selectAll(location)">{{ location.location.name }}</td>
           <td href ng-click="location.results[0].selected = !location.results[0].selected" ng-bind-html="vm.displayNames(location.results[0].patientRecordName)"></td>
           <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].gender.description }}</td>
           <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].dateOfBirth | ehealthdate }}</td>

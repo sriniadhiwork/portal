@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -15,6 +15,7 @@
         vm.friendlyFullName = friendlyFullName;
         vm.isStageable = isStageable;
         vm.prepopulate = prepopulate;
+        vm.selectAll = selectAll;
         vm.stagePatient = stagePatient;
         vm.viewRecordDetails = viewRecordDetails;
 
@@ -73,6 +74,12 @@
             //*/
         }
 
+        function selectAll (location) {
+            for (var i = 0; i < location.results.length; i++) {
+                location.results[i].selected = !location.results[i].selected;
+            }
+        }
+
         function stagePatient () {
             if (vm.isStageable()) {
                 var newPatient = {
@@ -82,12 +89,9 @@
                 };
                 if (vm.patient.dateOfBirthObject) {
                     if (angular.isObject(vm.patient.dateOfBirthObject)) {
-                        vm.patient.dateOfBirth = '' +
-                            vm.patient.dateOfBirthObject.getFullYear() + '-' +
-                            pad((vm.patient.dateOfBirthObject.getMonth() + 1) , 2) + '-' +
-                            pad(vm.patient.dateOfBirthObject.getDate(), 2);
+                        vm.patient.dateOfBirth = vm.patient.dateOfBirthObject.getTime();
                     } else {
-                        vm.patient.dateOfBirth = vm.patient.dateOfBirthObject;
+                        vm.patient.dateOfBirth = new Date(vm.patient.dateOfBirthObject).getTime();
                     }
                 }
                 for (var i = 0; i < vm.query.locationStatuses.length; i++) {
@@ -97,7 +101,7 @@
                         }
                     }
                 }
-                commonService.stagePatient(newPatient).then(function() {
+                commonService.stagePatient(newPatient).then(function () {
                     $uibModalInstance.close()
                 }, function (error) {
                     vm.errorMessage = error.data.error;
@@ -123,16 +127,6 @@
             }, function (result) {
                 $log.info(result)
             });
-        }
-
-        ////////////////////////////////////////////////////////////////////
-
-        function pad(str,len) {
-            str = str + '';
-            while (str.length < len) {
-                str = '0' + str;
-            }
-            return str;
         }
     }
 })();

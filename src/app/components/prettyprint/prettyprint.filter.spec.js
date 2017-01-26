@@ -1,12 +1,12 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('prettyprint.filter', function() {
+    describe('prettyprint.filter', function () {
         var $log, $filter;
 
         beforeEach(function () {
             module('portal');
-            inject(function(_$log_, _$filter_) {
+            inject(function (_$log_, _$filter_) {
                 $log = _$log_;
                 $filter = _$filter_;
             });

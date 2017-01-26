@@ -1,5 +1,5 @@
 /* global prettyPrintOne */
-(function() {
+(function () {
     'use strict';
 
     angular
