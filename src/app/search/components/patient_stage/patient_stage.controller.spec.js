@@ -188,6 +188,16 @@
                     delete vm.query.locationStatuses;
                     expect(vm.isStageable()).toBe(false);
                 });
+
+                it('should have a way to mark all records at a location as valid', function () {
+                    vm.query.locationStatuses[0].results[0].selected = false;
+                    vm.selectAll(vm.query.locationStatuses[0]);
+                    expect(vm.query.locationStatuses[0].results[0].selected).toBe(true);
+                    expect(vm.query.locationStatuses[0].results[1].selected).toBe(true);
+                    vm.selectAll(vm.query.locationStatuses[0]);
+                    expect(vm.query.locationStatuses[0].results[0].selected).toBe(false);
+                    expect(vm.query.locationStatuses[0].results[1].selected).toBe(false);
+                });
             });
 
             describe('clearing a query', function () {

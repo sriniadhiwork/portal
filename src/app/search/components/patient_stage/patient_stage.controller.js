@@ -15,6 +15,7 @@
         vm.friendlyFullName = friendlyFullName;
         vm.isStageable = isStageable;
         vm.prepopulate = prepopulate;
+        vm.selectAll = selectAll;
         vm.stagePatient = stagePatient;
         vm.viewRecordDetails = viewRecordDetails;
 
@@ -71,6 +72,12 @@
                 vm.patient.dateOfBirthObject = new Date(dateStr);
             }
             //*/
+        }
+
+        function selectAll (location) {
+            for (var i = 0; i < location.results.length; i++) {
+                location.results[i].selected = !location.results[i].selected;
+            }
         }
 
         function stagePatient () {
