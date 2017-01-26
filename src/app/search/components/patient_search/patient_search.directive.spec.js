@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('search.aiPatientSearch', function() {
+    describe('search.aiPatientSearch', function () {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
         mock = {patientSearch: {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]}};
         mock.badRequest = {
@@ -34,7 +34,7 @@
                     return $delegate;
                 });
             });
-            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
+            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;

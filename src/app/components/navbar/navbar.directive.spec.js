@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('navbar.directive', function() {
+    describe('navbar.directive', function () {
         var vm, el, scope, $log, $q, commonService;
         var mock = {statistics: [
             {location:{name:'Santa Cruz',id:1,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:78,requestSuccessAvgCompletionSeconds:78,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}},
@@ -21,7 +21,7 @@
                     return $delegate;
                 });
             });
-            inject(function($compile, $rootScope, _$log_, _$q_, _commonService_) {
+            inject(function ($compile, $rootScope, _$log_, _$q_, _commonService_) {
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;

@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('portal.aiNames', function() {
+    describe('portal.aiNames', function () {
         var $compile, $rootScope, vm, el, $log, mock;
         mock = {
             names: [ { givenName: ['John', 'Frank'], familyName: 'Smith'} ],
@@ -10,7 +10,7 @@
 
         beforeEach(function () {
             module('portal');
-            inject(function(_$compile_, _$rootScope_, _$log_) {
+            inject(function (_$compile_, _$rootScope_, _$log_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;

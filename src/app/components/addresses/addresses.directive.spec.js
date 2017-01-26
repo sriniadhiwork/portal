@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('portal.aiAddresses', function() {
+    describe('portal.aiAddresses', function () {
         var $compile, $rootScope, vm, el, $log, mock;
         mock = {
             addresses: [ { lines: ['line 1', 'line 2'], city: 'city', state: 'state', zipcode: 'zip'} ]
@@ -9,7 +9,7 @@
 
         beforeEach(function () {
             module('portal');
-            inject(function(_$compile_, _$rootScope_, _$log_) {
+            inject(function (_$compile_, _$rootScope_, _$log_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;

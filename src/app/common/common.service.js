@@ -20,6 +20,7 @@
         self.displayName = displayName;
         self.displayNames = displayNames;
         self.editAcf = editAcf;
+        self.editPatient = editPatient;
         self.friendlyFullName = friendlyFullName;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
@@ -125,6 +126,10 @@
                 });
         }
 
+        function editPatient (patient) {
+            return enhancedPost('/patients/' + patient.id + '/edit', patient);
+        }
+
         function friendlyFullName (name) {
             return self.displayName(name).split('(')[0].trim();
         }
@@ -161,7 +166,7 @@
         function getToken (callApi) {
             var token = $localStorage.jwtToken;
             if (!token && callApi) {
-                self.getSamlUserToken().then(function(token) {
+                self.getSamlUserToken().then(function (token) {
                     if (validTokenFormat(token)) {
                         self.saveToken(token);
                         return token;
@@ -303,7 +308,7 @@
 
         function enhancedGet (endpoint) {
             return $http.get(API + endpoint)
-                .then(function(response) {
+                .then(function (response) {
                     return $q.when(response.data);
                 }, function (response) {
                     if (response.data.error && response.data.error.match(/ACF.*does not exist!/)) {
@@ -325,7 +330,7 @@
 
         function getApi (endpoint, api) {
             return $http.get(api + endpoint)
-                .then(function(response) {
+                .then(function (response) {
                     return response.data;
                 }, function (response) {
                     return $q.reject(response);

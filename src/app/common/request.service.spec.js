@@ -1,11 +1,11 @@
 (function () {
     'use strict';
 
-    describe('Service Unit Tests', function() {
+    describe('Service Unit Tests', function () {
 
         var httpProviderIt, requestService, $httpBackend, token = 'a token', $localStorage;
 
-        beforeEach(function() {
+        beforeEach(function () {
             module('portal.common', function ($httpProvider) {
                 httpProviderIt = $httpProvider;
             });
@@ -18,7 +18,7 @@
             })
         });
 
-        describe('RequestService Tests', function() {
+        describe('RequestService Tests', function () {
 
             it('should be defined', function () {
                 expect(requestService).toBeDefined();
@@ -30,19 +30,19 @@
                     expect(httpProviderIt.interceptors).toContain('requestService');
                 });
 
-                it('should put the token in the headers after setting', function() {
+                it('should put the token in the headers after setting', function () {
                     $localStorage.jwtToken = token;
-                    $httpBackend.when('GET', 'http://example.com', null, function(headers) {
+                    $httpBackend.when('GET', 'http://example.com', null, function (headers) {
                         expect(headers.Authorization).toBe('Bearer ' + token);
                     }).respond(200, {name: 'example' });
                 });
 
-                it('should not place a token in the http request headers if no token is set', function() {
+                it('should not place a token in the http request headers if no token is set', function () {
                     var config = requestService.request({headers: {} });
                     expect(config.headers['Authorization']).toBe(undefined);
                 });
 
-                it('should place a token in the http request headers after a token is set', function() {
+                it('should place a token in the http request headers after a token is set', function () {
                     $localStorage.jwtToken = token;
                     var config = requestService.request({headers: {} });
                     expect(config.headers['Authorization']).toBe('Bearer ' + token);

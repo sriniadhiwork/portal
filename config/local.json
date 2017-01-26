@@ -6,6 +6,6 @@
     'LocationQueryInterval': 60,
     'LogoutRedirect': 'http://www.google.com',
     'QueryQueryTimeout': 5,
-    'SwaggerUrl': 'http://localhost:9090/api-docs',
+    'SwaggerUrl': '/rest/api-docs',
     'acfWritesAllowed': false
 }

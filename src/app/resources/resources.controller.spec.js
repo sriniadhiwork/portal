@@ -1,12 +1,12 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('portal.resources', function(){
+    describe('portal.resources', function (){
         var vm;
         var scope;
 
         beforeEach(module('portal'));
-        beforeEach(inject(function($controller, $rootScope) {
+        beforeEach(inject(function ($controller, $rootScope) {
             scope = $rootScope.$new();
             vm = $controller('ResourcesController');
             scope.$digest();
