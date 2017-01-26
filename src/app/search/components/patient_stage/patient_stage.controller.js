@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -82,12 +82,9 @@
                 };
                 if (vm.patient.dateOfBirthObject) {
                     if (angular.isObject(vm.patient.dateOfBirthObject)) {
-                        vm.patient.dateOfBirth = '' +
-                            vm.patient.dateOfBirthObject.getFullYear() + '-' +
-                            pad((vm.patient.dateOfBirthObject.getMonth() + 1) , 2) + '-' +
-                            pad(vm.patient.dateOfBirthObject.getDate(), 2);
+                        vm.patient.dateOfBirth = vm.patient.dateOfBirthObject.getTime();
                     } else {
-                        vm.patient.dateOfBirth = vm.patient.dateOfBirthObject;
+                        vm.patient.dateOfBirth = new Date(vm.patient.dateOfBirthObject).getTime();
                     }
                 }
                 for (var i = 0; i < vm.query.locationStatuses.length; i++) {
@@ -97,7 +94,7 @@
                         }
                     }
                 }
-                commonService.stagePatient(newPatient).then(function() {
+                commonService.stagePatient(newPatient).then(function () {
                     $uibModalInstance.close()
                 }, function (error) {
                     vm.errorMessage = error.data.error;
@@ -123,16 +120,6 @@
             }, function (result) {
                 $log.info(result)
             });
-        }
-
-        ////////////////////////////////////////////////////////////////////
-
-        function pad(str,len) {
-            str = str + '';
-            while (str.length < len) {
-                str = '0' + str;
-            }
-            return str;
         }
     }
 })();

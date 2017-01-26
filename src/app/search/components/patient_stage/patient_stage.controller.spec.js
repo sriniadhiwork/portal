@@ -1,8 +1,8 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('search.aiPatientStage', function() {
-        var vm, scope, $log, $uibModal, $q, commonService, mock;
+    describe('search.aiPatientStage', function () {
+        var vm, scope, $log, $uibModal, $q, commonService, mock, actualOptions;
 
         mock = {query: {"id":13,"userToken":"fake@sample.com","status":"Complete","terms":{"dob":"1999","ssn":"123-12-1234","gender":"M","zip":null,"telephone":null,"addresses":null,"patientNames":[{"id":null,"suffix":null,"prefix":null,"profSuffix":null,"nameType":{"id":null,"code":"L","description":"Legal Name"},"nameRepresentation":null,"nameAssembly":null,"effectiveDate":null,"expirationDate":null,"familyName":"Doe","givenName":["John"]}]},"lastRead":1483642184101,"locationStatuses":[{id:14,queryId:7,locationId:2,status:'Complete',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,locationId:3,status:'Complete',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,locationId:1,status:'Complete',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]}};
         mock.badRequest = {
@@ -11,12 +11,24 @@
         };
         mock.fakeModal = {
             result: {
-                then: function(confirmCallback, cancelCallback) {
+                then: function (confirmCallback, cancelCallback) {
                     this.confirmCallBack = confirmCallback;
                     this.cancelCallback = cancelCallback;
                 }},
-            close: function(item) { this.result.confirmCallBack(item); },
-            dismiss: function(type) { this.result.cancelCallback(type); }
+            close: function (item) { this.result.confirmCallBack(item); },
+            dismiss: function (type) { this.result.cancelCallback(type); }
+        };
+        mock.fakeModalOptions = {
+            templateUrl: 'app/search/components/patient_stage_details/patient_stage_details.html',
+            controller: 'PatientStageDetailsController',
+            controllerAs: 'vm',
+            animation: false,
+            backdrop: 'static',
+            keyboard: false,
+            size: 'md',
+            resolve: {
+                record: jasmine.any(Function)
+            }
         };
         mock.modalInstance = {
             close: jasmine.createSpy('close'),
@@ -39,7 +51,10 @@
             inject(function ($controller, $rootScope, _$log_, _$uibModal_,_$q_, _commonService_) {
                 $log = _$log_;
                 $uibModal = _$uibModal_;
-                spyOn($uibModal, 'open').and.returnValue(mock.fakeModal);
+                spyOn($uibModal, 'open').and.callFake(function (options) {
+                    actualOptions = options;
+                    return mock.fakeModal;
+                });
                 $q = _$q_;
                 commonService = _commonService_;
                 commonService.clearQuery.and.returnValue($q.when({}));
@@ -111,7 +126,7 @@
             });
         });
 
-        describe('staging a patient', function() {
+        describe('staging a patient', function () {
 
             var patientStage;
 
@@ -188,9 +203,17 @@
                 });
             });
 
-            describe('viewing record details', function() {
+            describe('viewing record details', function () {
                 it('should have a function to view record details', function () {
                     expect(vm.viewRecordDetails).toBeDefined();
+                });
+
+                it('should create a modal instance when record details are viewed', function () {
+                    expect(vm.viewRecordDetailsInstance).toBeUndefined();
+                    vm.viewRecordDetails(vm.query.locationStatuses[0].results[0]);
+                    expect(vm.viewRecordDetailsInstance).toBeDefined();
+                    expect($uibModal.open).toHaveBeenCalledWith(mock.fakeModalOptions);
+                    expect(actualOptions.resolve.record()).toEqual(vm.query.locationStatuses[0].results[0]);
                 });
 
                 it('should log that the details was closed', function () {
@@ -214,23 +237,27 @@
                     vm.cancel();
                     expect(mock.modalInstance.dismiss).toHaveBeenCalled();
                 });
+            });
 
-                it('should change the dob to a string if it\'s an object', function () {
+            describe('patient DOB stuff', function () {
+                it('should change the dob to millis if it\'s an object', function () {
                     vm.patient.dateOfBirthObject = new Date();
                     vm.stagePatient();
-                    expect(typeof(vm.patient.dateOfBirth)).toBe('string');
+                    expect(typeof(vm.patient.dateOfBirth)).toBe('number');
                 });
 
                 it('should make the dob object the correct short string', function () {
-                    vm.patient.dateOfBirthObject = new Date('2016-09-01');
+                    var dob = new Date('2016-09-01');
+                    vm.patient.dateOfBirthObject = dob
                     vm.stagePatient();
-                    expect(vm.patient.dateOfBirth).toBe('2016-09-01');
+                    expect(vm.patient.dateOfBirth).toBe(dob.getTime());
                 });
 
                 it('should set the dob to the dobObject if the dobObject is just a string', function () {
-                    vm.patient.dateOfBirthObject = '2015-03-01';
+                    var dob = '2015-03-01';
+                    vm.patient.dateOfBirthObject = dob;
                     vm.stagePatient();
-                    expect(vm.patient.dateOfBirth).toBe('2015-03-01');
+                    expect(vm.patient.dateOfBirth).toBe(new Date(dob).getTime());
                 });
             });
         });
