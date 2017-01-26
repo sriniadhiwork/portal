@@ -1,4 +1,4 @@
-<div class="container-fluid no-background">
+<div class="container-fluid no-background hidden-print">
   <header>
     <ai-navbar active="review"></ai-navbar>
   </header>
@@ -28,4 +28,12 @@
   <footer>
     <ai-footer></ai-footer>
   </footer>
+</div>
+<div class="visible-print-block">
+  <div ng-if="!vm.activeDocument">
+    PULSE does not support printing of this page without an active document
+  </div>
+  <ai-document-review ng-if="vm.activeDocument" class="visible-print-block"
+                      active-document="vm.activeDocument">
+  </ai-document-review>
 </div>

@@ -1,4 +1,4 @@
-<div class="container-fluid document-review">
+<div class="container-fluid document-review" id="document-review">
   <div class="panel panel-primary">
     <div class="panel-heading">
       <div class="pull-right">
@@ -7,7 +7,7 @@
       <h2 class="panel-title">Document Review<span ng-if="vm.activeDocument">: {{ vm.activeDocument.className }}</span></h2>
       <div class="clearfix"></div>
     </div>
-    <div class="panel-body slide" ng-if="!vm.hidePanel">
+    <div class="panel-body" ng-if="!vm.hidePanel">
       <div ng-if="vm.activeDocument">
         Showing&nbsp;
         <select ng-model="vm.displayType">
