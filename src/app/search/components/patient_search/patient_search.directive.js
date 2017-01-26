@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -61,7 +61,7 @@
                 var count = 0,
                     errors = vm.queryForm.$error;
 
-                angular.forEach(errors, function(val) {
+                angular.forEach(errors, function (val) {
                     if (angular.isArray(val)) {
                         count += val.length;
                     }
@@ -74,7 +74,7 @@
                     vm.query.dob = vm.assembledDob();
 
                     var queryObj = {query: angular.copy(vm.query)};
-                    commonService.searchForPatient(queryObj.query).then(function() {
+                    commonService.searchForPatient(queryObj.query).then(function () {
                         vm.triggerHandlers();
                     }, function (error) {
                         vm.errorMessage = error.data.message;

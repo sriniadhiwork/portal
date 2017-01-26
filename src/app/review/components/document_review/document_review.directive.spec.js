@@ -1,13 +1,13 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('review.aiDocumentReview', function() {
+    describe('review.aiDocumentReview', function () {
         var vm, scope, el, $log, mock;
         mock = {fakeDocument: {id:2, title: 'Title of a doc', filetype: 'C-CDA 1', data: '<document><made><of>XML</of></made></document>', status: 'cached'}};
 
         beforeEach(function () {
             module('portal');
-            inject(function($compile, $rootScope, _$log_) {
+            inject(function ($compile, $rootScope, _$log_) {
                 $log = _$log_;
 
                 el = angular.element('<ai-document-review></ai-document-review>');

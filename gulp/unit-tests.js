@@ -42,7 +42,7 @@ function runTests (singleRun, done) {
         },
         coverageReporter: {
             // specify a common output directory
-            dir: 'coverage',
+            dir: 'test_reports/coverage',
             reporters: [
                 { type: 'lcov', subdir: '.' },
                 // display summary to screen

@@ -1,12 +1,12 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('ehealthdate.filter', function() {
+    describe('ehealthdate.filter', function () {
         var $log, $filter;
 
         beforeEach(function () {
             module('portal');
-            inject(function(_$log_, _$filter_) {
+            inject(function (_$log_, _$filter_) {
                 $log = _$log_;
                 $filter = _$filter_;
             });

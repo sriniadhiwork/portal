@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('portal.aiLocationStatus', function() {
+    describe('portal.aiLocationStatus', function () {
         var $compile, $rootScope, vm, el, $log, $q, $interval, commonService, mock;
         mock = {};
         mock.statistics = [{"location":{"id":4,"externalId":null,"status":{"id":null,"name":"Active"},"parentOrgName":null,"name":"San Ramon Regional Medical Center","description":null,"type":"Hospital","address":null,"externalLastUpdateDate":null,"creationDate":null,"lastModifiedDate":null,"endpoints":[]},"calculationStart":null,"calculationEnd":null,"calculationNumRequests":null,"patientDiscoveryStats":{"requestCount":2,"requestSuccessCount":2,"requestFailureCount":0,"requestCancelledCount":0,"requestAvgCompletionSeconds":0,"requestSuccessAvgCompletionSeconds":0,"requestFailureAvgCompletionSeconds":null,"requestCancelledAvgCompletionSeconds":null}},{"location":{"id":3,"externalId":null,"status":{"id":null,"name":"Active"},"parentOrgName":null,"name":"Contra Costa Regional Medical Center","description":null,"type":"Hospital","address":null,"externalLastUpdateDate":null,"creationDate":null,"lastModifiedDate":null,"endpoints":[]},"calculationStart":null,"calculationEnd":null,"calculationNumRequests":null,"patientDiscoveryStats":{"requestCount":2,"requestSuccessCount":2,"requestFailureCount":0,"requestCancelledCount":0,"requestAvgCompletionSeconds":0,"requestSuccessAvgCompletionSeconds":0,"requestFailureAvgCompletionSeconds":null,"requestCancelledAvgCompletionSeconds":null}},{"location":{"id":2,"externalId":null,"status":{"id":null,"name":"Active"},"parentOrgName":null,"name":"John Muir Medical Center (Walnut Creek)","description":null,"type":"Hospital","address":null,"externalLastUpdateDate":null,"creationDate":null,"lastModifiedDate":null,"endpoints":[]},"calculationStart":null,"calculationEnd":null,"calculationNumRequests":null,"patientDiscoveryStats":{"requestCount":2,"requestSuccessCount":2,"requestFailureCount":0,"requestCancelledCount":0,"requestAvgCompletionSeconds":0,"requestSuccessAvgCompletionSeconds":0,"requestFailureAvgCompletionSeconds":null,"requestCancelledAvgCompletionSeconds":null}},{"location":{"id":1,"externalId":null,"status":{"id":null,"name":"Active"},"parentOrgName":null,"name":"John Muir Medical Center","description":null,"type":"Hospital","address":null,"externalLastUpdateDate":null,"creationDate":null,"lastModifiedDate":null,"endpoints":[]},"calculationStart":null,"calculationEnd":null,"calculationNumRequests":null,"patientDiscoveryStats":{"requestCount":2,"requestSuccessCount":2,"requestFailureCount":0,"requestCancelledCount":0,"requestAvgCompletionSeconds":0,"requestSuccessAvgCompletionSeconds":0,"requestFailureAvgCompletionSeconds":null,"requestCancelledAvgCompletionSeconds":null}}]
@@ -15,7 +15,7 @@
                     return $delegate;
                 });
             });
-            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _$interval_, _commonService_) {
+            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _$interval_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;

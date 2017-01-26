@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('search.controller', function() {
+    describe('search.controller', function () {
         var vm, scope, commonService, $log, location, ctrl;
 
         beforeEach(function () {

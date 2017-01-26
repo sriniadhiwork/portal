@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('review.aiPatientEdit', function() {
+    describe('review.aiPatientEdit', function () {
         var vm, scope, $log, $uibModal, $q, commonService, mock;
 
         mock = {
@@ -12,12 +12,12 @@
             dobString: '1990-03-23',
             fakeModal: {
                 result: {
-                    then: function(confirmCallback, cancelCallback) {
+                    then: function (confirmCallback, cancelCallback) {
                         this.confirmCallBack = confirmCallback;
                         this.cancelCallback = cancelCallback;
                     }},
-                close: function(item) { this.result.confirmCallBack(item); },
-                dismiss: function(type) { this.result.cancelCallback(type); }
+                close: function (item) { this.result.confirmCallBack(item); },
+                dismiss: function (type) { this.result.cancelCallback(type); }
             },
             modalInstance: {
                 close: jasmine.createSpy('close'),
@@ -79,7 +79,7 @@
             });
         });
 
-        describe('editing a patient', function() {
+        describe('editing a patient', function () {
             it('should close the modal after editing the patient', function () {
                 vm.editPatient();
                 scope.$digest();
@@ -91,6 +91,13 @@
                 vm.patient.dateOfBirthObject = newDob;
                 vm.editPatient();
                 expect(vm.patient.dateOfBirth).toEqual(newDob.getTime());
+            });
+
+            it('should get millis if the dateOfBirthObject is a string', function () {
+                var newDob = '1982-02-18';
+                vm.patient.dateOfBirthObject = newDob;
+                vm.editPatient();
+                expect(vm.patient.dateOfBirth).toEqual(new Date(newDob).getTime());
             });
 
             it('should have an error message if the saving doesn\'t go well', function () {

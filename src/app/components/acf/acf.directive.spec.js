@@ -1,7 +1,7 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('portal.aiAcf', function() {
+    describe('portal.aiAcf', function () {
         var $compile, $rootScope, vm, el, $log, $q, commonService, mock, $location;
         mock = {};
         mock.acfs = [{id: 1, name: 'ACF-1', address: {}}, {id: 2, name: 'ACF-2', address: {}}, {id: 3, name: 'FAC-1', address: {}}];
@@ -24,7 +24,7 @@
                 });
                 $provide.constant('acfWritesAllowed', true);
             });
-            inject(function(_$compile_, _$rootScope_, _$log_, _$q_, _commonService_, _$location_) {
+            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _commonService_, _$location_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;

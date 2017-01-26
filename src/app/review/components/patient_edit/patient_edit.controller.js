@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -26,8 +26,12 @@
         }
 
         function editPatient () {
-            vm.patient.dateOfBirth = vm.patient.dateOfBirthObject.getTime();
-            commonService.editPatient(vm.patient).then(function() {
+            if (angular.isObject(vm.patient.dateOfBirthObject)) {
+                vm.patient.dateOfBirth = vm.patient.dateOfBirthObject.getTime();
+            } else {
+                vm.patient.dateOfBirth = new Date(vm.patient.dateOfBirthObject).getTime();
+            }
+            commonService.editPatient(vm.patient).then(function () {
                 $uibModalInstance.close()
             }, function (error) {
                 vm.errorMessage = error.data.error;

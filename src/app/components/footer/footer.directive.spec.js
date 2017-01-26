@@ -1,12 +1,12 @@
-(function() {
+(function () {
     'use strict';
 
-    describe('footer.directive', function() {
+    describe('footer.directive', function () {
         var vm, el, scope, $log;
 
         beforeEach(function () {
             module('portal');
-            inject(function($compile, $rootScope, _$log_) {
+            inject(function ($compile, $rootScope, _$log_) {
                 $log = _$log_;
 
                 el = angular.element('<ai-footer></ai-footer>');
