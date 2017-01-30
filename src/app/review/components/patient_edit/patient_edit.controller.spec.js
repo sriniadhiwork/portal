@@ -74,7 +74,7 @@
 
         describe('setup', function () {
             it('should create a dobObject', function () {
-                expect(vm.patient.dateOfBirthObject).toEqual(new Date(mock.patient.dateOfBirth));
+                expect(vm.patient.dateOfBirthObject).toEqual(mock.patient.dateOfBirth);
             });
         });
 
