@@ -83,25 +83,7 @@
         describe('setup', function () {
             it('should prepopulate patient name and gender from query terms', function () {
                 expect(vm.patient).toEqual({
-                    fullName: 'John Doe',
-                    gender: 'M',
-                    ssn: '123-12-1234',
-                    dateOfBirthObject: null
-                });
-            });
-
-            xit('should populate dob if the dob has exactly 8 characters', function () {
-                vm.query.terms.dob = '19990325';
-                vm.prepopulate();
-                expect(vm.patient).toEqual({
-                    fullName: 'John Doe',
-                    gender: 'M',
-                    ssn: '123-12-1234',
-                    dateOfBirthObject: new Date('1999-03-25')
-                });
-                vm.query.terms.dob = '1999';
-                vm.prepopulate();
-                expect(vm.patient).toEqual({
+                    dateOfBirth: '1999',
                     fullName: 'John Doe',
                     gender: 'M',
                     ssn: '123-12-1234',
@@ -250,24 +232,24 @@
             });
 
             describe('patient DOB stuff', function () {
-                it('should change the dob to millis if it\'s an object', function () {
+                it('should change the dob to a string if it\'s an object', function () {
                     vm.patient.dateOfBirthObject = new Date();
                     vm.stagePatient();
-                    expect(typeof(vm.patient.dateOfBirth)).toBe('number');
+                    expect(typeof(vm.patient.dateOfBirth)).toBe('string');
                 });
 
                 it('should make the dob object the correct short string', function () {
                     var dob = new Date('2016-09-01');
                     vm.patient.dateOfBirthObject = dob
                     vm.stagePatient();
-                    expect(vm.patient.dateOfBirth).toBe(dob.getTime());
+                    expect(vm.patient.dateOfBirth).toBe('2016-09-01');
                 });
 
                 it('should set the dob to the dobObject if the dobObject is just a string', function () {
                     var dob = '2015-03-01';
                     vm.patient.dateOfBirthObject = dob;
                     vm.stagePatient();
-                    expect(vm.patient.dateOfBirth).toBe(new Date(dob).getTime());
+                    expect(vm.patient.dateOfBirth).toBe('2015-03-01');
                 });
             });
         });

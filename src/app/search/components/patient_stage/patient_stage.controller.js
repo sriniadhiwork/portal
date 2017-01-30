@@ -6,7 +6,7 @@
         .controller('PatientStageController', PatientStageController);
 
     /** @ngInject */
-    function PatientStageController($log, $uibModal, $uibModalInstance, commonService, query) {
+    function PatientStageController($filter, $log, $uibModal, $uibModalInstance, commonService, query) {
         var vm = this;
 
         vm.cancel = cancel;
@@ -61,17 +61,12 @@
 
         function prepopulate () {
             vm.patient = {
+                dateOfBirth: vm.query.terms.dob,
+                dateOfBirthObject: null,
                 fullName: vm.friendlyFullName(vm.query.terms.patientNames[0]),
                 gender: vm.query.terms.gender,
-                ssn: vm.query.terms.ssn,
-                dateOfBirthObject: null
+                ssn: vm.query.terms.ssn
             };
-            /*/ removing until I can figure out UTC issues
-            if (vm.query.terms.dob.length === 8) {
-                var dateStr = vm.query.terms.dob.substring(0,4) + '-' + vm.query.terms.dob.substr(4,2) + '-' + vm.query.terms.dob.substr(6,2);
-                vm.patient.dateOfBirthObject = new Date(dateStr);
-            }
-            //*/
         }
 
         function selectAll (location) {
@@ -89,9 +84,9 @@
                 };
                 if (vm.patient.dateOfBirthObject) {
                     if (angular.isObject(vm.patient.dateOfBirthObject)) {
-                        vm.patient.dateOfBirth = vm.patient.dateOfBirthObject.getTime();
+                        vm.patient.dateOfBirth = $filter('date')(vm.patient.dateOfBirthObject, 'yyyy-MM-dd', 'utc');
                     } else {
-                        vm.patient.dateOfBirth = new Date(vm.patient.dateOfBirthObject).getTime();
+                        vm.patient.dateOfBirth = vm.patient.dateOfBirthObject;
                     }
                 }
                 for (var i = 0; i < vm.query.locationStatuses.length; i++) {

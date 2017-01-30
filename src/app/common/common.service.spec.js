@@ -25,7 +25,7 @@
         var expDate = new Date();
         expDate.setDate(expDate.getDate() + 1);
         var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, mock.userAcf], Authorities: user.authorities});
-        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, {}], Authorities: user.authorities});
+        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role], Authorities: user.authorities});
 
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
@@ -240,6 +240,14 @@
                 expect(commonService.getUserIdentity()).not.toEqual(user);
                 commonService.saveToken(mock.token);
                 expect(commonService.getUserIdentity()).toEqual(user);
+            });
+
+            it('should have a way to get the entire user\'s identity even if without ACF', function () {
+                var userWOAcf = angular.copy(user);
+                delete(userWOAcf.acf);
+                expect(commonService.getUserIdentity()).not.toEqual(userWOAcf);
+                commonService.saveToken(mock.tokenWOAcf);
+                expect(commonService.getUserIdentity()).toEqual(userWOAcf);
             });
 
             it('should have a way to refresh the token', function () {
