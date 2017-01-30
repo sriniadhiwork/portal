@@ -18,7 +18,7 @@
 
         function activate () {
             vm.patient = angular.copy(patient);
-            vm.patient.dateOfBirthObject = new Date(vm.patient.dateOfBirth);
+            vm.patient.dateOfBirthObject = vm.patient.dateOfBirth;
         }
 
         function cancel () {
@@ -27,7 +27,7 @@
 
         function editPatient () {
             if (angular.isObject(vm.patient.dateOfBirthObject)) {
-                vm.patient.dateOfBirth = $filter('date')(vm.patient.dateOfBirthObject, 'yyyy-MM-dd', 'utc');
+                vm.patient.dateOfBirth = $filter('date')(vm.patient.dateOfBirthObject, 'yyyy-MM-dd');
             } else {
                 vm.patient.dateOfBirth = vm.patient.dateOfBirthObject;
             }
