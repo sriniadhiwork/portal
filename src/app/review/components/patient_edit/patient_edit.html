@@ -38,7 +38,7 @@
           <label for="dob" class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
           <div class="col-sm-4">
             <div class="input-group">
-              <input class="form-control" type="text" ng-model="vm.patient.dateOfBirthObject" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" required>
+              <input class="form-control" type="text" ng-model="vm.patient.dateOfBirthObject" ng-model-options="{ timezone: 'utc' }" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" required>
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
               </span>
