@@ -58,7 +58,14 @@
             }
 
             function clearQuery (query) {
-                commonService.clearQuery(query.id).then(function () {
+                var id = query.id;
+                for (var i = 0; i < vm.patientQueries.length; i++) {
+                    if (query.id === vm.patientQueries[i].id) {
+                        vm.patientQueries.splice(i,1);
+                        break;
+                    }
+                }
+                commonService.clearQuery(id).then(function () {
                     vm.getQueries();
                 });
             }
@@ -82,17 +89,9 @@
             }
 
             function getQueries () {
-                commonService.getQueries().then(function (response) {
-                    var hasActive = false;
-                    vm.patientQueries = response;
-                    for (var i = 0; i < vm.patientQueries.length; i++) {
-                        vm.patientQueries[i].recordCount = vm.getRecordCount(vm.patientQueries[i]);
-                        hasActive = hasActive || (vm.patientQueries[i].status === 'Active');
-                    }
-                    if (hasActive) {
-                        $timeout(vm.getQueries, vm.TIMEOUT_MILLIS);
-                    }
-                });
+                if (!vm.activeQuery) {
+                    getQueryHelper();
+                }
             }
 
             function getRecordCount (query) {
@@ -131,6 +130,23 @@
                         vm.getQueries();
                     }
                     $log.debug('dismissed', result);
+                });
+            }
+
+            ////////////////////////////////////////////////////////////////////
+
+            function getQueryHelper () {
+                commonService.getQueries().then(function (response) {
+                    var stillActive = false;
+                    vm.patientQueries = response;
+                    for (var i = 0; i < vm.patientQueries.length; i++) {
+                        vm.patientQueries[i].recordCount = vm.getRecordCount(vm.patientQueries[i]);
+                        stillActive = stillActive || (vm.patientQueries[i].status === 'Active');
+                    }
+                    vm.activeQuery = stillActive;
+                    if (stillActive) {
+                        vm.timeout = $timeout(getQueryHelper, vm.TIMEOUT_MILLIS);
+                    }
                 });
             }
         }

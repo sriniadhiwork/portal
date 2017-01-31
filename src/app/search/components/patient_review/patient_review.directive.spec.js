@@ -129,11 +129,21 @@
 
             describe('refreshing', function () {
 
-                var activeProducts = angular.copy(mock.queries);
+                var activeProducts;
 
                 beforeEach(function () {
                     activeProducts = angular.copy(mock.queries);
                     activeProducts[0].status = 'Active';
+                });
+
+                it('should not refresh if there is already a refresh pending', function () {
+                    commonService.getQueries.and.returnValue($q.when(activeProducts));
+                    vm.getQueries();
+                    el.isolateScope().$digest();
+                    expect(commonService.getQueries.calls.count()).toBe(2);
+                    vm.getQueries();
+                    el.isolateScope().$digest();
+                    expect(commonService.getQueries.calls.count()).toBe(2);
                 });
 
                 it('should refresh the queries if there is one marked "Active"', function () {
@@ -147,17 +157,11 @@
                     expect(commonService.getQueries.calls.count()).toBe(2);
                     $timeout.flush();
                     expect(commonService.getQueries.calls.count()).toBe(3);
-                    $timeout.flush();
-                    expect(commonService.getQueries.calls.count()).toBe(4);
-                    $timeout.flush();
-                    expect(commonService.getQueries.calls.count()).toBe(5);
 
                     activeProducts[0].status = 'Complete';
                     commonService.getQueries.and.returnValue($q.when(activeProducts));
                     $timeout.flush();
-                    expect(commonService.getQueries.calls.count()).toBe(6);
-                    $timeout.flush();
-                    expect(commonService.getQueries.calls.count()).toBe(6);
+                    expect(commonService.getQueries.calls.count()).toBe(4);
                 });
             });
         });
@@ -185,8 +189,9 @@
             });
 
             it('should call commonService.clearQuery', function () {
+                var id = vm.patientQueries[0].id;
                 vm.clearQuery(vm.patientQueries[0]);
-                expect(commonService.clearQuery).toHaveBeenCalledWith(vm.patientQueries[0].id);
+                expect(commonService.clearQuery).toHaveBeenCalledWith(id);
             });
 
             it('should have a way to cancel an location\'s query', function () {
@@ -245,13 +250,18 @@
         });
 
         describe('requerying', function () {
-            it('should have a function ro requery', function () {
+            beforeEach(function () {
+                vm.patientQueries = angular.copy(mock.queries);
+            });
+
+            it('should have a function for requery', function () {
                 expect(vm.reQuery).toBeDefined();
             });
 
             it('should call commonService.searchForPatient when requeried', function () {
+                var terms = mock.queries[0].terms;
                 vm.reQuery(mock.queries[0]);
-                expect(commonService.searchForPatient).toHaveBeenCalledWith(mock.queries[0].terms);
+                expect(commonService.searchForPatient).toHaveBeenCalledWith(terms);
             });
 
             it('should refresh local queries when requeried', function () {
@@ -265,6 +275,15 @@
                 spyOn(vm,'clearQuery');
                 vm.reQuery(mock.queries[0]);
                 expect(vm.clearQuery).toHaveBeenCalledWith(mock.queries[0]);
+            });
+
+            it('should clear the query from patientQueries immediately', function () {
+                var newQueries = angular.copy(mock.queries);
+                newQueries.splice(1,1);
+                commonService.getQueries.and.returnValue($q.when(newQueries));
+                vm.reQuery(mock.queries[1]);
+                el.isolateScope().$digest();
+                expect(vm.patientQueries.length).toBe(2);
             });
         });
     });
