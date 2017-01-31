@@ -38,6 +38,7 @@
                     $delegate.cancelQueryLocation = jasmine.createSpy('cancelQueryLocation');
                     $delegate.clearQuery = jasmine.createSpy('clearQuery');
                     $delegate.getQueries = jasmine.createSpy('getQueries');
+                    $delegate.searchForPatient = jasmine.createSpy('commonService.searchForPatient');
                     $delegate.stagePatient = jasmine.createSpy('stagePatient');
                     return $delegate;
                 });
@@ -57,6 +58,7 @@
                 commonService.cancelQueryLocation.and.returnValue($q.when({}));
                 commonService.clearQuery.and.returnValue($q.when({}));
                 commonService.getQueries.and.returnValue($q.when(mock.queries));
+                commonService.searchForPatient.and.returnValue($q.when({}));
                 commonService.stagePatient.and.returnValue($q.when({}));
 
                 el = angular.element('<ai-patient-review></ai-patient-review>');
@@ -239,6 +241,30 @@
                 vm.stagePatient(vm.patientQueries[0]);
                 vm.stagePatientInstance.dismiss('query cleared');
                 expect(vm.getQueries).toHaveBeenCalled();
+            });
+        });
+
+        describe('requerying', function () {
+            it('should have a function ro requery', function () {
+                expect(vm.reQuery).toBeDefined();
+            });
+
+            it('should call commonService.searchForPatient when requeried', function () {
+                vm.reQuery(mock.queries[0]);
+                expect(commonService.searchForPatient).toHaveBeenCalledWith(mock.queries[0].terms);
+            });
+
+            it('should refresh local queries when requeried', function () {
+                spyOn(vm,'getQueries');
+                vm.reQuery(mock.queries[0]);
+                el.isolateScope().$digest();
+                expect(vm.getQueries).toHaveBeenCalled();
+            });
+
+            it('should call clearQuery to clear the requeried query', function () {
+                spyOn(vm,'clearQuery');
+                vm.reQuery(mock.queries[0]);
+                expect(vm.clearQuery).toHaveBeenCalledWith(mock.queries[0]);
             });
         });
     });

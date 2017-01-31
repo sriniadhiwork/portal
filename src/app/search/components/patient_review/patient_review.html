@@ -49,6 +49,7 @@
                           confirm-cancel="No"
                           confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
                           ng-click="vm.clearQuery(query)"><i class="fa fa-trash"></i><span class="sr-only">Clear query for {{ commonService.displayName(query.terms.name) }}</span></button>
+                  <button ng-if="query.status === 'Complete'" class="btn btn-primary btn-sm" ng-click="vm.reQuery(query)"><i class="fa fa-refresh"></i><span class="sr-only">Redo query for {{ commonService.displayName(query.terms.name) }}</span></button>
                 </td>
               </tr>
             </tbody>

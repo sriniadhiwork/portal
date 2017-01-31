@@ -39,6 +39,7 @@
             vm.displayNames = displayNames;
             vm.getQueries = getQueries;
             vm.getRecordCount = getRecordCount;
+            vm.reQuery = reQuery;
             vm.stagePatient = stagePatient;
 
             vm.TIMEOUT_MILLIS = QueryQueryTimeout * 1000;
@@ -100,6 +101,13 @@
                     recordCount += query.locationStatuses[i].results.length;
                 }
                 return recordCount;
+            }
+
+            function reQuery (query) {
+                commonService.searchForPatient(query.terms).then(function () {
+                    vm.getQueries();
+                });
+                vm.clearQuery(query);
             }
 
             function stagePatient (query) {
