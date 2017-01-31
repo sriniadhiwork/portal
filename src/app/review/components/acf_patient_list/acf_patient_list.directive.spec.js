@@ -169,24 +169,32 @@
         it('should have a way to discharge patients', function () {
             // given a patient in the queue
             expect(vm.patients.length).toBe(2);
+            var result = angular.copy(mock.patients);
+            result.splice(0,1);
 
-            commonService.getPatientsAtAcf.and.returnValue($q.when([]));
+            commonService.getPatientsAtAcf.and.returnValue($q.when(result));
             // when first result is cleared
-            vm.dischargePatient(vm.patients[0]);
+            vm.dischargePatient(0);
             el.isolateScope().$digest();
 
             // then expect to have one less patient in the queue
-            expect(vm.patients.length).toBe(0);
+            expect(vm.patients.length).toBe(1);
         });
 
         it('should call commonService.dischargePatient on discharge', function () {
-            vm.dischargePatient(vm.patients[0]);
+            vm.dischargePatient(0);
             expect(commonService.dischargePatient).toHaveBeenCalledWith(2);
         });
 
         it('should not try to clear an out of bounds query', function () {
             var patientQueueLength = vm.patients.length;
             vm.dischargePatient(patientQueueLength + 1);
+            expect(vm.patients.length).toBe(patientQueueLength);
+        });
+
+        it('should not try to clear an out of bounds query', function () {
+            var patientQueueLength = vm.patients.length;
+            vm.dischargePatient(-1);
             expect(vm.patients.length).toBe(patientQueueLength);
         });
 
@@ -297,7 +305,7 @@
         it('should change the title when the number of patients changes', function () {
             commonService.getPatientsAtAcf.and.returnValue($q.when([mock.patients[1]]));
             // when first result is cleared
-            vm.dischargePatient(vm.patients[0]);
+            vm.dischargePatient(0);
             el.isolateScope().$digest();
 
             // then expect to have one less patient in the queue
@@ -306,7 +314,7 @@
 
         it('should deactivate a patient when a patient is discharged', function () {
             spyOn(vm,'deactivatePatient');
-            vm.dischargePatient(vm.patients[0]);
+            vm.dischargePatient(0);
             el.isolateScope().$digest();
             expect(vm.deactivatePatient).toHaveBeenCalled();
         });
