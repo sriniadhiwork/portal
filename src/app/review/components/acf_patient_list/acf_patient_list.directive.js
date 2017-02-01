@@ -93,11 +93,13 @@
                 buildTitle();
             }
 
-            function dischargePatient (patient) {
-                commonService.dischargePatient(patient.id).then(function () {
-                    vm.getPatientsAtAcf();
-                });
-                vm.deactivatePatient();
+            function dischargePatient (patientIndex) {
+                if (patientIndex >= 0 && patientIndex < vm.patients.length) {
+                    commonService.dischargePatient(vm.patients[patientIndex].id).then(function () {
+                        vm.getPatientsAtAcf();
+                    });
+                    vm.deactivatePatient();
+                }
             }
 
             function editPatient (patient) {

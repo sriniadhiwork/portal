@@ -4,7 +4,7 @@
       <h2 class="panel-title">Queries ({{ vm.patientQueries.length}})</h2>
       <div class="clearfix"></div>
     </div>
-    <div class="panel-body slide" ng-if="!vm.hidePanel">
+    <div class="panel-body">
       <div class="row">
         <div class="col-sm-12">
           <h3>Queried Patient Information</h3>
@@ -49,6 +49,7 @@
                           confirm-cancel="No"
                           confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
                           ng-click="vm.clearQuery(query)"><i class="fa fa-trash"></i><span class="sr-only">Clear query for {{ commonService.displayName(query.terms.name) }}</span></button>
+                  <button ng-if="query.status === 'Complete'" class="btn btn-primary btn-sm" ng-click="vm.reQuery(query)"><i class="fa fa-refresh"></i><span class="sr-only">Redo query for {{ commonService.displayName(query.terms.name) }}</span></button>
                 </td>
               </tr>
             </tbody>
