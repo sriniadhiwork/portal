@@ -38,6 +38,7 @@
         self.logout = logout;
         self.queryLocations = queryLocations;
         self.refreshToken = refreshToken;
+        self.requeryLocation = requeryLocation;
         self.saveToken = saveToken;
         self.searchForPatient = searchForPatient;
         self.searchForPatientDocuments = searchForPatientDocuments;
@@ -276,6 +277,10 @@
                 }, function (error) {
                     return $q.reject(error);
                 });
+        }
+
+        function requeryLocation (queryId, locationId) {
+            return enhancedPost('/requery/' + queryId + '/location/' + locationId, {});
         }
 
         function saveToken (token) {

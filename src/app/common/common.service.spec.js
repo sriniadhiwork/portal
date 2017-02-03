@@ -79,6 +79,7 @@
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
             requestHandler.refreshToken = $httpBackend.whenGET(AuthAPI + '/jwt/keepalive').respond(200, {token: mock.token});
+            requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/3/location/4', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
             requestHandler.stagePatient = $httpBackend.whenPOST(API + '/queries/1/stage', mock.stagePatient).respond(200, {});
         }));
@@ -472,6 +473,16 @@
                 $httpBackend.flush();
                 requestHandler.editPatient.respond(401, {error: 'a rejection'});
                 commonService.editPatient(mock.patient).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /requery/{queryId}/location/{locationId}', function () {
+                commonService.requeryLocation(3,4);
+                $httpBackend.flush();
+                requestHandler.requeryLocation.respond(401, {error: 'a rejection'});
+                commonService.requeryLocation(3,4).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();

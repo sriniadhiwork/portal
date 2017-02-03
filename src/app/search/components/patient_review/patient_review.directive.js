@@ -39,7 +39,8 @@
             vm.displayNames = displayNames;
             vm.getQueries = getQueries;
             vm.getRecordCount = getRecordCount;
-            vm.reQuery = reQuery;
+            vm.requery = requery;
+            vm.requeryLocation = requeryLocation;
             vm.stagePatient = stagePatient;
 
             vm.TIMEOUT_MILLIS = QueryQueryTimeout * 1000;
@@ -102,11 +103,18 @@
                 return recordCount;
             }
 
-            function reQuery (query) {
+            function requery (query) {
                 commonService.searchForPatient(query.terms).then(function () {
                     vm.getQueries();
                 });
                 vm.clearQuery(query);
+            }
+
+            function requeryLocation (location) {
+                location.isRequerying = true;
+                commonService.requeryLocation(location.queryId, location.location.id).then(function () {
+                    vm.getQueries();
+                });
             }
 
             function stagePatient (query) {
