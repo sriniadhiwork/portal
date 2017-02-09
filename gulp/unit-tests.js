@@ -11,11 +11,12 @@ var pathSrcHtml = [
 ];
 
 var pathSrcJs = [
-    path.join(conf.paths.src, '/**/!(*.spec).js')
+//    path.join(conf.paths.src, '/**/!(*.spec).js')
+    path.join(conf.paths.src, '/**/!(*.spec|*.mock).js')
 ];
 
 function runTests (singleRun, done) {
-    var reporters = ['dots', 'junit', 'growl', 'html'];
+    var reporters = ['dots', 'junit', 'growl', 'html', 'coverage'];
     var preprocessors = {};
 
     pathSrcHtml.forEach(function(path) {
@@ -25,13 +26,13 @@ function runTests (singleRun, done) {
     pathSrcJs.forEach(function(path) {
         preprocessors[path] = ['coverage'];
     });
-    reporters.push('coverage')
 
     var localConfig = {
         configFile: path.join(__dirname, '/../karma.conf.js'),
         singleRun: singleRun,
         autoWatch: !singleRun,
         reporters: reporters,
+        growlReporter: { prefix: 'PULSE Unit Tests\n' },
         preprocessors: preprocessors,
         htmlReporter: {
             outputFile: 'test_reports/units.html'

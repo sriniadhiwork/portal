@@ -6,7 +6,7 @@
         .controller('PatientEditController', PatientEditController);
 
     /** @ngInject */
-    function PatientEditController($log, $uibModalInstance, commonService, patient) {
+    function PatientEditController($filter, $log, $uibModalInstance, commonService, patient) {
         var vm = this;
 
         vm.cancel = cancel;
@@ -18,7 +18,7 @@
 
         function activate () {
             vm.patient = angular.copy(patient);
-            vm.patient.dateOfBirthObject = new Date(vm.patient.dateOfBirth);
+            vm.patient.dateOfBirthObject = vm.patient.dateOfBirth;
         }
 
         function cancel () {
@@ -27,9 +27,9 @@
 
         function editPatient () {
             if (angular.isObject(vm.patient.dateOfBirthObject)) {
-                vm.patient.dateOfBirth = vm.patient.dateOfBirthObject.getTime();
+                vm.patient.dateOfBirth = $filter('date')(vm.patient.dateOfBirthObject, 'yyyy-MM-dd');
             } else {
-                vm.patient.dateOfBirth = new Date(vm.patient.dateOfBirthObject).getTime();
+                vm.patient.dateOfBirth = vm.patient.dateOfBirthObject;
             }
             commonService.editPatient(vm.patient).then(function () {
                 $uibModalInstance.close()

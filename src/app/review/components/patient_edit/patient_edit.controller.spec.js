@@ -9,7 +9,6 @@
                 status: 500,
                 error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement'
             },
-            dobString: '1990-03-23',
             fakeModal: {
                 result: {
                     then: function (confirmCallback, cancelCallback) {
@@ -29,13 +28,13 @@
                 givenName: ['Bob']
             },
             patient: {
+                dateOfBirth: '1990-03-23',
                 fullName: 'John Doe',
                 friendlyName: 'John',
                 gender: 'M',
                 ssn: '123-12-1234'
             }
         };
-        mock.patient.dateOfBirth = (new Date(mock.dobString)).getTime();
 
 
         beforeEach(function () {
@@ -75,7 +74,7 @@
 
         describe('setup', function () {
             it('should create a dobObject', function () {
-                expect(vm.patient.dateOfBirthObject).toEqual(new Date(mock.dobString));
+                expect(vm.patient.dateOfBirthObject).toEqual(mock.patient.dateOfBirth);
             });
         });
 
@@ -87,17 +86,17 @@
             });
 
             it('should update the dateOfBirth with the dateOfBirthObject', function () {
-                var newDob = new Date();
+                var newDob = new Date('1999-02-21');
                 vm.patient.dateOfBirthObject = newDob;
                 vm.editPatient();
-                expect(vm.patient.dateOfBirth).toEqual(newDob.getTime());
+                expect(vm.patient.dateOfBirth).toEqual('1999-02-21');
             });
 
             it('should get millis if the dateOfBirthObject is a string', function () {
                 var newDob = '1982-02-18';
                 vm.patient.dateOfBirthObject = newDob;
                 vm.editPatient();
-                expect(vm.patient.dateOfBirth).toEqual(new Date(newDob).getTime());
+                expect(vm.patient.dateOfBirth).toEqual('1982-02-18');
             });
 
             it('should have an error message if the saving doesn\'t go well', function () {
