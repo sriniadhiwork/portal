@@ -1,11 +1,11 @@
 {
-    'API': 'https://52.40.244.116/rest',
-    'AuthAPI':  'https://52.40.244.116/auth',
+    'API': 'https://www.pulsedemo.org/rest',
+    'AuthAPI':  'https://www.pulsedemo.org/auth',
     'IdleTimeout': 20,
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
     'LogoutRedirect': 'https://california.demo.collaborativefusion.com/',
     'QueryQueryTimeout': 5,
-    'SwaggerUrl': 'https://52.40.244.116/rest/api-docs',
+    'SwaggerUrl': 'https://www.pulsedemo.org/rest/api-docs',
     'acfWritesAllowed': false
 }
