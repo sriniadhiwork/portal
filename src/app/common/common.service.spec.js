@@ -64,7 +64,7 @@
 
             spyOn($window.location, 'replace');
             requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
-            requestHandler.cancelQueryLocation = $httpBackend.whenPOST(API + '/queries/1/2/cancel', {}).respond(200, true);
+            requestHandler.cancelQueryLocation = $httpBackend.whenPOST(API + '/queries/1/locationMap/2/cancel', {}).respond(200, true);
             requestHandler.clearQuery = $httpBackend.whenPOST(API + '/queries/1/delete', {}).respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
             requestHandler.dischargePatient = $httpBackend.whenPOST(API + '/patients/1/delete', {}).respond(200, true);
@@ -79,7 +79,7 @@
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
             requestHandler.refreshToken = $httpBackend.whenGET(AuthAPI + '/jwt/keepalive').respond(200, {token: mock.token});
-            requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/3/location/4', {}).respond(200, {results: mock.patientQueryResponse});
+            requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/query/3/locationMap/4', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
             requestHandler.stagePatient = $httpBackend.whenPOST(API + '/queries/1/stage', mock.stagePatient).respond(200, {});
         }));
@@ -311,7 +311,7 @@
                 $httpBackend.flush();
             });
 
-            it('should call /queries/locationid/queryid/cancel', function () {
+            it('should call /queries/queryid/locationMap/locationmapid/cancel', function () {
                 commonService.cancelQueryLocation(1,2);
                 $httpBackend.flush();
                 requestHandler.cancelQueryLocation.respond(401, {error: 'test'});
@@ -478,7 +478,7 @@
                 $httpBackend.flush();
             });
 
-            it('should call /requery/{queryId}/location/{locationId}', function () {
+            it('should call /requery/query/{queryId}/locationMap/{locationMapId}', function () {
                 commonService.requeryLocation(3,4);
                 $httpBackend.flush();
                 requestHandler.requeryLocation.respond(401, {error: 'a rejection'});
