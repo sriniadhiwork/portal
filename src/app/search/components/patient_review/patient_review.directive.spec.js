@@ -195,7 +195,7 @@
 
             it('should call commonService.clearLocationQuery', function () {
                 vm.cancelQueryLocation(vm.patientQueries[0].locationStatuses[0]);
-                expect(commonService.cancelQueryLocation).toHaveBeenCalledWith(vm.patientQueries[0].id, vm.patientQueries[0].locationStatuses[0].location.id);
+                expect(commonService.cancelQueryLocation).toHaveBeenCalledWith(vm.patientQueries[0].id, vm.patientQueries[0].locationStatuses[0].id);
             });
 
             it('should set the location status to "pending" when clearing', function () {
@@ -282,7 +282,7 @@
 
             it('should call commonService.requeryLocation when requeried', function () {
                 vm.requeryLocation(Mock.queries[0].locationStatuses[0]);
-                expect(commonService.requeryLocation).toHaveBeenCalledWith(4,1);
+                expect(commonService.requeryLocation).toHaveBeenCalledWith(4,13);
             });
 
             it('should refresh local queries when requeried', function () {
