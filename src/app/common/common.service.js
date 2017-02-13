@@ -276,13 +276,16 @@
             .then(function(result){
                 return postApi('/jwt/keepalive', result, AuthAPI)
                     .then(function (response) {
-                    self.saveToken(response.token);
-                    return $q.when(response.token);
+                    if (validTokenFormat(response.token)) {
+                        self.saveToken(response.token);
+                        return $q.when(response.token);
+                    } else {
+                        return $q.when(null);
+                    }
                 }, function (error) {
-                    return $q.reject(error);
+                    return $q.reject(eror);
                 });
             });
-            
         }
 
         function requeryLocation (queryId, locationMapId) {

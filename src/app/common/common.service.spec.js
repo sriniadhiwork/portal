@@ -71,6 +71,7 @@
             requestHandler.editAcf = $httpBackend.whenPOST(API + '/acfs/1/edit', mock.newAcf).respond(200, {acf: mock.newAcf});
             requestHandler.editPatient = $httpBackend.whenPOST(API + '/patients/1/edit', mock.patient).respond(200, {acf: mock.patient});
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
+            requestHandler.getAcf = $httpBackend.whenGET(API + '/acfs/1').respond(200, {results: mock.acfs[0]});
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
             requestHandler.getLocations = $httpBackend.whenGET(API + '/locations').respond(200, {results: mock.locations});
             requestHandler.getLocationStatistics = $httpBackend.whenGET(API + '/locations/statistics').respond(200, {results: mock.locations});
