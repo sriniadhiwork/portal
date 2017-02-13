@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     angular
@@ -37,7 +37,7 @@
             function activate () {
                 vm.navCollapse = true;
                 Idle.watch();
-                $scope.$on('Keepalive', function () {
+                $scope.$on('Keepalive', function() {
                     $log.info('Keepalive');
                     commonService.refreshToken();
                 });

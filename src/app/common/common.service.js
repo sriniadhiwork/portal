@@ -276,7 +276,6 @@
             .then(function(result){
                 return postApi('/jwt/keepalive', result, AuthAPI)
                     .then(function (response) {
-                    $log.info(result);
                     self.saveToken(response.token);
                     return $q.when(response.token);
                 }, function (error) {
@@ -291,7 +290,6 @@
         }
 
         function saveToken (token) {
-            $log.info(parseJwt(token));
             $localStorage.jwtToken = token;
         }
 
@@ -304,7 +302,6 @@
         }
 
         function setAcf (acf) {
-            $log.info(acf);
             return postApi('/jwt/setAcf', acf, AuthAPI)
                 .then(function (response) {
                     self.saveToken(response.token);
