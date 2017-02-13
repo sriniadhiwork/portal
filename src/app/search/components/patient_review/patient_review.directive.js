@@ -55,7 +55,7 @@
 
             function cancelQueryLocation (locationStatus) {
                 locationStatus.isClearing = true;
-                commonService.cancelQueryLocation(locationStatus.queryId, locationStatus.location.id);
+                commonService.cancelQueryLocation(locationStatus.queryId, locationStatus.id);
             }
 
             function clearQuery (query) {
@@ -112,7 +112,7 @@
 
             function requeryLocation (location) {
                 location.isRequerying = true;
-                commonService.requeryLocation(location.queryId, location.location.id).then(function () {
+                commonService.requeryLocation(location.queryId, location.id).then(function () {
                     vm.getQueries();
                 });
             }

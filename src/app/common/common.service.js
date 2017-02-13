@@ -52,8 +52,8 @@
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId);
         }
 
-        function cancelQueryLocation (queryId, locationId) {
-            return enhancedPost('/queries/' + queryId + '/' + locationId + '/cancel', {});
+        function cancelQueryLocation (queryId, locationMapId) {
+            return enhancedPost('/queries/' + queryId + '/locationMap/' + locationMapId + '/cancel', {});
         }
 
         function clearQuery (queryId) {
@@ -285,8 +285,8 @@
             
         }
 
-        function requeryLocation (queryId, locationId) {
-            return enhancedPost('/requery/' + queryId + '/location/' + locationId, {});
+        function requeryLocation (queryId, locationMapId) {
+            return enhancedPost('/requery/query/' + queryId + '/locationMap/' + locationMapId, {});
         }
 
         function saveToken (token) {
