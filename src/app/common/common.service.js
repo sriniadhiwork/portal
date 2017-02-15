@@ -272,8 +272,8 @@
 
         function refreshToken () {
             var userAcf = getUserAcf();
-            getAcf(userAcf.id)
-            .then(function(result){
+            return getAcf(userAcf.id)
+            .then(function (result){
                 return postApi('/jwt/keepalive', result, AuthAPI)
                     .then(function (response) {
                     if (validTokenFormat(response.token)) {
@@ -283,7 +283,7 @@
                         return $q.when(null);
                     }
                 }, function (error) {
-                    return $q.reject(eror);
+                    return $q.reject(error);
                 });
             });
         }

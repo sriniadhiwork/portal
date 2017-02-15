@@ -9,7 +9,7 @@
         requestHandler = {};
 
         var mock = {};
-        mock.userAcf = {name: 'ACF Number 1', address: {}, id: 0};
+        mock.userAcf = {name: 'ACF Number 1', address: {}, id: 1};
         var user = {
             user_id: 'user_id',
             username: 'username',
@@ -71,7 +71,7 @@
             requestHandler.editAcf = $httpBackend.whenPOST(API + '/acfs/1/edit', mock.newAcf).respond(200, {acf: mock.newAcf});
             requestHandler.editPatient = $httpBackend.whenPOST(API + '/patients/1/edit', mock.patient).respond(200, {acf: mock.patient});
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
-            requestHandler.getAcf = $httpBackend.whenGET(API + '/acfs/1').respond(200, {results: mock.acfs[0]});
+            requestHandler.getAcf = $httpBackend.whenGET(API + '/acfs/1').respond(200, mock.acfs[0]);
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
             requestHandler.getLocations = $httpBackend.whenGET(API + '/locations').respond(200, {results: mock.locations});
             requestHandler.getLocationStatistics = $httpBackend.whenGET(API + '/locations/statistics').respond(200, {results: mock.locations});
@@ -79,7 +79,7 @@
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
-            requestHandler.refreshToken = $httpBackend.whenGET(AuthAPI + '/jwt/keepalive').respond(200, {token: mock.token});
+            requestHandler.refreshToken = $httpBackend.whenPOST(AuthAPI + '/jwt/keepalive', mock.acfs[0]).respond(200, mock);
             requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/3/location/4', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/query/3/locationMap/4', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
@@ -254,6 +254,7 @@
             });
 
             it('should have a way to refresh the token', function () {
+            	commonService.saveToken(mock.token);
                 commonService.refreshToken().then(function (response) {
                     expect(response).toEqual(mock.token);
                 });
@@ -436,6 +437,13 @@
                 requestHandler.editAcf.respond(401, {error: 'a rejection'});
                 commonService.editAcf(mock.newAcf).then(function (response) {
                     expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+            
+            it('should call /acfs/{{id}}', function () {
+                commonService.getAcf(1).then(function (response){
+                    expect(response).toEqual(mock.acfs[0]);
                 });
                 $httpBackend.flush();
             });
