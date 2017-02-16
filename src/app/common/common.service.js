@@ -22,6 +22,7 @@
         self.editAcf = editAcf;
         self.editPatient = editPatient;
         self.friendlyFullName = friendlyFullName;
+        self.getAcf = getAcf;
         self.getAcfs = getAcfs;
         self.getDocument = getDocument;
         self.getLocationStatistics = getLocationStatistics;
@@ -115,6 +116,10 @@
             } else {
                 return '';
             }
+        }
+        
+        function getAcf (acfId) {
+            return angular.fromJson(enhancedGet('/acfs/' + acfId ));
         }
 
         function editAcf (anAcf) {
@@ -266,8 +271,11 @@
         }
 
         function refreshToken () {
-            return getApi('/jwt/keepalive', AuthAPI)
-                .then(function (response) {
+            var userAcf = getUserAcf();
+            return getAcf(userAcf.id)
+            .then(function (result){
+                return postApi('/jwt/keepalive', result, AuthAPI)
+                    .then(function (response) {
                     if (validTokenFormat(response.token)) {
                         self.saveToken(response.token);
                         return $q.when(response.token);
@@ -277,6 +285,7 @@
                 }, function (error) {
                     return $q.reject(error);
                 });
+            });
         }
 
         function requeryLocation (queryId, locationMapId) {
