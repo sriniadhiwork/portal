@@ -79,7 +79,7 @@
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
-            requestHandler.refreshToken = $httpBackend.whenPOST(AuthAPI + '/jwt/keepalive', mock.acfs[0]).respond(200, mock);
+            requestHandler.refreshToken = $httpBackend.whenPOST(AuthAPI + '/jwt/keepalive', mock.acfs[0]).respond(200, {token: mock.token});
             requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/3/location/4', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/query/3/locationMap/4', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
@@ -254,7 +254,7 @@
             });
 
             it('should have a way to refresh the token', function () {
-            	commonService.saveToken(mock.token);
+                commonService.saveToken(mock.token);
                 commonService.refreshToken().then(function (response) {
                     expect(response).toEqual(mock.token);
                 });
