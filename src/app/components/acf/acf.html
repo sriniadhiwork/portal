@@ -24,6 +24,7 @@
           <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required }" ng-if="!vm.acfWritesAllowed">
             <div class="col-sm-6">
               <label for="selectAcfPrefix" class="control-label sr-only">ACF County Selection</label>
+              <label for="selectAcfPrefix" class="control-label">ACF County Selection</label>
               <select class="input-sm form-control" ng-model="vm.selectAcfPrefix" id="selectAcfPrefix" name="selectAcfPrefix" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
                       ng-options="acfPref for acfPref in vm.acfPrefixes | orderBy:'toString()'">
               </select>
@@ -31,6 +32,7 @@
             </div>
             <div class="col-sm-6">
               <label for="selectAcfSuffix" class="control-label sr-only">ACF Suffix Selection</label>
+              <label for="selectAcfSuffix" class="control-label">ACF Suffix Selection</label>
               <select class="input-sm form-control" ng-model="vm.selectAcfSuffix" id="selectAcfSuffix" name="selectAcfSuffix" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
                       ng-options="acfSuff for acfSuff in vm.acfSuffixes | orderBy:'toString()'">
               </select>
