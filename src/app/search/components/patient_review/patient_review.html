@@ -33,10 +33,10 @@
                   </uib-progress>
                   <uib-progressbar ng-click="query.viewDetails = !query.viewDetails" class="progress-striped-no" ng-if="query.status === 'Complete'" value="100" type="{{ query.recordCount > 0 ? 'success' : 'danger' }}"><i>{{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> found</i></uib-progressbar>
                   <div ng-if="query.status !== 'Complete' || query.viewDetails">
-                    <div ng-repeat="location in query.locationStatuses | orderBy:'location.name' track by location.id">
-                      {{ location.location.name }}: {{ location.status }}
+                    <div ng-repeat="location in query.locationStatuses | orderBy:['location.name','location.id'] track by location.location.id">
+                      {{ location.location.name }}: {{ location.status }}<span ng-if="location.status === 'Successful'">, {{ location.results.length }} record<span ng-if="location.results.length !== 1">s</span> found</span>
                       <button ng-if="location.status === 'Active'" class="btn btn-sm pull-right" ng-class="location.isClearing ? 'btn-warning' : 'btn-danger'" ng-click="vm.cancelQueryLocation(location)"><i class="fa" ng-class="location.isClearing ? 'fa-spinner fa-spin' : 'fa-ban'"></i><span class="sr-only">Cancel query for {{ location.location.name }}</span></button>
-                      <button ng-if="location.status !== 'Active'" class="btn btn-sm pull-right" ng-class="location.isRequerying ? 'btn-warning' : 'btn-primary'" ng-click="vm.requeryLocation(location)"><i class="fa" ng-class="location.isRequerying ? 'fa-spinner fa-spin' : 'fa-refresh'"></i><span class="sr-only">Refresh query for {{ location.location.name }}</span></button>
+                      <button ng-if="location.status !== 'Active'" class="btn btn-sm pull-right" ng-class="location.isRequerying ? 'btn-warning' : 'btn-primary'" ng-click="vm.requeryLocation(location)" ng-disabled="location.isRequerying"><i class="fa" ng-class="location.isRequerying ? 'fa-spinner fa-spin' : 'fa-refresh'"></i><span class="sr-only">Refresh query for {{ location.location.name }}</span></button>
                       <div class="clearfix"></div>
                     </div>
                   </div>
