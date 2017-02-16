@@ -117,7 +117,7 @@
                 return '';
             }
         }
-        
+
         function getAcf (acfId) {
             return angular.fromJson(enhancedGet('/acfs/' + acfId ));
         }
