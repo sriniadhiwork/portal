@@ -153,6 +153,22 @@
                     $timeout.flush();
                     expect(commonService.getQueries.calls.count()).toBe(4);
                 });
+
+                it('should set "activeQuery" to true immediately upon starting a query', function () {
+                    expect(vm.activeQuery).toBe(false);
+                    commonService.getQueries.and.returnValue($q.when(activeProducts));
+                    vm.getQueries();
+                    el.isolateScope().$digest();
+                    expect(vm.activeQuery).toBe(true);
+                    activeProducts[0].status = 'Complete';
+                    commonService.getQueries.and.returnValue($q.when(activeProducts));
+                    $timeout.flush();
+                    expect(vm.activeQuery).toBe(false);
+                    vm.getQueries();
+                    expect(vm.activeQuery).toBe(true);
+                    el.isolateScope().$digest();
+                    expect(vm.activeQuery).toBe(false);
+                });
             });
         });
 

@@ -139,6 +139,7 @@
             ////////////////////////////////////////////////////////////////////
 
             function getQueryHelper () {
+                vm.activeQuery = true;
                 commonService.getQueries().then(function (response) {
                     var stillActive = false;
                     vm.patientQueries = response;
