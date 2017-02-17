@@ -59,14 +59,8 @@
             }
 
             function clearQuery (query) {
-                var id = query.id;
-                for (var i = 0; i < vm.patientQueries.length; i++) {
-                    if (query.id === vm.patientQueries[i].id) {
-                        vm.patientQueries.splice(i,1);
-                        break;
-                    }
-                }
-                commonService.clearQuery(id).then(function () {
+                shallowClearQuery(query);
+                commonService.clearQuery(query.id).then(function () {
                     vm.getQueries();
                 });
             }
@@ -135,6 +129,7 @@
                     vm.getQueries();
                 }, function (result) {
                     if (result === 'query cleared') {
+                        shallowClearQuery(query);
                         vm.getQueries();
                     }
                     $log.debug('dismissed', result);
@@ -156,6 +151,22 @@
                         vm.timeout = $timeout(getQueryHelper, vm.TIMEOUT_MILLIS);
                     }
                 });
+            }
+
+            function shallowClearQuery (query) {
+                var i;
+                for (i = 0; i < vm.patientQueries.length; i++) {
+                    if (query.id === vm.patientQueries[i].id) {
+                        vm.patientQueries.splice(i,1);
+                        break;
+                    }
+                }
+                for (i = 0; i < vm.displayedQueries.length; i++) {
+                    if (query.id === vm.displayedQueries[i].id) {
+                        vm.displayedQueries.splice(i,1);
+                        break;
+                    }
+                }
             }
         }
     }
