@@ -46,5 +46,35 @@
             var result = $filter('ehealthdate')(date);
             expect(result).toBe('Mar 19, 1999');
         });
+
+        it('should display years, months, days, and hours', function () {
+            var date = '1999031914';
+            var result = $filter('ehealthdate')(date);
+            expect(result).toBe('Mar 19, 1999 2 PM');
+        });
+
+        it('should display years, months, days, hours, and minutes', function () {
+            var date = '199903191432';
+            var result = $filter('ehealthdate')(date);
+            expect(result).toBe('Mar 19, 1999 2:32 PM');
+        });
+
+        it('should display years, months, days, hours, and minutes', function () {
+            var date = '199903190232';
+            var result = $filter('ehealthdate')(date);
+            expect(result).toBe('Mar 19, 1999 2:32 AM');
+        });
+
+        it('should display years, months, days, hours, minutes, and seconds', function () {
+            var date = '19990319143212';
+            var result = $filter('ehealthdate')(date);
+            expect(result).toBe('Mar 19, 1999 2:32:12 PM');
+        });
+
+        it('should display years, months, days, hours, minutes, seconds, and timezone', function () {
+            var date = '19990319143212+0300';
+            var result = $filter('ehealthdate')(date);
+            expect(result).toBe('Mar 19, 1999 2:32:12 PM UTC+0300');
+        });
     });
 })();
