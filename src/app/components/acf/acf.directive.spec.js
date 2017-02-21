@@ -2,16 +2,16 @@
     'use strict';
 
     describe('portal.aiAcf', function () {
-        var $compile, $rootScope, vm, el, $log, $q, commonService, mock, $location;
+        var $compile, $rootScope, vm, el, $log, $q, commonService, mock, Mock, $location;
         mock = {};
-        mock.acfs = [{id: 1, name: 'ACF-1', address: {}}, {id: 2, name: 'ACF-2', address: {}}, {id: 3, name: 'FAC-1', address: {}}];
-        mock.fakeAcf = { name: 'fake', address: {city: 'city', lines: ['','123 Main St']}};
+        mock.newAcf = {identifier:'New-01',name:'Fairgrounds',phoneNumber:'555-1895',address:{lines:['133 Smith Gardn'],city:'Albany',state:'CA',zipcode:'94602',country:null}};
         mock.badRequest = {
             status: 400,
-            error: 'ACF name is required.'
+            error: 'ACF identitifer is required.'
         };
 
         beforeEach(function () {
+            module('pulse.mock');
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.createAcf = jasmine.createSpy('createAcf');
@@ -24,17 +24,18 @@
                 });
                 $provide.constant('acfWritesAllowed', true);
             });
-            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _commonService_, _$location_) {
+            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _commonService_, _$location_, _Mock_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;
                 $q = _$q_;
                 $location = _$location_;
+                Mock = _Mock_;
                 commonService = _commonService_;
-                commonService.createAcf.and.returnValue($q.when({response: {name: 'new acf', address: {}, id: 3}}));
-                commonService.editAcf.and.returnValue($q.when(mock.acfs[1]));
-                commonService.getAcfs.and.returnValue($q.when(mock.acfs));
-                commonService.getUserAcf.and.returnValue(mock.acfs[0]);
+                commonService.createAcf.and.returnValue($q.when({response: angular.extend(mock.newAcf,{id:4})}));
+                commonService.editAcf.and.returnValue($q.when(Mock.acfs[1]));
+                commonService.getAcfs.and.returnValue($q.when(Mock.acfs));
+                commonService.getUserAcf.and.returnValue(Mock.acfs[0]);
                 commonService.hasAcf.and.returnValue(true);
                 commonService.setAcf.and.returnValue($q.when({}));
 
@@ -66,7 +67,7 @@
 
         it('should call commonService.getAcfs on load', function () {
             expect(commonService.getAcfs).toHaveBeenCalled();
-            expect(vm.acfs.length).toBe(3);
+            expect(vm.acfs.length).toBe(4);
         });
 
         it('should set acfs to an empty array if the server fails', function () {
@@ -81,14 +82,14 @@
             expect(vm.acfSubmit).toBeDefined();
         });
 
-        it('should call commonService.createAcf if one is in the acf.name field', function () {
-            vm.acf = angular.copy(mock.fakeAcf);
+        it('should call commonService.createAcf if one is in the acf.identifier field', function () {
+            vm.acf = angular.copy(mock.newAcf);
             vm.mode = 'enter';
             vm.acfSubmit();
             expect(commonService.createAcf).toHaveBeenCalled();
         });
 
-        it('should not call commonService.createAcf if there isn\'t one in the acf.name field', function () {
+        it('should not call commonService.createAcf if there isn\'t one in the acf.identifier field', function () {
             vm.acf = {};
             vm.mode = 'enter';
             vm.acfSubmit();
@@ -108,7 +109,7 @@
         });
 
         it('should show an error if create goes wrong', function () {
-            vm.acf = angular.copy(mock.fakeAcf);
+            vm.acf = angular.copy(mock.newAcf);
             vm.mode = 'enter';
             commonService.createAcf.and.returnValue($q.reject({data: mock.badRequest}));
             vm.acfSubmit();
@@ -117,7 +118,7 @@
         });
 
         it('should call setAcf after createAcf', function () {
-            vm.acf = angular.copy(mock.fakeAcf);
+            vm.acf = angular.copy(mock.newAcf);
             vm.mode = 'enter';
             vm.acfSubmit();
             el.isolateScope().$digest();
@@ -135,7 +136,7 @@
 
         it('should call commonService.getUserAcf on load', function () {
             expect(commonService.getUserAcf).toHaveBeenCalled();
-            expect(vm.acf).toBe(mock.acfs[0]);
+            expect(vm.acf).toBe(Mock.acfs[0]);
         });
 
         it('should set acf to a blank-ish acf object if the user doesn\'t have an ACF', function () {
@@ -144,40 +145,42 @@
             expect(vm.acf).toEqual({address: {lines: ['']}});
         });
 
-        it('should add an address object if it doesn\'t have one', function () {
-            var full = angular.copy(mock.acfs[0]);
-            var empty = angular.copy(full);
-            delete(empty.address);
-            commonService.getUserAcf.and.returnValue(empty);
-            vm.getUserAcf();
-            expect(vm.acf).toEqual(full);
-        });
+        describe('address object on load', function () {
+            var baseAcf;
+            var plusAcf;
 
-        it('should add an address object if the acf is null', function () {
-            var newAcf = angular.copy(mock.acfs[0]);
-            delete(newAcf.id);
-            delete(newAcf.name);
-            commonService.getUserAcf.and.returnValue(null);
-            vm.getUserAcf();
-            expect(vm.acf).toEqual(newAcf);
-        });
+            beforeEach(function () {
+                baseAcf = angular.copy(Mock.acfs[0]);
+                delete baseAcf.address;
+                plusAcf = angular.copy(baseAcf);
+                plusAcf.address = {lines: ['']};
+            });
 
-        it('should add an address object if the address is null', function () {
-            var full = angular.copy(mock.acfs[0]);
-            var empty = angular.copy(full);
-            empty.address = null;
-            commonService.getUserAcf.and.returnValue(empty);
-            vm.getUserAcf();
-            expect(vm.acf).toEqual(full);
-        });
+            it('should add an address object if the acf is null', function () {
+                commonService.getUserAcf.and.returnValue(null);
+                vm.getUserAcf();
+                expect(vm.acf).toEqual({address: {lines: ['']}});
+            });
 
-        it('should put a lines object in the acf address if it doesn\'t have one', function () {
-            var fullLines = angular.copy(mock.acfs[0]);
-            var emptyLines = angular.copy(fullLines);
-            delete(emptyLines.address.lines);
-            commonService.getUserAcf.and.returnValue(emptyLines);
-            vm.getUserAcf();
-            expect(vm.acf).toEqual(fullLines);
+            it('should add an address object if it doesn\'t have one', function () {
+                commonService.getUserAcf.and.returnValue(baseAcf);
+                vm.getUserAcf();
+                expect(vm.acf).toEqual(plusAcf);
+            });
+
+            it('should add an address object if the address is null', function () {
+                baseAcf.address = null;
+                commonService.getUserAcf.and.returnValue(baseAcf);
+                vm.getUserAcf();
+                expect(vm.acf).toEqual(plusAcf);
+            });
+
+            it('should put a lines object in the acf address if it doesn\'t have one', function () {
+                baseAcf.address = {};
+                commonService.getUserAcf.and.returnValue(baseAcf);
+                vm.getUserAcf();
+                expect(vm.acf).toEqual(plusAcf);
+            });
         });
 
         it('should have a function to edit the current ACF', function () {
@@ -186,7 +189,7 @@
 
         it('should call commonService.editAcf when one is edited', function () {
             vm.editAcf();
-            expect(commonService.editAcf).toHaveBeenCalledWith(mock.acfs[0]);
+            expect(commonService.editAcf).toHaveBeenCalledWith(Mock.acfs[0]);
         });
 
         it('should turn off editing after editAcf is called', function () {
@@ -198,7 +201,7 @@
         it('should set the local acf to the edited acf', function () {
             vm.editAcf();
             el.isolateScope().$digest();
-            expect(vm.acf).toBe(mock.acfs[1]);
+            expect(vm.acf).toBe(Mock.acfs[1]);
         });
 
         it('should have a function to cancel editing', function () {
@@ -240,26 +243,28 @@
         });
 
         it('should remove empty lines from the address on "create"', function () {
-            var updAcf = angular.copy(mock.fakeAcf);
-            updAcf.address.lines = ['123 Main St'];
-            vm.acf = angular.copy(mock.fakeAcf);
+            var tweakedAcf = angular.copy(mock.newAcf);
+            vm.acf = angular.copy(mock.newAcf);
+            vm.acf.address.lines.push('');
             vm.mode = 'enter';
             vm.acfSubmit();
-            expect(commonService.createAcf).toHaveBeenCalledWith(updAcf);
+            expect(commonService.createAcf).toHaveBeenCalledWith(tweakedAcf);
         });
 
         it('should not send an empty array of lines on "create"', function () {
-            var updAcf = angular.copy(mock.fakeAcf);
-            delete updAcf.address.lines
-            vm.acf = angular.copy(mock.fakeAcf);
-            vm.acf.address.lines[1] = '';
+            var tweakedAcf = angular.copy(mock.newAcf);
+            tweakedAcf.address.lines = ['123 Main St'];
+            delete tweakedAcf.address.lines
+            vm.acf = angular.copy(mock.newAcf);
+            vm.acf.address.lines.push('');
+            vm.acf.address.lines[0] = '';
             vm.mode = 'enter';
             vm.acfSubmit();
-            expect(commonService.createAcf).toHaveBeenCalledWith(updAcf);
+            expect(commonService.createAcf).toHaveBeenCalledWith(tweakedAcf);
         });
 
         it('should redirect the user to /search on acf creation', function () {
-            vm.acf = angular.copy(mock.fakeAcf);
+            vm.acf = angular.copy(mock.newAcf);
             vm.mode = 'enter';
             spyOn($location, 'path');
 
@@ -313,43 +318,38 @@
             expect(vm.mode).toBe('display');
         });
 
-        it('should know if the entered new ACF name matches one that already exists', function () {
-            vm.acf = angular.copy(mock.fakeAcf);
-            vm.mode = 'enter';
-            expect(vm.validName()).toBe(true);
-            vm.acf.name = 'ACF-1';
-            expect(vm.validName()).toBe(false);
+        it('should know if the entered new ACF identifier matches one that already exists', function () {
+            vm.acf = angular.copy(mock.newAcf);
+            expect(vm.validIdentifier()).toBe(true);
         });
 
-        it('should split ACF names into prefix/suffix if !acfWritesAllowed', function () {
+        it('should know if the entered new ACF identifier matches one that already exists', function () {
+            vm.acf = angular.copy(Mock.acfs[1]);
+            expect(vm.validIdentifier()).toBe(false);
+        });
+
+        it('should split ACF identifiers into prefix/suffix if !acfWritesAllowed', function () {
             vm.acfWritesAllowed = false;
-            vm.splitAcfNames();
-            expect(vm.acfPrefixes).toBeDefined();
-            expect(vm.acfSuffixes).toBeDefined();
+            vm.acfs = Mock.acfs;
+            vm.splitAcfIdentifiers();
+            expect(vm.acfPrefixes).toEqual(['Del Norte','Alameda','Los Angeles']);
+            expect(vm.acfSuffixes).toEqual(['04','01','02']);
         });
 
-        it('should split ACF names into prefix/suffix if !acfWritesAllowed', function () {
-            vm.acfWritesAllowed = false;
-            vm.acfs = mock.acfs;
-            vm.splitAcfNames();
-            expect(vm.acfPrefixes).toEqual(['ACF','FAC']);
-            expect(vm.acfSuffixes).toEqual(['1','2']);
-        });
-
-        it('should not split ACF names into prefix/suffix if acfWritesAllowed', function () {
+        it('should not split ACF identifiers into prefix/suffix if acfWritesAllowed', function () {
             vm.acfWritesAllowed = true;
-            vm.splitAcfNames();
+            vm.splitAcfIdentifiers();
             expect(vm.acfPrefixes).toBeUndefined();
             expect(vm.acfSuffixes).toBeUndefined();
         });
 
         it('should compose an ACF if !acfWritesAllowed', function () {
             vm.acfWritesAllowed = false;
-            vm.acfs = mock.acfs;
-            vm.selectAcfPrefix = 'ACF';
-            vm.selectAcfSuffix = '2';
+            vm.acfs = Mock.acfs;
+            vm.selectAcfPrefix = 'Alameda';
+            vm.selectAcfSuffix = '01';
             vm.findAcf();
-            expect(vm.selectAcf).toEqual(mock.acfs[1]);
+            expect(vm.selectAcf).toEqual(Mock.acfs[1]);
         });
 
         it('should not compose an ACF if acfWritesAllowed', function () {
@@ -357,5 +357,12 @@
             expect(vm.selectAcf).toBeUndefined();
         });
 
+        it('should have a way to get the name of an ACF from the identifier', function () {
+            expect(vm.getName(Mock.acfs[0].identifier)).toBe(Mock.acfs[0].name);
+        });
+
+        it('should return "" is the identifier is invalid', function () {
+            expect(vm.getName('fake ID')).toBe('');
+        });
     });
 })();
