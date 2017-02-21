@@ -15,7 +15,7 @@
             <label for="selectAcf" class="control-label sr-only">ACF Selection</label>
             <div class="col-sm-12">
               <select class="input-sm form-control" ng-model="vm.selectAcf" id="selectAcf" name="selectAcf" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
-                      ng-options="(acf.identifer + ': ' + acf.name) for acf in vm.acfs | orderBy:'identifier'"
+                      ng-options="(acf.identifier + ': ' + acf.name) for acf in vm.acfs | orderBy:'identifier'"
                       ng-keyup="$event.keyCode == 13 && vm.submitForm()">
               </select>
               <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required">An ACF must be selected</span>
@@ -90,7 +90,7 @@
           </div>
           <div class="form-group" ng-if="vm.mode === 'enter'">
             <div class="col-sm-4 col-sm-offset-4">
-              <button ng-disabled="(vm.queryForm.$invalid || !vm.validIdentifer()) && vm.showFormErrors"
+              <button ng-disabled="(vm.queryForm.$invalid || !vm.validIdentifier()) && vm.showFormErrors"
                       class="btn btn-success btn-block"
                       id="acfSubmit"
                       ng-mouseover="vm.showFormErrors = true"

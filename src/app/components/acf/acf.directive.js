@@ -33,7 +33,7 @@
             vm.hasAcf = hasAcf;
             vm.splitAcfIdentifiers = splitAcfIdentifiers;
             vm.submitForm = submitForm;
-            vm.validIdentifier = validIdentifer;
+            vm.validIdentifier = validIdentifier;
 
             activate();
 
@@ -174,7 +174,7 @@
                 }
             }
 
-            function validIdentifer () {
+            function validIdentifier () {
                 var ret = true;
                 for (var i = 0; i < vm.acfs.length; i++) {
                     ret = ret && (vm.acfs[i].identifier !== vm.acf.identifier);
