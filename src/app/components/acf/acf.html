@@ -33,7 +33,7 @@
             <div class="col-sm-6">
               <label for="selectAcfSuffix" class="control-label sr-only">ACF Suffix Selection</label>
               <select class="input-sm form-control" ng-model="vm.selectAcfSuffix" id="selectAcfSuffix" name="selectAcfSuffix" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
-                      ng-options="acfSuff for acfSuff in vm.acfSuffixes | orderBy:'toString()'">
+                      ng-options="(acfSuff + ' ' + vm.getName(vm.selectAcfPrefix + '-' + acfSuff)) for acfSuff in vm.acfSuffixes | orderBy:'toString()'">
                       <option disabled="true" selected="true" label="ACF Suffix" value="">ACF Suffix</option>
               </select>
               <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcfSuffix.$touched) && vm.queryForm.selectAcfSuffix.$error.required">An ACF suffix must be selected</span>
