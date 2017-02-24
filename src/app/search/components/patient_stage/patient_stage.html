@@ -36,7 +36,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat-start="location in vm.query.locationStatuses track by location.id" ng-if="location.results && location.results.length > 0">
+        <tr ng-repeat-start="location in vm.query.locationStatuses | orderBy:['location.name','location.id'] track by location.location.id" ng-if="location.results && location.results.length > 0">
           <td rowspan="{{ location.results.length }}" href ng-click="vm.selectAll(location)">{{ location.location.name }}</td>
           <td href ng-click="location.results[0].selected = !location.results[0].selected" ng-bind-html="vm.displayNames(location.results[0].patientRecordName)"></td>
           <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].gender.description }}</td>

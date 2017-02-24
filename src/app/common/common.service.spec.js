@@ -440,7 +440,7 @@
                 });
                 $httpBackend.flush();
             });
-            
+
             it('should call /acfs/{{id}}', function () {
                 commonService.getAcf(1).then(function (response){
                     expect(response).toEqual(mock.acfs[0]);

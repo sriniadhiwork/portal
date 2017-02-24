@@ -15,7 +15,7 @@
             <label for="selectAcf" class="control-label sr-only">ACF Selection</label>
             <div class="col-sm-12">
               <select class="input-sm form-control" ng-model="vm.selectAcf" id="selectAcf" name="selectAcf" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
-                      ng-options="acf.name for acf in vm.acfs | orderBy:'name'"
+                      ng-options="(acf.identifier + ': ' + acf.name) for acf in vm.acfs | orderBy:'identifier'"
                       ng-keyup="$event.keyCode == 13 && vm.submitForm()">
               </select>
               <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcf.$touched) && vm.queryForm.selectAcf.$error.required">An ACF must be selected</span>
@@ -61,12 +61,18 @@
           </div>
         </div>
         <div ng-if="vm.mode === 'enter' || vm.mode === 'edit'">
-          <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.acfName.$touched) && vm.queryForm.acfName.$error.required }">
-            <label for="acfName" class="col-sm-3 control-label">Name <span class="text-danger" ng-if="vm.acfWritesAllowed">*</span></label>
+          <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.acfIdentifier.$touched) && vm.queryForm.acfIdentifier.$error.required }">
+            <label for="acfIdentifier" class="col-sm-3 control-label">Identifier <span class="text-danger" ng-if="vm.acfWritesAllowed">*</span></label>
             <div class="col-sm-9">
-              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.name" id="acfName" name="acfName" ng-required="(vm.mode === 'enter' || vm.mode === 'edit') && vm.acfWritesAllowed" ng-disabled="!vm.acfWritesAllowed"></input>
-              <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.acfName.$touched) && vm.queryForm.acfName.$error.required">Field is required</span>
-              <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.acfName.$touched) && (!vm.validName() && vm.mode === 'enter')">ACF already exists</span>
+              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.identifier" id="acfIdentifier" name="acfIdentifier" ng-required="(vm.mode === 'enter' || vm.mode === 'edit') && vm.acfWritesAllowed" ng-disabled="!vm.acfWritesAllowed"></input>
+              <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.acfIdentifier.$touched) && vm.queryForm.acfIdentifier.$error.required">Field is required</span>
+              <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.acfIdentifier.$touched) && (!vm.validIdentifier() && vm.mode === 'enter')">ACF already exists</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="acfName" class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+              <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.acf.name" id="acfName" name="acfName"></input>
             </div>
           </div>
           <div class="form-group">
@@ -86,7 +92,7 @@
           </div>
           <div class="form-group" ng-if="vm.mode === 'enter'">
             <div class="col-sm-4 col-sm-offset-4">
-              <button ng-disabled="(vm.queryForm.$invalid || !vm.validName()) && vm.showFormErrors"
+              <button ng-disabled="(vm.queryForm.$invalid || !vm.validIdentifier()) && vm.showFormErrors"
                       class="btn btn-success btn-block"
                       id="acfSubmit"
                       ng-mouseover="vm.showFormErrors = true"
@@ -123,12 +129,12 @@
                       ng-click="vm.cancelEditing()">Cancel editing</button>
             </div>
           </div>
-          <div class="form-group" ng-if="(vm.queryForm.$invalid || (!vm.validName() && vm.mode === 'enter')) && vm.showFormErrors">
+          <div class="form-group" ng-if="(vm.queryForm.$invalid || (!vm.validIdentifier() && vm.mode === 'enter')) && vm.showFormErrors">
             <div class="col-sm-10 col-sm-offset-1 text-danger">
               The following error must be fixed:
               <ul>
-                <li ng-if="!vm.validName() && vm.mode === 'enter'">ACF already exists</li>
-                <li ng-if="vm.queryForm.acfName.$error.required">ACF Name is required</li>
+                <li ng-if="!vm.validIdentifier() && vm.mode === 'enter'">ACF already exists</li>
+                <li ng-if="vm.queryForm.acfIdentifier.$error.required">ACF Identifier is required</li>
               </ul>
             </div>
           </div>
@@ -146,7 +152,7 @@
       </span>
       <div ng-if="vm.acf.address && vm.acf.address"><ai-addresses fixed="true" addresses="[vm.acf.address]"></ai-addresses></div>
     </span>
-    <h3>{{ vm.acf.name }}</h3>
+    <h3>{{ vm.acf.identifier }}<small ng-if="vm.acf.name"> ({{ vm.acf.name }})</small></h3>
     <span ng-if="vm.acf.phoneNumber">{{ vm.acf.phoneNumber }}</span>
   </div>
 </div>

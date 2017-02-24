@@ -28,11 +28,12 @@
             vm.editAcf = editAcf;
             vm.findAcf = findAcf;
             vm.getAcfs = getAcfs;
+            vm.getName = getName;
             vm.getUserAcf = getUserAcf;
             vm.hasAcf = hasAcf;
-            vm.splitAcfNames = splitAcfNames;
+            vm.splitAcfIdentifiers = splitAcfIdentifiers;
             vm.submitForm = submitForm;
-            vm.validName = validName;
+            vm.validIdentifier = validIdentifier;
 
             activate();
 
@@ -47,7 +48,7 @@
             }
 
             function acfSubmit () {
-                if (vm.mode === 'enter' && vm.acf && vm.acf.name) {
+                if (vm.mode === 'enter' && vm.acf && vm.acf.identifier) {
                     var newlines = [];
                     for (var i = 0; i < vm.acf.address.lines.length; i++) {
                         if (vm.acf.address.lines[i] !== '') {
@@ -90,9 +91,9 @@
 
             function findAcf () {
                 if (!vm.acfWritesAllowed) {
-                    var name = vm.selectAcfPrefix + '-' + vm.selectAcfSuffix;
+                    var identifier = vm.selectAcfPrefix + '-' + vm.selectAcfSuffix;
                     for (var i = 0; i < vm.acfs.length; i++) {
-                        if (vm.acfs[i].name === name) {
+                        if (vm.acfs[i].identifier === identifier) {
                             vm.selectAcf = vm.acfs[i];
                             break;
                         }
@@ -104,7 +105,7 @@
                 vm.acfs = [];
                 commonService.getAcfs().then(function (response) {
                     vm.acfs = vm.acfs.concat(response);
-                    vm.splitAcfNames();
+                    vm.splitAcfIdentifiers();
                     if (vm.acfs.length === 0) {
                         if (vm.mode === 'select') {
                             vm.mode = 'enter';
@@ -116,6 +117,15 @@
                         vm.mode = 'enter';
                     }
                 });
+            }
+
+            function getName (identifier) {
+                for (var i = 0; i < vm.acfs.length; i++) {
+                    if (vm.acfs[i].identifier === identifier) {
+                        return vm.acfs[i].name;
+                    }
+                }
+                return '';
             }
 
             function getUserAcf () {
@@ -139,13 +149,13 @@
                 return commonService.hasAcf();
             }
 
-            function splitAcfNames () {
+            function splitAcfIdentifiers () {
                 if (!vm.acfWritesAllowed) {
                     vm.acfPrefixes = [];
                     vm.acfSuffixes = [];
                     var parts;
                     for (var i = 0; i < vm.acfs.length; i++) {
-                        parts = vm.acfs[i].name.split('-');
+                        parts = vm.acfs[i].identifier.split('-');
                         if (vm.acfPrefixes.indexOf(parts[0]) < 0)
                             vm.acfPrefixes.push(parts[0]);
                         if (vm.acfSuffixes.indexOf(parts[1]) < 0)
@@ -164,13 +174,12 @@
                 }
             }
 
-            function validName () {
+            function validIdentifier () {
+                var ret = true;
                 for (var i = 0; i < vm.acfs.length; i++) {
-                    if (vm.acfs[i].name === vm.acf.name) {
-                        return false;
-                    }
+                    ret = ret && (vm.acfs[i].identifier !== vm.acf.identifier);
                 }
-                return true;
+                return ret;
             }
         }
     }
