@@ -2,9 +2,9 @@
   <div class="form-horizontal" ng-form="vm.queryForm" ng-if="vm.mode === 'select' || vm.mode === 'enter' || vm.mode === 'edit'">
     <div class="panel panel-primary">
       <div class="panel-heading">
-        <h2 class="panel-title" ng-if="vm.mode === 'select' || vm.mode === 'enter'">Login to an Alternate Care Facility (ACF)</h2>
-        <h2 class="panel-title" ng-if="vm.mode === 'enter'">Create a new ACF</h2>
+        <h2 class="panel-title" ng-if="vm.mode === 'select'">Select an Alternate Care Facility (ACF)</h2>
         <h2 class="panel-title" ng-if="vm.mode === 'edit'">Edit current ACF</h2>
+        <h2 class="panel-title" ng-if="vm.mode === 'enter'">Create a new ACF</h2>
       </div>
       <div class="panel-body">
         <div ng-if="vm.mode === 'select'">
@@ -26,6 +26,7 @@
               <label for="selectAcfPrefix" class="control-label sr-only">ACF County Selection</label>
               <select class="input-sm form-control" ng-model="vm.selectAcfPrefix" id="selectAcfPrefix" name="selectAcfPrefix" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
                       ng-options="acfPref for acfPref in vm.acfPrefixes | orderBy:'toString()'">
+              	<option disabled="true" selected="true" label="ACF County" value="">ACF County</option>
               </select>
               <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcfPrefix.$touched) && vm.queryForm.selectAcfPrefix.$error.required">An ACF county must be selected</span>
             </div>
@@ -33,6 +34,7 @@
               <label for="selectAcfSuffix" class="control-label sr-only">ACF Suffix Selection</label>
               <select class="input-sm form-control" ng-model="vm.selectAcfSuffix" id="selectAcfSuffix" name="selectAcfSuffix" ng-disabled="!vm.acfs || vm.acfs.length === 0" ng-required="vm.mode === 'select'"
                       ng-options="(acfSuff + ' ' + vm.getName(vm.selectAcfPrefix + '-' + acfSuff)) for acfSuff in vm.acfSuffixes | orderBy:'toString()'">
+                      <option disabled="true" selected="true" label="ACF Suffix" value="">ACF Suffix</option>
               </select>
               <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.selectAcfSuffix.$touched) && vm.queryForm.selectAcfSuffix.$error.required">An ACF suffix must be selected</span>
             </div>
