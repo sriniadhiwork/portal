@@ -8,6 +8,10 @@
     function  mock () {
         var mock = {};
 
+        mock.acfs = [{"id":179,"identifier":"Del Norte-04","name":"Elementary School","phoneNumber":"555-3258","address":{"id":null,"lines":["266 Seventh Way","475 View Gln"],"city":"Smith River","state":"CA","zipcode":"95543","country":null},"lastRead":1487616916883},
+                     {"id":1,"identifier":"Alameda-01","name":"Fairgrounds","phoneNumber":"555-1895","address":{"id":null,"lines":["395 Sunset Pky","133 Smith Gardn"],"city":"Albany","state":"CA","zipcode":"94602","country":null},"lastRead":1487616087349},
+                     {"id":452,"identifier":"Los Angeles-02","name":"Elementary School","phoneNumber":"555-3007","address":{"id":null,"lines":["887 Park Bridge","925 Center Strt"],"city":"Lancaster","state":"CA","zipcode":"91040","country":null},"lastRead":1487616087349},
+                     {"id":1450,"identifier":"Del Norte-02","name":"Fairgrounds","phoneNumber":"555-4451","address":{"id":null,"lines":["584 9th Ally","789 Fourteenth Radial"],"city":"Plumas Lake","state":"CA","zipcode":"95961","country":null},"lastRead":1487616087349}];
         mock.fakeModal = {
             result: {
                 then: function (confirmCallback, cancelCallback) {
