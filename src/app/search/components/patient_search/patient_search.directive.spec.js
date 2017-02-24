@@ -12,11 +12,7 @@
         mock.dob = {
             year: '1999',
             month: '03',
-            day: '19',
-            hour: '11',
-            minute: '01',
-            second: '03',
-            z: '-0800'
+            day: '19'
         };
         mock.query = {}
         mock.query.patientNames = [{
@@ -82,6 +78,16 @@
         it('should have a function to query for patients', function () {
             expect(vm.searchForPatient).toBeDefined();
         });
+        
+        it('should populate the patientNames ', function () {
+        	expect(vm.query.patientNames).toBeDefined();
+        });
+        
+        it('should populate the dob object', function () {
+        	expect(vm.query.dob).toBeDefined();
+        	expect(vm.query.dob.month).toBeDefined();
+        	expect(vm.query.dob.day).toBeDefined();
+        });
 
         describe('submitting the search form', function () {
             beforeEach(function () {
@@ -124,32 +130,20 @@
 
             it('should compile the date of birth fields on search', function () {
                 var compiled = angular.copy(vm.query);
-                compiled.dob = '19990319110103-0800'
+                compiled.dob = '19990319'
                 vm.searchForPatient();
                 expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
             });
 
             it('should have a way to assemble the DOB', function () {
-                expect(vm.assembledDob()).toBe('19990319110103-0800');
+                expect(vm.assembledDob()).toBe('19990319');
             });
 
             it('should handle dob fields without all the parameters', function () {
-                delete vm.query.dob.second;
-                expect(vm.assembledDob()).toBe('199903191101-0800');
-
-                delete vm.query.dob.minute;
-                expect(vm.assembledDob()).toBe('1999031911-0800');
-
-                delete vm.query.dob.hour;
-                expect(vm.assembledDob()).toBe('19990319-0800');
-
                 delete vm.query.dob.day;
-                expect(vm.assembledDob()).toBe('199903-0800');
+                expect(vm.assembledDob()).toBe('199903');
 
                 delete vm.query.dob.month;
-                expect(vm.assembledDob()).toBe('1999-0800');
-
-                delete vm.query.dob.z;
                 expect(vm.assembledDob()).toBe('1999');
             });
 
@@ -173,7 +167,13 @@
             vm.query.familyName =  'last';
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query.dob = mock.dob;
+            vm.query.dob.year = mock.dob.year;
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).not.toHaveBeenCalled();
+            vm.query.dob.month = mock.dob.month;
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).not.toHaveBeenCalled();
+            vm.query.dob.day = mock.dob.day;
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
             vm.query.gender= 'M' ;

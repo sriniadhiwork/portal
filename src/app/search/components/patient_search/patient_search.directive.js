@@ -24,7 +24,7 @@
 
             vm.errorCount = errorCount;
             vm.searchForPatient = searchForPatient;
-            vm.assembledDob = assembledDob;
+            vm.assembledDob = assembledDob; 
 
             activate();
 
@@ -32,6 +32,10 @@
 
             function activate () {
                 vm.query = {};
+                vm.query.patientNames = [{givenName: [''], nameType: { code: 'L', description: 'Legal Name'} }];
+                vm.query.dob = {};
+                vm.query.dob.month = "";
+                vm.query.dob.day = "";
             }
 
             function assembledDob () {
