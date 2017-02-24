@@ -139,14 +139,6 @@
                 expect(vm.assembledDob()).toBe('19990319');
             });
 
-            it('should handle dob fields without all the parameters', function () {
-                delete vm.query.dob.day;
-                expect(vm.assembledDob()).toBe('199903');
-
-                delete vm.query.dob.month;
-                expect(vm.assembledDob()).toBe('1999');
-            });
-
             it('should show an error if the search is bad', function () {
                 commonService.searchForPatient.and.returnValue($q.reject({data: mock.badRequest}));
                 vm.searchForPatient();
