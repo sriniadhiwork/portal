@@ -21,11 +21,11 @@
         /** @ngInject */
         function PatientSearchController($log, commonService) {
             var vm = this;
-
+            
+            vm.assembledDob = assembledDob;
             vm.errorCount = errorCount;
             vm.searchForPatient = searchForPatient;
-            vm.assembledDob = assembledDob; 
-
+             
             activate();
 
             ////////////////////////////////////////////////////////////////////
@@ -34,8 +34,8 @@
                 vm.query = {};
                 vm.query.patientNames = [{givenName: [''], nameType: { code: 'L', description: 'Legal Name'} }];
                 vm.query.dob = {};
-                vm.query.dob.month = "";
-                vm.query.dob.day = "";
+                vm.query.dob.month = '';
+                vm.query.dob.day = '';
             }
 
             function assembledDob () {
