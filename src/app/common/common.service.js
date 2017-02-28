@@ -66,9 +66,9 @@
         }
         
         function convertDobString (dob) {
-        	var pattern = /(\d{4})(\d{2})(\d{2})(.*)/;
-        	var dateUnix = new Date(dob.replace(pattern, '$1-$2-$3')).getTime();
-        	return $filter('date')(dateUnix, 'MM/dd/yyyy', 'utc');
+            var pattern = /(\d{4})(\d{2})(\d{2})(.*)/;
+            var dateUnix = new Date(dob.replace(pattern, '$1-$2-$3')).getTime();
+            return $filter('date')(dateUnix, 'MM/dd/yyyy', 'utc');
         }
 
         function createAcf (newAcf) {
