@@ -54,6 +54,11 @@
                     $setUntouched: function () { this.$untouched = true; }
                 };
                 vm.query = { };
+                vm.query.patientNames = [{givenName: [''], nameType: { code: 'L', description: 'Legal Name'} }];
+                vm.query.dob = {};
+                vm.query.dob.month = '';
+                vm.query.dob.day = '';
+                vm.query.dob.year = '';
             });
         });
 
@@ -80,13 +85,13 @@
         });
         
         it('should populate the patientNames ', function () {
-        	expect(vm.query.patientNames).toBeDefined();
+            expect(vm.query.patientNames).toBeDefined();
         });
         
         it('should populate the dob object', function () {
-        	expect(vm.query.dob).toBeDefined();
-        	expect(vm.query.dob.month).toBeDefined();
-        	expect(vm.query.dob.day).toBeDefined();
+            expect(vm.query.dob).toBeDefined();
+            expect(vm.query.dob.month).toBeDefined();
+            expect(vm.query.dob.day).toBeDefined();
         });
 
         describe('submitting the search form', function () {
@@ -159,6 +164,8 @@
             vm.query.familyName =  'last';
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
+            vm.query.dob = {};
+            console.log(vm.query.dob);
             vm.query.dob.year = mock.dob.year;
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
