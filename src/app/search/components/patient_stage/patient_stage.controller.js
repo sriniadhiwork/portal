@@ -11,6 +11,7 @@
 
         vm.cancel = cancel;
         vm.clearQuery = clearQuery;
+        vm.convertDobString = convertDobString;
         vm.displayNames = displayNames;
         vm.friendlyFullName = friendlyFullName;
         vm.isStageable = isStageable;
@@ -38,6 +39,10 @@
                 $uibModalInstance.dismiss('query cleared');
             });
         }
+        
+        function convertDobString (dob) {
+        	return $filter('date')(dob, 'MM/dd/yyyy', 'utc');
+        }
 
         function displayNames (names) {
             return commonService.displayNames(names, '<br />');
@@ -58,11 +63,14 @@
             }
             return ret;
         }
+        
+        
 
         function prepopulate () {
             vm.patient = {
                 dateOfBirth: vm.query.terms.dob,
                 dateOfBirthObject: null,
+                dateOfBirthString: convertDobString(vm.query.terms.dob),
                 fullName: vm.friendlyFullName(vm.query.terms.patientNames[0]),
                 gender: vm.query.terms.gender,
                 ssn: vm.query.terms.ssn
