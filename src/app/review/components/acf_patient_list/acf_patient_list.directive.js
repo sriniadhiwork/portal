@@ -30,11 +30,12 @@
         return directive;
 
         /** @ngInject */
-        function AcfPatientListController($log, $timeout, $uibModal, commonService, QueryQueryTimeout) {
+        function AcfPatientListController($log, $filter, $timeout, $uibModal, commonService, QueryQueryTimeout) {
             var vm = this;
 
             vm.activatePatient = activatePatient;
             vm.cacheDocument = cacheDocument;
+            vm.convertDobString = commonService.convertDobString;
             vm.countActive = countActive;
             vm.deactivatePatient = deactivatePatient;
             vm.dischargePatient = dischargePatient;

@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <th scope="row">Date of Birth</th>
-              <td>{{ vm.patients[vm.activePatient].dateOfBirth }}</td>
+              <td>{{ vm.convertDobString(vm.patients[vm.activePatient].dateOfBirth) }}</td>
             </tr>
             <tr>
               <th scope="row">SSN</th>
