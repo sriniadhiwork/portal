@@ -11,7 +11,7 @@
 
         vm.cancel = cancel;
         vm.clearQuery = clearQuery;
-        vm.convertDobString = convertDobString;
+        vm.convertDobString = commonService.convertDobString;
         vm.displayNames = displayNames;
         vm.friendlyFullName = friendlyFullName;
         vm.isStageable = isStageable;
@@ -38,10 +38,6 @@
             commonService.clearQuery(vm.query.id).then(function () {
                 $uibModalInstance.dismiss('query cleared');
             });
-        }
-        
-        function convertDobString (dob) {
-        	return $filter('date')(dob, 'MM/dd/yyyy', 'utc');
         }
 
         function displayNames (names) {
@@ -70,7 +66,7 @@
             vm.patient = {
                 dateOfBirth: vm.query.terms.dob,
                 dateOfBirthObject: null,
-                dateOfBirthString: convertDobString(vm.query.terms.dob),
+                dateOfBirthString: commonService.convertDobString(vm.query.terms.dob),
                 fullName: vm.friendlyFullName(vm.query.terms.patientNames[0]),
                 gender: vm.query.terms.gender,
                 ssn: vm.query.terms.ssn

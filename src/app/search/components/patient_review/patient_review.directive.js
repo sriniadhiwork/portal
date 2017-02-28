@@ -34,6 +34,7 @@
 
             vm.cancelQueryLocation = cancelQueryLocation;
             vm.clearQuery = clearQuery;
+            vm.convertDobString = commonService.convertDobString;
             vm.countComplete = countComplete;
             vm.displayName = displayName;
             vm.displayNames = displayNames;
