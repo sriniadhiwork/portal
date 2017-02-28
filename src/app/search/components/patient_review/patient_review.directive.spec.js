@@ -153,12 +153,29 @@
                     $timeout.flush();
                     expect(commonService.getQueries.calls.count()).toBe(4);
                 });
+
+                it('should set "activeQuery" to true immediately upon starting a query', function () {
+                    expect(vm.activeQuery).toBe(false);
+                    commonService.getQueries.and.returnValue($q.when(activeProducts));
+                    vm.getQueries();
+                    el.isolateScope().$digest();
+                    expect(vm.activeQuery).toBe(true);
+                    activeProducts[0].status = 'Complete';
+                    commonService.getQueries.and.returnValue($q.when(activeProducts));
+                    $timeout.flush();
+                    expect(vm.activeQuery).toBe(false);
+                    vm.getQueries();
+                    expect(vm.activeQuery).toBe(true);
+                    el.isolateScope().$digest();
+                    expect(vm.activeQuery).toBe(false);
+                });
             });
         });
 
         describe('clearing queries', function () {
             beforeEach(function () {
                 vm.patientQueries = angular.copy(Mock.queries);
+                vm.displayedQueries = angular.copy(Mock.queries);
             });
 
             it('should have a way to clear patient queries', function () {
@@ -168,6 +185,12 @@
                 vm.clearQuery(vm.patientQueries[0]);
                 el.isolateScope().$digest();
                 expect(vm.patientQueries.length).toBe(2);
+            });
+
+            it('should remove a cleared query from the display Queue', function () {
+                expect(vm.displayedQueries.length).toBe(3);
+                vm.clearQuery(vm.patientQueries[0]);
+                expect(vm.displayedQueries.length).toBe(2);
             });
 
             it('should do nothing if the query isn\'t found', function () {
