@@ -64,7 +64,7 @@
         function clearToken () {
             delete($localStorage.jwtToken);
         }
-        
+
         function convertDobString (dob) {
             var pattern = /(\d{4})(\d{2})(\d{2})(.*)/;
             var dateUnix = new Date(dob.replace(pattern, '$1-$2-$3')).getTime();
@@ -99,19 +99,6 @@
             }
             if (name.profSuffix) {
                 ret += ', ' + name.profSuffix;
-            }
-            if (name.nameType) {
-                for (var i = 0; i < self.nameTypes.length; i++) {
-                    if (name.nameType.code === self.nameTypes[i].code) {
-                        ret += ' (' + self.nameTypes[i].description + ')';
-                    }
-                }
-            }
-            if (!name.givenName ||
-                name.givenName.length === 0 ||
-                !name.familyName ||
-                !name.nameType) {
-                ret += ' (improper)'
             }
             return ret.trim();
         }

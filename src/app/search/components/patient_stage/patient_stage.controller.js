@@ -59,8 +59,6 @@
             }
             return ret;
         }
-        
-        
 
         function prepopulate () {
             vm.patient = {
