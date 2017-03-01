@@ -57,7 +57,7 @@
             </tr>
           </table>
           </ul>
-          <table class="table table-condensed" st-table="vm.activePatient.documents">
+          <table class="table table-condensed" st-table="vm.documents" st-safe-src="vm.activePatient.documents">
             <thead>
               <tr>
                 <th scope="col" st-sort="cached" st-skip-natural="true" class="st-sort">Status</th>
@@ -70,7 +70,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="doc in vm.activePatient.documents track by doc.id" ng-class="{ 'active' : vm.activeDocument === doc }">
+              <tr ng-repeat="doc in vm.documents track by doc.id" ng-class="{ 'active' : vm.activeDocument === doc }">
                 <td>
                   <button ng-if="!doc.cached && !doc.status" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
                   <button ng-if="!doc.cached && doc.status === 'Failed'" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
