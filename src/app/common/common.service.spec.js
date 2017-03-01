@@ -102,28 +102,28 @@
                     familyName: 'Smith',
                     nameType: {code: 'L', description: 'Legal Name'}
                 };
-                expect(commonService.displayName(name)).toBe('John Andrew Smith (Legal Name)');
+                expect(commonService.displayName(name)).toBe('John Andrew Smith');
                 name.prefix = 'Mr';
-                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith (Legal Name)');
+                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith');
                 name.suffix = 'III';
-                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III (Legal Name)');
+                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III');
                 name.profSuffix = 'DDS';
-                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III, DDS (Legal Name)');
+                expect(commonService.displayName(name)).toBe('Mr John Andrew Smith III, DDS');
                 name.nameAssembly = {code: 'F'};
-                expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Legal Name)');
+                expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS');
                 name.nameType = {code: 'D'};
-                expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS (Display Name)');
+                expect(commonService.displayName(name)).toBe('Mr Smith John Andrew III, DDS');
             });
 
             it('should display a message on names with missing required elements', function () {
                 var name = {};
-                expect(commonService.displayName(name)).toBe('(improper)');
+                expect(commonService.displayName(name)).toBe('');
                 name.givenName = ['John', 'Andrew'];
-                expect(commonService.displayName(name)).toBe('John Andrew (improper)');
+                expect(commonService.displayName(name)).toBe('John Andrew');
                 name.givenName = [];
-                expect(commonService.displayName(name)).toBe('(improper)');
+                expect(commonService.displayName(name)).toBe('');
                 name.familyName = 'Smith';
-                expect(commonService.displayName(name)).toBe('Smith (improper)');
+                expect(commonService.displayName(name)).toBe('Smith');
             });
 
             it('should have a function to join names', function () {
@@ -140,7 +140,7 @@
                     familyName: 'Smith',
                     nameType: {code: 'L', description: 'Legal Name'}
                 }];
-                expect(commonService.displayNames(names, '-')).toBe('John Andrew Smith (Legal Name)-Sue Mary Smith (Legal Name)');
+                expect(commonService.displayNames(names, '-')).toBe('John Andrew Smith-Sue Mary Smith');
             });
 
             it('should display names correctly', function () {

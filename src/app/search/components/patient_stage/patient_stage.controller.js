@@ -59,12 +59,15 @@
             }
             return ret;
         }
-        
-        
 
         function prepopulate () {
             vm.patient = {
                 dateOfBirth: vm.query.terms.dob,
+                dateOfBirthParts: {
+                    year: vm.query.terms.dob.substring(0,4),
+                    month: vm.query.terms.dob.substring(4,6),
+                    day: vm.query.terms.dob.substring(6,8)
+                },
                 dateOfBirthString: commonService.convertDobString(vm.query.terms.dob),
                 fullName: vm.friendlyFullName(vm.query.terms.patientNames[0]),
                 gender: vm.query.terms.gender,
@@ -80,6 +83,7 @@
 
         function stagePatient () {
             if (vm.isStageable()) {
+                vm.patient.dateOfBirth = vm.patient.dateOfBirthParts.year + vm.patient.dateOfBirthParts.month + vm.patient.dateOfBirthParts.day;
                 var newPatient = {
                     patientRecordIds: [],
                     patient: vm.patient,

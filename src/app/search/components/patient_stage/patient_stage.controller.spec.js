@@ -3,13 +3,12 @@
 
     describe('search.aiPatientStage', function () {
         var vm, scope, $log, $uibModal, $q, commonService, mock, actualOptions;
-        
+
         mock = {query: {"id":13,"userToken":"fake@sample.com","status":"Complete","terms":{"dob":"19990502","ssn":"123-12-1234","gender":"M","zip":null,"telephone":null,"addresses":null,"patientNames":[{"id":null,"suffix":null,"prefix":null,"profSuffix":null,"nameType":{"id":null,"code":"L","description":"Legal Name"},"nameRepresentation":null,"nameAssembly":null,"effectiveDate":null,"expirationDate":null,"familyName":"Doe","givenName":["John"]}]},"lastRead":1483642184101,"locationStatuses":[{id:14,queryId:7,locationId:2,status:'Complete',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,locationId:3,status:'Complete',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,locationId:1,status:'Complete',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]}};
         mock.badRequest = {
             status: 500,
             error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement'
         };
-        //mock.query.dob = '19990502';
         mock.fakeModal = {
             result: {
                 then: function (confirmCallback, cancelCallback) {
@@ -40,6 +39,13 @@
             familyName: 'Jones',
             givenName: ['Bob']
         };
+        mock.queriedPatient = {
+            dateOfBirth: '19990502',
+            dateOfBirthParts: { year: '1999', month: '05', day: '02' },
+            fullName: 'John Doe',
+            gender: 'M',
+            ssn: '123-12-1234'
+        };
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -60,6 +66,7 @@
                 commonService = _commonService_;
                 commonService.clearQuery.and.returnValue($q.when({}));
                 commonService.stagePatient.and.returnValue($q.when({}));
+                mock.queriedPatient.dateOfBirthString = commonService.convertDobString(mock.queriedPatient.dateOfBirth),
 
                 scope = $rootScope.$new();
                 vm = $controller('PatientStageController', {
@@ -80,16 +87,10 @@
         it('should exist', function () {
             expect(vm).toBeDefined();
         });
-       
+
         describe('setup', function () {
             it('should prepopulate patient name and gender and dob from query terms', function () {
-                expect(vm.patient).toEqual({
-                    dateOfBirth: '19990502',
-                    dateOfBirthString: commonService.convertDobString('19990502'),
-                    fullName: 'John Doe',
-                    gender: 'M',
-                    ssn: '123-12-1234'
-                });
+                expect(vm.patient).toEqual(mock.queriedPatient);
             });
         });
 
@@ -117,7 +118,7 @@
                 vm.query = angular.copy(mock.query);
                 vm.query.locationStatuses[0].results[0].selected = true;
                 vm.query.locationStatuses[0].results[1] = {selected: false};
-                vm.patient = { givenName: 'Bob', familyName: 'Smith', dateOfBirth: '20130201' };
+                vm.patient = angular.copy(mock.queriedPatient);
                 patientStage = {
                     patientRecordIds: [1],
                     patient: angular.copy(vm.patient),
@@ -180,6 +181,12 @@
                     vm.selectAll(vm.query.locationStatuses[0]);
                     expect(vm.query.locationStatuses[0].results[0].selected).toBe(false);
                     expect(vm.query.locationStatuses[0].results[1].selected).toBe(false);
+                });
+
+                it('should update the dateOfBirth with the model values', function () {
+                    vm.patient.dateOfBirthParts = { year: '2001', month: '12', day: '26' };
+                    vm.stagePatient();
+                    expect(vm.patient.dateOfBirth).toBe('20011226');
                 });
             });
 
