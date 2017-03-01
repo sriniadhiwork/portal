@@ -21,32 +21,24 @@
         /** @ngInject */
         function PatientSearchController($log, commonService) {
             var vm = this;
-            
+
             vm.assembledDob = assembledDob;
             vm.errorCount = errorCount;
             vm.searchForPatient = searchForPatient;
-             
+
             activate();
 
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                vm.query = {};
-                vm.query.patientNames = [{givenName: [''], nameType: { code: 'L', description: 'Legal Name'} }];
-                vm.query.dob = {};
-                vm.query.dob.month = '';
-                vm.query.dob.day = '';
+                vm.query = {
+                    patientNames: [{givenName: [''], nameType: { code: 'L', description: 'Legal Name'} }],
+                    dob: {}
+                };
             }
 
             function assembledDob () {
-                var newDob = vm.query.dob.year;
-                if (vm.query.dob.month) {
-                    newDob += vm.query.dob.month;
-                    if (vm.query.dob.day) {
-                        newDob += vm.query.dob.day;
-                    }
-                }
-                return newDob;
+                return vm.query.dob.year + vm.query.dob.month + vm.query.dob.day;
             }
 
             function errorCount () {

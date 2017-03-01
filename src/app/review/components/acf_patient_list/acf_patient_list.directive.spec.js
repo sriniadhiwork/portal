@@ -49,6 +49,7 @@
             module('portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.cacheDocument = jasmine.createSpy('cacheDocument');
+                    $delegate.convertDobString = jasmine.createSpy('convertDobString');
                     $delegate.dischargePatient = jasmine.createSpy('dischargePatient');
                     $delegate.displayName = jasmine.createSpy('displayName');
                     $delegate.getDocument = jasmine.createSpy('getDocument');
@@ -68,6 +69,7 @@
                 });
                 commonService = _commonService_;
                 commonService.cacheDocument.and.returnValue($q.when({data: ''}));
+                commonService.convertDobString.and.returnValue('fake');
                 commonService.dischargePatient.and.returnValue($q.when({}));
                 commonService.displayName.and.returnValue(mock.patients[0].givenName + ' ' + mock.patients[0].familyName);
                 commonService.getDocument.and.returnValue($q.when(angular.copy(mock.fakeDocument)));
@@ -199,6 +201,16 @@
 
         it('should call "getPatientsAtAcf" on load', function () {
             expect(commonService.getPatientsAtAcf).toHaveBeenCalled();
+        });
+
+        it('should update the activePatient if there is one on "getPatientsAtAcf"', function () {
+            vm.getPatientsAtAcf();
+            el.isolateScope().$digest();
+            expect(vm.activePatient).toBe(null);
+            vm.activePatient = vm.patients[1];
+            vm.getPatientsAtAcf();
+            el.isolateScope().$digest();
+            expect(vm.activePatient).toEqual(vm.patients[1]);
         });
 
         it('should know if a patient\'s documents are cached', function () {
@@ -364,6 +376,19 @@
                 vm.editPatient(vm.patients[0]);
                 vm.editPatientInstance.close();
                 expect(vm.getPatientsAtAcf).toHaveBeenCalled();
+            });
+
+            it('should set the activePatient to the edited one if there is an activePatient', function () {
+                vm.activatePatient(vm.patients[0]);
+                vm.editPatient(vm.patients[0]);
+                vm.editPatientInstance.close(vm.patients[1]);
+                expect(vm.activePatient).toEqual(vm.patients[1]);
+            });
+
+            it('should set the activePatient to the edited one if there is an activePatient', function () {
+                vm.editPatient(vm.patients[0]);
+                vm.editPatientInstance.close(vm.patients[1]);
+                expect(vm.activePatient).toBe(null);
             });
 
             it('should not trigger the controller if the modal is dismissed', function () {

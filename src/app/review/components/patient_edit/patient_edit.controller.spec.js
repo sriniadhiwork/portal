@@ -28,7 +28,7 @@
                 givenName: ['Bob']
             },
             patient: {
-                dateOfBirth: '1990-03-23',
+                dateOfBirth: '19900323',
                 fullName: 'John Doe',
                 friendlyName: 'John',
                 gender: 'M',
@@ -72,6 +72,12 @@
             expect(vm).toBeDefined();
         });
 
+        describe('setup', function () {
+            it('should get the parts of the DOB', function () {
+                expect(vm.patient.dateOfBirthParts).toEqual({ year: '1990', month: '03', day: '23' });
+            });
+        });
+
         describe('editing a patient', function () {
             it('should close the modal after editing the patient', function () {
                 vm.editPatient();
@@ -84,6 +90,12 @@
                 vm.editPatient();
                 scope.$digest();
                 expect(vm.errorMessage).toEqual('error');
+            });
+
+            it('should combine the DOB when saving', function () {
+                vm.patient.dateOfBirthParts = { year: '2001', month: '12', day: '26' };
+                vm.editPatient();
+                expect(vm.patient.dateOfBirth).toBe('20011226');
             });
         });
 

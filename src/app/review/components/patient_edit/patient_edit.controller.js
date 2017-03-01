@@ -18,6 +18,11 @@
 
         function activate () {
             vm.patient = angular.copy(patient);
+            vm.patient.dateOfBirthParts = {
+                year: vm.patient.dateOfBirth.substring(0,4),
+                month: vm.patient.dateOfBirth.substring(4,6),
+                day: vm.patient.dateOfBirth.substring(6,8)
+            };
         }
 
         function cancel () {
@@ -25,6 +30,7 @@
         }
 
         function editPatient () {
+            vm.patient.dateOfBirth = vm.patient.dateOfBirthParts.year + vm.patient.dateOfBirthParts.month + vm.patient.dateOfBirthParts.day;
             commonService.editPatient(vm.patient).then(function () {
                 $uibModalInstance.close(vm.patient)
             }, function (error) {
