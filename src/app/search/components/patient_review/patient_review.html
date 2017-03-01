@@ -23,7 +23,7 @@
             <tbody>
               <tr ng-repeat="query in vm.displayedQueries track by query.id" class="fade">
                 <td ng-bind-html="vm.displayNames(query.terms.patientNames)"></td>
-                <td>{{ query.terms.dob | ehealthdate }}</td>
+                <td>{{ vm.convertDobString(query.terms.dob) }}</td>
                 <td>{{ query.terms.gender }}</td>
                 <td>{{ query.lastRead | date : 'medium' }}</td>
                 <td>

@@ -6,7 +6,7 @@
         .service('commonService', commonService);
 
     /** @ngInject */
-    function commonService ($http, $q, API, AuthAPI, LogoutRedirect, $log, $localStorage, $window) {
+    function commonService ($http, $filter, $q, API, AuthAPI, LogoutRedirect, $log, $localStorage, $window) {
         var self = this;
 
         var ACF_LOCATION_IN_IDENTITY = 7;
@@ -15,6 +15,7 @@
         self.cancelQueryLocation = cancelQueryLocation;
         self.clearQuery = clearQuery;
         self.clearToken = clearToken;
+        self.convertDobString = convertDobString;
         self.createAcf = createAcf;
         self.dischargePatient = dischargePatient;
         self.displayName = displayName;
@@ -62,6 +63,12 @@
 
         function clearToken () {
             delete($localStorage.jwtToken);
+        }
+        
+        function convertDobString (dob) {
+            var pattern = /(\d{4})(\d{2})(\d{2})(.*)/;
+            var dateUnix = new Date(dob.replace(pattern, '$1-$2-$3')).getTime();
+            return $filter('date')(dateUnix, 'MM/dd/yyyy', 'utc');
         }
 
         function createAcf (newAcf) {

@@ -18,7 +18,7 @@
         <tr>
           <td ng-bind-html="vm.displayNames(vm.query.terms.patientNames)"></td>
           <td>{{ vm.query.terms.gender }}</td>
-          <td>{{ vm.query.terms.dob | ehealthdate }}</td>
+          <td>{{ vm.convertDobString(vm.query.terms.dob) }}</td>
         </tr>
       </tbody>
     </table>
@@ -40,12 +40,12 @@
           <td rowspan="{{ location.results.length }}" href ng-click="vm.selectAll(location)">{{ location.location.name }}</td>
           <td href ng-click="location.results[0].selected = !location.results[0].selected" ng-bind-html="vm.displayNames(location.results[0].patientRecordName)"></td>
           <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].gender.description }}</td>
-          <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].dateOfBirth | ehealthdate }}</td>
+          <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ vm.convertDobString(location.results[0].dateOfBirth) }}</td>
           <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].ssn }}</td>
-          <td>
+          <td align="center">
             <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(location.results[0])"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
           </td>
-          <td>
+          <td align="center">
             <label class="sr-only" for="recordSelect-{{ location.results[0].id }}" ng-bind-html="vm.displayNames(location.results[0].patientRecordName)"></label>
             <input id="recordSelect-{{ location.results[0].id }}" type="checkbox" ng-model="location.results[0].selected">
           </td>
@@ -53,12 +53,12 @@
         <tr ng-repeat-end ng-repeat="record in location.results.slice(1)">
           <td href ng-click="record.selected = !record.selected" ng-bind-html="vm.displayNames(record.patientRecordName)"></td>
           <td href ng-click="record.selected = !record.selected">{{ record.gender.description }}</td>
-          <td href ng-click="record.selected = !record.selected">{{ record.dateOfBirth | ehealthdate }}</td>
+          <td href ng-click="record.selected = !record.selected">{{ vm.convertDobString(record.dateOfBirth) }}</td>
           <td href ng-click="record.selected = !record.selected">{{ record.ssn }}</td>
-          <td>
+          <td align="center">
             <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(record)"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
           </td>
-          <td>
+          <td align="center">
             <label class="sr-only" for="recordSelect-{{ record.id }}" ng-bind-html="vm.displayNames(record.patientRecordName)"></label>
             <input id="recordSelect-{{ record.id }}" type="checkbox" ng-model="record.selected">
           </td>
@@ -97,12 +97,7 @@
         <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required }">
           <label for="dob" class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
           <div class="col-sm-4">
-            <div class="input-group">
-              <input class="form-control" type="text" ng-model="vm.patient.dateOfBirthObject" ng-model-options="{ timezone: 'utc'}" uib-datepicker-popup is-open="vm.dobPopup.open" id="dob" name="dob" required>
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="vm.dobPopup.open = !vm.dobPopup.open"><i class="fa fa-calendar"></i><span class="sr-only">Open Date of Birth calendar chooser</span></button>
-              </span>
-            </div>
+              <input class="form-control" type="text" ng-model="vm.patient.dateOfBirthString" id="dob" name="dob" required>
             <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.dob.$touched) && vm.queryForm.dob.$error.required">Field is required</span>
           </div>
         </div>

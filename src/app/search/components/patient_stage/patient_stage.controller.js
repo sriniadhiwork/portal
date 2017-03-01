@@ -11,6 +11,7 @@
 
         vm.cancel = cancel;
         vm.clearQuery = clearQuery;
+        vm.convertDobString = commonService.convertDobString;
         vm.displayNames = displayNames;
         vm.friendlyFullName = friendlyFullName;
         vm.isStageable = isStageable;
@@ -58,11 +59,13 @@
             }
             return ret;
         }
+        
+        
 
         function prepopulate () {
             vm.patient = {
                 dateOfBirth: vm.query.terms.dob,
-                dateOfBirthObject: null,
+                dateOfBirthString: commonService.convertDobString(vm.query.terms.dob),
                 fullName: vm.friendlyFullName(vm.query.terms.patientNames[0]),
                 gender: vm.query.terms.gender,
                 ssn: vm.query.terms.ssn
@@ -82,13 +85,6 @@
                     patient: vm.patient,
                     id: vm.query.id
                 };
-                if (vm.patient.dateOfBirthObject) {
-                    if (angular.isObject(vm.patient.dateOfBirthObject)) {
-                        vm.patient.dateOfBirth = $filter('date')(vm.patient.dateOfBirthObject, 'yyyy-MM-dd', 'utc');
-                    } else {
-                        vm.patient.dateOfBirth = vm.patient.dateOfBirthObject;
-                    }
-                }
                 for (var i = 0; i < vm.query.locationStatuses.length; i++) {
                     for (var j = 0; j < vm.query.locationStatuses[i].results.length; j++) {
                         if (vm.query.locationStatuses[i].results[j].selected) {
