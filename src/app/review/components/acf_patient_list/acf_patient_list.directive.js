@@ -30,7 +30,7 @@
         return directive;
 
         /** @ngInject */
-        function AcfPatientListController($log, $filter, $timeout, $uibModal, commonService, QueryQueryTimeout) {
+        function AcfPatientListController($log, $timeout, $uibModal, commonService, QueryQueryTimeout) {
             var vm = this;
 
             vm.activatePatient = activatePatient;
@@ -59,13 +59,8 @@
                 vm.userAcf = commonService.getUserAcf();
             }
 
-            function activatePatient (id) {
-                for (var i = 0; i < vm.patients.length; i++) {
-                    if (vm.patients[i].id === id) {
-                        vm.activePatient = i;
-                        break;
-                    }
-                }
+            function activatePatient (patient) {
+                vm.activePatient = patient;
                 buildTitle();
             }
 
@@ -116,7 +111,8 @@
                         patient: function () { return patient; }
                     }
                 });
-                vm.editPatientInstance.result.then(function () {
+                vm.editPatientInstance.result.then(function (patient) {
+                    vm.activePatient = patient;
                     vm.getPatientsAtAcf();
                 }, function (result) {
                     $log.debug('dismissed', result);
@@ -181,10 +177,10 @@
 
             function buildTitle () {
                 if (vm.activePatient !== null) {
-                    vm.panelTitle = 'Patient: ' + vm.patients[vm.activePatient].fullName;
+                    vm.panelTitle = 'Patient: ' + vm.activePatient.fullName;
 
-                    if (vm.patients[vm.activePatient].friendlyName && vm.patients[vm.activePatient].friendlyName.length > 0) {
-                        vm.panelTitle += ' (' + vm.patients[vm.activePatient].friendlyName + ')';
+                    if (vm.activePatient.friendlyName && vm.activePatient.friendlyName.length > 0) {
+                        vm.panelTitle += ' (' + vm.activePatient.friendlyName + ')';
                     }
                 } else {
                     vm.panelTitle = vm.patients.length + ' Active Patient';

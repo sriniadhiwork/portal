@@ -83,11 +83,11 @@
         it('should have a function to query for patients', function () {
             expect(vm.searchForPatient).toBeDefined();
         });
-        
+
         it('should populate the patientNames ', function () {
             expect(vm.query.patientNames).toBeDefined();
         });
-        
+
         it('should populate the dob object', function () {
             expect(vm.query.dob).toBeDefined();
             expect(vm.query.dob.month).toBeDefined();
@@ -165,7 +165,6 @@
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
             vm.query.dob = {};
-            console.log(vm.query.dob);
             vm.query.dob.year = mock.dob.year;
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();

@@ -41,6 +41,12 @@
                     $log.info('Keepalive');
                     commonService.refreshToken();
                 });
+                $scope.$on('IdleWarn', function (e, countdown) {
+                    $log.warn('User will be logged out in ' + countdown + ' seconds');
+                });
+                $scope.$on('IdleTimeout', function () {
+                    vm.logout();
+                });
             }
 
             function isAuthenticated () {

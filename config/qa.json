@@ -2,6 +2,7 @@
     'API': 'https://www.pulsedemo.org/rest',
     'AuthAPI':  'https://www.pulsedemo.org/auth',
     'IdleTimeout': 20,
+    'IdleWarn': 1,
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
     'LogoutRedirect': 'https://california.demo.collaborativefusion.com/',

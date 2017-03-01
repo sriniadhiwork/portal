@@ -255,20 +255,20 @@
         });
 
         it('should change the title when a patient is activated', function () {
-            vm.activatePatient(1);
+            vm.activatePatient(vm.patients[1]);
             expect(vm.panelTitle).toBe('Patient: Jane Doe (Jane)');
         });
 
         it('should handle a missing friendly name', function () {
             vm.patients[1].friendlyName = null;
-            vm.activatePatient(1);
+            vm.activatePatient(vm.patients[1]);
             expect(vm.panelTitle).toBe('Patient: Jane Doe');
         });
 
         it('should set the active patient when activated', function () {
             expect(vm.activePatient).toBeNull();
-            vm.activatePatient(2);
-            expect(vm.activePatient).toBe(0);
+            vm.activatePatient(vm.patients[0]);
+            expect(vm.activePatient.id).toEqual(mock.patients[0].id);
         });
 
         it('should have a way to deactivate the patient', function () {
@@ -276,13 +276,13 @@
         });
 
         it('should deactive a patient', function () {
-            vm.activatePatient(2);
+            vm.activatePatient(vm.patients[0]);
             vm.deactivatePatient();
             expect(vm.activePatient).toBeNull();
         });
 
         it('should clear active documents on deactivation', function () {
-            vm.activatePatient(2);
+            vm.activatePatient(vm.patients[0]);
             vm.deactivatePatient();
             vm.activeDocument = {document: 'text'};
             vm.deactivatePatient();
@@ -297,7 +297,7 @@
         });
 
         it('should reset the title on deactivation', function () {
-            vm.activatePatient(2);
+            vm.activatePatient(vm.patients[0]);
             vm.deactivatePatient();
             expect(vm.panelTitle).toBe('2 Active Patients at ' + mock.userAcf.name);
         });
