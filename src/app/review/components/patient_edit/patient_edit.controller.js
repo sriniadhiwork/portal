@@ -18,7 +18,6 @@
 
         function activate () {
             vm.patient = angular.copy(patient);
-            vm.patient.dateOfBirthObject = vm.patient.dateOfBirth;
         }
 
         function cancel () {
@@ -26,13 +25,8 @@
         }
 
         function editPatient () {
-            if (angular.isObject(vm.patient.dateOfBirthObject)) {
-                vm.patient.dateOfBirth = $filter('date')(vm.patient.dateOfBirthObject, 'yyyy-MM-dd');
-            } else {
-                vm.patient.dateOfBirth = vm.patient.dateOfBirthObject;
-            }
             commonService.editPatient(vm.patient).then(function () {
-                $uibModalInstance.close()
+                $uibModalInstance.close(vm.patient)
             }, function (error) {
                 vm.errorMessage = error.data.error;
             });

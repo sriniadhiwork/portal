@@ -72,31 +72,11 @@
             expect(vm).toBeDefined();
         });
 
-        describe('setup', function () {
-            it('should create a dobObject', function () {
-                expect(vm.patient.dateOfBirthObject).toEqual(mock.patient.dateOfBirth);
-            });
-        });
-
         describe('editing a patient', function () {
             it('should close the modal after editing the patient', function () {
                 vm.editPatient();
                 scope.$digest();
-                expect(mock.modalInstance.close).toHaveBeenCalled();
-            });
-
-            it('should update the dateOfBirth with the dateOfBirthObject', function () {
-                var newDob = new Date('1999-02-21');
-                vm.patient.dateOfBirthObject = newDob;
-                vm.editPatient();
-                expect(vm.patient.dateOfBirth).toEqual('1999-02-21');
-            });
-
-            it('should get millis if the dateOfBirthObject is a string', function () {
-                var newDob = '1982-02-18';
-                vm.patient.dateOfBirthObject = newDob;
-                vm.editPatient();
-                expect(vm.patient.dateOfBirth).toEqual('1982-02-18');
+                expect(mock.modalInstance.close).toHaveBeenCalledWith(vm.patient);
             });
 
             it('should have an error message if the saving doesn\'t go well', function () {

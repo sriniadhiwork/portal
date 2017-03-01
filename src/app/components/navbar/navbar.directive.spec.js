@@ -85,5 +85,18 @@
             scope.$digest();
             expect(commonService.refreshToken).toHaveBeenCalled();
         });
+
+        it('should log when Idle happens', function () {
+            var initialLogLength = $log.warn.logs.length;
+            scope.$broadcast('IdleWarn');
+            scope.$digest();
+            expect($log.warn.logs.length).toBe(initialLogLength + 1);
+        });
+
+        it('should call the commonService.logout on a IdleTimeout ping', function () {
+            scope.$broadcast('IdleTimeout');
+            scope.$digest();
+            expect(commonService.logout).toHaveBeenCalled();
+        });
     });
 })();

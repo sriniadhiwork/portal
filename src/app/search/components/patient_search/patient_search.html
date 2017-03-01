@@ -5,25 +5,28 @@
         <h2 class="panel-title">Patient Query</h2>
         <div class="clearfix"></div>
       </div>
-      <div class="panel-body slide" ng-if="!vm.hidePanel">
+      <div class="panel-body">
+
         <div class="form-group">
-        	<label class="col-sm-12 control-label">Name<span class="text-danger"> *</span></label>
-            	<div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.given.$touched) && vm.queryForm.given.$error.required }">
-        			<label for="given" class="control-label col-sm-4">First <span class="text-danger">*</span></label>
-        				<div class="col-sm-8">
-          					<input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.query.patientNames[0].givenName[0]" id="given" name="given" placeholder="First" required></input>
-          					<span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.given.$touched) && vm.queryForm.given.$error.required">Field is required</span>
-        				</div>
-        		</div>
-      			<div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.family.$touched) && vm.queryForm.family.$error.required }">
-        			<label for="family" class="control-label col-sm-4">Last <span class="text-danger">*</span></label>
-        				<div class="col-sm-8">
-          					<input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.query.patientNames[0].familyName" id="family" name="family" placeholder="Last" required></input>
-          					<span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.family.$touched) && vm.queryForm.family.$error.required">Field is required</span>
-        				</div>
-      			</div>
+          <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.given.$touched) && vm.queryForm.given.$error.required }">
+            <label for="given" class="control-label col-sm-12">First Name <span class="text-danger">*</span></label>
+            <div class="col-sm-12">
+          	  <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.query.patientNames[0].givenName[0]" id="given" name="given" placeholder="First Name" required></input>
+          	  <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.given.$touched) && vm.queryForm.given.$error.required">Field is required</span>
+            </div>
           </div>
         </div>
+
+        <div class="form-group">
+      	  <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.family.$touched) && vm.queryForm.family.$error.required }">
+        	<label for="family" class="control-label col-sm-12">Last Name <span class="text-danger">*</span></label>
+        	<div class="col-sm-12">
+          	  <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.query.patientNames[0].familyName" id="family" name="family" placeholder="Last Name" required></input>
+          	  <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.family.$touched) && vm.queryForm.family.$error.required">Field is required</span>
+        	</div>
+      	  </div>
+        </div>
+
         <div class="form-group">
           <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required }">
             <label for="gender" class="col-sm-12 control-label">Gender <span class="text-danger">*</span></label>
@@ -38,6 +41,7 @@
             </div>
           </div>
         </div>
+
         <div class="form-group">
           <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dobYear.$touched) && vm.queryForm.dobYear.$error.required }">
             <label class="col-sm-12 control-label">Date of Birth <span class="text-danger">*</span></label>
@@ -51,70 +55,72 @@
             </div>
           </div>
           <div class="col-sm-4">
-          <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobMonth.$touched  && vm.query.dob.month.length !== 2)) && vm.queryForm.dobMonth.$error.required }">
-            <label class="sr-only" for="dobMonth">Month</label>
-            <select class="input-sm form-control" ng-model="vm.query.dob.month" ng-disabled="vm.query.dob.year.length !== 4"
-                    id="dobMonth" name="dobMonth" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
-              <option value="" selected="true">Month</option>
-              <option value="01">January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-            </select>
-            <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobMonth.$touched && vm.query.dob.month.length !== 2)) && vm.queryForm.dobMonth.$error.required">Field is required</span>
+            <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobMonth.$touched  && vm.query.dob.month.length !== 2)) && vm.queryForm.dobMonth.$error.required }">
+              <label class="sr-only" for="dobMonth">Month</label>
+              <select class="input-sm form-control" ng-model="vm.query.dob.month"
+                      id="dobMonth" name="dobMonth" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
+                <option value="" selected="true">Month</option>
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+              <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobMonth.$touched && vm.query.dob.month.length !== 2)) && vm.queryForm.dobMonth.$error.required">Field is required</span>
             </div>
           </div>
           <div class="col-sm-4">
-          <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobDay.$touched  && vm.query.dob.day.length !== 2)) && vm.queryForm.dobDay.$error.required }">
-            <label class="sr-only" for="dobDay">Day</label>
-            <select class="input-sm form-control" ng-model="vm.query.dob.day" ng-disabled="vm.query.dob.month.length !== 2"
-                    id="dobDay" name="dobDay" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
-              <option value="" selected="true">Day</option>
-              <option value="01">1</option>
-              <option value="02">2</option>
-              <option value="03">3</option>
-              <option value="04">4</option>
-              <option value="05">5</option>
-              <option value="06">6</option>
-              <option value="07">7</option>
-              <option value="08">8</option>
-              <option value="09">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-              <option value="24">24</option>
-              <option value="25">25</option>
-              <option value="26">26</option>
-              <option value="27">27</option>
-              <option value="28">28</option>
-              <option value="29">29</option>
-              <option value="30">30</option>
-              <option value="31">31</option>
-            </select>
-            <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobDay.$touched && vm.query.dob.day.length !== 2)) && vm.queryForm.dobDay.$error.required">Field is required</span>
+            <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobDay.$touched  && vm.query.dob.day.length !== 2)) && vm.queryForm.dobDay.$error.required }">
+              <label class="sr-only" for="dobDay">Day</label>
+              <select class="input-sm form-control" ng-model="vm.query.dob.day"
+                      id="dobDay" name="dobDay" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
+                <option value="" selected="true">Day</option>
+                <option value="01">1</option>
+                <option value="02">2</option>
+                <option value="03">3</option>
+                <option value="04">4</option>
+                <option value="05">5</option>
+                <option value="06">6</option>
+                <option value="07">7</option>
+                <option value="08">8</option>
+                <option value="09">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+              </select>
+              <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobDay.$touched && vm.query.dob.day.length !== 2)) && vm.queryForm.dobDay.$error.required">Field is required</span>
             </div>
           </div>
         </div>
-        <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern }">
+
+        <div class="form-group">
+          <div ng-class="{ 'has-error' : ((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern }">
             <label for="ssn" class="col-sm-12 control-label">SSN</label>
             <div class="col-sm-12">
               <input class="input-sm form-control" type="text" ng-model="vm.query.ssn" id="ssn" name="ssn"
@@ -122,8 +128,11 @@
                      placeholder="XXX-XX-XXXX" pattern="(\d{3}-?\d{2}-?\d{4})" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
               <div class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX)</div>
             </div>
+          </div>
         </div>
-      <div class="panel-footer slide" ng-if="!vm.hidePanel">
+      </div>
+
+      <div class="panel-footer">
         <div class="row" ng-if="vm.errorMessage">
           <div class="col-sm-12 bg-danger">{{ vm.errorMessage }}</div>
         </div>
