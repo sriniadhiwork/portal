@@ -84,6 +84,7 @@
         it('should not call commonService.queryLocationStatistics if not authenticated', function () {
             expect(commonService.getLocationStatistics.calls.count()).toBe(1);
             commonService.isAuthenticated.and.returnValue(false);
+            vm.getLocationStatistics();
             el.isolateScope().$digest();
             expect(commonService.getLocationStatistics.calls.count()).toBe(1);
         });

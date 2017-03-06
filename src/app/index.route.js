@@ -32,6 +32,11 @@
                 controller: 'ResourcesController',
                 controllerAs: 'vm'
             })
+            .when('/status', {
+                templateUrl: 'app/status/status.html',
+                controller: 'StatusController',
+                controllerAs: 'vm'
+            })
             .otherwise({
                 redirectTo: '/'
             });

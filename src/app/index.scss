@@ -3,7 +3,7 @@
  *  The list of variables are listed here bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss
  */
 $navbar-inverse-link-color: #5AADBB;
-$grid-float-breakpoint: 100%;
+//$grid-float-breakpoint: 100%;
 $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 $fa-font-path: "../../bower_components/font-awesome/fonts";
 @import "../../bower_components/font-awesome/scss/font-awesome.scss";
@@ -20,11 +20,7 @@ $btn-font-weight: 800;
 // endbower
 
 body {
-    background-image: url('../assets/images/PULSE_background.jpg');
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: #f8f8f8;
 }
 
 .inner-nav {
@@ -33,9 +29,12 @@ body {
     vertical-align: middle;
 }
 
-.no-background {
-    padding-top: 10px;
-    background-color: #f8f8f8;
+.has-background {
+    background-image: url('../assets/images/PULSE_background.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .btn-active-nav {

@@ -30,7 +30,8 @@
             'portal.main',
             'portal.resources',
             'portal.review',
-            'portal.search'
+            'portal.search',
+            'portal.status'
         ]);
 
 })();

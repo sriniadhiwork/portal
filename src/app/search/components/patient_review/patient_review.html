@@ -9,52 +9,54 @@
         <div class="col-sm-12">
           <h3>Queried Patient Information</h3>
           <p ng-if="!vm.patientQueries.length > 0">No current queries</p>
-          <table class="table table-striped" st-table="vm.displayedQueries" st-safe-src="vm.patientQueries" ng-if="vm.patientQueries.length > 0">
-            <thead>
-              <tr>
-                <th scope="col" st-sort="patientNames[0].givenName" st-skip-natural="true" class="st-sort">Name</th>
-                <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
-                <th scope="col" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
-                <th scope="col" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Updated</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="query in vm.displayedQueries track by query.id" class="fade">
-                <td ng-bind-html="vm.displayNames(query.terms.patientNames)"></td>
-                <td>{{ vm.convertDobString(query.terms.dob) }}</td>
-                <td>{{ query.terms.gender }}</td>
-                <td>{{ query.lastRead | date : 'medium' }}</td>
-                <td>
-                  <uib-progress max="query.locationStatuses.length" ng-if="query.status !== 'Complete'">
-                    <uib-bar class="progress-striped active" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} location<span ng-if="vm.countComplete(query) > 1">s</span> complete</i></uib-bar>
-                    <uib-bar class="progress-striped active" value="query.locationStatuses.length - vm.countComplete(query)" type="info"><i>{{ query.locationStatuses.length - vm.countComplete(query) }} location<span ng-if="query.locationStatuses.length - vm.countComplete(query) > 1">s</span> pending</i></uib-bar>
-                  </uib-progress>
-                  <uib-progressbar ng-click="query.viewDetails = !query.viewDetails" class="progress-striped-no" ng-if="query.status === 'Complete'" value="100" type="{{ query.recordCount > 0 ? 'success' : 'danger' }}"><i>{{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> found</i></uib-progressbar>
-                  <div ng-if="query.status !== 'Complete' || query.viewDetails">
-                    <div ng-repeat="location in query.locationStatuses | orderBy:['location.name','location.id'] track by location.location.id">
-                      {{ location.location.name }}: {{ location.status }}<span ng-if="location.status === 'Successful'">, {{ location.results.length }} record<span ng-if="location.results.length !== 1">s</span> found</span>
-                      <button ng-if="location.status === 'Active'" class="btn btn-sm pull-right" ng-class="location.isClearing ? 'btn-warning' : 'btn-danger'" ng-click="vm.cancelQueryLocation(location)" ng-disabled="location.isClearing"><i class="fa" ng-class="location.isClearing ? 'fa-spinner fa-spin' : 'fa-ban'"></i><span class="sr-only">Cancel query for {{ location.location.name }}</span></button>
-                      <button ng-if="location.status !== 'Active'" class="btn btn-sm pull-right" ng-class="location.isRequerying ? 'btn-warning' : 'btn-primary'" ng-click="vm.requeryLocation(location)" ng-disabled="location.isRequerying"><i class="fa" ng-class="location.isRequerying ? 'fa-spinner fa-spin' : 'fa-refresh'"></i><span class="sr-only">Refresh query for {{ location.location.name }}</span></button>
-                      <div class="clearfix"></div>
+          <div class="table-responsive">
+            <table class="table table-striped" st-table="vm.displayedQueries" st-safe-src="vm.patientQueries" ng-if="vm.patientQueries.length > 0">
+              <thead>
+                <tr>
+                  <th scope="col" st-sort="patientNames[0].givenName" st-skip-natural="true" class="st-sort">Name</th>
+                  <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
+                  <th scope="col" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
+                  <th scope="col" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Updated</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="query in vm.displayedQueries track by query.id" class="fade">
+                  <td ng-bind-html="vm.displayNames(query.terms.patientNames)"></td>
+                  <td>{{ vm.convertDobString(query.terms.dob) }}</td>
+                  <td>{{ query.terms.gender }}</td>
+                  <td>{{ query.lastRead | date : 'medium' }}</td>
+                  <td>
+                    <uib-progress max="query.locationStatuses.length" ng-if="query.status !== 'Complete'">
+                      <uib-bar class="progress-striped active" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} location<span ng-if="vm.countComplete(query) > 1">s</span> complete</i></uib-bar>
+                      <uib-bar class="progress-striped active" value="query.locationStatuses.length - vm.countComplete(query)" type="info"><i>{{ query.locationStatuses.length - vm.countComplete(query) }} location<span ng-if="query.locationStatuses.length - vm.countComplete(query) > 1">s</span> pending</i></uib-bar>
+                    </uib-progress>
+                    <uib-progressbar ng-click="query.viewDetails = !query.viewDetails" class="progress-striped-no" ng-if="query.status === 'Complete'" value="100" type="{{ query.recordCount > 0 ? 'success' : 'danger' }}"><i>{{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> found</i></uib-progressbar>
+                    <div ng-if="query.status !== 'Complete' || query.viewDetails">
+                      <div ng-repeat="location in query.locationStatuses | orderBy:['location.name','location.id'] track by location.location.id">
+                        {{ location.location.name }}: {{ location.status }}<span ng-if="location.status === 'Successful'">, {{ location.results.length }} record<span ng-if="location.results.length !== 1">s</span> found</span>
+                        <button ng-if="location.status === 'Active'" class="btn btn-sm pull-right" ng-class="location.isClearing ? 'btn-warning' : 'btn-danger'" ng-click="vm.cancelQueryLocation(location)" ng-disabled="location.isClearing"><i class="fa" ng-class="location.isClearing ? 'fa-spinner fa-spin' : 'fa-ban'"></i><span class="sr-only">Cancel query for {{ location.location.name }}</span></button>
+                        <button ng-if="location.status !== 'Active'" class="btn btn-sm pull-right" ng-class="location.isRequerying ? 'btn-warning' : 'btn-primary'" ng-click="vm.requeryLocation(location)" ng-disabled="location.isRequerying"><i class="fa" ng-class="location.isRequerying ? 'fa-spinner fa-spin' : 'fa-refresh'"></i><span class="sr-only">Refresh query for {{ location.location.name }}</span></button>
+                        <div class="clearfix"></div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <button ng-if="query.status === 'Complete' && query.recordCount !== 0" class="btn btn-success btn-sm" ng-click="vm.stagePatient(query)"><i class="fa fa-plus"></i><span class="sr-only">Stage {{ commonService.displayName(query.terms.name) }}</span></button>
-                  <button ng-if="query.status !== 'Complete' || query.recordCount === 0" class="btn btn-danger btn-sm"
-                          confirm="Are you sure you'd like to clear this Patient Query?"
-                          confirm-title="Confirmation"
-                          confirm-ok="Yes"
-                          confirm-cancel="No"
-                          confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
-                          ng-click="vm.clearQuery(query)"><i class="fa fa-trash"></i><span class="sr-only">Clear query for {{ commonService.displayName(query.terms.name) }}</span></button>
-                  <button ng-if="query.status === 'Complete'" class="btn btn-primary btn-sm" ng-click="vm.requery(query)"><i class="fa fa-refresh"></i><span class="sr-only">Redo query for {{ commonService.displayName(query.terms.name) }}</span></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  </td>
+                  <td>
+                    <button ng-if="query.status === 'Complete' && query.recordCount !== 0" class="btn btn-success btn-sm" ng-click="vm.stagePatient(query)"><i class="fa fa-plus"></i><span class="sr-only">Stage {{ commonService.displayName(query.terms.name) }}</span></button>
+                    <button ng-if="query.status !== 'Complete' || query.recordCount === 0" class="btn btn-danger btn-sm"
+                            confirm="Are you sure you'd like to clear this Patient Query?"
+                            confirm-title="Confirmation"
+                            confirm-ok="Yes"
+                            confirm-cancel="No"
+                            confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
+                            ng-click="vm.clearQuery(query)"><i class="fa fa-trash"></i><span class="sr-only">Clear query for {{ commonService.displayName(query.terms.name) }}</span></button>
+                    <button ng-if="query.status === 'Complete'" class="btn btn-primary btn-sm" ng-click="vm.requery(query)"><i class="fa fa-refresh"></i><span class="sr-only">Redo query for {{ commonService.displayName(query.terms.name) }}</span></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
