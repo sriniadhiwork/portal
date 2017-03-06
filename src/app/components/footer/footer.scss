@@ -11,10 +11,11 @@ footer {
 
     .navbar {
         min-height: $bottom-nav-height;
-        height: $bottom-nav-height;
+        //height: $bottom-nav-height;
+        height: 100%;
     }
 
-    .navbar-brand {
+    img {
         height: 100%;
         max-height: $bottom-nav-height
     }

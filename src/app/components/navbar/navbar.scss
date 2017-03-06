@@ -5,39 +5,23 @@ body {
 }
 
 header {
+
     .navbar-default {
         background-color: rgb(255,255,255);
     }
 
     .navbar {
         min-height: $top-nav-height;
-        height: $top-nav-height;
         border-bottom: 4px solid #3e7685;
-        width: 100%;
+        max-height: $top-nav-height;
 
-        .container-fluid {
-            min-height: $top-nav-height;
+        img {
+            max-height: $top-nav-height;
+            width: 100%;
+        }
 
-            .col-sm-2 {
-                min-height: $top-nav-height;
-                position: relative;
-
-                button {
-                    position: absolute;
-                    margin-right: 15px;
-                    right: 0;
-                    top: 50%;
-                    transform: translateY(-50%);
-                }
-
-                ai-location-status {
-                    position: absolute;
-                    margin-right: 15px;
-                    margin-bottom: 5px;
-                    right: 0px;
-                    bottom: 0px;
-                }
-            }
+        li.dropdown {
+            background-color: rgb(255,255,255);
         }
     }
 }

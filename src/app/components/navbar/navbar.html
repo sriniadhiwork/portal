@@ -1,15 +1,32 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
-    <div class="col-sm-5">
-      <a class="navbar-brand" href="#/"><img src="assets/images/PULSE_logo2.svg" alt="PULSE Logo" width="100%" /></a>
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a href="#/" class="navbar-left navbar-brand"><img alt="Patient Unified Lookup System for Emergencies Logo" src="assets/images/PULSE_logo2.svg" class=""></img></a>
+      <button type="button" class="navbar-toggle collapsed" ng-click="vm.navCollapsed = !vm.navCollapsed" ng-init="vm.navCollapsed = true" aria-expanded="false" id="menu-toggle">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
     </div>
-    <div class="col-sm-5">
-      <ai-acf mode="view" ng-if="vm.hasAcf()"></ai-acf>
-    </div>
-    <div class="col-sm-2 text-right">
-      <span ng-if="vm.getUserName()">{{ vm.getUserName() }}<br /></span>
-      <button class="btn btn-sm btn-primary pull-right" id="logoutButton" ng-click="vm.logout()">Log Out</button>
-      <ai-location-status></ai-location-status>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" uib-collapse="vm.navCollapsed" aria-labeledby="menu-toggle">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown" uib-dropdown auto-close="disabled" is-open="vm.navOpen">
+          <a href class="dropdown-toggle" id="login-toggle" uib-dropdown-toggle aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> {{ vm.getUserName() }} <span class="fa" ng-class="vm.navOpen ? 'fa-caret-down' : 'fa-caret-right'"></span></a>
+          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="login-toggle">
+            <li ng-if="vm.hasAcf()"><ai-acf mode="view"></ai-acf>
+            <li><a href="#/search">Search</a></li>
+            <li><a href="#/review">Review</a></li>
+            <li><a href="#/status">Location Status</a></li>
+            <li>
+              <button class="btn btn-primary btn-block" id="logoutButton" ng-click="vm.logout()">Log Out</button>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
