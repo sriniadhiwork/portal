@@ -44,7 +44,15 @@ function browserSyncInit(baseDir, browser) {
             changeOrigin: true,
             secure: false,
             rejectUnauthorized: false
+        }),
+        proxyMiddleware('/analytics', {
+            target: 'https://pulse-160916.appspot.com/',
+            pathRewrite: { '^/analytics' : '' },
+            changeOrigin: true,
+            secure: false,
+            rejectUnauthorized: false
         })
+
     ];
 
     browserSync.instance = browserSync.init({

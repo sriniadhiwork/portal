@@ -1,6 +1,7 @@
 {
     'API': '/rest',
     'AuthAPI':  '/auth',
+    'GAAPI': '/analytics',
     'IdleTimeout': 20,
     'IdleWarn': 1,
     'KeepaliveInterval': 1,

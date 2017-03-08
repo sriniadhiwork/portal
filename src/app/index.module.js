@@ -6,6 +6,8 @@
             // external modules
             'angular-confirm',
             'angular-filters',
+            'angulartics',
+            'angulartics.google.analytics',
             'cb.x2js',
             'googlechart',
             'ngAnimate',

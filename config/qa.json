@@ -1,6 +1,7 @@
 {
     'API': 'https://www.pulsedemo.org/rest',
     'AuthAPI':  'https://www.pulsedemo.org/auth',
+    'GAAPI': 'https://pulse-160916.appspot.com',
     'IdleTimeout': 20,
     'IdleWarn': 1,
     'KeepaliveInterval': 1,

@@ -27,7 +27,8 @@
     "angular-google-chart": "^0.1.0",
     "angular-x2js": "^0.2.0",
     "angular-confirm-modal": "^1.2.6",
-    "angular-dom-events": "*"
+    "angular-dom-events": "*",
+    "angulartics-google-analytics": "^0.4.0"
   },
   "devDependencies": {},
   "overrides": {

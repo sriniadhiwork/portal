@@ -4,7 +4,7 @@
     describe('portal.common.services', function () {
 
         var commonService, $httpBackend, $window, requestHandler;
-        var API, AuthAPI, LogoutRedirect;
+        var API, AuthAPI, GAAPI, LogoutRedirect;
 
         requestHandler = {};
 
@@ -51,7 +51,7 @@
             }
         });
 
-        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _LogoutRedirect_, _API_, _AuthAPI_) {
+        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _LogoutRedirect_, _API_, _AuthAPI_, _GAAPI_) {
             commonService = _commonService_;
             $httpBackend = _$httpBackend_;
             $window = _$window_;
@@ -60,6 +60,7 @@
             LogoutRedirect = _LogoutRedirect_;
             API = _API_;
             AuthAPI = _AuthAPI_;
+            GAAPI = _GAAPI_;
             delete($localStorage.jwtToken);
 
             spyOn($window.location, 'replace');
@@ -84,6 +85,8 @@
             requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/query/3/locationMap/4', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
             requestHandler.stagePatient = $httpBackend.whenPOST(API + '/queries/1/stage', mock.stagePatient).respond(200, {});
+
+            //requestHandler.analytics = $httpBackend.whenGET(/pulse-160916/).respond(200,true);
         }));
 
         afterEach(function () {
@@ -493,6 +496,30 @@
                 $httpBackend.flush();
                 requestHandler.requeryLocation.respond(401, {error: 'a rejection'});
                 commonService.requeryLocation(3,4).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+        });
+
+        describe('analytics', function () {
+            it('should call /analytic endpoints', function () {
+                $httpBackend.expectGET(GAAPI + '/query?id=4&format=data-table').respond(200, {});
+                commonService.getAnalytics(4);
+                $httpBackend.flush();
+            });
+
+            it('should return the data endpoints', function () {
+                $httpBackend.expectGET(GAAPI + '/query?id=4&format=data-table').respond(200, {data: 'data'});
+                commonService.getAnalytics(4).then(function (response) {
+                    expect(response).toEqual({data: 'data'});
+                });
+                $httpBackend.flush();
+            });
+
+            it('should reject a call that doesn\'t return an object', function () {
+                $httpBackend.expectGET(GAAPI + '/query?id=4&format=data-table').respond(401, {error: 'a rejection'});
+                commonService.getAnalytics(4).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();
