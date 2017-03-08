@@ -6,7 +6,7 @@
         .service('commonService', commonService);
 
     /** @ngInject */
-    function commonService ($http, $filter, $q, API, AuthAPI, LogoutRedirect, $log, $localStorage, $window) {
+    function commonService ($http, $filter, $q, API, AuthAPI, GAAPI, LogoutRedirect, $log, $localStorage, $window) {
         var self = this;
 
         var ACF_LOCATION_IN_IDENTITY = 7;
@@ -25,6 +25,7 @@
         self.friendlyFullName = friendlyFullName;
         self.getAcf = getAcf;
         self.getAcfs = getAcfs;
+        self.getAnalytics = getAnalytics;
         self.getDocument = getDocument;
         self.getLocationStatistics = getLocationStatistics;
         self.getQueries = getQueries;
@@ -136,6 +137,15 @@
 
         function getAcfs () {
             return enhancedGet('/acfs');
+        }
+
+        function getAnalytics (id) {
+            return $http.get(GAAPI + '/query?id=' + id + '&format=data-table')
+                .then(function (response) {
+                        return response.data;
+                }, function (response) {
+                    return $q.reject(response);
+                });
         }
 
         function getDocument (patientId, documentId) {

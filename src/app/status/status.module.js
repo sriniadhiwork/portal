@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('portal.status', ['portal.constants']);
+        .module('portal.status', ['portal.common', 'portal.constants']);
 })();
