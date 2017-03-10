@@ -142,7 +142,7 @@
         function getAnalytics (id) {
             return $http.get(GAAPI + '/query?id=' + id + '&format=data-table')
                 .then(function (response) {
-                        return response.data;
+                    return response.data;
                 }, function (response) {
                     return $q.reject(response);
                 });
@@ -403,6 +403,5 @@
             { code: 'I', description: 'Ideographic (i.e. Kanji)' },
             { code: 'P', description: 'Phonetic (i.e. ASCII, Katakana, Hiragana, etc.)'}
         ];
-
     }
 })();
