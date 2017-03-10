@@ -18,6 +18,7 @@
           <a href class="dropdown-toggle" id="login-toggle" uib-dropdown-toggle aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> {{ vm.getUserName() }} <span class="fa" ng-class="vm.navOpen ? 'fa-caret-down' : 'fa-caret-right'"></span></a>
           <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="login-toggle">
             <li ng-if="vm.hasAcf()"><ai-acf mode="view"></ai-acf>
+            <li ng-if="vm.hasAcf()" role="separator" class="divider"></li>
             <li><a href="#/search">Search</a></li>
             <li><a href="#/review">Review</a></li>
             <li><a href="#/status">Location Status</a></li>

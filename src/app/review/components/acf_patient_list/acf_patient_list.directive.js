@@ -189,7 +189,7 @@
                     vm.panelTitle = vm.patients.length + ' Active Patient';
                     if (vm.patients.length !== 1)
                         vm.panelTitle += 's';
-                    vm.panelTitle += ' at ' + vm.userAcf.name;
+                    vm.panelTitle += ' at ' + vm.userAcf.identifier;
                 }
             }
         }

@@ -5,7 +5,7 @@
         var vm, el, scope, $log, $timeout, $uibModal, $q, commonService, mock, actualOptions;
         mock = {
             fakeDocument: {data: "<document><made><of>XML</of></made></document"},
-            userAcf: {name: 'ACF Number 1'}
+            userAcf: {"id":277,"identifier":"Humboldt-02","name":"Community College","phoneNumber":"555-1912","address":{"id":null,"lines":["92 Tenth Stn"],"city":"Mckinleyville","state":"CA","zipcode":"95501","country":null},"lastRead":1489156161065}
         };
         mock.fakeModal = {
             result: {
@@ -247,7 +247,7 @@
         });
 
         it('should know what the panel title should be', function () {
-            expect(vm.panelTitle).toBe('2 Active Patients at ' + mock.userAcf.name);
+            expect(vm.panelTitle).toBe('2 Active Patients at ' + mock.userAcf.identifier);
         });
 
         it('should have a way to activate a patient', function () {
@@ -299,7 +299,7 @@
         it('should reset the title on deactivation', function () {
             vm.activatePatient(vm.patients[0]);
             vm.deactivatePatient();
-            expect(vm.panelTitle).toBe('2 Active Patients at ' + mock.userAcf.name);
+            expect(vm.panelTitle).toBe('2 Active Patients at ' + mock.userAcf.identifier);
         });
 
         it('should change the title when the number of patients changes', function () {
@@ -309,7 +309,7 @@
             el.isolateScope().$digest();
 
             // then expect to have one less patient in the queue
-            expect(vm.panelTitle).toBe('1 Active Patient at ' + mock.userAcf.name);
+            expect(vm.panelTitle).toBe('1 Active Patient at ' + mock.userAcf.identifier);
         });
 
         it('should deactivate a patient when a patient is discharged', function () {

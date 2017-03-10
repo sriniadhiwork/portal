@@ -23,5 +23,9 @@ header {
         li.dropdown {
             background-color: rgb(255,255,255);
         }
+
+        .dropdown-menu {
+            width: $screen-xs * 2 / 3;
+        }
     }
 }
