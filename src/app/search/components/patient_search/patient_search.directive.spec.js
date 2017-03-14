@@ -10,7 +10,7 @@
             message:'One of the following search parameters was blank or improperly formed: Name, Date of Birth, Gender'
         };
         mock.dob = {
-            year: '1999',
+            year: 1999,
             month: '03',
             day: '19'
         };
@@ -20,8 +20,13 @@
             familyName: 'jones',
             nameType: {code: 'L'}
         }];
-        mock.query.dob = mock.dob;
+        mock.query.dobParts = mock.dob;
         mock.query.gender = 'M';
+        mock.baseQuery = {
+            addresses: [{ lines: []}],
+            dobParts: {},
+            patientNames: [{givenName: [], nameType: { code: 'L', description: 'Legal Name'} }]
+        };
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -53,12 +58,6 @@
                     $setPristine: function () { this.$pristine = true; },
                     $setUntouched: function () { this.$untouched = true; }
                 };
-                vm.query = { };
-                vm.query.patientNames = [{givenName: [''], nameType: { code: 'L', description: 'Legal Name'} }];
-                vm.query.dob = {};
-                vm.query.dob.month = '';
-                vm.query.dob.day = '';
-                vm.query.dob.year = '';
             });
         });
 
@@ -88,10 +87,14 @@
             expect(vm.query.patientNames).toBeDefined();
         });
 
-        it('should populate the dob object', function () {
-            expect(vm.query.dob).toBeDefined();
-            expect(vm.query.dob.month).toBeDefined();
-            expect(vm.query.dob.day).toBeDefined();
+        it('should a dob object to search with', function () {
+            expect(vm.query.dobParts).toBeDefined();
+            expect(vm.query.dobParts).toEqual(mock.baseQuery.dobParts);
+        });
+
+        it('should have an address object to search with', function () {
+            expect(vm.query.addresses).toBeDefined();
+            expect(vm.query.addresses).toEqual(mock.baseQuery.addresses);
         });
 
         describe('submitting the search form', function () {
@@ -107,23 +110,27 @@
 
             it('should clear the query fields on a search', function () {
                 vm.searchForPatient();
-                expect(vm.query).toEqual({patientNames: [{givenName: [''], nameType: {code: 'L'}}]});
+                el.isolateScope().$digest();
+                expect(vm.query).toEqual(mock.baseQuery);
             });
 
             it('should wipe the form on a search', function () {
                 vm.searchForPatient();
+                el.isolateScope().$digest();
                 expect(vm.queryForm.$pristine).toBe(true);
             });
 
             it('should hide errors on a search', function () {
                 vm.searchForPatient();
+                el.isolateScope().$digest();
                 expect(vm.showFormErrors).toBe(false);
             });
 
             it('should set the addresses to blank on a search', function () {
                 vm.query.addresses = [{},{}];
                 vm.searchForPatient();
-                expect(vm.query.addresses).toBeUndefined();
+                el.isolateScope().$digest();
+                expect(vm.query.addresses).toEqual(mock.baseQuery.addresses);
             });
 
             it('should tell the controller that a search was performed', function () {
@@ -140,10 +147,6 @@
                 expect(commonService.searchForPatient).toHaveBeenCalledWith(compiled);
             });
 
-            it('should have a way to assemble the DOB', function () {
-                expect(vm.assembledDob()).toBe('19990319');
-            });
-
             it('should show an error if the search is bad', function () {
                 commonService.searchForPatient.and.returnValue($q.reject({data: mock.badRequest}));
                 vm.searchForPatient();
@@ -152,29 +155,18 @@
             });
         });
 
-        it('should not let a search be performed without required parameters', function () {
-            vm.query = {};
+        it('should only search if the form is valid and edited', function () {
+            vm.searchForPatient();
+            expect(commonService.searchForPatient).not.toHaveBeenCalled();
+
             vm.queryForm.$invalid = true;
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
+
             vm.queryForm.$setDirty();
-            vm.query = { givenName: 'fake' };
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query.familyName =  'last';
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query.dob = {};
-            vm.query.dob.year = mock.dob.year;
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query.dob.month = mock.dob.month;
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query.dob.day = mock.dob.day;
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).not.toHaveBeenCalled();
-            vm.query.gender= 'M' ;
+
             vm.queryForm.$invalid = false;
             vm.searchForPatient();
             expect(commonService.searchForPatient).toHaveBeenCalled();

@@ -22,7 +22,6 @@
         function PatientSearchController($log, commonService) {
             var vm = this;
 
-            vm.assembledDob = assembledDob;
             vm.errorCount = errorCount;
             vm.searchForPatient = searchForPatient;
 
@@ -31,14 +30,12 @@
             ////////////////////////////////////////////////////////////////////
 
             function activate () {
-                vm.query = {
-                    patientNames: [{givenName: [''], nameType: { code: 'L', description: 'Legal Name'} }],
-                    dob: {}
+                vm.baseQuery = {
+                    addresses: [{ lines: []}],
+                    dobParts: {},
+                    patientNames: [{givenName: [], nameType: { code: 'L', description: 'Legal Name'} }]
                 };
-            }
-
-            function assembledDob () {
-                return vm.query.dob.year + vm.query.dob.month + vm.query.dob.day;
+                vm.query = angular.copy(vm.baseQuery);
             }
 
             function errorCount () {
@@ -55,18 +52,19 @@
 
             function searchForPatient () {
                 if (!vm.queryForm.$invalid && vm.queryForm.$dirty) {
-                    vm.query.dob = vm.assembledDob();
+                    vm.query.dob = vm.query.dobParts.year + vm.query.dobParts.month + vm.query.dobParts.day;
 
                     var queryObj = {query: angular.copy(vm.query)};
                     commonService.searchForPatient(queryObj.query).then(function () {
                         vm.triggerHandlers();
+                        vm.query = angular.copy(vm.baseQuery);
+
+                        vm.queryForm.$setPristine();
+                        vm.queryForm.$setUntouched();
+                        vm.showFormErrors = false;
                     }, function (error) {
                         vm.errorMessage = error.data.message;
                     });
-                    vm.query = {patientNames: [{givenName: [''], nameType: {code: 'L'}}]};
-                    vm.queryForm.$setPristine();
-                    vm.queryForm.$setUntouched();
-                    vm.showFormErrors = false;
                 }
             }
         }
