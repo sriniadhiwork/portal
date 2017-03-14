@@ -9,8 +9,8 @@
 
         <div class="form-group">
           <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.given.$touched) && vm.queryForm.given.$error.required }">
-            <label for="given" class="control-label col-sm-12">First Name <span class="text-danger">*</span></label>
             <div class="col-sm-12">
+              <label for="given" class="control-label">First Name <span class="text-danger">*</span></label>
           	  <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.query.patientNames[0].givenName[0]" id="given" name="given" placeholder="First Name" required></input>
           	  <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.given.$touched) && vm.queryForm.given.$error.required">Field is required</span>
             </div>
@@ -19,8 +19,8 @@
 
         <div class="form-group">
       	  <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.family.$touched) && vm.queryForm.family.$error.required }">
-        	<label for="family" class="control-label col-sm-12">Last Name <span class="text-danger">*</span></label>
         	<div class="col-sm-12">
+        	  <label for="family" class="control-label">Last Name <span class="text-danger">*</span></label>
           	  <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="vm.query.patientNames[0].familyName" id="family" name="family" placeholder="Last Name" required></input>
           	  <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.queryForm.family.$touched) && vm.queryForm.family.$error.required">Field is required</span>
         	</div>
@@ -29,8 +29,8 @@
 
         <div class="form-group">
           <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.gender.$touched) && vm.queryForm.gender.$error.required }">
-            <label for="gender" class="col-sm-12 control-label">Gender <span class="text-danger">*</span></label>
             <div class="col-sm-12">
+              <label for="gender" class="control-label">Gender <span class="text-danger">*</span></label>
               <select class="input-sm form-control" ng-model="vm.query.gender" id="gender" name="gender" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
                 <option value="" selected="true" disabled="disabled">Choose from the selection</option>
                 <option value="F">Female</option>
@@ -43,12 +43,12 @@
         </div>
 
         <div class="form-group">
-          <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.dobYear.$touched || vm.queryForm.dobMonth.$touched || vm.queryForm.dobDay.$touched) && (vm.queryForm.dobYear.$error.required || vm.queryForm.dobMonth.$error.required || vm.queryForm.dobDay.$error.required) }">
+          <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobYear.$touched && vm.queryForm.dobMonth.$touched && vm.queryForm.dobDay.$touched)) && (vm.queryForm.dobYear.$error.required || vm.queryForm.dobMonth.$error.required || vm.queryForm.dobDay.$error.required) }">
             <label class="col-sm-12 control-label">Date of Birth <span class="text-danger">*</span></label>
             <div class="col-md-4">
-              <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobMonth.$touched && !vm.query.dob.month)) && vm.queryForm.dobMonth.$error.required }">
+              <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobMonth.$touched && !vm.query.dobParts.month)) && vm.queryForm.dobMonth.$error.required }">
                 <label class="sr-only" for="dobMonth">Month</label>
-                <select class="input-sm form-control" ng-model="vm.query.dob.month"
+                <select class="input-sm form-control" ng-model="vm.query.dobParts.month"
                         id="dobMonth" name="dobMonth" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
                   <option value="" selected="true">Month</option>
                   <option value="01">January</option>
@@ -64,13 +64,13 @@
                   <option value="11">November</option>
                   <option value="12">December</option>
                 </select>
-                <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobMonth.$touched && !vm.query.dob.month)) && vm.queryForm.dobMonth.$error.required">Field is required</span>
+                <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobMonth.$touched && !vm.query.dobParts.month)) && vm.queryForm.dobMonth.$error.required">Field is required</span>
               </div>
             </div>
             <div class="col-md-4">
-              <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobDay.$touched && !vm.query.dob.day)) && vm.queryForm.dobDay.$error.required }">
+              <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobDay.$touched && !vm.query.dobParts.day)) && vm.queryForm.dobDay.$error.required }">
                 <label class="sr-only" for="dobDay">Day</label>
-                <select class="input-sm form-control" ng-model="vm.query.dob.day"
+                <select class="input-sm form-control" ng-model="vm.query.dobParts.day"
                         id="dobDay" name="dobDay" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
                   <option value="" selected="true">Day</option>
                   <option value="01">1</option>
@@ -105,12 +105,12 @@
                   <option value="30">30</option>
                   <option value="31">31</option>
                 </select>
-                <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobDay.$touched && !vm.query.dob.day)) && vm.queryForm.dobDay.$error.required">Field is required</span>
+                <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobDay.$touched && !vm.query.dobParts.day)) && vm.queryForm.dobDay.$error.required">Field is required</span>
               </div>
             </div>
             <div class="col-md-4">
               <label class="sr-only" for="dobYear">Year</label>
-              <input class="input-sm form-control" type="text" ng-model="vm.query.dob.year" placeholder="yyyy"
+              <input class="input-sm form-control" type="number" ng-model="vm.query.dobParts.year" placeholder="yyyy"
                      ng-pattern="/^\d{4}$/"
                      id="dobYear" name="dobYear" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()" required>
               <span class="text-danger" ng-if="(vm.showFormErrors || vm.queryForm.dobYear.$touched) && !vm.queryForm.dobYear.$error.required && !vm.queryForm.dobYear.$valid">yyyy</span>
@@ -128,6 +128,91 @@
                      placeholder="XXX-XX-XXXX" pattern="(\d{3}-?\d{2}-?\d{4})" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
               <div class="text-danger" ng-if="((vm.showFormErrors && vm.queryForm.$touched) || vm.queryForm.ssn.$touched) && vm.queryForm.ssn.$error.pattern">Improper format (XXX-XX-XXXX)</div>
             </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-12">
+            <label for="line" class="control-label">Street Address</label>
+            <input class="input-sm form-control" type="text" ng-model="vm.query.addresses[0].lines[0]" id="line" name="line"
+                   ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
+          </div>
+
+          <div class="col-sm-4">
+            <label for="city" class="control-label">City</label>
+            <input class="input-sm form-control" type="text" ng-model="vm.query.addresses[0].city" id="city" name="city"
+                   ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
+          </div>
+          <div class="col-sm-4">
+            <label for="state" class="control-label">State</label>
+            <select class="input-sm form-control" ng-model="vm.query.addresses[0].state"
+                    id="state" name="state" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
+              <option value="" selected="true">State</option>
+              <option value="AL">Alabama</option>
+	          <option value="AK">Alaska</option>
+	          <option value="AZ">Arizona</option>
+	          <option value="AR">Arkansas</option>
+	          <option value="CA">California</option>
+	          <option value="CO">Colorado</option>
+	          <option value="CT">Connecticut</option>
+	          <option value="DE">Delaware</option>
+	          <option value="DC">District Of Columbia</option>
+	          <option value="FL">Florida</option>
+	          <option value="GA">Georgia</option>
+	          <option value="HI">Hawaii</option>
+	          <option value="ID">Idaho</option>
+	          <option value="IL">Illinois</option>
+	          <option value="IN">Indiana</option>
+	          <option value="IA">Iowa</option>
+	          <option value="KS">Kansas</option>
+	          <option value="KY">Kentucky</option>
+	          <option value="LA">Louisiana</option>
+	          <option value="ME">Maine</option>
+	          <option value="MD">Maryland</option>
+	          <option value="MA">Massachusetts</option>
+	          <option value="MI">Michigan</option>
+	          <option value="MN">Minnesota</option>
+	          <option value="MS">Mississippi</option>
+	          <option value="MO">Missouri</option>
+	          <option value="MT">Montana</option>
+	          <option value="NE">Nebraska</option>
+	          <option value="NV">Nevada</option>
+	          <option value="NH">New Hampshire</option>
+	          <option value="NJ">New Jersey</option>
+	          <option value="NM">New Mexico</option>
+	          <option value="NY">New York</option>
+	          <option value="NC">North Carolina</option>
+	          <option value="ND">North Dakota</option>
+	          <option value="OH">Ohio</option>
+	          <option value="OK">Oklahoma</option>
+	          <option value="OR">Oregon</option>
+	          <option value="PA">Pennsylvania</option>
+	          <option value="RI">Rhode Island</option>
+	          <option value="SC">South Carolina</option>
+	          <option value="SD">South Dakota</option>
+	          <option value="TN">Tennessee</option>
+	          <option value="TX">Texas</option>
+	          <option value="UT">Utah</option>
+	          <option value="VT">Vermont</option>
+	          <option value="VA">Virginia</option>
+	          <option value="WA">Washington</option>
+	          <option value="WV">West Virginia</option>
+	          <option value="WI">Wisconsin</option>
+	          <option value="WY">Wyoming</option>
+            </select>
+          </div>
+          <div class="col-sm-4">
+            <label for="zipcode" class="control-label">Zipcode</label>
+            <input class="input-sm form-control" type="text" ng-model="vm.query.addresses[0].zipcode" id="zipcode" name="zipcode"
+                   ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="telephone" class="col-sm-12 control-label">Telephone</label>
+          <div class="col-sm-12">
+            <input class="input-sm form-control" type="text" ng-model="vm.query.telephone" id="telephone" name="telephone"
+                   ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
           </div>
         </div>
       </div>
