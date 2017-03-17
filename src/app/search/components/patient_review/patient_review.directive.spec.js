@@ -3,6 +3,7 @@
 
     describe('search.aiPatientReview', function () {
         var $compile, $rootScope, $timeout, $uibModal, vm, el, $log, $q, commonService, mock, Mock, actualOptions;
+
         mock = {};
         mock.name = {
             nameType: { code: 'M', description: 'Maiden Name' },
