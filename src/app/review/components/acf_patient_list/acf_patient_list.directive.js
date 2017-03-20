@@ -75,8 +75,8 @@
 
             function countActive (patient) {
                 var active = 0;
-                for (var i = 0; i < patient.locationMaps.length; i++) {
-                    if (patient.locationMaps[i].documentsQueryStatus === 'Active')
+                for (var i = 0; i < patient.endpointMaps.length; i++) {
+                    if (patient.endpointMaps[i].documentsQueryStatus === 'Active')
                         active += 1;
                 }
                 return active;
@@ -138,16 +138,16 @@
                         var patient = vm.patients[i];
                         patient.documentStatus = {total: 0, active: 0, cached: 0};
                         patient.documents = [];
-                        for (var j = 0; j < patient.locationMaps.length; j++) {
-                            hasActive = hasActive || (patient.locationMaps[j].documentsQueryStatus === 'Active');
-                            patient.documentStatus.total += patient.locationMaps[j].documents.length;
-                            for (var k = 0; k < patient.locationMaps[j].documents.length; k++) {
-                                patient.locationMaps[j].documents[k].location = patient.locationMaps[j].location.name;
-                                patient.documents.push(patient.locationMaps[j].documents[k]);
-                                if (patient.locationMaps[j].documents[k].cached) {
+                        for (var j = 0; j < patient.endpointMaps.length; j++) {
+                            hasActive = hasActive || (patient.endpointMaps[j].documentsQueryStatus === 'Active');
+                            patient.documentStatus.total += patient.endpointMaps[j].documents.length;
+                            for (var k = 0; k < patient.endpointMaps[j].documents.length; k++) {
+                                patient.endpointMaps[j].documents[k].endpoint = patient.endpointMaps[j].endpoint.name;
+                                patient.documents.push(patient.endpointMaps[j].documents[k]);
+                                if (patient.endpointMaps[j].documents[k].cached) {
                                     patient.documentStatus.cached += 1;
                                 }
-                                if (patient.locationMaps[j].documents[k].status === 'Active') {
+                                if (patient.endpointMaps[j].documents[k].status === 'Active') {
                                     patient.documentStatus.active += 1;
                                     hasActive = true;
                                 }
