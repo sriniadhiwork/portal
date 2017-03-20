@@ -28,18 +28,6 @@
                 patient: jasmine.any(Function)
             }
         };
-        mock.patients = [{"id":2,"endpointPatientId":null,"fullName":"John Smith","friendlyName":"John","dateOfBirth":1484629200000,"gender":"Male","phoneNumber":null,"ssn":null,"lastRead":1482942445639,"acf":{"id":178,"name":"Del Norte-03","phoneNumber":null,"address":null,"lastRead":1482942622025},
-                          "endpointMaps":[{"id":4,"patientId":2,"endpoint":{"id":2,"externalId":"2","status":{"id":1,"name":"Active"},"parentOrgName":"John Muir Health Foundation","name":"John Muir Medical Center (Walnut Creek)","description":"Primary Walnut Creek-based hospital facility within the John Muir Health healthcare provider organization","type":"Hospital","address":{"id":null,"lines":["1601 Ygnacio Valley Rd"],"city":"Walnut Creek","state":"CA","zipcode":"94598","country":null},"externalLastUpdateDate":1478294180000,"creationDate":1482937059621,"lastModifiedDate":1482937059621,"endpoints":[{"id":114,"externalId":"12","endpointType":{"id":3,"name":"Retrieve Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":114,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/retrieveDocumentSet","externalLastUpdateDate":1478623432000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":112,"externalId":"11","endpointType":{"id":2,"name":"Query for Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":112,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/documentQuery","externalLastUpdateDate":1478623421000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":113,"externalId":"10","endpointType":{"id":1,"name":"Patient Discovery"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":113,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/patientDiscovery","externalLastUpdateDate":1478623380000,"creationDate":1482942461119,"lastModifiedDate":1482942461119}]},"documentsQueryStatus":"Successful","documentsQueryStart":1482942461118,"documentsQueryEnd":1482942487857,
-                                           "documents":[{"id":"4","cached":false,"endpointMapId":4,"patient":null,"status":null,"className":"SUMMARIZATION OF EPISODE NOTE","confidentiality":"Normal","format":"HL7 CCD Document","name":"Physical Test","description":null,"size":"35452","creationTime":"20080516","identifier":{"homeCommunityId":"urn:oid:2.16.840.1.113883.3.166","repositoryUniqueId":"2.16.840.1.113883.3.166.3.1","documentUniqueId":"129.6.58.92.147"}},
-                                                        {"id":"5","cached":false,"endpointMapId":4,"patient":null,"status":null,"className":"ALLERGY NOTE","confidentiality":"High","format":"HL7 CCD Document","name":"Hospital Admission","description":null,"size":"35400","creationTime":"20080515","identifier":{"homeCommunityId":"urn:oid:2.16.840.1.113883.3.166","repositoryUniqueId":"2.16.840.1.113883.3.166.3.1","documentUniqueId":"129.6.58.92.146"}}]},
-                                          {"id":3,"patientId":2,"endpoint":{"id":2,"externalId":"2","status":{"id":1,"name":"Active"},"parentOrgName":"John Muir Health Foundation","name":"John Muir Medical Center (Walnut Creek)","description":"Primary Walnut Creek-based hospital facility within the John Muir Health healthcare provider organization","type":"Hospital","address":{"id":null,"lines":["1601 Ygnacio Valley Rd"],"city":"Walnut Creek","state":"CA","zipcode":"94598","country":null},"externalLastUpdateDate":1478294180000,"creationDate":1482937059621,"lastModifiedDate":1482937059621,"endpoints":[{"id":114,"externalId":"12","endpointType":{"id":3,"name":"Retrieve Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":114,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/retrieveDocumentSet","externalLastUpdateDate":1478623432000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":112,"externalId":"11","endpointType":{"id":2,"name":"Query for Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":112,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/documentQuery","externalLastUpdateDate":1478623421000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":113,"externalId":"10","endpointType":{"id":1,"name":"Patient Discovery"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":113,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/patientDiscovery","externalLastUpdateDate":1478623380000,"creationDate":1482942461119,"lastModifiedDate":1482942461119}]},"documentsQueryStatus":"Active","documentsQueryStart":1482942445668,"documentsQueryEnd":1482942483726,
-                                           "documents":[{"id":"3","cached":false,"endpointMapId":3,"patient":null,"status":null,"className":"SUMMARIZATION OF EPISODE NOTE","confidentiality":"Normal","format":"HL7 CCD Document","name":"Physical Test","description":null,"size":"35452","creationTime":"20080516","identifier":{"homeCommunityId":"urn:oid:2.16.840.1.113883.3.166","repositoryUniqueId":"2.16.840.1.113883.3.166.3.1","documentUniqueId":"129.6.58.92.147"}}]}]},
-                         {"id":1,"endpointPatientId":null,"fullName":"Jane Doe","friendlyName":"Jane","dateOfBirth":1484629200000,"gender":"Female","phoneNumber":null,"ssn":null,"lastRead":1482941898443,"acf":{"id":178,"name":"Del Norte-03","phoneNumber":null,"address":null,"lastRead":1482942622025},
-                          "endpointMaps":[{"id":1,"patientId":1,"endpoint":{"id":1,"externalId":"1","status":{"id":1,"name":"Active"},"parentOrgName":"John Muir Health Foundation","name":"John Muir Medical Center","description":"Concord-based hospital facility within the John Muir Health healthcare provider organization","type":"Hospital","address":{"id":null,"lines":["2540 East St"],"city":"Concord","state":"CA","zipcode":"94520","country":null},"externalLastUpdateDate":1478294131000,"creationDate":1482937059621,"lastModifiedDate":1482937059621,"endpoints":[{"id":110,"externalId":"3","endpointType":{"id":3,"name":"Retrieve Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":110,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/retrieveDocumentSet","externalLastUpdateDate":1478623432000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":109,"externalId":"1","endpointType":{"id":1,"name":"Patient Discovery"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":109,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/patientDiscovery","externalLastUpdateDate":1478623380000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":111,"externalId":"2","endpointType":{"id":2,"name":"Query for Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":111,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/documentQuery","externalLastUpdateDate":1478623421000,"creationDate":1482942461119,"lastModifiedDate":1482942461119}]},"documentsQueryStatus":"Failed","documentsQueryStart":1482941898469,"documentsQueryEnd":1482941898924,
-                                           "documents":[]},
-                                          {"id":2,"patientId":1,"endpoint":{"id":2,"externalId":"2","status":{"id":1,"name":"Active"},"parentOrgName":"John Muir Health Foundation","name":"John Muir Medical Center (Walnut Creek)","description":"Primary Walnut Creek-based hospital facility within the John Muir Health healthcare provider organization","type":"Hospital","address":{"id":null,"lines":["1601 Ygnacio Valley Rd"],"city":"Walnut Creek","state":"CA","zipcode":"94598","country":null},"externalLastUpdateDate":1478294180000,"creationDate":1482937059621,"lastModifiedDate":1482937059621,"endpoints":[{"id":114,"externalId":"12","endpointType":{"id":3,"name":"Retrieve Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":114,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/retrieveDocumentSet","externalLastUpdateDate":1478623432000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":112,"externalId":"11","endpointType":{"id":2,"name":"Query for Documents"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":112,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/documentQuery","externalLastUpdateDate":1478623421000,"creationDate":1482942461119,"lastModifiedDate":1482942461119},{"id":113,"externalId":"10","endpointType":{"id":1,"name":"Patient Discovery"},"endpointStatus":{"id":1,"name":"Active"},"adapter":"eHealthExchange","mimeTypes":[{"id":113,"mimeType":"application/xml"}],"payloadType":"HL7 CCD Document","publicKey":"MIIDxDCCAqygAwIBAgIBAjANBgkqhkiG9w0BAQsFADB7MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTE/MD0GA1UECgw2Q2FsaWZvcm5pYSBBc3NvY2lhdGlvbiBvZiBIZWFsdGggSW5mb3JtYXRpb24gRXhjaGFuZ2VzMRYwFAYDVQQDDA1GaWN0aXRpb3VzIENBMB4XDTE2MTEwNzE1NDAzOVoXDTE4MTEwNzE1NDAzOVowUzELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExGjAYBgNVBAoMEUthaXNlciBQZXJtYW5lbnRlMRMwEQYDVQQDDAplaHgua3Aub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4zh+5F1uN2EK9VCUTGyJYfvAZ2I5Bq5qCntftsks5jR+RIe1WVukVUpjFIFr8QdtmdTI5Wmpgndbh+Pj8E3yHvdXTxosfWtCbxdrAAFfvjQ0PZzVpFHEYP/rCAy0/1lHDEdrNC9C3NNdM6GECdtITuCq7qsK5LJgopITcuvOZYXAOlqMLzXpJ8xsEueoTxIQFhY7SPt5Nl2rprSMJuoltF3ARZ+qU3fmiM4vPrSAJzcUjehu60LMUilwKwS6DEbYai2uJXjavsrWkg3TOcSGPwTD3IoOPjPo/z2QZ41zkD/uVDe1w+UtyjWqQaFaOfNByl0rfWDUhpZarqvEoYG1xwIDAQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQUmkEG1ij7vvcTpF3//Q0IcWyfoXAwHwYDVR0jBBgwFoAUhLxiknJV2lU6HddLzPbXXqzKMT4wDQYJKoZIhvcNAQELBQADggEBAFgMqoBuWBQcHCFrDgyqceQdD9FXzbAIAxHwox6dpd1G4R5/bencf9YlALv9yOJNWz93GJ2fAtimGCICYYek1GmnK6dJ2BvBndygP8qE1Bbvv5/5yfxkm54TMR5mQrllZbPq8HFAJKnipP4PkThjjVWrttgKlklQjdjvEFkfuFth+DKkUZalgQ9WMN6nUxNCeTTOtmsWZqp0GDQQfxmhuk4/7lE33F6OkY9zQTT49UJbtITeSsvr9fzV449wjcR91MyX3zkybDe+Qlih0eR+FJDSJn5XjjSFkNOLgwb25R7U2wfFkVd69N/VW+Bvj6QsW+kg7mUdvOreIX7w1XwzmFo=","url":"http://localhost:9080/patientDiscovery","externalLastUpdateDate":1478623380000,"creationDate":1482942461119,"lastModifiedDate":1482942461119}]},"documentsQueryStatus":"Successful","documentsQueryStart":1482941898497,"documentsQueryEnd":1482941928329,
-                                           "documents":[{"id":"2","cached":false,"endpointMapId":2,"patient":null,"status":null,"className":"ALLERGY NOTE","confidentiality":"High","format":"HL7 CCD Document","name":"Hospital Admission","description":null,"size":"35400","creationTime":"20080515","identifier":{"homeCommunityId":"urn:oid:2.16.840.1.113883.3.166","repositoryUniqueId":"2.16.840.1.113883.3.166.3.1","documentUniqueId":"129.6.58.92.146"}},
-                                                        {"id":"1","cached":false,"endpointMapId":2,"patient":null,"status":null,"className":"SUMMARIZATION OF EPISODE NOTE","confidentiality":"Normal","format":"HL7 CCD Document","name":"Physical Test","description":null,"size":"35452","creationTime":"20080516","identifier":{"homeCommunityId":"urn:oid:2.16.840.1.113883.3.166","repositoryUniqueId":"2.16.840.1.113883.3.166.3.1","documentUniqueId":"129.6.58.92.147"}}]}]}];
         beforeEach(function () {
             module('pulse.mock', 'portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
@@ -59,9 +47,16 @@
                 $q = _$q_;
                 $uibModal = _$uibModal_;
                 Mock = _Mock_;
-                mock.documentList = [].concat(Mock.patients[0].endpointMaps[0].documents).concat(mock.patients[0].endpointMaps[1].documents).concat(mock.patients[0].endpointMaps[2].documents);
+                Mock.patients[0].endpointMaps[1].documentsQueryStatus = 'Active';
+                mock.documentList = []
+                    .concat(Mock.patients[0].endpointMaps[0].documents)
+                    .concat(Mock.patients[0].endpointMaps[1].documents)
+                    .concat(Mock.patients[0].endpointMaps[2].documents)
+                    .concat(Mock.patients[0].endpointMaps[3].documents)
+                    .concat(Mock.patients[0].endpointMaps[4].documents)
+                    .concat(Mock.patients[0].endpointMaps[5].documents);
                 for (var i = 0; i < mock.documentList.length; i++) {
-                    mock.documentList[i].endpoint = Mock.patients[0].endpointMaps[0].endpoint.locations[0].parentOrgName;
+                    mock.documentList[i].organization = Mock.patients[0].endpointMaps[0].endpoint.locations[0].parentOrgName;
                 }
                 spyOn($uibModal, 'open').and.callFake(function (options) {
                     actualOptions = options;
@@ -71,7 +66,7 @@
                 commonService.cacheDocument.and.returnValue($q.when({data: ''}));
                 commonService.convertDobString.and.returnValue('fake');
                 commonService.dischargePatient.and.returnValue($q.when({}));
-                commonService.displayName.and.returnValue(mock.patients[0].givenName + ' ' + mock.patients[0].familyName);
+                commonService.displayName.and.returnValue(Mock.patients[0].givenName + ' ' + Mock.patients[0].familyName);
                 commonService.getDocument.and.returnValue($q.when(angular.copy(mock.fakeDocument)));
                 commonService.getPatientsAtAcf.and.returnValue($q.when(angular.copy(Mock.patients)));
                 commonService.getUserAcf.and.returnValue(mock.userAcf);
@@ -102,7 +97,7 @@
         });
 
         it('should have a way to cache a document', function () {
-            var cachedDocPatients = angular.copy(mock.patients);
+            var cachedDocPatients = angular.copy(Mock.patients);
             cachedDocPatients[0].endpointMaps[0].documents[0].cached = true;
             commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
 
@@ -112,7 +107,7 @@
             vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
             el.isolateScope().$digest();
 
-            expect(commonService.cacheDocument).toHaveBeenCalledWith(2, '4');
+            expect(commonService.cacheDocument).toHaveBeenCalledWith(3, '16');
             expect(vm.patients[0].endpointMaps[0].documents[0].cached).toBe(true);
         });
 
@@ -124,17 +119,17 @@
         });
 
         it('should know when a document is actively being cached', function () {
-            var cachedDocPatients = angular.copy(mock.patients);
+            var cachedDocPatients = angular.copy(Mock.patients);
             cachedDocPatients[0].endpointMaps[0].documents[0].status = 'Active';
             commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
 
             vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
             el.isolateScope().$digest();
-            expect(vm.patients[0].documentStatus).toEqual({total: 3, cached: 0, active: 1});
+            expect(vm.patients[0].documentStatus).toEqual({total: 12, cached: 0, active: 1});
         });
 
         it('should not try to cache the same document twice', function () {
-            var cachedDocPatients = angular.copy(mock.patients);
+            var cachedDocPatients = angular.copy(Mock.patients);
             cachedDocPatients[0].endpointMaps[0].documents[0].cached = true;
             commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
 
@@ -154,7 +149,7 @@
             vm.getDocument(patient, patient.endpointMaps[0].documents[0]);
             el.isolateScope().$digest();
 
-            expect(commonService.getDocument).toHaveBeenCalledWith(2, '4');
+            expect(commonService.getDocument).toHaveBeenCalledWith(3, '16');
             expect(vm.activeDocument).toEqual(patient.endpointMaps[0].documents[0]);
         });
 
@@ -171,7 +166,7 @@
         it('should have a way to discharge patients', function () {
             // given a patient in the queue
             expect(vm.patients.length).toBe(2);
-            var result = angular.copy(mock.patients);
+            var result = angular.copy(Mock.patients);
             result.splice(0,1);
 
             commonService.getPatientsAtAcf.and.returnValue($q.when(result));
@@ -185,7 +180,7 @@
 
         it('should call commonService.dischargePatient on discharge', function () {
             vm.dischargePatient(vm.patients[0]);
-            expect(commonService.dischargePatient).toHaveBeenCalledWith(2);
+            expect(commonService.dischargePatient).toHaveBeenCalledWith(3);
         });
 
         it('should know the user\'s ACF', function () {
@@ -215,29 +210,29 @@
 
         it('should know if a patient\'s documents are cached', function () {
             var patient = vm.patients[0];
-            expect(patient.documentStatus).toEqual({total: 3, cached: 0, active: 0});
+            expect(patient.documentStatus).toEqual({total: 12, cached: 0, active: 0});
         });
 
         it('should know how many documents a patient has', function () {
-            var cachedDocPatients = angular.copy(mock.patients);
+            var cachedDocPatients = angular.copy(Mock.patients);
             cachedDocPatients[0].endpointMaps[0].documents[0].cached = true;
             commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
 
             vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
             el.isolateScope().$digest();
-            expect(vm.patients[0].documentStatus).toEqual({total: 3, cached: 1, active: 0});
+            expect(vm.patients[0].documentStatus).toEqual({total: 12, cached: 1, active: 0});
         });
 
         it('should know how many document queries are active', function () {
             expect(vm.countActive).toBeDefined();
             expect(vm.countActive(vm.patients[0])).toBe(1);
-            vm.patients[0].endpointMaps[1].documentsQueryStatus = 'Successful';
+            vm.patients[0].endpointMaps[1].documentsQueryStatus = 'Complete';
             expect(vm.countActive(vm.patients[0])).toBe(0);
         });
 
         it('should combine the documents for a patient', function () {
             expect(vm.patients[0].documents.length).toBe(mock.documentList.length);
-            expect(vm.patients[0].documents).toEqual(mock.documentList);
+            //expect(vm.patients[0].documents).toEqual(mock.documentList);
             expect(vm.patients[0].documents[0]).toEqual(mock.documentList[0]);
         });
 
@@ -256,19 +251,19 @@
 
         it('should change the title when a patient is activated', function () {
             vm.activatePatient(vm.patients[1]);
-            expect(vm.panelTitle).toBe('Patient: Jane Doe (Jane)');
+            expect(vm.panelTitle).toBe('Patient: James Dean (Jim)');
         });
 
         it('should handle a missing friendly name', function () {
             vm.patients[1].friendlyName = null;
             vm.activatePatient(vm.patients[1]);
-            expect(vm.panelTitle).toBe('Patient: Jane Doe');
+            expect(vm.panelTitle).toBe('Patient: James Dean');
         });
 
         it('should set the active patient when activated', function () {
             expect(vm.activePatient).toBeNull();
             vm.activatePatient(vm.patients[0]);
-            expect(vm.activePatient.id).toEqual(mock.patients[0].id);
+            expect(vm.activePatient.id).toEqual(Mock.patients[0].id);
         });
 
         it('should have a way to deactivate the patient', function () {
@@ -303,7 +298,7 @@
         });
 
         it('should change the title when the number of patients changes', function () {
-            commonService.getPatientsAtAcf.and.returnValue($q.when([mock.patients[1]]));
+            commonService.getPatientsAtAcf.and.returnValue($q.when([Mock.patients[1]]));
             // when first result is cleared
             vm.dischargePatient(vm.patients[0]);
             el.isolateScope().$digest();
