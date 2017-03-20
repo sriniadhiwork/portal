@@ -89,9 +89,13 @@
                 expect(vm.getRecordCount(vm.patientQueries[0])).toBe(0);
             });
 
+            it('should handle an undefined query', function () {
+                expect(vm.getRecordCount(undefined)).toBe(0);
+            });
+
             it('should put the recordCount into the query at load', function () {
                 expect(vm.patientQueries[0].recordCount).toBe(0);
-                expect(vm.patientQueries[1].recordCount).toBe(2);
+                expect(vm.patientQueries[1].recordCount).toBe(3);
             });
 
             it('should know how many endpoints are complete for a query', function () {
@@ -210,7 +214,7 @@
 
             it('should call commonService.clearEndpointQuery', function () {
                 vm.cancelQueryEndpoint(vm.patientQueries[0].endpointStatuses[0]);
-                expect(commonService.cancelQueryEndpoint).toHaveBeenCalledWith(vm.patientQueries[0].id, vm.patientQueries[0].endpointStatuses[0].id);
+                expect(commonService.cancelQueryEndpoint).toHaveBeenCalledWith(vm.patientQueries[0].id, vm.patientQueries[0].endpointStatuses[0].endpoint.id);
             });
 
             it('should set the endpoint status to "pending" when clearing', function () {
@@ -299,7 +303,7 @@
 
             it('should call commonService.requeryEndpoint when requeried', function () {
                 vm.requeryEndpoint(Mock.queries[0].endpointStatuses[0]);
-                expect(commonService.requeryEndpoint).toHaveBeenCalledWith(4,10);
+                expect(commonService.requeryEndpoint).toHaveBeenCalledWith(4,1);
             });
 
             it('should refresh local queries when requeried', function () {

@@ -56,7 +56,7 @@
 
             function cancelQueryEndpoint (endpointStatus) {
                 endpointStatus.isClearing = true;
-                commonService.cancelQueryEndpoint(endpointStatus.queryId, endpointStatus.id);
+                commonService.cancelQueryEndpoint(endpointStatus.queryId, endpointStatus.endpoint.id);
             }
 
             function clearQuery (query) {
@@ -109,7 +109,7 @@
 
             function requeryEndpoint (endpoint) {
                 endpoint.isRequerying = true;
-                commonService.requeryEndpoint(endpoint.queryId, endpoint.id).then(function () {
+                commonService.requeryEndpoint(endpoint.queryId, endpoint.endpoint.id).then(function () {
                     vm.getQueries();
                 });
             }

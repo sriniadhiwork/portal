@@ -105,7 +105,7 @@
             beforeEach(function () {
                 vm.query = angular.copy(mock.query);
                 vm.query.endpointStatuses[1].results[0].selected = true;
-                vm.query.endpointStatuses[1].results[1] = {selected: false};
+                //vm.query.endpointStatuses[1].results[1] = {selected: false};
                 vm.patient = angular.copy(mock.queriedPatient);
                 patientStage = {
                     patientRecordIds: [1],
@@ -120,14 +120,12 @@
                 });
 
                 it('should call commonService.stagePatient when stagePatient is called', function () {
-                    vm.query.endpointStatuses[1].results[0].selected = true;
                     vm.stagePatient();
                     scope.$digest();
                     expect(commonService.stagePatient).toHaveBeenCalledWith(patientStage);
                 });
 
                 it('should show an error if stage goes wrong', function () {
-                    vm.query.endpointStatuses[1].results[0].selected = true;
                     commonService.stagePatient.and.returnValue($q.reject({data: mock.badRequest}));
                     vm.stagePatient();
                     scope.$digest();
@@ -135,7 +133,6 @@
                 });
 
                 it('should close the modal after staging the patient', function () {
-                    vm.query.endpointStatuses[1].results[0].selected = true;
                     vm.stagePatient();
                     expect(mock.modalInstance.close).toHaveBeenCalled();
                 });
@@ -163,10 +160,10 @@
 
                 it('should have a way to mark all records at a endpoint as valid', function () {
                     vm.query.endpointStatuses[1].results[0].selected = false;
-                    vm.selectAll(vm.query.endpointStatuses[0]);
+                    vm.selectAll(vm.query.endpointStatuses[1]);
                     expect(vm.query.endpointStatuses[1].results[0].selected).toBe(true);
                     expect(vm.query.endpointStatuses[1].results[1].selected).toBe(true);
-                    vm.selectAll(vm.query.endpointStatuses[0]);
+                    vm.selectAll(vm.query.endpointStatuses[1]);
                     expect(vm.query.endpointStatuses[1].results[0].selected).toBe(false);
                     expect(vm.query.endpointStatuses[1].results[1].selected).toBe(false);
                 });

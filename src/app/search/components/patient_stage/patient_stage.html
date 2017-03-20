@@ -39,8 +39,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat-start="endpoint in vm.query.endpointStatuses | orderBy:['location.name','location.id'] track by location.location.id" ng-if="endpoint.results && endpoint.results.length > 0">
-            <td rowspan="{{ endpoint.results.length }}" href ng-click="vm.selectAll(endpoint)">{{ endpoint.location.name }}</td>
+          <tr ng-repeat-start="endpoint in vm.query.endpointStatuses | orderBy:'endpoint.id' track by endpoint.id" ng-if="endpoint.results && endpoint.results.length > 0">
+            <td rowspan="{{ endpoint.results.length }}" href ng-click="vm.selectAll(endpoint)">
+              <strong>{{ endpoint.endpoint.locations[0].parentOrgName }}</strong>
+              <ul class="" ng-repeat="location in endpoint.endpoint.locations | orderBy:['location.name','location.id'] track by location.id">
+                <li>{{ location.name }}</li>
+              </ul>
+            </td>
             <td href ng-click="endpoint.results[0].selected = !endpoint.results[0].selected" ng-bind-html="vm.displayNames(endpoint.results[0].patientRecordName)"></td>
             <td href ng-click="endpoint.results[0].selected = !endpoint.results[0].selected">{{ endpoint.results[0].gender.description }}</td>
             <td href ng-click="endpoint.results[0].selected = !endpoint.results[0].selected">{{ vm.convertDobString(endpoint.results[0].dateOfBirth) }}</td>
