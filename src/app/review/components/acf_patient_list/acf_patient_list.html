@@ -9,7 +9,7 @@
     </div>
     <div class="panel-body slide" ng-if="!vm.hidePanel">
       <div class="row" ng-if="!vm.patients || vm.patients.length === 0">
-        <div class="col-sm-12">No active patients currently at <strong>{{ vm.userAcf.name }}</strong></div>
+        <div class="col-sm-12">No active patients currently at <strong>{{ vm.userAcf.identifier }}</strong></div>
       </div>
       <div class="row" ng-if="vm.activePatient === null">
         <div class="col-sm-4" ng-repeat="patient in vm.patients | orderBy : 'lastRead' : 'reverse' track by patient.id">
@@ -60,13 +60,13 @@
           <table class="table table-condensed" st-table="vm.documents" st-safe-src="vm.activePatient.documents">
             <thead>
               <tr>
-                <th scope="col" st-sort="cached" st-skip-natural="true" class="st-sort">Status</th>
-                <th scope="col" st-sort="name" st-skip-natural="true" class="st-sort">Title</th>
-                <th scope="col" st-sort="className" st-skip-natural="true" class="st-sort">Class Name</th>
-                <th scope="col" st-sort="confidentiality" st-skip-natural="true" class="st-sort">Confidentiality </th>
-                <th scope="col" st-sort="creationTime" st-skip-natural="true" class="st-sort" st-sort-default="reverse">Creation Date</th>
-                <th scope="col" st-sort="size" st-skip-natural="true" class="st-sort">Size</th>
-                <th scope="col" st-sort="location" st-skip-natural="true" class="st-sort">Location</th>
+                <th scope="col" st-sort="['cached','className','id']" st-skip-natural="true" class="st-sort">Status</th>
+                <th scope="col" st-sort="['name','className','id']" st-skip-natural="true" class="st-sort">Title</th>
+                <th scope="col" st-sort="['className','id']" st-skip-natural="true" class="st-sort">Class Name</th>
+                <th scope="col" st-sort="['confidentiality','className','id']" st-skip-natural="true" class="st-sort">Confidentiality </th>
+                <th scope="col" st-sort="['creationTime','className','id']" st-skip-natural="true" class="st-sort" st-sort-default="reverse">Creation Date</th>
+                <th scope="col" st-sort="['size','className','id']" st-skip-natural="true" class="st-sort">Size</th>
+                <th scope="col" st-sort="['organization','className','id']" st-skip-natural="true" class="st-sort">Organization</th>
               </tr>
             </thead>
             <tbody>
@@ -82,7 +82,7 @@
                 <td>{{ doc.confidentiality }}</td>
                 <td>{{ vm.translateDate(doc.creationTime) | date : 'mediumDate' : 'UTC' }}</td>
                 <td>{{ doc.size | bytes }}</td>
-                <td>{{ doc.location }}</td>
+                <td>{{ doc.organization }}</td>
               </tr>
             </tbody>
           </table>

@@ -12,7 +12,7 @@
         var ACF_LOCATION_IN_IDENTITY = 7;
 
         self.cacheDocument = cacheDocument;
-        self.cancelQueryLocation = cancelQueryLocation;
+        self.cancelQueryEndpoint = cancelQueryEndpoint;
         self.clearQuery = clearQuery;
         self.clearToken = clearToken;
         self.convertDobString = convertDobString;
@@ -27,7 +27,7 @@
         self.getAcfs = getAcfs;
         self.getAnalytics = getAnalytics;
         self.getDocument = getDocument;
-        self.getLocationStatistics = getLocationStatistics;
+        self.getEndpointStatistics = getEndpointStatistics;
         self.getQueries = getQueries;
         self.getPatientsAtAcf = getPatientsAtAcf;
         self.getSamlUserToken = getSamlUserToken;
@@ -39,9 +39,9 @@
         self.hasAcf = hasAcf;
         self.isAuthenticated = isAuthenticated;
         self.logout = logout;
-        self.queryLocations = queryLocations;
+        self.queryEndpoints = queryEndpoints;
         self.refreshToken = refreshToken;
-        self.requeryLocation = requeryLocation;
+        self.requeryEndpoint = requeryEndpoint;
         self.saveToken = saveToken;
         self.searchForPatient = searchForPatient;
         self.searchForPatientDocuments = searchForPatientDocuments;
@@ -54,8 +54,8 @@
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId);
         }
 
-        function cancelQueryLocation (queryId, locationMapId) {
-            return enhancedPost('/queries/' + queryId + '/locationMap/' + locationMapId + '/cancel', {});
+        function cancelQueryEndpoint (queryId, endpointId) {
+            return enhancedPost('/queries/' + queryId + '/endpoint/' + endpointId + '/cancel', {});
         }
 
         function clearQuery (queryId) {
@@ -152,8 +152,8 @@
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId + '?cacheOnly=false');
         }
 
-        function getLocationStatistics () {
-            return enhancedGet('/locations/statistics');
+        function getEndpointStatistics () {
+            return enhancedGet('/endpoints/statistics');
         }
 
         function getQueries () {
@@ -270,8 +270,8 @@
             $window.location.replace(LogoutRedirect);
         }
 
-        function queryLocations () {
-            return enhancedGet('/locations');
+        function queryEndpoints () {
+            return enhancedGet('/endpoints');
         }
 
         function refreshToken () {
@@ -292,8 +292,8 @@
             });
         }
 
-        function requeryLocation (queryId, locationMapId) {
-            return enhancedPost('/requery/query/' + queryId + '/locationMap/' + locationMapId, {});
+        function requeryEndpoint (queryId, endpointId) {
+            return enhancedPost('/queries/' + queryId + '/endpoint/' + endpointId + '/requery', {});
         }
 
         function saveToken (token) {

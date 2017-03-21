@@ -49,15 +49,16 @@
         }
 
         function isStageable () {
-            var ret = false;
-            if (vm.query && vm.query.locationStatuses) {
-                for (var i = 0; i < vm.query.locationStatuses.length; i++) {
-                    for (var j = 0; j < vm.query.locationStatuses[i].results.length; j++) {
-                        ret = ret || vm.query.locationStatuses[i].results[j].selected;
+            if (vm.query && vm.query.endpointStatuses) {
+                for (var i = 0; i < vm.query.endpointStatuses.length; i++) {
+                    for (var j = 0; j < vm.query.endpointStatuses[i].results.length; j++) {
+                        if (vm.query.endpointStatuses[i].results[j].selected) {
+                            return true;
+                        }
                     }
                 }
             }
-            return ret;
+            return false;
         }
 
         function prepopulate () {
@@ -75,9 +76,9 @@
             };
         }
 
-        function selectAll (location) {
-            for (var i = 0; i < location.results.length; i++) {
-                location.results[i].selected = !location.results[i].selected;
+        function selectAll (endpoint) {
+            for (var i = 0; i < endpoint.results.length; i++) {
+                endpoint.results[i].selected = !endpoint.results[i].selected;
             }
         }
 
@@ -89,10 +90,10 @@
                     patient: vm.patient,
                     id: vm.query.id
                 };
-                for (var i = 0; i < vm.query.locationStatuses.length; i++) {
-                    for (var j = 0; j < vm.query.locationStatuses[i].results.length; j++) {
-                        if (vm.query.locationStatuses[i].results[j].selected) {
-                            newPatient.patientRecordIds.push(vm.query.locationStatuses[i].results[j].id);
+                for (var i = 0; i < vm.query.endpointStatuses.length; i++) {
+                    for (var j = 0; j < vm.query.endpointStatuses[i].results.length; j++) {
+                        if (vm.query.endpointStatuses[i].results[j].selected) {
+                            newPatient.patientRecordIds.push(vm.query.endpointStatuses[i].results[j].id);
                         }
                     }
                 }

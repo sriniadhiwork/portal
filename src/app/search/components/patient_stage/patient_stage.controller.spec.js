@@ -2,33 +2,12 @@
     'use strict';
 
     describe('search.aiPatientStage', function () {
-        var vm, scope, $log, $uibModal, $q, commonService, mock, actualOptions;
+        var vm, scope, $log, $uibModal, $q, commonService, mock, Mock, actualOptions;
 
-        mock = {query: {"id":13,"userToken":"fake@sample.com","status":"Complete","terms":{"dob":"19990502","ssn":"123-12-1234","gender":"M","zip":null,"telephone":null,"addresses":null,"patientNames":[{"id":null,"suffix":null,"prefix":null,"profSuffix":null,"nameType":{"id":null,"code":"L","description":"Legal Name"},"nameRepresentation":null,"nameAssembly":null,"effectiveDate":null,"expirationDate":null,"familyName":"Doe","givenName":["John"]}]},"lastRead":1483642184101,"locationStatuses":[{id:14,queryId:7,locationId:2,status:'Complete',startDate:1469130142755,endDate:1469130535902,success:true,results:[{id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}]},{id:13,queryId:7,locationId:3,status:'Complete',startDate:1469130142749,endDate:1469130535909,success:false,results:[]},{id:15,queryId:7,locationId:1,status:'Complete',startDate:1469130142761,endDate:1469130535907,success:false,results:[]}]}};
+        mock = {};
         mock.badRequest = {
             status: 500,
             error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement'
-        };
-        mock.fakeModal = {
-            result: {
-                then: function (confirmCallback, cancelCallback) {
-                    this.confirmCallBack = confirmCallback;
-                    this.cancelCallback = cancelCallback;
-                }},
-            close: function (item) { this.result.confirmCallBack(item); },
-            dismiss: function (type) { this.result.cancelCallback(type); }
-        };
-        mock.fakeModalOptions = {
-            templateUrl: 'app/search/components/patient_stage_details/patient_stage_details.html',
-            controller: 'PatientStageDetailsController',
-            controllerAs: 'vm',
-            animation: false,
-            backdrop: 'static',
-            keyboard: false,
-            size: 'md',
-            resolve: {
-                record: jasmine.any(Function)
-            }
         };
         mock.modalInstance = {
             close: jasmine.createSpy('close'),
@@ -40,33 +19,42 @@
             givenName: ['Bob']
         };
         mock.queriedPatient = {
-            dateOfBirth: '19990502',
-            dateOfBirthParts: { year: '1999', month: '05', day: '02' },
-            fullName: 'John Doe',
+            dateOfBirth: '19910405',
+            dateOfBirthParts: { year: '1991', month: '04', day: '05' },
+            fullName: 'Bob Jones',
             gender: 'M',
             ssn: '123-12-1234'
         };
 
         beforeEach(function () {
-            module('portal', function ($provide) {
+            module('pulse.mock', 'portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.clearQuery = jasmine.createSpy('clearQuery');
                     $delegate.stagePatient = jasmine.createSpy('stagePatient');
                     return $delegate;
                 });
             });
-            inject(function ($controller, $rootScope, _$log_, _$uibModal_,_$q_, _commonService_) {
+            inject(function ($controller, $rootScope, _$log_, _$uibModal_,_$q_, _commonService_, _Mock_) {
                 $log = _$log_;
                 $uibModal = _$uibModal_;
+                $q = _$q_;
+                Mock = _Mock_;
                 spyOn($uibModal, 'open').and.callFake(function (options) {
                     actualOptions = options;
-                    return mock.fakeModal;
+                    return Mock.fakeModal;
                 });
-                $q = _$q_;
                 commonService = _commonService_;
                 commonService.clearQuery.and.returnValue($q.when({}));
                 commonService.stagePatient.and.returnValue($q.when({}));
+                mock.query = Mock.queries[1];
                 mock.queriedPatient.dateOfBirthString = commonService.convertDobString(mock.queriedPatient.dateOfBirth),
+                mock.fakeModalOptions = Mock.fakeModalOptions;
+                mock.fakeModalOptions.templateUrl = 'app/search/components/patient_stage_details/patient_stage_details.html';
+                mock.fakeModalOptions.controller = 'PatientStageDetailsController';
+                mock.fakeModalOptions.size = 'md';
+                mock.fakeModalOptions.resolve = {
+                    record: jasmine.any(Function)
+                }
 
                 scope = $rootScope.$new();
                 vm = $controller('PatientStageController', {
@@ -116,8 +104,8 @@
 
             beforeEach(function () {
                 vm.query = angular.copy(mock.query);
-                vm.query.locationStatuses[0].results[0].selected = true;
-                vm.query.locationStatuses[0].results[1] = {selected: false};
+                vm.query.endpointStatuses[1].results[0].selected = true;
+                //vm.query.endpointStatuses[1].results[1] = {selected: false};
                 vm.patient = angular.copy(mock.queriedPatient);
                 patientStage = {
                     patientRecordIds: [1],
@@ -132,14 +120,12 @@
                 });
 
                 it('should call commonService.stagePatient when stagePatient is called', function () {
-                    vm.query.locationStatuses[0].results[0].selected = true;
                     vm.stagePatient();
                     scope.$digest();
                     expect(commonService.stagePatient).toHaveBeenCalledWith(patientStage);
                 });
 
                 it('should show an error if stage goes wrong', function () {
-                    vm.query.locationStatuses[0].results[0].selected = true;
                     commonService.stagePatient.and.returnValue($q.reject({data: mock.badRequest}));
                     vm.stagePatient();
                     scope.$digest();
@@ -147,13 +133,12 @@
                 });
 
                 it('should close the modal after staging the patient', function () {
-                    vm.query.locationStatuses[0].results[0].selected = true;
                     vm.stagePatient();
                     expect(mock.modalInstance.close).toHaveBeenCalled();
                 });
 
                 it('should not call commonService.stagePatient if there are no selected records', function () {
-                    vm.query.locationStatuses[0].results[0].selected = false;
+                    vm.query.endpointStatuses[1].results[0].selected = false;
                     vm.stagePatient();
                     expect(commonService.stagePatient).not.toHaveBeenCalled();
                 });
@@ -164,23 +149,23 @@
 
                 it('should only be stageable if at least one record is selected', function () {
                     expect(vm.isStageable()).toBe(true);
-                    vm.query.locationStatuses[0].results[0].selected = false;
+                    vm.query.endpointStatuses[1].results[0].selected = false;
                     expect(vm.isStageable()).toBe(false);
                 });
 
-                it('should not be stageable if there are no locationStatuses', function () {
-                    delete vm.query.locationStatuses;
+                it('should not be stageable if there are no endpointStatuses', function () {
+                    delete vm.query.endpointStatuses;
                     expect(vm.isStageable()).toBe(false);
                 });
 
-                it('should have a way to mark all records at a location as valid', function () {
-                    vm.query.locationStatuses[0].results[0].selected = false;
-                    vm.selectAll(vm.query.locationStatuses[0]);
-                    expect(vm.query.locationStatuses[0].results[0].selected).toBe(true);
-                    expect(vm.query.locationStatuses[0].results[1].selected).toBe(true);
-                    vm.selectAll(vm.query.locationStatuses[0]);
-                    expect(vm.query.locationStatuses[0].results[0].selected).toBe(false);
-                    expect(vm.query.locationStatuses[0].results[1].selected).toBe(false);
+                it('should have a way to mark all records at a endpoint as valid', function () {
+                    vm.query.endpointStatuses[1].results[0].selected = false;
+                    vm.selectAll(vm.query.endpointStatuses[1]);
+                    expect(vm.query.endpointStatuses[1].results[0].selected).toBe(true);
+                    expect(vm.query.endpointStatuses[1].results[1].selected).toBe(true);
+                    vm.selectAll(vm.query.endpointStatuses[1]);
+                    expect(vm.query.endpointStatuses[1].results[0].selected).toBe(false);
+                    expect(vm.query.endpointStatuses[1].results[1].selected).toBe(false);
                 });
 
                 it('should update the dateOfBirth with the model values', function () {
@@ -210,22 +195,22 @@
 
                 it('should create a modal instance when record details are viewed', function () {
                     expect(vm.viewRecordDetailsInstance).toBeUndefined();
-                    vm.viewRecordDetails(vm.query.locationStatuses[0].results[0]);
+                    vm.viewRecordDetails(vm.query.endpointStatuses[0].results[0]);
                     expect(vm.viewRecordDetailsInstance).toBeDefined();
                     expect($uibModal.open).toHaveBeenCalledWith(mock.fakeModalOptions);
-                    expect(actualOptions.resolve.record()).toEqual(vm.query.locationStatuses[0].results[0]);
+                    expect(actualOptions.resolve.record()).toEqual(vm.query.endpointStatuses[0].results[0]);
                 });
 
                 it('should log that the details was closed', function () {
                     var initialCount = $log.info.logs.length;
-                    vm.viewRecordDetails(vm.query.locationStatuses[0].results[0]);
+                    vm.viewRecordDetails(vm.query.endpointStatuses[0].results[0]);
                     vm.viewRecordDetailsInstance.close('closed');
                     expect($log.info.logs.length).toBe(initialCount + 1);
                 });
 
                 it('should log that the details was closed', function () {
                     var initialCount = $log.info.logs.length;
-                    vm.viewRecordDetails(vm.query.locationStatuses[0].results[0]);
+                    vm.viewRecordDetails(vm.query.endpointStatuses[0].results[0]);
                     vm.viewRecordDetailsInstance.dismiss('dismissed');
                     expect($log.info.logs.length).toBe(initialCount + 1);
                 });

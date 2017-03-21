@@ -28,16 +28,19 @@
                   <td>{{ query.terms.gender }}</td>
                   <td>{{ query.lastRead | date : 'medium' }}</td>
                   <td>
-                    <uib-progress max="query.locationStatuses.length" ng-if="query.status !== 'Complete'">
-                      <uib-bar class="progress-striped active" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} location<span ng-if="vm.countComplete(query) > 1">s</span> complete</i></uib-bar>
-                      <uib-bar class="progress-striped active" value="query.locationStatuses.length - vm.countComplete(query)" type="info"><i>{{ query.locationStatuses.length - vm.countComplete(query) }} location<span ng-if="query.locationStatuses.length - vm.countComplete(query) > 1">s</span> pending</i></uib-bar>
+                    <uib-progress max="query.endpointStatuses.length" ng-if="query.status !== 'Complete'">
+                      <uib-bar class="progress-striped active" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} organization<span ng-if="vm.countComplete(query) > 1">s</span> complete</i></uib-bar>
+                      <uib-bar class="progress-striped active" value="query.endpointStatuses.length - vm.countComplete(query)" type="info"><i>{{ query.endpointStatuses.length - vm.countComplete(query) }} organization<span ng-if="query.endpointStatuses.length - vm.countComplete(query) > 1">s</span> pending</i></uib-bar>
                     </uib-progress>
                     <uib-progressbar ng-click="query.viewDetails = !query.viewDetails" class="progress-striped-no" ng-if="query.status === 'Complete'" value="100" type="{{ query.recordCount > 0 ? 'success' : 'danger' }}"><i>{{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> found</i></uib-progressbar>
                     <div ng-if="query.status !== 'Complete' || query.viewDetails">
-                      <div ng-repeat="location in query.locationStatuses | orderBy:['location.name','location.id'] track by location.location.id">
-                        {{ location.location.name }}: {{ location.status }}<span ng-if="location.status === 'Successful'">, {{ location.results.length }} record<span ng-if="location.results.length !== 1">s</span> found</span>
-                        <button ng-if="location.status === 'Active'" class="btn btn-sm pull-right" ng-class="location.isClearing ? 'btn-warning' : 'btn-danger'" ng-click="vm.cancelQueryLocation(location)" ng-disabled="location.isClearing"><i class="fa" ng-class="location.isClearing ? 'fa-spinner fa-spin' : 'fa-ban'"></i><span class="sr-only">Cancel query for {{ location.location.name }}</span></button>
-                        <button ng-if="location.status !== 'Active'" class="btn btn-sm pull-right" ng-class="location.isRequerying ? 'btn-warning' : 'btn-primary'" ng-click="vm.requeryLocation(location)" ng-disabled="location.isRequerying"><i class="fa" ng-class="location.isRequerying ? 'fa-spinner fa-spin' : 'fa-refresh'"></i><span class="sr-only">Refresh query for {{ location.location.name }}</span></button>
+                      <div ng-repeat="endpoint in query.endpointStatuses | orderBy:'endpoint.id' track by endpoint.id">
+                        <button ng-if="endpoint.status === 'Active'" class="btn btn-sm pull-right" ng-class="endpoint.isClearing ? 'btn-warning' : 'btn-danger'" ng-click="vm.cancelQueryEndpoint(endpoint)" ng-disabled="endpoint.isClearing"><i class="fa" ng-class="endpoint.isClearing ? 'fa-spinner fa-spin' : 'fa-ban'"></i><span class="sr-only">Cancel query for {{ endpoint.endpoint.locations[0].parentOrgName }}</span></button>
+                        <button ng-if="endpoint.status !== 'Active'" class="btn btn-sm pull-right" ng-class="endpoint.isRequerying ? 'btn-warning' : 'btn-primary'" ng-click="vm.requeryEndpoint(endpoint)" ng-disabled="endpoint.isRequerying"><i class="fa" ng-class="endpoint.isRequerying ? 'fa-spinner fa-spin' : 'fa-refresh'"></i><span class="sr-only">Refresh query for {{ endpoint.endpoint.locations[0].parentOrgName }}</span></button>
+                        <strong>{{ endpoint.endpoint.locations[0].parentOrgName }}</strong>: {{ endpoint.status }}<span ng-if="endpoint.status === 'Successful'">, {{ endpoint.results.length }} record<span ng-if="endpoint.results.length !== 1">s</span> found</span>
+                        <ul class="" ng-repeat="location in endpoint.endpoint.locations | orderBy:['name','id'] track by location.id">
+                          <li>{{ location.name }}</li>
+                        </ul>
                         <div class="clearfix"></div>
                       </div>
                     </div>

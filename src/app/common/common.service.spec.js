@@ -33,7 +33,7 @@
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
         mock.fakeDocument = {data: '<document><made><of>XML</of></made></document'};
         mock.newAcf = {name: 'New ACF'};
-        mock.locations = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
+        mock.endpoints = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
         mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
         mock.patientQueryResponse = {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]};
         mock.stagePatient = { patientRecords: [0,1], id: 1, patient: { givenName: 'Joe', familyName: 'Watson' } };
@@ -63,9 +63,14 @@
             GAAPI = _GAAPI_;
             delete($localStorage.jwtToken);
 
+            /*
+             * /queries/:queryId/endpoint//cancel
+             * /queries/:queryId/endpoint/: endpointStatuses[0].endpoint.id /cancel
+             * /queries/:queryId/endpoint/: endpointStatuses[0].endpoint.id /requery
+             */
             spyOn($window.location, 'replace');
             requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
-            requestHandler.cancelQueryLocation = $httpBackend.whenPOST(API + '/queries/1/locationMap/2/cancel', {}).respond(200, true);
+            requestHandler.cancelQueryEndpoint = $httpBackend.whenPOST(API + '/queries/1/endpoint/2/cancel', {}).respond(200, true);
             requestHandler.clearQuery = $httpBackend.whenPOST(API + '/queries/1/delete', {}).respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
             requestHandler.dischargePatient = $httpBackend.whenPOST(API + '/patients/1/delete', {}).respond(200, true);
@@ -74,15 +79,14 @@
             requestHandler.getAcfs = $httpBackend.whenGET(API + '/acfs').respond(200, {results: mock.acfs});
             requestHandler.getAcf = $httpBackend.whenGET(API + '/acfs/1').respond(200, mock.acfs[0]);
             requestHandler.getDocument = $httpBackend.whenGET(API + '/patients/3/documents/2?cacheOnly=false').respond(200, mock.fakeDocument);
-            requestHandler.getLocations = $httpBackend.whenGET(API + '/locations').respond(200, {results: mock.locations});
-            requestHandler.getLocationStatistics = $httpBackend.whenGET(API + '/locations/statistics').respond(200, {results: mock.locations});
+            requestHandler.getEndpoints = $httpBackend.whenGET(API + '/endpoints').respond(200, {results: mock.endpoints});
+            requestHandler.getEndpointStatistics = $httpBackend.whenGET(API + '/endpoints/statistics').respond(200, {results: mock.endpoints});
             requestHandler.getQueries = $httpBackend.whenGET(API + '/queries').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getPatientsAtAcf = $httpBackend.whenGET(API + '/patients').respond(200, {results: mock.patientQueryResponse});
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
             requestHandler.refreshToken = $httpBackend.whenPOST(AuthAPI + '/jwt/keepalive', mock.acfs[0]).respond(200, {token: mock.token});
-            requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/3/location/4', {}).respond(200, {results: mock.patientQueryResponse});
-            requestHandler.requeryLocation = $httpBackend.whenPOST(API + '/requery/query/3/locationMap/4', {}).respond(200, {results: mock.patientQueryResponse});
+            requestHandler.requeryEndpoint = $httpBackend.whenPOST(API + '/queries/3/endpoint/4/requery', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
             requestHandler.stagePatient = $httpBackend.whenPOST(API + '/queries/1/stage', mock.stagePatient).respond(200, {});
 
@@ -317,11 +321,11 @@
                 $httpBackend.flush();
             });
 
-            it('should call /queries/queryid/locationMap/locationmapid/cancel', function () {
-                commonService.cancelQueryLocation(1,2);
+            it('should call /queries/queryid/endpoint/endpointmapid/cancel', function () {
+                commonService.cancelQueryEndpoint(1,2);
                 $httpBackend.flush();
-                requestHandler.cancelQueryLocation.respond(401, {error: 'test'});
-                commonService.cancelQueryLocation(1,2).then(function (response) {
+                requestHandler.cancelQueryEndpoint.respond(401, {error: 'test'});
+                commonService.cancelQueryEndpoint(1,2).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
@@ -367,21 +371,21 @@
                 $httpBackend.flush();
             });
 
-            it('should call /locations', function () {
-                commonService.queryLocations();
+            it('should call /endpoints', function () {
+                commonService.queryEndpoints();
                 $httpBackend.flush();
-                requestHandler.getLocations.respond(401, {error: 'test'});
-                commonService.queryLocations().then(function (response) {
+                requestHandler.getEndpoints.respond(401, {error: 'test'});
+                commonService.queryEndpoints().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
             });
 
-            it('should call /locations/statistics', function () {
-                commonService.getLocationStatistics();
+            it('should call /endpoints/statistics', function () {
+                commonService.getEndpointStatistics();
                 $httpBackend.flush();
-                requestHandler.getLocationStatistics.respond(401, {error: 'test'});
-                commonService.getLocationStatistics().then(function (response) {
+                requestHandler.getEndpointStatistics.respond(401, {error: 'test'});
+                commonService.getEndpointStatistics().then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();
@@ -491,11 +495,11 @@
                 $httpBackend.flush();
             });
 
-            it('should call /requery/query/{queryId}/locationMap/{locationMapId}', function () {
-                commonService.requeryLocation(3,4);
+            it('should call /queries/{queryId}/endpoint/{endpointId}/requery', function () {
+                commonService.requeryEndpoint(3,4);
                 $httpBackend.flush();
-                requestHandler.requeryLocation.respond(401, {error: 'a rejection'});
-                commonService.requeryLocation(3,4).then(function (response) {
+                requestHandler.requeryEndpoint.respond(401, {error: 'a rejection'});
+                commonService.requeryEndpoint(3,4).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();

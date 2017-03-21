@@ -39,21 +39,26 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat-start="location in vm.query.locationStatuses | orderBy:['location.name','location.id'] track by location.location.id" ng-if="location.results && location.results.length > 0">
-            <td rowspan="{{ location.results.length }}" href ng-click="vm.selectAll(location)">{{ location.location.name }}</td>
-            <td href ng-click="location.results[0].selected = !location.results[0].selected" ng-bind-html="vm.displayNames(location.results[0].patientRecordName)"></td>
-            <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].gender.description }}</td>
-            <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ vm.convertDobString(location.results[0].dateOfBirth) }}</td>
-            <td href ng-click="location.results[0].selected = !location.results[0].selected">{{ location.results[0].ssn }}</td>
+          <tr ng-repeat-start="endpoint in vm.query.endpointStatuses | orderBy:'endpoint.id' track by endpoint.id" ng-if="endpoint.results && endpoint.results.length > 0">
+            <td rowspan="{{ endpoint.results.length }}" href ng-click="vm.selectAll(endpoint)">
+              <strong>{{ endpoint.endpoint.locations[0].parentOrgName }}</strong>
+              <ul class="" ng-repeat="location in endpoint.endpoint.locations | orderBy:['name','id'] track by location.id">
+                <li>{{ location.name }}</li>
+              </ul>
+            </td>
+            <td href ng-click="endpoint.results[0].selected = !endpoint.results[0].selected" ng-bind-html="vm.displayNames(endpoint.results[0].patientRecordName)"></td>
+            <td href ng-click="endpoint.results[0].selected = !endpoint.results[0].selected">{{ endpoint.results[0].gender.description }}</td>
+            <td href ng-click="endpoint.results[0].selected = !endpoint.results[0].selected">{{ vm.convertDobString(endpoint.results[0].dateOfBirth) }}</td>
+            <td href ng-click="endpoint.results[0].selected = !endpoint.results[0].selected">{{ endpoint.results[0].ssn }}</td>
             <td align="center">
-              <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(location.results[0])"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
+              <button class="btn btn-success btn-sm" ng-click="vm.viewRecordDetails(endpoint.results[0])"><i class="fa fa-search"></i><span class="sr-only">View Details</span></button>
             </td>
             <td align="center">
-              <label class="sr-only" for="recordSelect-{{ location.results[0].id }}" ng-bind-html="vm.displayNames(location.results[0].patientRecordName)"></label>
-              <input id="recordSelect-{{ location.results[0].id }}" type="checkbox" ng-model="location.results[0].selected">
+              <label class="sr-only" for="recordSelect-{{ endpoint.results[0].id }}" ng-bind-html="vm.displayNames(endpoint.results[0].patientRecordName)"></label>
+              <input id="recordSelect-{{ endpoint.results[0].id }}" type="checkbox" ng-model="endpoint.results[0].selected">
             </td>
           </tr>
-          <tr ng-repeat-end ng-repeat="record in location.results.slice(1)">
+          <tr ng-repeat-end ng-repeat="record in endpoint.results.slice(1)">
             <td href ng-click="record.selected = !record.selected" ng-bind-html="vm.displayNames(record.patientRecordName)"></td>
             <td href ng-click="record.selected = !record.selected">{{ record.gender.description }}</td>
             <td href ng-click="record.selected = !record.selected">{{ vm.convertDobString(record.dateOfBirth) }}</td>
@@ -68,7 +73,8 @@
           </tr>
         </tbody>
       </table>
-    </div>    <h3>Combined PULSE Patient</h3>
+    </div>
+    <h3>Combined PULSE Patient</h3>
     <div class="form-horizontal" ng-form="vm.queryForm">
       <div class="form-group">
         <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.queryForm.fullName.$touched) && vm.queryForm.fullName.$error.required }">

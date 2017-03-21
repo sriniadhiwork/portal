@@ -32,7 +32,7 @@
         function PatientReviewController($log, $scope, $timeout, $uibModal, commonService, QueryQueryTimeout) {
             var vm = this;
 
-            vm.cancelQueryLocation = cancelQueryLocation;
+            vm.cancelQueryEndpoint = cancelQueryEndpoint;
             vm.clearQuery = clearQuery;
             vm.convertDobString = commonService.convertDobString;
             vm.countComplete = countComplete;
@@ -41,7 +41,7 @@
             vm.getQueries = getQueries;
             vm.getRecordCount = getRecordCount;
             vm.requery = requery;
-            vm.requeryLocation = requeryLocation;
+            vm.requeryEndpoint = requeryEndpoint;
             vm.stagePatient = stagePatient;
 
             vm.TIMEOUT_MILLIS = QueryQueryTimeout * 1000;
@@ -54,9 +54,9 @@
                 vm.getQueries();
             }
 
-            function cancelQueryLocation (locationStatus) {
-                locationStatus.isClearing = true;
-                commonService.cancelQueryLocation(locationStatus.queryId, locationStatus.id);
+            function cancelQueryEndpoint (endpointStatus) {
+                endpointStatus.isClearing = true;
+                commonService.cancelQueryEndpoint(endpointStatus.queryId, endpointStatus.endpoint.id);
             }
 
             function clearQuery (query) {
@@ -68,8 +68,8 @@
 
             function countComplete (query) {
                 var count = 0;
-                for (var i = 0; i < query.locationStatuses.length; i++) {
-                    if (query.locationStatuses[i].status !== 'Active') {
+                for (var i = 0; i < query.endpointStatuses.length; i++) {
+                    if (query.endpointStatuses[i].status !== 'Active') {
                         count += 1;
                     }
                 }
@@ -92,8 +92,10 @@
 
             function getRecordCount (query) {
                 var recordCount = 0;
-                for (var i = 0; i < query.locationStatuses.length; i++) {
-                    recordCount += query.locationStatuses[i].results.length;
+                if (query) {
+                    for (var i = 0; i < query.endpointStatuses.length; i++) {
+                        recordCount += query.endpointStatuses[i].results.length;
+                    }
                 }
                 return recordCount;
             }
@@ -105,9 +107,9 @@
                 vm.clearQuery(query);
             }
 
-            function requeryLocation (location) {
-                location.isRequerying = true;
-                commonService.requeryLocation(location.queryId, location.id).then(function () {
+            function requeryEndpoint (endpoint) {
+                endpoint.isRequerying = true;
+                commonService.requeryEndpoint(endpoint.queryId, endpoint.endpoint.id).then(function () {
                     vm.getQueries();
                 });
             }
