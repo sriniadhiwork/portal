@@ -1,0 +1,94 @@
+<div class="container-fluid names">
+  <div class="form-horizontal" ng-form="vm.activeForm">
+    <div ng-repeat="name in vm.names track by $index">
+      <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.activeForm.given0.$touched) && vm.activeForm.given0.$error.required }">
+        <label for="given0" class="control-label col-sm-4">First <span class="text-danger">*</span></label>
+        <div class="col-sm-8">
+          <div class="input-group">
+            <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.givenName[0]" id="given0" name="given0" placeholder="First" required></input>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-sm btn-default" ng-click="vm.addGiven(name)" ng-if="name.givenName.length === 1"><i class="fa fa-plus"></i><span class="sr-only">Add new first name</span></button>
+              <button type="button" class="btn btn-sm btn-default" ng-click="vm.removeGiven(name, 0)" ng-if="name.givenName.length > 1"><i class="fa fa-trash"></i><span class="sr-only">Remove current first name</span></button>
+            </span>
+          </div>
+          <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.activeForm.given0.$touched) && vm.activeForm.given0.$error.required">Field is required</span>
+        </div>
+      </div>
+      <div class="form-group" ng-repeat="given in name.givenName.slice(1) track by $index">
+        <label for="given{{ $index + 1 }}" class="control-label col-sm-4">{{ $index + 2 | ordinal }}</label>
+        <div class="col-sm-8">
+          <div class="input-group">
+            <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.givenName[$index + 1]" id="given{{ $index + 1 }}" name="given{{ $index + 1 }}" placeholder="{{ $index + 2 | ordinal}}"></input>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-sm btn-default" ng-click="vm.addGiven(name)" ng-if="name.givenName.length === $index + 2"><i class="fa fa-plus"></i><span class="sr-only">Add new given name</span></button>
+              <button type="button" class="btn btn-sm btn-default" ng-click="vm.removeGiven(name, $index + 1)" ng-if="name.givenName.length > 1"><i class="fa fa-trash"></i><span class="sr-only">Remove current given name</span></button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error' : (vm.showFormErrors || vm.activeForm.family.$touched) && vm.activeForm.family.$error.required }">
+        <label for="family" class="control-label col-sm-4">Last <span class="text-danger">*</span></label>
+        <div class="col-sm-8">
+          <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.familyName" id="family" name="family" placeholder="Last" required></input>
+          <span class="text-danger form-control-static" ng-if="(vm.showFormErrors || vm.activeForm.family.$touched) && vm.activeForm.family.$error.required">Field is required</span>
+        </div>
+      </div>
+      <div ng-if="name.showAdditional">
+        <div class="form-group">
+          <label for="prefix{{ $index }}" class="control-label col-sm-4">Prefix</label>
+          <div class="col-sm-8">
+            <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.prefix" id="prefix{{ $index }}" name="prefix{{ $index }}"></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="suffix{{ $index }}" class="control-label col-sm-4">Suffix</label>
+          <div class="col-sm-8">
+            <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.suffix" id="suffix{{ $index }}" name="suffix{{ $index }}"></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="profSuffix{{ $index }}" class="control-label col-sm-4">Professional Suffix</label>
+          <div class="col-sm-8">
+            <input class="input-sm form-control" type="text" ng-keyup="$event.keyCode == 13 && vm.submitForm()" ng-model="name.profSuffix" id="profSuffix{{ $index }}" name="profSuffix{{ $index }}"></input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="nameType{{ $index }}" class="control-label col-sm-4">Name Type</label>
+          <div class="col-sm-8">
+            <select class="input-sm form-control" ng-model="name.nameType" id="nameType{{ $index }}" name="nameType{{ $index }}" required
+                    ng-options="item as item.description for item in vm.nameTypes">
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="nameRepresentation{{ $index }}" class="control-label col-sm-4">Name Representation</label>
+          <div class="col-sm-8">
+            <select class="input-sm form-control" ng-model="name.nameRepresentation" id="nameRepresentation{{ $index }}" name="nameRepresentation{{ $index }}"
+                    ng-options="item as item.description for item in vm.nameRepresentations">
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="nameAssembly{{ $index }}" class="control-label col-sm-4">Name Assembly Order</label>
+          <div class="col-sm-8">
+            <select class="input-sm form-control" ng-model="name.nameAssembly" id="nameAssembly{{ $index }}" name="nameAssembly{{ $index }}"
+                    ng-options="item as item.description for item in vm.nameAssemblies">
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row" ng-if="name.familyName && name.givenName[0].length > 0">
+        <div class="col-sm-12">
+          Assembled Name: {{ vm.displayName(name) }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 text-right">
+          <button type="button" class="btn btn-default" ng-click="vm.removeName($index)" ng-if="vm.names.length > 1"><span class="sr-only">Remove this name </span><i class="fa fa-trash"></i></button>
+          <button type="button" class="btn btn-default" ng-click="vm.addName()" ng-if="vm.names.length === $index + 1"><span class="sr-only">Add new name </span><i class="fa fa-plus"></i></button>
+          <button type="button" class="btn btn-default" ng-click="name.showAdditional = !name.showAdditional"><span class="sr-only">{{ name.showAdditional ? 'Hide' : 'See' }} additional parameters </span><i class="fa" ng-class="name.showAdditional ? 'fa-caret-up' : 'fa-caret-down'"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

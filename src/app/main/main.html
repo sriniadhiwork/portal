@@ -1,34 +1,29 @@
-<div class="container-fluid">
-
-  <div>
-    <acme-navbar creation-date="main.creationDate"></acme-navbar>
-  </div>
-
-  <div class="jumbotron text-center">
-    <h1>'Allo, 'Allo!</h1>
-    <p class="lead">
-      <img src="assets/images/yeoman.png" alt="I'm Yeoman"><br>
-      Always a pleasure scaffolding your apps.
-    </p>
-    <p>
-      <button type="button" class="btn btn-lg btn-success animated infinite" ng-class="main.classAnimation" ng-click="main.showToastr()">Splendid Toastr</button>
-    </p>
-    <p>
-      With <i class="fa fa-heart fa-spin"></i> thanks to the contributions of<acme-malarkey extra-values="['Yeoman', 'Gulp', 'Angular']"></acme-malarkey>
-    </p>
-  </div>
-
-  <div class="row">
-    <div class="col-sm-6 col-md-4" ng-repeat="awesomeThing in main.awesomeThings | orderBy:'rank'">
-      <div class="thumbnail">
-        <img class="pull-right" ng-src="assets/images/{{ awesomeThing.logo }}" alt="{{ awesomeThing.title }}">
-        <div class="caption">
-          <h3>{{ awesomeThing.title }}</h3>
-          <p>{{ awesomeThing.description }}</p>
-          <p><a ng-href="{{awesomeThing.url}}">{{ awesomeThing.url }}</a></p>
-        </div>
+<div class="container-fluid main-page hidden-print">
+  <header>
+    <ai-navbar active="home"></ai-navbar>
+  </header>
+  <div ng-if="!vm.isAuthenticated()" class="fake-login">
+    <div class="row has-background">
+      <div class="col-sm-6 col-sm-offset-3">
+        <form role="log in" method="get" action="{{ vm.authAction }}" id="dhvForm" name="dhvForm">
+          <input type="hidden" name="idp" id="idp" value="https://california.demo.collaborativefusion.com/sso/saml2/idp/" dom-on-create="vm.redirectToDhv()"></input>
+        </form>
+        <h2>Logging into PULSE...<i class="fa fa-spinner fa-spin"></i></h2>
       </div>
     </div>
   </div>
-
+  <div ng-if="vm.isAuthenticated()">
+    <div class="row has-background">
+      <div class="col-sm-6 col-sm-offset-3">
+        <ai-acf mode="select">
+        </ai-acf>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <ai-footer></ai-footer>
+  </footer>
+</div>
+<div class="visible-print-block">
+  PULSE does not support printing of this page
 </div>

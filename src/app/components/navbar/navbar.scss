@@ -1,18 +1,31 @@
-.acme-navbar-text{
-    color: white !important;
+$top-nav-height: 120px;
+
+body {
+    margin-top: $top-nav-height;
 }
 
-a {
-    color: black;
-}
+header {
 
-h1 {
-    font-size: 2em;
-    margin: 0;
-    line-height: 1.25em;
-}
+    .navbar-default {
+        background-color: rgb(255,255,255);
+    }
 
-a:hover,
-a:focus {
-    color: greenyellow;
+    .navbar {
+        min-height: $top-nav-height;
+        border-bottom: 4px solid #3e7685;
+        max-height: $top-nav-height;
+
+        img {
+            max-height: $top-nav-height;
+            width: 100%;
+        }
+
+        li.dropdown {
+            background-color: rgb(255,255,255);
+        }
+
+        .dropdown-menu {
+            width: $screen-xs * 2 / 3;
+        }
+    }
 }

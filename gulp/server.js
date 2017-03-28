@@ -23,16 +23,33 @@ function browserSyncInit(baseDir, browser) {
 
     var server = {
         baseDir: baseDir,
+        https: true,
         routes: routes
     };
 
     /*
      * For more details and option, https://github.com/chimurai/http-proxy-middleware/blob/v0.9.0/README.md
      */
-    server.middleware = proxyMiddleware('/rest', {target: 'http://localhost:8080/service', changeOrigin: true});
+    server.middleware = [
+        proxyMiddleware('/rest', {
+            target: 'https://localhost:9090/',
+            pathRewrite: { '^/rest' : '/' },
+            changeOrigin: true,
+            secure: false, // TODO want to change this when we get an SSL cert thats not self signed,
+            rejectUnauthorized: false
+        }),
+        proxyMiddleware('/auth', {
+            target: 'https://localhost:8080/',
+            pathRewrite: { '^/auth' : '' },
+            changeOrigin: true,
+            secure: false,
+            rejectUnauthorized: false
+        })
+    ];
 
     browserSync.instance = browserSync.init({
         startPath: '/',
+        notify: false,
         open: false,
         server: server,
         browser: browser

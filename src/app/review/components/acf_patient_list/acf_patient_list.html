@@ -1,0 +1,93 @@
+<div class="container-fluid acf-patient-list">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <div class="pull-right">
+        <button class="btn btn-sm panel-button" ng-click="vm.hidePanel = !vm.hidePanel"><i class="fa fa-lg {{ vm.hidePanel ? 'fa-caret-right' : 'fa-caret-down' }}"></i><span class="sr-only">{{ vm.hidePanel ? 'Show' : 'Hide' }} Panel</span></button>
+      </div>
+      <h2 class="panel-title">{{ vm.panelTitle }}</h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="panel-body slide" ng-if="!vm.hidePanel">
+      <div class="row" ng-if="!vm.patients || vm.patients.length === 0">
+        <div class="col-sm-12">No active patients currently at <strong>{{ vm.userAcf.identifier }}</strong></div>
+      </div>
+      <div class="row" ng-if="vm.activePatient === null">
+        <div class="col-sm-4" ng-repeat="patient in vm.patients | orderBy : 'lastRead' : 'reverse' track by patient.id">
+          <h3>{{ patient.fullName }}
+            <div class="btn-group btn-group-sm pull-right">
+              <button class="btn btn-success" ng-click="vm.activatePatient(patient)"><i class="fa fa-search"></i><span class="sr-only">Activate {{ patient.fullName }}</span></button>
+              <button class="btn btn-primary" ng-click="vm.editPatient(patient)"><i class="fa fa-pencil-square-o"></i><span class="sr-only">Edit {{ patient.fullName }}</span></button>
+            </div>
+          </h3>
+          <uib-progress max="patient.documentStatus.total + vm.countActive(patient)">
+            <uib-bar value="patient.documentStatus.cached" type="success"><i>{{ patient.documentStatus.cached }} / {{ patient.documentStatus.total }} document<span ng-if="patient.documentStatus.total !== 1">s</span> cached</i></uib-bar>
+            <uib-bar value="patient.documentStatus.active" type="warning"><i>{{ patient.documentStatus.active }} document<span ng-if="patient.documentStatus.active !== 1">s</span> pending</i></uib-bar>
+            <uib-bar value="patient.documentStatus.total - patient.documentStatus.cached - patient.documentStatus.active" type="info"><i>{{ patient.documentStatus.total - patient.documentStatus.cached - patient.documentStatus.active }} document<span ng-if="patient.documentStatus.total - patient.documentStatus.cached - patient.documentStatus.active !== 1">s</span> available</i></uib-bar>
+            <uib-bar value="vm.countActive(patient)" type="warning"><i>{{ vm.countActive(patient) }} location<span ng-if="vm.countActive(patient) > 1">s</span> pending</i></uib-bar>
+          </uib-progress>
+          Last accessed: {{ patient.lastRead | date : 'medium' }}
+        </div>
+      </div>
+      <div class="row" ng-if="vm.activePatient !== null">
+        <div class="col-sm-12">
+          <div class="btn-group btn-group-sm pull-right">
+            <button class="btn btn-primary" ng-click="vm.editPatient(vm.activePatient)"><i class="fa fa-pencil-square-o"></i> Edit<span class="sr-only"> {{ vm.activePatient }}</span></button>
+            <button class="btn btn-danger"
+                    confirm="Are you sure you'd like to discharge this Patient?"
+                    confirm-title="Confirmation"
+                    confirm-ok="Yes"
+                    confirm-cancel="No"
+                    confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
+                    ng-click="vm.dischargePatient(vm.activePatient)"><i class="fa fa-sign-out"></i> Discharge<span class="sr-only"> {{ vm.activePatient.fullName }}</span></button>
+            <button class="btn btn-warning" ng-click="vm.deactivatePatient()"><i class="fa fa-close"></i> Deactivate<span class="sr-only"> {{ vm.activePatient.fullName }}</span></button>
+          </div>
+          <h3>{{ vm.activePatient.fullName }}<span ng-if="vm.activePatient.friendlyName && vm.activePatient.friendlyName.length > 0"> ({{ vm.activePatient.friendlyName }})</span></h3>
+          <table class="table table-striped">
+            <tr>
+              <th scope="row">Gender</th>
+              <td>{{ vm.activePatient.gender }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Date of Birth</th>
+              <td>{{ vm.convertDobString(vm.activePatient.dateOfBirth) }}</td>
+            </tr>
+            <tr>
+              <th scope="row">SSN</th>
+              <td>{{ vm.activePatient.ssn }}</td>
+            </tr>
+          </table>
+          </ul>
+          <table class="table table-condensed" st-table="vm.documents" st-safe-src="vm.activePatient.documents">
+            <thead>
+              <tr>
+                <th scope="col" st-sort="['cached','className','id']" st-skip-natural="true" class="st-sort">Status</th>
+                <th scope="col" st-sort="['name','className','id']" st-skip-natural="true" class="st-sort">Title</th>
+                <th scope="col" st-sort="['className','id']" st-skip-natural="true" class="st-sort">Class Name</th>
+                <th scope="col" st-sort="['confidentiality','className','id']" st-skip-natural="true" class="st-sort">Confidentiality </th>
+                <th scope="col" st-sort="['creationTime','className','id']" st-skip-natural="true" class="st-sort" st-sort-default="reverse">Creation Date</th>
+                <th scope="col" st-sort="['size','className','id']" st-skip-natural="true" class="st-sort">Size</th>
+                <th scope="col" st-sort="['organization','className','id']" st-skip-natural="true" class="st-sort">Organization</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="doc in vm.documents track by doc.id" ng-class="{ 'active' : vm.activeDocument === doc }">
+                <td>
+                  <button ng-if="!doc.cached && !doc.status" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
+                  <button ng-if="!doc.cached && doc.status === 'Failed'" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
+                  <button ng-if="doc.status === 'Active'" disabled class="btn btn-warning btn-sm"><span class="sr-only">Pending </span><i class="fa fa-spinner fa-spin"></i></button>
+                  <button ng-if="doc.cached" ng-click="vm.getDocument(vm.activePatient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
+                </td>
+                <td>{{ doc.name }}</td>
+                <td>{{ doc.className }}</td>
+                <td>{{ doc.confidentiality }}</td>
+                <td>{{ vm.translateDate(doc.creationTime) | date : 'mediumDate' : 'UTC' }}</td>
+                <td>{{ doc.size | bytes }}</td>
+                <td>{{ doc.organization }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

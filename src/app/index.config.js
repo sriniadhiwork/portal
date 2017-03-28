@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -6,16 +6,13 @@
         .config(config);
 
     /** @ngInject */
-    function config($logProvider, toastrConfig) {
+    function config($logProvider, $httpProvider, IdleProvider, KeepaliveProvider, KeepaliveInterval, IdleTimeout, IdleWarn) {
         // Enable log
         $logProvider.debugEnabled(true);
 
-        // Set options third-party lib
-        toastrConfig.allowHtml = true;
-        toastrConfig.timeOut = 3000;
-        toastrConfig.positionClass = 'toast-top-right';
-        toastrConfig.preventDuplicates = true;
-        toastrConfig.progressBar = true;
+        // Idle/keepalive settings
+        IdleProvider.idle(60 * IdleTimeout); // duration in seconds
+        IdleProvider.timeout(60 * IdleWarn); // warning time in seconds
+        KeepaliveProvider.interval(60 * KeepaliveInterval); // duration in seconds
     }
-
 })();

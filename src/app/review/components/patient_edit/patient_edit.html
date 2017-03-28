@@ -1,0 +1,140 @@
+<div class="patient-edit" role="modal" aria-labeled-by="titleLabel">
+  <div class="modal-header">
+    <button class="btn btn-default pull-right" aria-label="Cancel edits"
+            ng-click="vm.cancel()"><i class="fa fa-close"></i><span class="sr-only">Close modal</span></button>
+    <h2 class="modal-title" id="titleLabel">Patient Editing</h2>
+  </div>
+  <div class="modal-body">
+    <h3>PULSE Patient</h3>
+    <div class="form-horizontal" ng-form="vm.editForm">
+      <div class="form-group">
+        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.editForm.fullName.$touched) && vm.editForm.fullName.$error.required }">
+          <label for="fullName" class="col-sm-2 control-label">Full Name <span class="text-danger">*</span></label>
+          <div class="col-sm-4">
+            <input class="form-control" type="text" ng-model="vm.patient.fullName" id="fullName" name="fullName" required>
+            <span class="text-danger" ng-if="(vm.showFormErrors || vm.editForm.fullName.$touched) && vm.editForm.fullName.$error.required">Field is required</span>
+          </div>
+        </div>
+        <div>
+          <label for="friendlyName" class="col-sm-2 control-label">Friendly Name</label>
+          <div class="col-sm-4">
+            <input class="form-control" type="text" ng-model="vm.patient.friendlyName" id="friendlyName" name="friendlyName">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.editForm.gender.$touched) && vm.editForm.gender.$error.required }">
+          <label for="gender" class="col-sm-2 control-label">Gender <span class="text-danger">*</span></label>
+          <div class="col-sm-4">
+            <select class="form-control" ng-model="vm.patient.gender" id="gender" name="gender" required>
+              <option value="F">Female</option>
+              <option value="M">Male</option>
+              <option value="UN">Undifferentiated</option>
+            </select>
+            <span class="text-danger" ng-if="(vm.showFormErrors || vm.editForm.gender.$touched) && vm.editForm.gender.$error.required">Field is required</span>
+          </div>
+        </div>
+        <div>
+          <label for="ssn" class="col-sm-2 control-label">SSN</label>
+          <div class="col-sm-4">
+            <input class="form-control" type="text" ng-model="vm.patient.ssn" id="ssn" name="ssn">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div ng-class="{ 'has-error' : (vm.showFormErrors || vm.editForm.dobYear.$touched) && vm.editForm.dobYear.$error.required }">
+          <label class="col-sm-2 control-label">Date of Birth <span class="text-danger">*</span></label>
+          <div class="col-sm-4">
+            <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.editForm.dobMonth.$touched && vm.patient.dateOfBirthParts.month.length !== 2)) && vm.editForm.dobMonth.$error.required }">
+              <label class="sr-only" for="dobMonth">Month</label>
+              <select class="form-control" ng-model="vm.patient.dateOfBirthParts.month"
+                      id="dobMonth" name="dobMonth" required>
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+              <span class="text-danger" ng-if="(vm.showFormErrors || (vm.editForm.dobMonth.$touched && vm.query.dob.month.length !== 2)) && vm.editForm.dobMonth.$error.required">Field is required</span>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.editForm.dobDay.$touched && vm.patient.dateOfBirthParts.day.length !== 2)) && vm.editForm.dobDay.$error.required }">
+              <label class="sr-only" for="dobDay">Day</label>
+              <select class="form-control" ng-model="vm.patient.dateOfBirthParts.day"
+                      id="dobDay" name="dobDay" required>
+                <option value="01">1</option>
+                <option value="02">2</option>
+                <option value="03">3</option>
+                <option value="04">4</option>
+                <option value="05">5</option>
+                <option value="06">6</option>
+                <option value="07">7</option>
+                <option value="08">8</option>
+                <option value="09">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+              </select>
+              <span class="text-danger" ng-if="(vm.showFormErrors || (vm.editForm.dobDay.$touched && vm.patient.dateOfBirthParts.day.length !== 2)) && vm.editForm.dobDay.$error.required">Field is required</span>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <label class="sr-only" for="dobYear">Year</label>
+            <input class="form-control" type="text" ng-model="vm.patient.dateOfBirthParts.year" placeholder="yyyy"
+                   ng-pattern="/^\d{4}$/"
+                   id="dobYear" name="dobYear" required>
+            <span class="text-danger" ng-if="(vm.showFormErrors || vm.editForm.dobYear.$touched) && !vm.editForm.dobYear.$error.required && !vm.editForm.dobYear.$valid">yyyy</span>
+            <span class="text-danger" ng-if="(vm.showFormErrors || vm.editForm.dobYear.$touched) && vm.editForm.dobYear.$error.required">Field is required</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="row">
+      <div class="col-sm-10">
+        <ul class="list-unstyled text-left text-danger" ng-if="vm.editForm.$invalid && vm.showFormErrors">
+          <li ng-if="vm.editForm.fullName.$error.required">Full Name is required</li>
+          <li ng-if="vm.editForm.gender.$error.required">Gender is required</li>
+          <li ng-if="vm.editForm.dobYear.$error.required">Date of Birth is required</li>
+        </ul>
+      </div>
+      <div class="col-sm-2">
+        <button class="btn btn-success pull-right" ng-click="vm.editPatient()"
+                ng-disabled="vm.showFormErrors && vm.editForm.$invalid"
+                ng-mouseover="vm.showFormErrors = true"
+                ng-focus="vm.showFormErrors = true">Save <i class="fa fa-save"></i></button>
+      </div>
+    </div>
+    <div class="row" ng-if="vm.errorMessage">
+      <div class="col-sm-12 bg-danger text-left">{{ vm.errorMessage }}</div>
+    </div>
+  </div>
+</div>

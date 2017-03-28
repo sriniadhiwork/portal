@@ -1,39 +1,60 @@
-(function() {
+(function () {
     'use strict';
 
     angular
-        .module('portal')
+        .module('portal.main')
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($timeout, webDevTec, toastr) {
+    function MainController($log, $location, $timeout, commonService, AuthAPI) {
         var vm = this;
 
-        vm.awesomeThings = [];
-        vm.classAnimation = '';
-        vm.creationDate = 1461069153153;
-        vm.showToastr = showToastr;
+        vm.hasAcf = hasAcf;
+        vm.isAuthenticated = isAuthenticated;
+        vm.redirectToDhv = redirectToDhv;
 
         activate();
 
-        function activate() {
-            getWebDevTec();
-            $timeout(function() {
-                vm.classAnimation = 'pulse';
-            }, 4000);
-        }
+        ////////////////////////////////////////////////////////////////////
 
-        function showToastr() {
-            toastr.info('Fork <a href="https://github.com/Swiip/generator-gulp-angular" target="_blank"><b>generator-gulp-angular</b></a>');
-            vm.classAnimation = '';
-        }
+        function activate () {
+            vm.commonService = commonService;
+            vm.authAction = AuthAPI + '/saml/login?disco=true';
+            vm.willRedirect = false;
 
-        function getWebDevTec() {
-            vm.awesomeThings = webDevTec.getTec();
-
-            angular.forEach(vm.awesomeThings, function(awesomeThing) {
-                awesomeThing.rank = Math.random();
+            commonService.getSamlUserToken().then(function (response) {
+                if (angular.isDefined(response)) {
+                    $log.info('response is defined', response);
+                    commonService.getToken(true);
+                    if (vm.hasAcf()) {
+                        $location.path('/search');
+                    }
+                } else {
+                    $log.info('response is not defined', response);
+                    vm.willRedirect = true;
+                }
+            }, function (error) {
+                $log.info('log in error', error);
+                vm.willRedirect = true;
             });
+        }
+
+        function hasAcf () {
+            return commonService.hasAcf();
+        }
+
+        function isAuthenticated () {
+            return commonService.isAuthenticated();
+        }
+
+        function redirectToDhv () {
+            $timeout(function () {
+                if (vm.willRedirect) {
+                    /* eslint-disable angular/document-service */
+                    document.getElementById('dhvForm').submit();
+                    /* eslint-enable angular/document-service */
+                }
+            },1000);
         }
     }
 })();

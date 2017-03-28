@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -10,7 +10,32 @@
             .when('/', {
                 templateUrl: 'app/main/main.html',
                 controller: 'MainController',
-                controllerAs: 'main'
+                controllerAs: 'vm'
+            })
+            .when('/search', {
+                templateUrl: 'app/search/search.html',
+                controller: 'SearchController',
+                controllerAs: 'vm'
+            })
+            .when('/review', {
+                templateUrl: 'app/review/review.html',
+                controller: 'ReviewController',
+                controllerAs: 'vm'
+            })
+            .when('/about', {
+                templateUrl: 'app/about/about.html',
+                controller: 'AboutController',
+                controllerAs: 'vm'
+            })
+            .when('/resources', {
+                templateUrl: 'app/resources/resources.html',
+                controller: 'ResourcesController',
+                controllerAs: 'vm'
+            })
+            .when('/status', {
+                templateUrl: 'app/status/status.html',
+                controller: 'StatusController',
+                controllerAs: 'vm'
             })
             .otherwise({
                 redirectTo: '/'

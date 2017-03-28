@@ -1,0 +1,67 @@
+<div class="patient-review container-fluid">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h2 class="panel-title">Queries ({{ vm.patientQueries.length}})</h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <h3>Queried Patient Information</h3>
+          <p ng-if="!vm.patientQueries.length > 0">No current queries</p>
+          <div class="table-responsive">
+            <table class="table table-striped" st-table="vm.displayedQueries" st-safe-src="vm.patientQueries" ng-if="vm.patientQueries.length > 0">
+              <thead>
+                <tr>
+                  <th scope="col" st-sort="patientNames[0].givenName" st-skip-natural="true" class="st-sort">Name</th>
+                  <th scope="col" st-sort="dateOfBirth" st-skip-natural="true" class="st-sort">Date of Birth</th>
+                  <th scope="col" st-sort="gender" st-skip-natural="true" class="st-sort">Gender</th>
+                  <th scope="col" st-sort="lastRead" class="st-sort" st-skip-natural="true" st-sort-default="reverse">Last Updated</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="query in vm.displayedQueries track by query.id" class="fade">
+                  <td ng-bind-html="vm.displayNames(query.terms.patientNames)"></td>
+                  <td>{{ vm.convertDobString(query.terms.dob) }}</td>
+                  <td>{{ query.terms.gender }}</td>
+                  <td>{{ query.lastRead | date : 'medium' }}</td>
+                  <td>
+                    <uib-progress max="query.endpointStatuses.length" ng-if="query.status !== 'Complete'">
+                      <uib-bar class="progress-striped active" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} organization<span ng-if="vm.countComplete(query) > 1">s</span> complete</i></uib-bar>
+                      <uib-bar class="progress-striped active" value="query.endpointStatuses.length - vm.countComplete(query)" type="info"><i>{{ query.endpointStatuses.length - vm.countComplete(query) }} organization<span ng-if="query.endpointStatuses.length - vm.countComplete(query) > 1">s</span> pending</i></uib-bar>
+                    </uib-progress>
+                    <uib-progressbar ng-click="query.viewDetails = !query.viewDetails" class="progress-striped-no" ng-if="query.status === 'Complete'" value="100" type="{{ query.recordCount > 0 ? 'success' : 'danger' }}"><i>{{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> found</i></uib-progressbar>
+                    <div ng-if="query.status !== 'Complete' || query.viewDetails">
+                      <div ng-repeat="endpoint in query.endpointStatuses | orderBy:'endpoint.id' track by endpoint.id">
+                        <button ng-if="endpoint.status === 'Active'" class="btn btn-sm pull-right" ng-class="endpoint.isClearing ? 'btn-warning' : 'btn-danger'" ng-click="vm.cancelQueryEndpoint(endpoint)" ng-disabled="endpoint.isClearing"><i class="fa" ng-class="endpoint.isClearing ? 'fa-spinner fa-spin' : 'fa-ban'"></i><span class="sr-only">Cancel query for {{ endpoint.endpoint.locations[0].parentOrgName }}</span></button>
+                        <button ng-if="endpoint.status !== 'Active'" class="btn btn-sm pull-right" ng-class="endpoint.isRequerying ? 'btn-warning' : 'btn-primary'" ng-click="vm.requeryEndpoint(endpoint)" ng-disabled="endpoint.isRequerying"><i class="fa" ng-class="endpoint.isRequerying ? 'fa-spinner fa-spin' : 'fa-refresh'"></i><span class="sr-only">Refresh query for {{ endpoint.endpoint.locations[0].parentOrgName }}</span></button>
+                        <strong>{{ endpoint.endpoint.locations[0].parentOrgName }}</strong>: {{ endpoint.status }}<span ng-if="endpoint.status === 'Successful'">, {{ endpoint.results.length }} record<span ng-if="endpoint.results.length !== 1">s</span> found</span>
+                        <ul class="" ng-repeat="location in endpoint.endpoint.locations | orderBy:['name','id'] track by location.id">
+                          <li>{{ location.name }}</li>
+                        </ul>
+                        <div class="clearfix"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <button ng-if="query.status === 'Complete' && query.recordCount !== 0" class="btn btn-success btn-sm" ng-click="vm.stagePatient(query)"><i class="fa fa-plus"></i><span class="sr-only">Stage {{ commonService.displayName(query.terms.name) }}</span></button>
+                    <button ng-if="query.status !== 'Complete' || query.recordCount === 0" class="btn btn-danger btn-sm"
+                            confirm="Are you sure you'd like to clear this Patient Query?"
+                            confirm-title="Confirmation"
+                            confirm-ok="Yes"
+                            confirm-cancel="No"
+                            confirm-settings="{animation: false, keyboard: false, backdrop: 'static'}"
+                            ng-click="vm.clearQuery(query)"><i class="fa fa-trash"></i><span class="sr-only">Clear query for {{ commonService.displayName(query.terms.name) }}</span></button>
+                    <button ng-if="query.status === 'Complete'" class="btn btn-primary btn-sm" ng-click="vm.requery(query)"><i class="fa fa-refresh"></i><span class="sr-only">Redo query for {{ commonService.displayName(query.terms.name) }}</span></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

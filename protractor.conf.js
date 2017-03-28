@@ -10,7 +10,12 @@ exports.config = {
 
     // Capabilities to be passed to the webdriver instance.
     capabilities: {
-        'browserName': 'chrome'
+        'browserName': 'chrome',
+        'chromeOptions': {
+            'args': [
+                'disable-extensions'
+            ]
+        }
     },
 
     baseUrl: 'http://localhost:3000',
@@ -19,11 +24,18 @@ exports.config = {
     // protractor is called.
     specs: [paths.e2e + '/**/*.js'],
 
+    suites: {
+        main: paths.e2e + '/**/main*.js',
+        search: paths.e2e + '/**/search*.js'
+    },
+
     onPrepare: function() {
         // The require statement must be down here, since jasmine-reporters@1.0
         // needs jasmine to be in the global and protractor does not guarantee
         // this until inside the onPrepare function.
         var jasmineReporters = require('jasmine-reporters');
+        var jasmineSpecReporter = require('jasmine-spec-reporter');
+        var Jasmine2HtmlReporter = require('protractor-jasmine2-html-reporter');
         jasmine.getEnv().addReporter(
             new jasmineReporters.JUnitXmlReporter({
                 consolidateAll: true,
@@ -31,11 +43,25 @@ exports.config = {
                 filePrefix: 'e2e_junit'
             })
         );
+        jasmine.getEnv().addReporter(
+            new jasmineSpecReporter({
+                displayStackTrace: 'all',
+                displaySpecDuration: true,
+                displaySuiteNumber: true
+            })
+        );
+        jasmine.getEnv().addReporter(
+            new Jasmine2HtmlReporter({
+                savePath: 'test_reports/e2e_report/'
+            })
+        );
+        browser.driver.manage().window().maximize();
     },
 
     // Options to be passed to Jasmine-node.
     jasmineNodeOpts: {
         showColors: true,
+        print: function () {},
         defaultTimeoutInterval: 30000
     }
 };

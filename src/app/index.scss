@@ -3,16 +3,58 @@
  *  The list of variables are listed here bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss
  */
 $navbar-inverse-link-color: #5AADBB;
+//$grid-float-breakpoint: 100%;
 $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 $fa-font-path: "../../bower_components/font-awesome/fonts";
 @import "../../bower_components/font-awesome/scss/font-awesome.scss";
-
+/*@import url(https://fonts.googleapis.com/css?family=Heebo:400,800|Source+Sans+Pro:700italic,700);*/
+@import "https://fonts.googleapis.com/css?family=Heebo:400,800,900|Source+Sans+Pro:700italic,700";
+$font-family-sans-serif:  "Heebo", Helvetica, Arial, sans-serif !default;
+$brand-success: #3cb878;
+$btn-font-weight: 800;
 /**
  *  Do not remove the comments below. It's the markers used by wiredep to inject
  *  sass dependencies when defined in the bower.json of your dependencies
  */
 // bower:scss
 // endbower
+
+body {
+    background-color: #f8f8f8;
+}
+
+.inner-nav {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    vertical-align: middle;
+}
+
+.has-background {
+    background-image: url('../assets/images/PULSE_background.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.btn-active-nav {
+	position: relative;
+    background: $brand-success;
+}
+
+.btn-active-nav:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-top-color: $brand-success;
+	border-width: 15px;
+	margin-left: -15px;
+}
 
 .browsehappy {
     margin: 0.2em 0;
@@ -21,12 +63,93 @@ $fa-font-path: "../../bower_components/font-awesome/fonts";
     padding: 0.2em 0;
 }
 
-.thumbnail {
-    height: 200px;
+.component {
+    border: 1px solid green;
+    border-width: 8px 1px 1px 1px;
+    border-radius: 8px 8px 0 0;
+    background-color: white;
+}
 
-    img.pull-right {
-        width: 50px;
+h3 {
+    font-family: 'Source Sans Pro';
+    font-weight: 700;
+}
+
+h1, h2, h4, h5, h6 {
+    .emphasis {
+        font-weight: 900;
     }
+}
+
+.emphasis {
+    text-transform: uppercase;
+}
+
+.panel-button {
+    background-color: rgba(1,1,1,0);
+    color: white;
+    border-color: white;
+}
+
+.panel-button:hover, .panel-button:focus, .panel-button.focus {
+    color: #ccc;
+}
+
+.st-sort-ascent:before {
+    content: '\25B2';
+}
+
+.st-sort-descent:before {
+    content: '\25BC';
+}
+
+.st-sort {
+    cursor: pointer;
+}
+
+.fade {
+    transition: 1s ease-in-out;
+    opacity: 1;
+}
+
+.fade.ng-enter {
+    opacity: 0;
+}
+
+.fade.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+
+.fade.ng-leave {
+    opacity: 1;
+}
+
+.fade.ng-leave.ng-leave-active {
+    opacity: 0;
+}
+
+.slide {
+    overflow-y: hidden;
+    transition: .3s ease-in-out;
+    max-height: 2000px;
+}
+
+.slide.ng-enter {
+    max-height: 0;
+}
+
+.slide.ng-enter.ng-enter-active {
+    max-height: 2000px;
+}
+
+.slide.ng-leave {
+    max-height: 2000px;
+}
+
+.slide.ng-leave.ng-leave-active {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject

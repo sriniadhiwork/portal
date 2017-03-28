@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -7,8 +7,6 @@
 
     /** @ngInject */
     function runBlock($log) {
-
-        $log.debug('runBlock end');
+        $log.info('runBlock end');
     }
-
 })();

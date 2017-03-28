@@ -1,12 +1,12 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('portal')
-        .directive('acmeNavbar', acmeNavbar);
+        .directive('aiNavbar', aiNavbar);
 
     /** @ngInject */
-    function acmeNavbar() {
+    function aiNavbar() {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/components/navbar/navbar.html',
@@ -14,18 +14,60 @@
             controller: NavbarController,
             controllerAs: 'vm',
             bindToController: {
-                creationDate: '='
+                active: '@'
             }
         };
 
         return directive;
 
         /** @ngInject */
-        function NavbarController(moment) {
+        function NavbarController($log, $scope, Idle, commonService) {
             var vm = this;
 
-            vm.relativeDate = moment(vm.creationDate).fromNow();
+            vm.isAuthenticated = isAuthenticated;
+            vm.getUserAcf = getUserAcf;
+            vm.getUserName = getUserName;
+            vm.hasAcf = hasAcf;
+            vm.logout = logout;
+
+            activate();
+
+            ////////////////////////////////////////////////////////////////////
+
+            function activate () {
+                vm.navCollapse = true;
+                Idle.watch();
+                $scope.$on('Keepalive', function () {
+                    $log.info('Keepalive');
+                    commonService.refreshToken();
+                });
+                $scope.$on('IdleWarn', function (e, countdown) {
+                    $log.warn('User will be logged out in ' + countdown + ' seconds');
+                });
+                $scope.$on('IdleTimeout', function () {
+                    vm.logout();
+                });
+            }
+
+            function isAuthenticated () {
+                return commonService.isAuthenticated();
+            }
+
+            function getUserAcf () {
+                return commonService.getUserAcf();
+            }
+
+            function getUserName () {
+                return commonService.getUserName();
+            }
+
+            function hasAcf () {
+                return commonService.hasAcf();
+            }
+
+            function logout () {
+                commonService.logout();
+            }
         }
     }
-
 })();

@@ -1,0 +1,9 @@
+.location-status {
+    background-color: #fff;
+
+    .dropdown-menu {
+        min-width: $screen-sm-min;
+        overflow: auto;
+        max-height: 400px;
+    }
+}

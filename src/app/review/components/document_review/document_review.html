@@ -1,0 +1,26 @@
+<div class="container-fluid document-review" id="document-review">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <div class="pull-right">
+        <button class="btn btn-sm panel-button" ng-click="vm.cancel()" ng-if="vm.activeDocument"><span class="sr-only">Close document</span><i class="fa fa-close"></i></button>
+      </div>
+      <h2 class="panel-title">Document Review<span ng-if="vm.activeDocument">: {{ vm.activeDocument.className }}</span></h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+      <div ng-if="vm.activeDocument">
+        Showing&nbsp;
+        <select ng-model="vm.displayType">
+          <option value="raw">raw</option>
+          <option value="xslt">transformed</option>
+        </select>
+        &nbsp;document information
+        <div ng-if="vm.displayType === 'raw'"><pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre></div>
+        <div ng-if="vm.displayType === 'xslt'" ng-bind-html="vm.transformedDocument"></div>
+      </div>
+      <div ng-if="!vm.activeDocument">
+        No document currently loaded
+      </div>
+    </div>
+  </div>
+</div>

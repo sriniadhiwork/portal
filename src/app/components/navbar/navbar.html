@@ -1,20 +1,32 @@
-<nav class="navbar navbar-static-top navbar-inverse">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand" href="https://github.com/Swiip/generator-gulp-angular">
-        <i class="fa fa-home"></i> Gulp Angular
-      </a>
+      <a href="#/" class="navbar-left navbar-brand"><img alt="Patient Unified Lookup System for Emergencies Logo" src="assets/images/PULSE_logo2.svg" class=""></img></a>
+      <button type="button" class="navbar-toggle collapsed" ng-click="vm.navCollapsed = !vm.navCollapsed" ng-init="vm.navCollapsed = true" aria-expanded="false" id="menu-toggle">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
     </div>
 
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
-      <ul class="nav navbar-nav">
-        <li class="active"><a ng-href="#">Home</a></li>
-        <li><a ng-href="#">About</a></li>
-        <li><a ng-href="#">Contact</a></li>
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right acme-navbar-text navbar-text">
-        <li>Application was created {{ vm.relativeDate }}.</li>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" uib-collapse="vm.navCollapsed" aria-labeledby="menu-toggle">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown" uib-dropdown auto-close="disabled" is-open="vm.navOpen">
+          <a href class="dropdown-toggle" id="login-toggle" uib-dropdown-toggle aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> {{ vm.getUserName() }} <span class="fa" ng-class="vm.navOpen ? 'fa-caret-down' : 'fa-caret-right'"></span></a>
+          <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="login-toggle">
+            <li ng-if="vm.hasAcf()"><ai-acf mode="view"></ai-acf>
+            <li ng-if="vm.hasAcf()" role="separator" class="divider"></li>
+            <li><a href="#/search">Search</a></li>
+            <li><a href="#/review">Review</a></li>
+            <li><a href="#/status">Location Status</a></li>
+            <li>
+              <button class="btn btn-primary btn-block" id="logoutButton" ng-click="vm.logout()">Log Out</button>
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>

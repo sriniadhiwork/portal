@@ -1,0 +1,13 @@
+{
+    'API': 'https://52.32.239.69/rest',
+    'AuthAPI':  'https://52.32.239.69/auth',
+    'GAAPI': 'https://pulse-160916.appspot.com',
+    'IdleTimeout': 20,
+    'IdleWarn': 1,
+    'KeepaliveInterval': 1,
+    'LocationQueryInterval': 60,
+    'LogoutRedirect': 'http://www.google.com',
+    'QueryQueryTimeout': 5,
+    'SwaggerUrl': 'https://52.32.239.69/rest/api-docs',
+    'acfWritesAllowed': true
+}

@@ -1,0 +1,29 @@
+<div class="container-fluid hidden-print">
+  <header>
+    <ai-navbar active="search"></ai-navbar>
+  </header>
+  <div class="row inner-nav">
+    <div class="col-md-2 col-md-offset-4 col-sm-3 col-sm-offset-3">
+      <a class="btn btn-lg btn-block btn-success btn-active-nav" href="#/search">Search</a>
+    </div>
+    <div class="col-md-2 col-sm-3">
+      <a class="btn btn-lg btn-block btn-primary" href="#/review">Review</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <ai-patient-search trigger-handlers="vm.triggerHandlers()">
+      </ai-patient-search>
+    </div>
+    <div class="col-sm-8">
+      <ai-patient-review trigger-handlers="vm.triggerHandlers()" register-handler="vm.registerHandler(handler)">
+      </ai-patient-review>
+    </div>
+  </div>
+  <footer>
+    <ai-footer></ai-footer>
+  </footer>
+</div>
+<div class="visible-print-block">
+  PULSE does not support printing of this page
+</div>

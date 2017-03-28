@@ -1,50 +1,102 @@
-(function() {
+(function () {
     'use strict';
 
-    /**
-     * @todo Complete the test
-     * This example is not perfect.
-     * Test should check if MomentJS have been called
-     */
-    describe('directive navbar', function() {
-        // var $window;
-        var vm;
-        var el;
-        var timeInMs;
+    describe('navbar.directive', function () {
+        var vm, el, scope, $log, $q, commonService;
+        var mock = {statistics: [
+            {location:{name:'Santa Cruz',id:1,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:78,requestSuccessAvgCompletionSeconds:78,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}},
+            {location:{name:'Sutter Health',id:2,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:69,requestSuccessAvgCompletionSeconds:69,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}},
+            {location:{name:'Dignity Health',id:3,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:63,requestSuccessAvgCompletionSeconds:63,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}}]};
 
-        beforeEach(module('portal'));
-        beforeEach(inject(function($compile, $rootScope) {
-            // spyOn(_$window_, 'moment').and.callThrough();
-            // $window = _$window_;
+        beforeEach(function () {
+            module('portal', function ($provide) {
+                $provide.decorator('commonService', function ($delegate) {
+                    $delegate.getLocationStatistics = jasmine.createSpy('getLocationStatistics');
+                    $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
+                    $delegate.getUserName = jasmine.createSpy('getUserName');
+                    $delegate.hasAcf = jasmine.createSpy('hasAcf');
+                    $delegate.isAuthenticated = jasmine.createSpy('isAuthenticated');
+                    $delegate.logout = jasmine.createSpy('logout');
+                    $delegate.refreshToken = jasmine.createSpy('refreshToken');
+                    return $delegate;
+                });
+            });
+            inject(function ($compile, $rootScope, _$log_, _$q_, _commonService_) {
+                $log = _$log_;
+                $q = _$q_;
+                commonService = _commonService_;
+                commonService.getLocationStatistics.and.returnValue($q.when(mock.statistics));
 
-            timeInMs = new Date();
-            timeInMs = timeInMs.setHours(timeInMs.getHours() - 24);
+                el = angular.element('<ai-navbar></ai-navbar>');
 
-            el = angular.element('<acme-navbar creation-date="' + timeInMs + '"></acme-navbar>');
+                scope = $rootScope.$new()
+                $compile(el)(scope);
+                scope.$digest();
+                vm = el.isolateScope().vm;
+            });
+        });
 
-            $compile(el)($rootScope.$new());
-            $rootScope.$digest();
-            vm = el.isolateScope().vm;
-            // ctrl = el.controller('acmeNavbar');
-        }));
+        afterEach(function () {
+            if ($log.debug.logs.length > 0) {
+                //console.debug("\n Debug: " + $log.debug.logs.join("\n Debug: "));
+            }
+        });
 
-        it('should be compiled', function() {
+        it('should be compiled', function () {
             expect(el.html()).not.toEqual(null);
         });
 
-        it('should have isolate scope object with instanciate members', function() {
+        it('should have isolate scope object with instanciate members', function () {
             expect(vm).toEqual(jasmine.any(Object));
-
-            expect(vm.creationDate).toEqual(jasmine.any(Number));
-            expect(vm.creationDate).toEqual(timeInMs);
-
-            expect(vm.relativeDate).toEqual(jasmine.any(String));
-            expect(vm.relativeDate).toEqual('a day ago');
         });
 
-        // it('should call Moment', function() {
-        //   console.log($window.moment)
-        //   expect($window.moment).toHaveBeenCalled();
-        // });
+        it('should know if the user is logged in', function () {
+            expect(vm.isAuthenticated).toBeDefined();
+            vm.isAuthenticated();
+            expect(commonService.isAuthenticated).toHaveBeenCalled();
+        });
+
+        it('should know the user\'s username', function () {
+            expect(vm.getUserName).toBeDefined();
+            vm.getUserName();
+            expect(commonService.getUserName).toHaveBeenCalled();
+        });
+
+        it('should know if the user has an ACF', function () {
+            expect(vm.hasAcf).toBeDefined();
+            vm.hasAcf();
+            expect(commonService.hasAcf).toHaveBeenCalled();
+        });
+
+        it('should know the user\'s ACF', function () {
+            expect(vm.getUserAcf).toBeDefined();
+            vm.getUserAcf();
+            expect(commonService.getUserAcf).toHaveBeenCalled();
+        });
+
+        it('should have a way to log out', function () {
+            expect(vm.logout).toBeDefined();
+            vm.logout();
+            expect(commonService.logout).toHaveBeenCalled();
+        });
+
+        it('should call the commonService.refreshToken on a Keepalive ping', function () {
+            scope.$broadcast('Keepalive');
+            scope.$digest();
+            expect(commonService.refreshToken).toHaveBeenCalled();
+        });
+
+        it('should log when Idle happens', function () {
+            var initialLogLength = $log.warn.logs.length;
+            scope.$broadcast('IdleWarn');
+            scope.$digest();
+            expect($log.warn.logs.length).toBe(initialLogLength + 1);
+        });
+
+        it('should call the commonService.logout on a IdleTimeout ping', function () {
+            scope.$broadcast('IdleTimeout');
+            scope.$digest();
+            expect(commonService.logout).toHaveBeenCalled();
+        });
     });
 })();
