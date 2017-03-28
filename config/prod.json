@@ -1,0 +1,13 @@
+{
+    'API': 'https://www.pulsedemo.org/rest',
+    'AuthAPI':  'https://www.pulsedemo.org/auth',
+    'GAAPI': 'https://pulse-160916.appspot.com',
+    'IdleTimeout': 20,
+    'IdleWarn': 1,
+    'KeepaliveInterval': 1,
+    'LocationQueryInterval': 60,
+    'LogoutRedirect': 'https://california.demo.collaborativefusion.com/',
+    'QueryQueryTimeout': 5,
+    'SwaggerUrl': 'https://www.pulsedemo.org/rest/api-docs',
+    'acfWritesAllowed': false
+}
