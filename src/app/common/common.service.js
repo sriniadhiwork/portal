@@ -6,7 +6,7 @@
         .service('commonService', commonService);
 
     /** @ngInject */
-    function commonService ($http, $filter, $q, API, AuthAPI, GAAPI, LogoutRedirect, $log, $localStorage, $window) {
+    function commonService ($http, $filter, $q, API, AuthAPI, GAAPI, $log, $localStorage, $window) {
         var self = this;
 
         var ACF_LOCATION_IN_IDENTITY = 7;
@@ -267,7 +267,7 @@
 
         function logout () {
             self.clearToken();
-            $window.location.replace(LogoutRedirect);
+            $window.location.replace(AuthAPI + '/saml/logout');
         }
 
         function queryEndpoints () {
@@ -277,19 +277,19 @@
         function refreshToken () {
             var userAcf = getUserAcf();
             return getAcf(userAcf.id)
-            .then(function (result){
-                return postApi('/jwt/keepalive', result, AuthAPI)
-                    .then(function (response) {
-                    if (validTokenFormat(response.token)) {
-                        self.saveToken(response.token);
-                        return $q.when(response.token);
-                    } else {
-                        return $q.when(null);
-                    }
-                }, function (error) {
-                    return $q.reject(error);
+                .then(function (result){
+                    return postApi('/jwt/keepalive', result, AuthAPI)
+                        .then(function (response) {
+                            if (validTokenFormat(response.token)) {
+                                self.saveToken(response.token);
+                                return $q.when(response.token);
+                            } else {
+                                return $q.when(null);
+                            }
+                        }, function (error) {
+                            return $q.reject(error);
+                        });
                 });
-            });
         }
 
         function requeryEndpoint (queryId, endpointId) {

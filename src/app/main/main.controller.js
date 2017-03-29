@@ -24,17 +24,14 @@
 
             commonService.getSamlUserToken().then(function (response) {
                 if (angular.isDefined(response)) {
-                    $log.info('response is defined', response);
                     commonService.getToken(true);
                     if (vm.hasAcf()) {
                         $location.path('/search');
                     }
                 } else {
-                    $log.info('response is not defined', response);
                     vm.willRedirect = true;
                 }
-            }, function (error) {
-                $log.info('log in error', error);
+            }, function () {
                 vm.willRedirect = true;
             });
         }

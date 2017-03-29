@@ -6,7 +6,6 @@
     'IdleWarn': 1,
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
-    'LogoutRedirect': 'http://www.google.com',
     'QueryQueryTimeout': 5,
     'SwaggerUrl': 'https://52.32.239.69/rest/api-docs',
     'acfWritesAllowed': true

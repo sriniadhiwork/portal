@@ -26,31 +26,34 @@
                 type: 'PieChart',
                 options: { is3D: true, title: 'Visitors by browser (last 7 days)' }
             };
+            vm.countries = {
+                type: 'PieChart',
+                options: { is3D: true, title: 'Visitors by country (last 7 days)' }
+            };
+            vm.states = {
+                type: 'PieChart',
+                options: { is3D: true, title: 'Visitors by state (last 7 days)' }
+            };
             vm.cities = {
                 type: 'PieChart',
                 options: { is3D: true, title: 'Visitors by city (last 7 days)' }
-            };
-            vm.country = {
-                type: 'PieChart',
-                options: { is3D: true, title: 'Visitors by country (last 7 days)' }
             };
             vm.traffic = {
                 type: 'LineChart',
                 options: {
                     legend: { position: 'none' },
-                    hAxis: { slantedText: true },
                     title: 'Visitors for the last 14 days'
                 }
             };
-            vm.map = {
+            vm.worldMap = {
                 type: 'GeoChart',
                 options: { }
             };
-            vm.cityMap = {
-                type: 'GeoChart',
-                options: { region: 'US', displayMode: 'markers' }
-            };
             vm.stateMap = {
+                type: 'GeoChart',
+                options: { region: 'US', resolution: 'provinces'}
+            };
+            vm.caMap = {
                 type: 'GeoChart',
                 options: { region: 'US-CA', displayMode: 'markers', resolution: 'provinces' }
             }
@@ -60,14 +63,18 @@
                 });
             commonService.getAnalytics('ag5zfnB1bHNlLTE2MDkxNnIVCxIIQXBpUXVlcnkYgICAgNrjhgoM')
                 .then(function (data) {
-                    vm.country.data = data;
-                    vm.map.data = data;
+                    vm.countries.data = data;
+                    vm.worldMap.data = data;
+                });
+            commonService.getAnalytics('ag5zfnB1bHNlLTE2MDkxNnIVCxIIQXBpUXVlcnkYgICAgO2xgwoM')
+                .then(function (data) {
+                    vm.states.data = data;
+                    vm.stateMap.data = data;
                 });
             commonService.getAnalytics('ag5zfnB1bHNlLTE2MDkxNnIVCxIIQXBpUXVlcnkYgICAgLyhggoM')
                 .then(function (data) {
                     vm.cities.data = data;
-                    vm.cityMap.data = data;
-                    vm.stateMap.data = data;
+                    vm.caMap.data = data;
                 });
             commonService.getAnalytics('ag5zfnB1bHNlLTE2MDkxNnIVCxIIQXBpUXVlcnkYgICAgICAgAoM')
                 .then(function (data) {
