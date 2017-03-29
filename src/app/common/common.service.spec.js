@@ -4,7 +4,7 @@
     describe('portal.common.services', function () {
 
         var commonService, $httpBackend, $window, requestHandler;
-        var API, AuthAPI, GAAPI, LogoutRedirect;
+        var API, AuthAPI, GAAPI;
 
         requestHandler = {};
 
@@ -51,13 +51,12 @@
             }
         });
 
-        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _LogoutRedirect_, _API_, _AuthAPI_, _GAAPI_) {
+        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _API_, _AuthAPI_, _GAAPI_) {
             commonService = _commonService_;
             $httpBackend = _$httpBackend_;
             $window = _$window_;
             mock.token = tokenPrefix + $window.btoa(jwt) + tokenSuffix;
             mock.tokenWOAcf = tokenPrefix + $window.btoa(jwtWithoutAcf) + tokenSuffix;
-            LogoutRedirect = _LogoutRedirect_;
             API = _API_;
             AuthAPI = _AuthAPI_;
             GAAPI = _GAAPI_;
@@ -220,7 +219,7 @@
 
             it('should redirect the user to an external page on logout', function () {
                 commonService.logout();
-                expect($window.location.replace).toHaveBeenCalledWith(LogoutRedirect);
+                expect($window.location.replace).toHaveBeenCalledWith(AuthAPI + '/saml/logout');
             });
 
             it('should call the saml SP to find the Spring Boot User Object', function () {

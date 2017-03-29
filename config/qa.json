@@ -6,7 +6,6 @@
     'IdleWarn': 1,
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
-    'LogoutRedirect': 'https://california.demo.collaborativefusion.com/',
     'QueryQueryTimeout': 5,
     'SwaggerUrl': 'https://www.pulsedemo.org/rest/api-docs',
     'acfWritesAllowed': false

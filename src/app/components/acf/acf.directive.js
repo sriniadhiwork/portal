@@ -129,18 +129,20 @@
             }
 
             function getUserAcf () {
-                var acf = commonService.getUserAcf();
-                if (acf === '') {
-                    vm.acf = {address: {lines: ['']}};
-                } else if (acf === null) {
-                    vm.acf = {address: {lines: ['']}};
-                } else {
-                    vm.acf = acf;
-                    if (angular.isUndefined(vm.acf.address) || vm.acf.address === null) {
-                        vm.acf.address = {lines: ['']};
-                    }
-                    if (angular.isUndefined(vm.acf.address.lines)) {
-                        vm.acf.address.lines = [''];
+                if (vm.hasAcf()) {
+                    var acf = commonService.getUserAcf();
+                    if (acf === '') {
+                        vm.acf = {address: {lines: ['']}};
+                    } else if (acf === null) {
+                        vm.acf = {address: {lines: ['']}};
+                    } else {
+                        vm.acf = acf;
+                        if (angular.isUndefined(vm.acf.address) || vm.acf.address === null) {
+                            vm.acf.address = {lines: ['']};
+                        }
+                        if (angular.isUndefined(vm.acf.address.lines)) {
+                            vm.acf.address.lines = [''];
+                        }
                     }
                 }
             }
