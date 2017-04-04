@@ -12,6 +12,7 @@
         var ACF_LOCATION_IN_IDENTITY = 7;
 
         self.cacheDocument = cacheDocument;
+        self.cancelDocument = cancelDocument;
         self.cancelQueryEndpoint = cancelQueryEndpoint;
         self.clearQuery = clearQuery;
         self.clearToken = clearToken;
@@ -52,6 +53,10 @@
 
         function cacheDocument (patientId, documentId) {
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId);
+        }
+
+        function cancelDocument (patientId, documentId) {
+            return enhancedPost('/patients/' + patientId + '/documents/' + documentId + '/cancel', {});
         }
 
         function cancelQueryEndpoint (queryId, endpointId) {

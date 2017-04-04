@@ -35,6 +35,7 @@
 
             vm.activatePatient = activatePatient;
             vm.cacheDocument = cacheDocument;
+            vm.cancelDocument = cancelDocument;
             vm.convertDobString = commonService.convertDobString;
             vm.countActive = countActive;
             vm.deactivatePatient = deactivatePatient;
@@ -68,6 +69,14 @@
                 if (!doc.cached) {
                     doc.status = 'Active';
                     commonService.cacheDocument(patient.id, doc.id).then(function () {
+                        vm.getPatientsAtAcf();
+                    });
+                }
+            }
+
+            function cancelDocument (patient, doc) {
+                if (doc.status === 'Active') {
+                    commonService.cancelDocument(patient.id, doc.id).then(function () {
                         vm.getPatientsAtAcf();
                     });
                 }

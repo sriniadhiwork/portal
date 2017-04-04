@@ -69,6 +69,7 @@
              */
             spyOn($window.location, 'replace');
             requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
+            requestHandler.cancelDocument = $httpBackend.whenPOST(API + '/patients/3/documents/2/cancel').respond(200, true);
             requestHandler.cancelQueryEndpoint = $httpBackend.whenPOST(API + '/queries/1/endpoint/2/cancel', {}).respond(200, true);
             requestHandler.clearQuery = $httpBackend.whenPOST(API + '/queries/1/delete', {}).respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
@@ -365,6 +366,16 @@
                 $httpBackend.flush();
                 requestHandler.cacheDocument.respond(401, {error: 'test'});
                 commonService.cacheDocument(3,2).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should cancel querying of documents', function () {
+                commonService.cancelDocument(3,2);
+                $httpBackend.flush();
+                requestHandler.cancelDocument.respond(401, {error: 'test'});
+                commonService.cancelDocument(3,2).then(function (response) {
                     expect(response.message).toEqual('test');
                 });
                 $httpBackend.flush();

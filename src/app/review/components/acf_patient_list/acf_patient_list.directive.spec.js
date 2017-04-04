@@ -32,6 +32,7 @@
             module('pulse.mock', 'portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.cacheDocument = jasmine.createSpy('cacheDocument');
+                    $delegate.cancelDocument = jasmine.createSpy('cancelDocument');
                     $delegate.convertDobString = jasmine.createSpy('convertDobString');
                     $delegate.dischargePatient = jasmine.createSpy('dischargePatient');
                     $delegate.displayName = jasmine.createSpy('displayName');
@@ -64,6 +65,7 @@
                 });
                 commonService = _commonService_;
                 commonService.cacheDocument.and.returnValue($q.when({data: ''}));
+                commonService.cancelDocument.and.returnValue($q.when({data: ''}));
                 commonService.convertDobString.and.returnValue('fake');
                 commonService.dischargePatient.and.returnValue($q.when({}));
                 commonService.displayName.and.returnValue(Mock.patients[0].givenName + ' ' + Mock.patients[0].familyName);
@@ -96,49 +98,72 @@
             expect(vm.patients.length).toBe(2);
         });
 
-        it('should have a way to cache a document', function () {
-            var cachedDocPatients = angular.copy(Mock.patients);
-            cachedDocPatients[0].endpointMaps[0].documents[0].cached = true;
-            commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
+        describe('caching a document', function () {
+            it('should have a way to cache a document', function () {
+                var cachedDocPatients = angular.copy(Mock.patients);
+                cachedDocPatients[0].endpointMaps[0].documents[0].cached = true;
+                commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
 
-            expect(vm.patients[0].endpointMaps[0].documents[0].cached).toBe(false);
-            expect(vm.cacheDocument).toBeDefined();
+                expect(vm.patients[0].endpointMaps[0].documents[0].cached).toBe(false);
+                expect(vm.cacheDocument).toBeDefined();
 
-            vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
-            el.isolateScope().$digest();
+                vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                el.isolateScope().$digest();
 
-            expect(commonService.cacheDocument).toHaveBeenCalledWith(3, '16');
-            expect(vm.patients[0].endpointMaps[0].documents[0].cached).toBe(true);
-        });
+                expect(commonService.cacheDocument).toHaveBeenCalledWith(3, '16');
+                expect(vm.patients[0].endpointMaps[0].documents[0].cached).toBe(true);
+            });
 
-        it('should refresh the info when a document is request to be cached', function () {
-            spyOn(vm,'getPatientsAtAcf');
-            vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
-            el.isolateScope().$digest();
-            expect(vm.getPatientsAtAcf).toHaveBeenCalled();
-        });
+            it('should refresh the info when a document is request to be cached', function () {
+                spyOn(vm,'getPatientsAtAcf');
+                vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                el.isolateScope().$digest();
+                expect(vm.getPatientsAtAcf).toHaveBeenCalled();
+            });
 
-        it('should know when a document is actively being cached', function () {
-            var cachedDocPatients = angular.copy(Mock.patients);
-            cachedDocPatients[0].endpointMaps[0].documents[0].status = 'Active';
-            commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
+            it('should know when a document is actively being cached', function () {
+                var cachedDocPatients = angular.copy(Mock.patients);
+                cachedDocPatients[0].endpointMaps[0].documents[0].status = 'Active';
+                commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
 
-            vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
-            el.isolateScope().$digest();
-            expect(vm.patients[0].documentStatus).toEqual({total: 12, cached: 0, active: 1});
-        });
+                vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                el.isolateScope().$digest();
+                expect(vm.patients[0].documentStatus).toEqual({total: 12, cached: 0, active: 1});
+            });
 
-        it('should not try to cache the same document twice', function () {
-            var cachedDocPatients = angular.copy(Mock.patients);
-            cachedDocPatients[0].endpointMaps[0].documents[0].cached = true;
-            commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
+            it('should not try to cache the same document twice', function () {
+                var cachedDocPatients = angular.copy(Mock.patients);
+                cachedDocPatients[0].endpointMaps[0].documents[0].cached = true;
+                commonService.getPatientsAtAcf.and.returnValue($q.when(cachedDocPatients));
 
-            vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
-            el.isolateScope().$digest();
+                vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                el.isolateScope().$digest();
 
-            vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
-            el.isolateScope().$digest();
-            expect(commonService.cacheDocument.calls.count()).toBe(1);
+                vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                el.isolateScope().$digest();
+                expect(commonService.cacheDocument.calls.count()).toBe(1);
+            });
+
+            it('should have a way to cancel caching a document', function () {
+                expect(vm.cancelDocument).toBeDefined();
+
+                vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                el.isolateScope().$digest();
+
+                vm.cancelDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                el.isolateScope().$digest();
+
+                expect(commonService.cancelDocument).toHaveBeenCalledWith(3, '16');
+            });
+
+            it('should not cancel caching an inactive document', function () {
+                expect(vm.cancelDocument).toBeDefined();
+
+                vm.cancelDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                el.isolateScope().$digest();
+
+                expect(commonService.cancelDocument).not.toHaveBeenCalled();
+            });
         });
 
         it('should have a way to get a document', function () {
