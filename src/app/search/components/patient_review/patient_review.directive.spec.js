@@ -212,7 +212,7 @@
                 expect(vm.patientQueries[0].endpointStatuses.length).toBe(3);
             });
 
-            it('should call commonService.clearEndpointQuery', function () {
+            it('should call commonService.cancelEndpointQuery', function () {
                 vm.cancelQueryEndpoint(vm.patientQueries[0].endpointStatuses[0]);
                 expect(commonService.cancelQueryEndpoint).toHaveBeenCalledWith(vm.patientQueries[0].id, vm.patientQueries[0].endpointStatuses[0].endpoint.id);
             });

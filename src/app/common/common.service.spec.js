@@ -70,6 +70,7 @@
             spyOn($window.location, 'replace');
             requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
             requestHandler.cancelDocument = $httpBackend.whenPOST(API + '/patients/3/documents/2/cancel').respond(200, true);
+            requestHandler.cancelDocumentQueryEndpoint = $httpBackend.whenPOST(API + '/patients/3/endpoints/2/cancel', {}).respond(200, true);
             requestHandler.cancelQueryEndpoint = $httpBackend.whenPOST(API + '/queries/1/endpoint/2/cancel', {}).respond(200, true);
             requestHandler.clearQuery = $httpBackend.whenPOST(API + '/queries/1/delete', {}).respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
@@ -86,6 +87,7 @@
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
             requestHandler.refreshToken = $httpBackend.whenPOST(AuthAPI + '/jwt/keepalive', mock.acfs[0]).respond(200, {token: mock.token});
+            requestHandler.requeryDocumentQueryEndpoint = $httpBackend.whenPOST(API + '/patients/3/endpoints/4/requery', {}).respond(200, true);
             requestHandler.requeryEndpoint = $httpBackend.whenPOST(API + '/queries/3/endpoint/4/requery', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
             requestHandler.stagePatient = $httpBackend.whenPOST(API + '/queries/1/stage', mock.stagePatient).respond(200, {});
@@ -381,6 +383,16 @@
                 $httpBackend.flush();
             });
 
+            it('should cancel querying of document lists', function () {
+                commonService.cancelDocumentQueryEndpoint(3,2);
+                $httpBackend.flush();
+                requestHandler.cancelDocumentQueryEndpoint.respond(401, {error: 'test'});
+                commonService.cancelDocumentQueryEndpoint(3,2).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
             it('should call /endpoints', function () {
                 commonService.queryEndpoints();
                 $httpBackend.flush();
@@ -510,6 +522,16 @@
                 $httpBackend.flush();
                 requestHandler.requeryEndpoint.respond(401, {error: 'a rejection'});
                 commonService.requeryEndpoint(3,4).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /patients/{queryId}/endpoints/{endpointId}/requery', function () {
+                commonService.requeryDocumentQueryEndpoint(3,4);
+                $httpBackend.flush();
+                requestHandler.requeryDocumentQueryEndpoint.respond(401, {error: 'a rejection'});
+                commonService.requeryDocumentQueryEndpoint(3,4).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();

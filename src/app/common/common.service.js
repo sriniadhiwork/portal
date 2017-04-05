@@ -13,6 +13,7 @@
 
         self.cacheDocument = cacheDocument;
         self.cancelDocument = cancelDocument;
+        self.cancelDocumentQueryEndpoint = cancelDocumentQueryEndpoint;
         self.cancelQueryEndpoint = cancelQueryEndpoint;
         self.clearQuery = clearQuery;
         self.clearToken = clearToken;
@@ -42,6 +43,7 @@
         self.logout = logout;
         self.queryEndpoints = queryEndpoints;
         self.refreshToken = refreshToken;
+        self.requeryDocumentQueryEndpoint = requeryDocumentQueryEndpoint;
         self.requeryEndpoint = requeryEndpoint;
         self.saveToken = saveToken;
         self.searchForPatient = searchForPatient;
@@ -57,6 +59,10 @@
 
         function cancelDocument (patientId, documentId) {
             return enhancedPost('/patients/' + patientId + '/documents/' + documentId + '/cancel', {});
+        }
+
+        function cancelDocumentQueryEndpoint (patientId, endpointId) {
+            return enhancedPost('/patients/' + patientId + '/endpoints/' + endpointId + '/cancel', {});
         }
 
         function cancelQueryEndpoint (queryId, endpointId) {
@@ -295,6 +301,10 @@
                             return $q.reject(error);
                         });
                 });
+        }
+
+        function requeryDocumentQueryEndpoint (patientId, endpointId) {
+            return enhancedPost('/patients/' + patientId + '/endpoints/' + endpointId + '/requery', {});
         }
 
         function requeryEndpoint (queryId, endpointId) {

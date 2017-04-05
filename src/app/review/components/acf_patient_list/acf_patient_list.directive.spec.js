@@ -33,12 +33,14 @@
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.cacheDocument = jasmine.createSpy('cacheDocument');
                     $delegate.cancelDocument = jasmine.createSpy('cancelDocument');
+                    $delegate.cancelDocumentQueryEndpoint = jasmine.createSpy('cancelDocumentQueryEndpoint');
                     $delegate.convertDobString = jasmine.createSpy('convertDobString');
                     $delegate.dischargePatient = jasmine.createSpy('dischargePatient');
                     $delegate.displayName = jasmine.createSpy('displayName');
                     $delegate.getDocument = jasmine.createSpy('getDocument');
                     $delegate.getPatientsAtAcf = jasmine.createSpy('getPatientsAtAcf');
                     $delegate.getUserAcf = jasmine.createSpy('getUserAcf');
+                    $delegate.requeryDocumentQueryEndpoint = jasmine.createSpy('requeryDocumentQueryEndpoint');
                     return $delegate;
                 });
             });
@@ -66,12 +68,14 @@
                 commonService = _commonService_;
                 commonService.cacheDocument.and.returnValue($q.when({data: ''}));
                 commonService.cancelDocument.and.returnValue($q.when({data: ''}));
+                commonService.cancelDocumentQueryEndpoint.and.returnValue($q.when({}));
                 commonService.convertDobString.and.returnValue('fake');
                 commonService.dischargePatient.and.returnValue($q.when({}));
                 commonService.displayName.and.returnValue(Mock.patients[0].givenName + ' ' + Mock.patients[0].familyName);
                 commonService.getDocument.and.returnValue($q.when(angular.copy(mock.fakeDocument)));
                 commonService.getPatientsAtAcf.and.returnValue($q.when(angular.copy(Mock.patients)));
                 commonService.getUserAcf.and.returnValue(mock.userAcf);
+                commonService.requeryDocumentQueryEndpoint.and.returnValue($q.when({}));
 
                 el = angular.element('<ai-acf-patient-list></ai-acf-patient-list>');
 
@@ -163,6 +167,53 @@
                 el.isolateScope().$digest();
 
                 expect(commonService.cancelDocument).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('document list query activity', function () {
+            it('should call commonService.cancelDocumentQueryEndpoint', function () {
+                vm.cancelDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[2]);
+                el.isolateScope().$digest();
+                expect(commonService.cancelDocumentQueryEndpoint).toHaveBeenCalledWith(vm.patients[1].id, vm.patients[1].endpointMaps[2].endpoint.id);
+            });
+
+            it('should not call commonService.cancelDocumentQueryEndpoint if the status is not Active', function () {
+                vm.cancelDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[0]);
+                el.isolateScope().$digest();
+                expect(commonService.cancelDocumentQueryEndpoint).not.toHaveBeenCalled();
+            });
+
+            it('should set the endpoint status to "pending" when clearing', function () {
+                vm.cancelDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[2]);
+                expect(vm.patients[1].endpointMaps[2].isClearing).toBe(true);
+            });
+
+            it('should have a function to requery individual endpoints', function () {
+                expect(vm.requeryDocumentQueryEndpoint).toBeDefined();
+            });
+
+            it('should call commonService.requeryDocumentQueryEndpoint when requeried', function () {
+                vm.requeryDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[1]);
+                el.isolateScope().$digest();
+                expect(commonService.requeryDocumentQueryEndpoint).toHaveBeenCalledWith(vm.patients[1].id, vm.patients[1].endpointMaps[1].endpoint.id);
+            });
+
+            it('should not call commonService.requeryDocumentQueryEndpoint if status is not "Failed"', function () {
+                vm.requeryDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[0]);
+                el.isolateScope().$digest();
+                expect(commonService.requeryDocumentQueryEndpoint).not.toHaveBeenCalled();
+            });
+
+            it('should set the endpoint "isRequerying" to true when requerying', function () {
+                vm.requeryDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[1]);
+                expect(vm.patients[1].endpointMaps[1].isRequerying).toBe(true);
+            });
+
+            it('should refresh local queries when requeried', function () {
+                spyOn(vm,'getPatientsAtAcf');
+                vm.requeryDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[1]);
+                el.isolateScope().$digest();
+                expect(vm.getPatientsAtAcf).toHaveBeenCalled();
             });
         });
 
@@ -340,6 +391,10 @@
         });
 
         describe('refreshing', function () {
+            beforeEach(function () {
+                vm.patients[1].endpointMaps[2].documentsQueryStatus = 'Successful';
+            });
+
             it('should refresh the queries if there is one marked "Active"', function () {
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(1);
                 $timeout.flush();
