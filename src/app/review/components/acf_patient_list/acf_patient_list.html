@@ -87,7 +87,7 @@
               <tr ng-repeat="doc in vm.documents track by doc.id" ng-class="{ 'active' : vm.activeDocument === doc }">
                 <td>
                   <button ng-if="!doc.cached && !doc.status" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
-                  <button ng-if="!doc.cached && doc.status === 'Failed'" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Retry </span><i class="fa fa-refresh"></i></button>
+                  <button ng-if="!doc.cached && (doc.status === 'Failed' || doc.status === 'Cancelled')" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-primary btn-sm"><span class="sr-only">Retry </span><i class="fa fa-refresh"></i></button>
                   <button ng-if="doc.status === 'Active'" disabled class="btn btn-warning btn-sm"><span class="sr-only">Pending </span><i class="fa fa-spinner fa-spin"></i></button>
                   <button ng-if="doc.status === 'Active'" ng-click="vm.cancelDocument(vm.activePatient, doc)" class="btn btn-danger btn-sm"><span class="sr-only">Cancel </span><i class="fa fa-trash"></i></button>
                   <button ng-if="doc.cached" ng-click="vm.getDocument(vm.activePatient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
