@@ -58,6 +58,7 @@
             function activate () {
                 vm.activePatient = null;
                 vm.patients = [];
+                vm.isQueryingPatients = false;
                 vm.getPatientsAtAcf();
                 vm.userAcf = commonService.getUserAcf();
             }
@@ -78,7 +79,8 @@
 
             function cancelDocument (patient, doc) {
                 if (doc.status === 'Active') {
-                    commonService.cancelDocument(patient.id, doc.id).then(function () {
+                    commonService.cancelDocument(patient.id, doc.id).then(function (response) {
+                        doc = response;
                         vm.getPatientsAtAcf();
                     });
                 }
@@ -142,7 +144,7 @@
             function getDocument (patient, doc) {
                 if (!doc.data) {
                     commonService.getDocument(patient.id, doc.id).then(function (response) {
-                        doc.data = response.data;
+                        doc.data = response.contents;
                         vm.activeDocument = doc;
                     });
                 } else {
@@ -151,39 +153,43 @@
             }
 
             function getPatientsAtAcf () {
-                commonService.getPatientsAtAcf().then(function (response) {
-                    var hasActive = false;
-                    vm.patients = response;
-                    for (var i = 0; i < vm.patients.length; i++) {
-                        var patient = vm.patients[i];
-                        patient.documentStatus = {total: 0, active: 0, cached: 0};
-                        patient.documents = [];
-                        for (var j = 0; j < patient.endpointMaps.length; j++) {
-                            hasActive = hasActive || (patient.endpointMaps[j].documentsQueryStatus === 'Active');
-                            patient.documentStatus.total += patient.endpointMaps[j].documents.length;
-                            for (var k = 0; k < patient.endpointMaps[j].documents.length; k++) {
-                                patient.endpointMaps[j].documents[k].organization = patient.endpointMaps[j].endpoint.locations[0].parentOrgName;
-                                patient.documents.push(patient.endpointMaps[j].documents[k]);
-                                if (patient.endpointMaps[j].documents[k].cached) {
-                                    patient.documentStatus.cached += 1;
-                                }
-                                if (patient.endpointMaps[j].documents[k].status === 'Active') {
-                                    patient.documentStatus.active += 1;
-                                    hasActive = true;
+                if (!vm.isQueryingPatients) {
+                    vm.isQueryingPatients = true;
+                    commonService.getPatientsAtAcf().then(function (response) {
+                        var hasActive = false;
+                        vm.patients = response;
+                        for (var i = 0; i < vm.patients.length; i++) {
+                            var patient = vm.patients[i];
+                            patient.documentStatus = {total: 0, active: 0, cached: 0};
+                            patient.documents = [];
+                            for (var j = 0; j < patient.endpointMaps.length; j++) {
+                                hasActive = hasActive || (patient.endpointMaps[j].documentsQueryStatus === 'Active');
+                                patient.documentStatus.total += patient.endpointMaps[j].documents.length;
+                                for (var k = 0; k < patient.endpointMaps[j].documents.length; k++) {
+                                    patient.endpointMaps[j].documents[k].organization = patient.endpointMaps[j].endpoint.locations[0].parentOrgName;
+                                    patient.documents.push(patient.endpointMaps[j].documents[k]);
+                                    if (patient.endpointMaps[j].documents[k].cached) {
+                                        patient.documentStatus.cached += 1;
+                                    }
+                                    if (patient.endpointMaps[j].documents[k].status === 'Active') {
+                                        patient.documentStatus.active += 1;
+                                        hasActive = true;
+                                    }
                                 }
                             }
+                            if (vm.activePatient && vm.activePatient.id === patient.id) {
+                                vm.activePatient = patient;
+                            }
                         }
-                        if (vm.activePatient && vm.activePatient.id === patient.id) {
-                            vm.activePatient = patient;
+                        buildTitle();
+                        if (hasActive) {
+                            $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS);
+                        } else {
+                            $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS * 10);
                         }
-                    }
-                    buildTitle();
-                    if (hasActive) {
-                        $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS);
-                    } else {
-                        $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS * 10);
-                    }
-                });
+                        vm.isQueryingPatients = false;
+                    });
+                }
             }
 
             function getUserAcf () {
@@ -191,7 +197,8 @@
             }
 
             function requeryDocumentQueryEndpoint (patient, endpoint) {
-                if (endpoint.documentsQueryStatus === 'Failed') {
+                if (endpoint.documentsQueryStatus === 'Failed' ||
+                    endpoint.documentsQueryStatus === 'Cancelled') {
                     endpoint.isRequerying = true;
                     commonService.requeryDocumentQueryEndpoint(patient.id, endpoint.endpoint.id).then(function () {
                         vm.getPatientsAtAcf();

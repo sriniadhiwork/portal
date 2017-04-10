@@ -4,7 +4,7 @@
     describe('review.aiAcfPatientList', function () {
         var vm, el, scope, $log, $timeout, $uibModal, $q, commonService, mock, Mock, actualOptions;
         mock = {
-            fakeDocument: {data: "<document><made><of>XML</of></made></document"},
+            fakeDocument: {contents: "<document><made><of>XML</of></made></document"},
             userAcf: {"id":277,"identifier":"Humboldt-02","name":"Community College","phoneNumber":"555-1912","address":{"id":null,"lines":["92 Tenth Stn"],"city":"Mckinleyville","state":"CA","zipcode":"95501","country":null},"lastRead":1489156161065}
         };
         mock.fakeModal = {
@@ -125,6 +125,14 @@
                 expect(vm.getPatientsAtAcf).toHaveBeenCalled();
             });
 
+            it('should not refresh if a refresh is already in progress', function () {
+                var initCount = commonService.getPatientsAtAcf.calls.count();
+                vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
+                el.isolateScope().$digest();
+                expect(commonService.getPatientsAtAcf.calls.count()).toBe(initCount + 1);
+            });
+
             it('should know when a document is actively being cached', function () {
                 var cachedDocPatients = angular.copy(Mock.patients);
                 cachedDocPatients[0].endpointMaps[0].documents[0].status = 'Active';
@@ -198,7 +206,12 @@
                 expect(commonService.requeryDocumentQueryEndpoint).toHaveBeenCalledWith(vm.patients[1].id, vm.patients[1].endpointMaps[1].endpoint.id);
             });
 
-            it('should not call commonService.requeryDocumentQueryEndpoint if status is not "Failed"', function () {
+            it('should not call commonService.requeryDocumentQueryEndpoint if status is not "Failed" or "Cancelled"', function () {
+                vm.requeryDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[0]);
+                el.isolateScope().$digest();
+                expect(commonService.requeryDocumentQueryEndpoint).not.toHaveBeenCalled();
+
+                vm.patients[1].endpointMaps[0].status = 'Cancelled';
                 vm.requeryDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[0]);
                 el.isolateScope().$digest();
                 expect(commonService.requeryDocumentQueryEndpoint).not.toHaveBeenCalled();
@@ -231,12 +244,13 @@
 
         it('should not re-call the service if the document is already cached', function () {
             var patient = vm.patients[0];
+            var initCount = commonService.getDocument.calls.count();
             vm.getDocument(patient, patient.endpointMaps[0].documents[0]);
             el.isolateScope().$digest();
 
             vm.getDocument(patient, patient.endpointMaps[0].documents[0]);
             el.isolateScope().$digest();
-            expect(commonService.getDocument.calls.count()).toBe(1);
+            expect(commonService.getDocument.calls.count()).toBe(initCount + 1);
         });
 
         it('should have a way to discharge patients', function () {
