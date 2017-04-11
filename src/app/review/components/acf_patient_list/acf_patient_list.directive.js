@@ -46,6 +46,7 @@
             vm.getDocument = getDocument;
             vm.getPatientsAtAcf = getPatientsAtAcf;
             vm.getUserAcf = getUserAcf;
+            vm.requeryDocument = requeryDocument;
             vm.requeryDocumentQueryEndpoint = requeryDocumentQueryEndpoint;
             vm.translateDate = translateDate;
 
@@ -79,6 +80,7 @@
 
             function cancelDocument (patient, doc) {
                 if (doc.status === 'Active') {
+                    doc.isClearing = true;
                     commonService.cancelDocument(patient.id, doc.id).then(function (response) {
                         doc = response;
                         vm.getPatientsAtAcf();
@@ -194,6 +196,14 @@
 
             function getUserAcf () {
                 return vm.userAcf;
+            }
+
+            function requeryDocument (patient, doc) {
+                if (doc.status === 'Failed' ||
+                    doc.status === 'Cancelled') {
+                    doc.isRequerying = true;
+                    vm.cacheDocument(patient, doc);
+                }
             }
 
             function requeryDocumentQueryEndpoint (patient, endpoint) {
