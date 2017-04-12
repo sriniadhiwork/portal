@@ -3,7 +3,7 @@
 
     describe('review.aiDocumentReview', function () {
         var vm, scope, el, $log, mock;
-        mock = {fakeDocument: {id:2, title: 'Title of a doc', filetype: 'C-CDA 1', data: '<document><made><of>XML</of></made></document>', status: 'cached'}};
+        mock = {fakeDocument: {id:2, title: 'Title of a doc', filetype: 'C-CDA 1', contents: '<document><made><of>XML</of></made></document>', status: 'cached'}};
 
         beforeEach(function () {
             module('portal');
