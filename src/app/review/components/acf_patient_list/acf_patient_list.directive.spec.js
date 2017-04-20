@@ -55,11 +55,9 @@
                     .concat(Mock.patients[0].endpointMaps[0].documents)
                     .concat(Mock.patients[0].endpointMaps[1].documents)
                     .concat(Mock.patients[0].endpointMaps[2].documents)
-                    .concat(Mock.patients[0].endpointMaps[3].documents)
-                    .concat(Mock.patients[0].endpointMaps[4].documents)
-                    .concat(Mock.patients[0].endpointMaps[5].documents);
+                    .concat(Mock.patients[0].endpointMaps[3].documents);
                 for (var i = 0; i < mock.documentList.length; i++) {
-                    mock.documentList[i].organization = Mock.patients[0].endpointMaps[0].endpoint.locations[0].parentOrgName;
+                    mock.documentList[i].organization = Mock.patients[0].endpointMaps[0].endpoint.managingOrganization;
                 }
                 spyOn($uibModal, 'open').and.callFake(function (options) {
                     actualOptions = options;
@@ -114,7 +112,7 @@
                 vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
                 el.isolateScope().$digest();
 
-                expect(commonService.cacheDocument).toHaveBeenCalledWith(3, '16');
+                expect(commonService.cacheDocument).toHaveBeenCalledWith(1, '5');
                 expect(vm.patients[0].endpointMaps[0].documents[0].cached).toBe(true);
             });
 
@@ -140,7 +138,7 @@
 
                 vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
                 el.isolateScope().$digest();
-                expect(vm.patients[0].documentStatus).toEqual({total: 12, cached: 0, active: 1});
+                expect(vm.patients[0].documentStatus).toEqual({total: 6, cached: 0, active: 1});
             });
 
             it('should not try to cache the same document twice', function () {
@@ -165,7 +163,7 @@
                 vm.cancelDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
                 el.isolateScope().$digest();
 
-                expect(commonService.cancelDocument).toHaveBeenCalledWith(3, '16');
+                expect(commonService.cancelDocument).toHaveBeenCalledWith(1, '5');
             });
 
             it('should not cancel caching an inactive document', function () {
@@ -185,7 +183,7 @@
                 vm.getDocument(patient, patient.endpointMaps[0].documents[0]);
                 el.isolateScope().$digest();
 
-                expect(commonService.getDocument).toHaveBeenCalledWith(3, '16');
+                expect(commonService.getDocument).toHaveBeenCalledWith(1, '5');
                 expect(vm.activeDocument).toEqual(patient.endpointMaps[0].documents[0]);
             });
 
@@ -201,9 +199,10 @@
             });
 
             it('should requery for document contents', function () {
+                vm.patients[1].endpointMaps[0].documents[0].status = 'Cancelled';
                 vm.requeryDocument(vm.patients[1], vm.patients[1].endpointMaps[0].documents[0]);
                 el.isolateScope().$digest();
-                expect(commonService.cacheDocument).toHaveBeenCalledWith(4,'1');
+                expect(commonService.cacheDocument).toHaveBeenCalledWith(2, '8');
             });
 
             it('should not requery for unless the document was cancelled or failed', function () {
@@ -211,7 +210,7 @@
                 vm.patients[1].endpointMaps[0].documents[0].status = 'Cancelled';
                 vm.requeryDocument(vm.patients[1], vm.patients[1].endpointMaps[0].documents[0]);
                 el.isolateScope().$digest();
-                expect(commonService.cacheDocument).toHaveBeenCalledWith(4,'1');
+                expect(commonService.cacheDocument).toHaveBeenCalledWith(2, '8');
                 expect(commonService.cacheDocument.calls.count()).toBe(initCount + 1);
 
                 vm.patients[1].endpointMaps[0].documents[0].status = 'Active';
@@ -221,6 +220,7 @@
             });
 
             it('should set the document isRequerying flag to true when requerying', function () {
+                vm.patients[1].endpointMaps[0].documents[0].status = 'Cancelled';
                 vm.requeryDocument(vm.patients[1], vm.patients[1].endpointMaps[0].documents[0]);
                 expect(vm.patients[1].endpointMaps[0].documents[0].isRequerying).toBe(true);
             });
@@ -232,7 +232,7 @@
 
                 vm.cacheDocument(vm.patients[0], vm.patients[0].endpointMaps[0].documents[0]);
                 el.isolateScope().$digest();
-                expect(vm.patients[0].documentStatus).toEqual({total: 12, cached: 1, active: 0});
+                expect(vm.patients[0].documentStatus).toEqual({total: 6, cached: 1, active: 0});
             });
 
             it('should know how many document queries are active', function () {
@@ -249,7 +249,7 @@
 
             it('should know if a patient\'s documents are cached', function () {
                 var patient = vm.patients[0];
-                expect(patient.documentStatus).toEqual({total: 12, cached: 0, active: 0});
+                expect(patient.documentStatus).toEqual({total: 6, cached: 0, active: 0});
             });
 
             it('should clear active documents on deactivation', function () {
@@ -285,6 +285,7 @@
             });
 
             it('should call commonService.requeryDocumentQueryEndpoint when requeried', function () {
+                vm.patients = markAll(angular.copy(vm.patients), 'Failed');
                 vm.requeryDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[1]);
                 el.isolateScope().$digest();
                 expect(commonService.requeryDocumentQueryEndpoint).toHaveBeenCalledWith(vm.patients[1].id, vm.patients[1].endpointMaps[1].endpoint.id);
@@ -302,12 +303,14 @@
             });
 
             it('should set the endpoint "isRequerying" to true when requerying', function () {
+                vm.patients = markAll(angular.copy(vm.patients), 'Failed');
                 vm.requeryDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[1]);
                 expect(vm.patients[1].endpointMaps[1].isRequerying).toBe(true);
             });
 
             it('should refresh local queries when requeried', function () {
                 spyOn(vm,'getPatientsAtAcf');
+                vm.patients = markAll(angular.copy(vm.patients), 'Failed');
                 vm.requeryDocumentQueryEndpoint(vm.patients[1], vm.patients[1].endpointMaps[1]);
                 el.isolateScope().$digest();
                 expect(vm.getPatientsAtAcf).toHaveBeenCalled();
@@ -331,7 +334,7 @@
 
         it('should call commonService.dischargePatient on discharge', function () {
             vm.dischargePatient(vm.patients[0]);
-            expect(commonService.dischargePatient).toHaveBeenCalledWith(3);
+            expect(commonService.dischargePatient).toHaveBeenCalledWith(Mock.patients[0].id);
         });
 
         it('should know the user\'s ACF', function () {
@@ -374,13 +377,13 @@
 
         it('should change the title when a patient is activated', function () {
             vm.activatePatient(vm.patients[1]);
-            expect(vm.panelTitle).toBe('Patient: James Dean (Jim)');
+            expect(vm.panelTitle).toBe('Patient: Robert Jones (Bob)');
         });
 
         it('should handle a missing friendly name', function () {
             vm.patients[1].friendlyName = null;
             vm.activatePatient(vm.patients[1]);
-            expect(vm.panelTitle).toBe('Patient: James Dean');
+            expect(vm.panelTitle).toBe('Patient: Robert Jones');
         });
 
         it('should set the active patient when activated', function () {
@@ -450,8 +453,7 @@
                 $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(5);
 
-                var completePatients = angular.copy(vm.patients);
-                completePatients[0].endpointMaps[1].documentsQueryStatus = 'Successful';
+                var completePatients = markAll(angular.copy(vm.patients), 'Successful');
                 commonService.getPatientsAtAcf.and.returnValue($q.when(completePatients));
                 $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(6);
@@ -461,8 +463,7 @@
 
             it('should refresh patients on a longer timescale when all are complete', function () {
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(1);
-                var completePatients = angular.copy(vm.patients);
-                completePatients[0].endpointMaps[1].documentsQueryStatus = 'Successful';
+                var completePatients = markAll(angular.copy(vm.patients), 'Successful');
                 commonService.getPatientsAtAcf.and.returnValue($q.when(completePatients));
                 $timeout.flush(vm.TIMEOUT_MILLIS);
                 expect(commonService.getPatientsAtAcf.calls.count()).toBe(2);
@@ -512,4 +513,15 @@
             });
         });
     });
+
+    ////////////////////////////////////////////////////////////////////
+
+    function markAll (patients, status) {
+        for (var i = 0; i < patients.length; i++) {
+            for (var j = 0; j < patients[i].endpointMaps.length; j++) {
+                patients[i].endpointMaps[j].documentsQueryStatus = status;
+            }
+        }
+        return patients;
+    }
 })();

@@ -168,7 +168,7 @@
                                 hasActive = hasActive || (patient.endpointMaps[j].documentsQueryStatus === 'Active');
                                 patient.documentStatus.total += patient.endpointMaps[j].documents.length;
                                 for (var k = 0; k < patient.endpointMaps[j].documents.length; k++) {
-                                    patient.endpointMaps[j].documents[k].organization = patient.endpointMaps[j].endpoint.locations[0].parentOrgName;
+                                    patient.endpointMaps[j].documents[k].organization = patient.endpointMaps[j].endpoint.managingOrganization;
                                     patient.documents.push(patient.endpointMaps[j].documents[k]);
                                     if (patient.endpointMaps[j].documents[k].cached) {
                                         patient.documentStatus.cached += 1;

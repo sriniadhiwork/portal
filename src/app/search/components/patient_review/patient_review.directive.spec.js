@@ -81,12 +81,12 @@
 
             it('should get queries for a user at login', function () {
                 expect(commonService.getQueries).toHaveBeenCalled();
-                expect(vm.patientQueries.length).toBe(3);
+                expect(vm.patientQueries.length).toBe(Mock.queries.length);
             });
 
             it('should know how many patientRecords were found for a query', function () {
                 expect(vm.getRecordCount).toBeDefined();
-                expect(vm.getRecordCount(vm.patientQueries[0])).toBe(0);
+                expect(vm.getRecordCount(vm.patientQueries[0])).toBe(4);
             });
 
             it('should handle an undefined query', function () {
@@ -94,15 +94,14 @@
             });
 
             it('should put the recordCount into the query at load', function () {
-                expect(vm.patientQueries[0].recordCount).toBe(0);
+                expect(vm.patientQueries[0].recordCount).toBe(4);
                 expect(vm.patientQueries[1].recordCount).toBe(3);
             });
 
             it('should know how many endpoints are complete for a query', function () {
                 expect(vm.countComplete).toBeDefined();
-                expect(vm.countComplete(vm.patientQueries[0])).toBe(0);
+                expect(vm.countComplete(vm.patientQueries[0])).toBe(5);
                 expect(vm.countComplete(vm.patientQueries[1])).toBe(3);
-                expect(vm.countComplete(vm.patientQueries[2])).toBe(3);
             });
 
             it('should call commonService to display names', function () {
@@ -146,6 +145,7 @@
                     expect(commonService.getQueries.calls.count()).toBe(3);
 
                     activeProducts[0].status = 'Complete';
+                    activeProducts[1].status = 'Complete';
                     commonService.getQueries.and.returnValue($q.when(activeProducts));
                     $timeout.flush();
                     expect(commonService.getQueries.calls.count()).toBe(4);
@@ -156,6 +156,7 @@
                 it('should set "activeQuery" to true immediately upon starting a query', function () {
                     expect(vm.activeQuery).toBe(true);
                     activeProducts[0].status = 'Complete';
+                    activeProducts[1].status = 'Complete';
                     commonService.getQueries.and.returnValue($q.when(activeProducts));
                     $timeout.flush();
                     expect(vm.activeQuery).toBe(false);
@@ -175,26 +176,26 @@
             });
 
             it('should have a way to clear patient queries', function () {
-                expect(vm.patientQueries.length).toBe(3);
+                expect(vm.patientQueries.length).toBe(Mock.queries.length);
                 commonService.getQueries.and.returnValue($q.when(angular.copy(Mock.queries).slice(1)));
 
                 vm.clearQuery(vm.patientQueries[0]);
                 el.isolateScope().$digest();
-                expect(vm.patientQueries.length).toBe(2);
+                expect(vm.patientQueries.length).toBe(Mock.queries.length - 1);
             });
 
             it('should remove a cleared query from the display Queue', function () {
-                expect(vm.displayedQueries.length).toBe(3);
+                expect(vm.displayedQueries.length).toBe(Mock.queries.length);
                 vm.clearQuery(vm.patientQueries[0]);
-                expect(vm.displayedQueries.length).toBe(2);
+                expect(vm.displayedQueries.length).toBe(Mock.queries.length - 1);
             });
 
             it('should do nothing if the query isn\'t found', function () {
-                expect(vm.patientQueries.length).toBe(3);
+                expect(vm.patientQueries.length).toBe(Mock.queries.length);
                 var fakeQuery = angular.copy(vm.patientQueries[0]);
                 fakeQuery.id = 'fake';
                 vm.clearQuery(fakeQuery);
-                expect(vm.patientQueries.length).toBe(3);
+                expect(vm.patientQueries.length).toBe(Mock.queries.length);
             });
 
             it('should call commonService.clearQuery', function () {
@@ -204,12 +205,12 @@
             });
 
             it('should have a way to cancel an endpoint\'s query', function () {
-                expect(vm.patientQueries[0].endpointStatuses.length).toBe(3);
+                expect(vm.patientQueries[0].endpointStatuses.length).toBe(5);
                 commonService.getQueries.and.returnValue($q.when((angular.copy(Mock.queries)[0].endpointStatuses.splice(0,1))));
 
                 vm.cancelQueryEndpoint(vm.patientQueries[0].endpointStatuses[0]);
                 el.isolateScope().$digest();
-                expect(vm.patientQueries[0].endpointStatuses.length).toBe(3);
+                expect(vm.patientQueries[0].endpointStatuses.length).toBe(5);
             });
 
             it('should call commonService.cancelEndpointQuery', function () {
@@ -294,7 +295,7 @@
                 commonService.getQueries.and.returnValue($q.when(newQueries));
                 vm.requery(Mock.queries[1]);
                 el.isolateScope().$digest();
-                expect(vm.patientQueries.length).toBe(2);
+                expect(vm.patientQueries.length).toBe(Mock.queries.length - 1);
             });
 
             it('should have a function to requery individual organizations', function () {
@@ -303,7 +304,7 @@
 
             it('should call commonService.requeryEndpoint when requeried', function () {
                 vm.requeryEndpoint(Mock.queries[0].endpointStatuses[0]);
-                expect(commonService.requeryEndpoint).toHaveBeenCalledWith(4,1);
+                expect(commonService.requeryEndpoint).toHaveBeenCalledWith(1,7);
             });
 
             it('should refresh local queries when requeried', function () {
