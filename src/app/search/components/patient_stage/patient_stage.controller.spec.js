@@ -19,8 +19,8 @@
             givenName: ['Bob']
         };
         mock.queriedPatient = {
-            dateOfBirth: '19910405',
-            dateOfBirthParts: { year: '1991', month: '04', day: '05' },
+            dateOfBirth: '13120117',
+            dateOfBirthParts: { year: '1312', month: '01', day: '17' },
             fullName: 'Bob Jones',
             gender: 'M',
             ssn: '123-12-1234'
@@ -46,7 +46,7 @@
                 commonService = _commonService_;
                 commonService.clearQuery.and.returnValue($q.when({}));
                 commonService.stagePatient.and.returnValue($q.when({}));
-                mock.query = Mock.queries[1];
+                mock.query = Mock.queries[0];
                 mock.queriedPatient.dateOfBirthString = commonService.convertDobString(mock.queriedPatient.dateOfBirth),
                 mock.fakeModalOptions = Mock.fakeModalOptions;
                 mock.fakeModalOptions.templateUrl = 'app/search/components/patient_stage_details/patient_stage_details.html';
@@ -108,7 +108,7 @@
                 //vm.query.endpointStatuses[1].results[1] = {selected: false};
                 vm.patient = angular.copy(mock.queriedPatient);
                 patientStage = {
-                    patientRecordIds: [1],
+                    patientRecordIds: [4],
                     patient: angular.copy(vm.patient),
                     id: vm.query.id
                 }
@@ -162,10 +162,8 @@
                     vm.query.endpointStatuses[1].results[0].selected = false;
                     vm.selectAll(vm.query.endpointStatuses[1]);
                     expect(vm.query.endpointStatuses[1].results[0].selected).toBe(true);
-                    expect(vm.query.endpointStatuses[1].results[1].selected).toBe(true);
                     vm.selectAll(vm.query.endpointStatuses[1]);
                     expect(vm.query.endpointStatuses[1].results[0].selected).toBe(false);
-                    expect(vm.query.endpointStatuses[1].results[1].selected).toBe(false);
                 });
 
                 it('should update the dateOfBirth with the model values', function () {
