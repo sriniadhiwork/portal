@@ -9,7 +9,7 @@
     function commonService ($http, $filter, $q, API, AuthAPI, GAAPI, $log, $localStorage, $window) {
         var self = this;
 
-        var ACF_LOCATION_IN_IDENTITY = 7;
+        var ACF_LOCATION_IN_IDENTITY = 8;
 
         self.cacheDocument = cacheDocument;
         self.cancelDocument = cancelDocument;
@@ -229,8 +229,8 @@
                 user.organization = identity[4];
                 user.purpose_for_use = identity[5];
                 user.role = identity[6];
-                if (identity[7]) {
-                    user.acf = identity[7];
+                if (identity[ACF_LOCATION_IN_IDENTITY]) {
+                    user.acf = identity[ACF_LOCATION_IN_IDENTITY];
                 }
                 user.authorities = authorities;
             }
