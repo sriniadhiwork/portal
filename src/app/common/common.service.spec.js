@@ -18,14 +18,15 @@
             organization: 'organization',
             purpose_for_use: 'purpose_for_use',
             role: 'role',
+            pulseUserId: '1',
             acf: mock.userAcf,
             authorities: ['ROLE_ADMIN']
         };
         var iatDate = new Date();
         var expDate = new Date();
         expDate.setDate(expDate.getDate() + 1);
-        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, mock.userAcf], Authorities: user.authorities});
-        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role], Authorities: user.authorities});
+        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, user.pulseUserId, mock.userAcf], Authorities: user.authorities});
+        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, user.pulseUserId], Authorities: user.authorities});
 
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
