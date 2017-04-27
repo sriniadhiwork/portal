@@ -229,6 +229,7 @@
                 user.organization = identity[4];
                 user.purpose_for_use = identity[5];
                 user.role = identity[6];
+                user.pulseUser = identity[7];
                 if (identity[ACF_LOCATION_IN_IDENTITY]) {
                     user.acf = identity[ACF_LOCATION_IN_IDENTITY];
                 }
