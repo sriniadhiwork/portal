@@ -145,6 +145,13 @@
             expect(vm.acf).toEqual({address: {lines: ['']}});
         });
 
+        it('should not call the commonService is the user isn\'t authenticated', function () {
+            var callCount = commonService.getUserAcf.calls.count();
+            commonService.hasAcf.and.returnValue(false)
+            vm.getUserAcf();
+            expect(commonService.getUserAcf.calls.count()).toBe(callCount);
+        });
+
         describe('address object on load', function () {
             var baseAcf;
             var plusAcf;

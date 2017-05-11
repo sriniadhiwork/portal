@@ -6,12 +6,14 @@
         .service('commonService', commonService);
 
     /** @ngInject */
-    function commonService ($http, $filter, $q, API, AuthAPI, GAAPI, LogoutRedirect, $log, $localStorage, $window) {
+    function commonService ($http, $filter, $q, API, AuthAPI, GAAPI, $log, $localStorage, $window) {
         var self = this;
 
-        var ACF_LOCATION_IN_IDENTITY = 7;
+        var ACF_LOCATION_IN_IDENTITY = 8;
 
         self.cacheDocument = cacheDocument;
+        self.cancelDocument = cancelDocument;
+        self.cancelDocumentQueryEndpoint = cancelDocumentQueryEndpoint;
         self.cancelQueryEndpoint = cancelQueryEndpoint;
         self.clearQuery = clearQuery;
         self.clearToken = clearToken;
@@ -41,6 +43,7 @@
         self.logout = logout;
         self.queryEndpoints = queryEndpoints;
         self.refreshToken = refreshToken;
+        self.requeryDocumentQueryEndpoint = requeryDocumentQueryEndpoint;
         self.requeryEndpoint = requeryEndpoint;
         self.saveToken = saveToken;
         self.searchForPatient = searchForPatient;
@@ -52,6 +55,14 @@
 
         function cacheDocument (patientId, documentId) {
             return enhancedGet('/patients/' + patientId + '/documents/' + documentId);
+        }
+
+        function cancelDocument (patientId, documentId) {
+            return enhancedPost('/patients/' + patientId + '/documents/' + documentId + '/cancel', {});
+        }
+
+        function cancelDocumentQueryEndpoint (patientId, endpointId) {
+            return enhancedPost('/patients/' + patientId + '/endpoints/' + endpointId + '/cancel', {});
         }
 
         function cancelQueryEndpoint (queryId, endpointId) {
@@ -218,8 +229,9 @@
                 user.organization = identity[4];
                 user.purpose_for_use = identity[5];
                 user.role = identity[6];
-                if (identity[7]) {
-                    user.acf = identity[7];
+                user.pulseUserId = identity[7];
+                if (identity[ACF_LOCATION_IN_IDENTITY]) {
+                    user.acf = identity[ACF_LOCATION_IN_IDENTITY];
                 }
                 user.authorities = authorities;
             }
@@ -267,7 +279,7 @@
 
         function logout () {
             self.clearToken();
-            $window.location.replace(LogoutRedirect);
+            $window.location.replace(AuthAPI + '/saml/logout');
         }
 
         function queryEndpoints () {
@@ -277,19 +289,23 @@
         function refreshToken () {
             var userAcf = getUserAcf();
             return getAcf(userAcf.id)
-            .then(function (result){
-                return postApi('/jwt/keepalive', result, AuthAPI)
-                    .then(function (response) {
-                    if (validTokenFormat(response.token)) {
-                        self.saveToken(response.token);
-                        return $q.when(response.token);
-                    } else {
-                        return $q.when(null);
-                    }
-                }, function (error) {
-                    return $q.reject(error);
+                .then(function (result){
+                    return postApi('/jwt/keepalive', result, AuthAPI)
+                        .then(function (response) {
+                            if (validTokenFormat(response.token)) {
+                                self.saveToken(response.token);
+                                return $q.when(response.token);
+                            } else {
+                                return $q.when(null);
+                            }
+                        }, function (error) {
+                            return $q.reject(error);
+                        });
                 });
-            });
+        }
+
+        function requeryDocumentQueryEndpoint (patientId, endpointId) {
+            return enhancedPost('/patients/' + patientId + '/endpoints/' + endpointId + '/requery', {});
         }
 
         function requeryEndpoint (queryId, endpointId) {

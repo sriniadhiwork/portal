@@ -39,9 +39,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat-start="endpoint in vm.query.endpointStatuses | orderBy:'endpoint.id' track by endpoint.id" ng-if="endpoint.results && endpoint.results.length > 0">
+          <tr ng-repeat-start="endpoint in vm.query.endpointStatuses | orderBy:['endpoint.managingOrganization','endpoint.id'] track by endpoint.id" ng-if="endpoint.results && endpoint.results.length > 0">
             <td rowspan="{{ endpoint.results.length }}" href ng-click="vm.selectAll(endpoint)">
-              <strong>{{ endpoint.endpoint.locations[0].parentOrgName }}</strong>
+              <strong>{{ endpoint.endpoint.managingOrganization }}</strong>
               <ul class="" ng-repeat="location in endpoint.endpoint.locations | orderBy:['name','id'] track by location.id">
                 <li>{{ location.name }}</li>
               </ul>

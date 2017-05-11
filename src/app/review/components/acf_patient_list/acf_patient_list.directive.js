@@ -35,6 +35,8 @@
 
             vm.activatePatient = activatePatient;
             vm.cacheDocument = cacheDocument;
+            vm.cancelDocument = cancelDocument;
+            vm.cancelDocumentQueryEndpoint = cancelDocumentQueryEndpoint;
             vm.convertDobString = commonService.convertDobString;
             vm.countActive = countActive;
             vm.deactivatePatient = deactivatePatient;
@@ -44,6 +46,8 @@
             vm.getDocument = getDocument;
             vm.getPatientsAtAcf = getPatientsAtAcf;
             vm.getUserAcf = getUserAcf;
+            vm.requeryDocument = requeryDocument;
+            vm.requeryDocumentQueryEndpoint = requeryDocumentQueryEndpoint;
             vm.translateDate = translateDate;
 
             vm.TIMEOUT_MILLIS = QueryQueryTimeout * 1000;
@@ -55,6 +59,7 @@
             function activate () {
                 vm.activePatient = null;
                 vm.patients = [];
+                vm.isQueryingPatients = false;
                 vm.getPatientsAtAcf();
                 vm.userAcf = commonService.getUserAcf();
             }
@@ -68,6 +73,25 @@
                 if (!doc.cached) {
                     doc.status = 'Active';
                     commonService.cacheDocument(patient.id, doc.id).then(function () {
+                        vm.getPatientsAtAcf();
+                    });
+                }
+            }
+
+            function cancelDocument (patient, doc) {
+                if (doc.status === 'Active') {
+                    doc.isClearing = true;
+                    commonService.cancelDocument(patient.id, doc.id).then(function (response) {
+                        doc = response;
+                        vm.getPatientsAtAcf();
+                    });
+                }
+            }
+
+            function cancelDocumentQueryEndpoint (patient, endpoint) {
+                if (endpoint.documentsQueryStatus === 'Active') {
+                    endpoint.isClearing = true;
+                    commonService.cancelDocumentQueryEndpoint(patient.id, endpoint.endpoint.id).then(function () {
                         vm.getPatientsAtAcf();
                     });
                 }
@@ -122,7 +146,7 @@
             function getDocument (patient, doc) {
                 if (!doc.data) {
                     commonService.getDocument(patient.id, doc.id).then(function (response) {
-                        doc.data = response.data;
+                        doc.data = response.contents;
                         vm.activeDocument = doc;
                     });
                 } else {
@@ -131,43 +155,65 @@
             }
 
             function getPatientsAtAcf () {
-                commonService.getPatientsAtAcf().then(function (response) {
-                    var hasActive = false;
-                    vm.patients = response;
-                    for (var i = 0; i < vm.patients.length; i++) {
-                        var patient = vm.patients[i];
-                        patient.documentStatus = {total: 0, active: 0, cached: 0};
-                        patient.documents = [];
-                        for (var j = 0; j < patient.endpointMaps.length; j++) {
-                            hasActive = hasActive || (patient.endpointMaps[j].documentsQueryStatus === 'Active');
-                            patient.documentStatus.total += patient.endpointMaps[j].documents.length;
-                            for (var k = 0; k < patient.endpointMaps[j].documents.length; k++) {
-                                patient.endpointMaps[j].documents[k].organization = patient.endpointMaps[j].endpoint.locations[0].parentOrgName;
-                                patient.documents.push(patient.endpointMaps[j].documents[k]);
-                                if (patient.endpointMaps[j].documents[k].cached) {
-                                    patient.documentStatus.cached += 1;
-                                }
-                                if (patient.endpointMaps[j].documents[k].status === 'Active') {
-                                    patient.documentStatus.active += 1;
-                                    hasActive = true;
+                if (!vm.isQueryingPatients) {
+                    vm.isQueryingPatients = true;
+                    commonService.getPatientsAtAcf().then(function (response) {
+                        var hasActive = false;
+                        vm.patients = response;
+                        for (var i = 0; i < vm.patients.length; i++) {
+                            var patient = vm.patients[i];
+                            patient.documentStatus = {total: 0, active: 0, cached: 0};
+                            patient.documents = [];
+                            for (var j = 0; j < patient.endpointMaps.length; j++) {
+                                hasActive = hasActive || (patient.endpointMaps[j].documentsQueryStatus === 'Active');
+                                patient.documentStatus.total += patient.endpointMaps[j].documents.length;
+                                for (var k = 0; k < patient.endpointMaps[j].documents.length; k++) {
+                                    patient.endpointMaps[j].documents[k].organization = patient.endpointMaps[j].endpoint.managingOrganization;
+                                    patient.documents.push(patient.endpointMaps[j].documents[k]);
+                                    if (patient.endpointMaps[j].documents[k].cached) {
+                                        patient.documentStatus.cached += 1;
+                                    }
+                                    if (patient.endpointMaps[j].documents[k].status === 'Active') {
+                                        patient.documentStatus.active += 1;
+                                        hasActive = true;
+                                    }
                                 }
                             }
+                            if (vm.activePatient && vm.activePatient.id === patient.id) {
+                                vm.activePatient = patient;
+                            }
                         }
-                        if (vm.activePatient && vm.activePatient.id === patient.id) {
-                            vm.activePatient = patient;
+                        buildTitle();
+                        if (hasActive) {
+                            $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS);
+                        } else {
+                            $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS * 10);
                         }
-                    }
-                    buildTitle();
-                    if (hasActive) {
-                        $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS);
-                    } else {
-                        $timeout(vm.getPatientsAtAcf, vm.TIMEOUT_MILLIS * 10);
-                    }
-                });
+                        vm.isQueryingPatients = false;
+                    });
+                }
             }
 
             function getUserAcf () {
                 return vm.userAcf;
+            }
+
+            function requeryDocument (patient, doc) {
+                if (doc.status === 'Failed' ||
+                    doc.status === 'Cancelled') {
+                    doc.isRequerying = true;
+                    vm.cacheDocument(patient, doc);
+                }
+            }
+
+            function requeryDocumentQueryEndpoint (patient, endpoint) {
+                if (endpoint.documentsQueryStatus === 'Failed' ||
+                    endpoint.documentsQueryStatus === 'Cancelled') {
+                    endpoint.isRequerying = true;
+                    commonService.requeryDocumentQueryEndpoint(patient.id, endpoint.endpoint.id).then(function () {
+                        vm.getPatientsAtAcf();
+                    });
+                }
             }
 
             function translateDate (input) {

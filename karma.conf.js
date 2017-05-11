@@ -79,13 +79,6 @@ module.exports = function(config) {
             'karma-ng-html2js-preprocessor'
         ],
 
-        coverageReporter: {
-            type: 'lcov',
-            dir: 'coverage/',
-            subdir: '.',
-            file: 'coverage.lcov'
-        },
-
         proxies: {
             '/assets/': path.join('/base/', conf.paths.src, '/assets/')
         }

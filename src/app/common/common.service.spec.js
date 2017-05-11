@@ -4,7 +4,7 @@
     describe('portal.common.services', function () {
 
         var commonService, $httpBackend, $window, requestHandler;
-        var API, AuthAPI, GAAPI, LogoutRedirect;
+        var API, AuthAPI, GAAPI;
 
         requestHandler = {};
 
@@ -18,14 +18,15 @@
             organization: 'organization',
             purpose_for_use: 'purpose_for_use',
             role: 'role',
+            pulseUserId: '1',
             acf: mock.userAcf,
             authorities: ['ROLE_ADMIN']
         };
         var iatDate = new Date();
         var expDate = new Date();
         expDate.setDate(expDate.getDate() + 1);
-        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, mock.userAcf], Authorities: user.authorities});
-        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role], Authorities: user.authorities});
+        var jwt = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, user.pulseUserId, mock.userAcf], Authorities: user.authorities});
+        var jwtWithoutAcf = angular.toJson({sub: user.username, iat: iatDate.getTime(), exp: expDate.getTime(), Identity: [user.user_id, user.username, user.auth_source, user.full_name, user.organization, user.purpose_for_use, user.role, user.pulseUserId], Authorities: user.authorities});
 
         var tokenPrefix = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.';
         var tokenSuffix = '.Fo482cebe7EfuTtGHjvgsMByC0l-V8ZULMlCNVoxWmI'
@@ -51,13 +52,12 @@
             }
         });
 
-        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _LogoutRedirect_, _API_, _AuthAPI_, _GAAPI_) {
+        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _API_, _AuthAPI_, _GAAPI_) {
             commonService = _commonService_;
             $httpBackend = _$httpBackend_;
             $window = _$window_;
             mock.token = tokenPrefix + $window.btoa(jwt) + tokenSuffix;
             mock.tokenWOAcf = tokenPrefix + $window.btoa(jwtWithoutAcf) + tokenSuffix;
-            LogoutRedirect = _LogoutRedirect_;
             API = _API_;
             AuthAPI = _AuthAPI_;
             GAAPI = _GAAPI_;
@@ -70,6 +70,8 @@
              */
             spyOn($window.location, 'replace');
             requestHandler.cacheDocument = $httpBackend.whenGET(API + '/patients/3/documents/2').respond(200, true);
+            requestHandler.cancelDocument = $httpBackend.whenPOST(API + '/patients/3/documents/2/cancel').respond(200, true);
+            requestHandler.cancelDocumentQueryEndpoint = $httpBackend.whenPOST(API + '/patients/3/endpoints/2/cancel', {}).respond(200, true);
             requestHandler.cancelQueryEndpoint = $httpBackend.whenPOST(API + '/queries/1/endpoint/2/cancel', {}).respond(200, true);
             requestHandler.clearQuery = $httpBackend.whenPOST(API + '/queries/1/delete', {}).respond(200, true);
             requestHandler.createAcf = $httpBackend.whenPOST(API + '/acfs/create', mock.newAcf).respond(200, mock.newAcf);
@@ -86,6 +88,7 @@
             requestHandler.getRestQueryPatientDocuments = $httpBackend.whenGET(API + '/patients/3/documents').respond(200, {results: mock.patientDocuments});
             requestHandler.getSamlUserToken = $httpBackend.whenGET(AuthAPI + '/jwt').respond(200, {token: mock.token});
             requestHandler.refreshToken = $httpBackend.whenPOST(AuthAPI + '/jwt/keepalive', mock.acfs[0]).respond(200, {token: mock.token});
+            requestHandler.requeryDocumentQueryEndpoint = $httpBackend.whenPOST(API + '/patients/3/endpoints/4/requery', {}).respond(200, true);
             requestHandler.requeryEndpoint = $httpBackend.whenPOST(API + '/queries/3/endpoint/4/requery', {}).respond(200, {results: mock.patientQueryResponse});
             requestHandler.setAcf = $httpBackend.whenPOST(AuthAPI + '/jwt/setAcf', {}).respond(200, {token: mock.token});
             requestHandler.stagePatient = $httpBackend.whenPOST(API + '/queries/1/stage', mock.stagePatient).respond(200, {});
@@ -220,7 +223,7 @@
 
             it('should redirect the user to an external page on logout', function () {
                 commonService.logout();
-                expect($window.location.replace).toHaveBeenCalledWith(LogoutRedirect);
+                expect($window.location.replace).toHaveBeenCalledWith(AuthAPI + '/saml/logout');
             });
 
             it('should call the saml SP to find the Spring Boot User Object', function () {
@@ -371,6 +374,26 @@
                 $httpBackend.flush();
             });
 
+            it('should cancel querying of documents', function () {
+                commonService.cancelDocument(3,2);
+                $httpBackend.flush();
+                requestHandler.cancelDocument.respond(401, {error: 'test'});
+                commonService.cancelDocument(3,2).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should cancel querying of document lists', function () {
+                commonService.cancelDocumentQueryEndpoint(3,2);
+                $httpBackend.flush();
+                requestHandler.cancelDocumentQueryEndpoint.respond(401, {error: 'test'});
+                commonService.cancelDocumentQueryEndpoint(3,2).then(function (response) {
+                    expect(response.message).toEqual('test');
+                });
+                $httpBackend.flush();
+            });
+
             it('should call /endpoints', function () {
                 commonService.queryEndpoints();
                 $httpBackend.flush();
@@ -500,6 +523,16 @@
                 $httpBackend.flush();
                 requestHandler.requeryEndpoint.respond(401, {error: 'a rejection'});
                 commonService.requeryEndpoint(3,4).then(function (response) {
+                    expect(response).toEqual('a rejection');
+                });
+                $httpBackend.flush();
+            });
+
+            it('should call /patients/{queryId}/endpoints/{endpointId}/requery', function () {
+                commonService.requeryDocumentQueryEndpoint(3,4);
+                $httpBackend.flush();
+                requestHandler.requeryDocumentQueryEndpoint.respond(401, {error: 'a rejection'});
+                commonService.requeryDocumentQueryEndpoint(3,4).then(function (response) {
                     expect(response).toEqual('a rejection');
                 });
                 $httpBackend.flush();
