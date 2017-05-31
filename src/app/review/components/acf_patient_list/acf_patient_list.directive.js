@@ -218,7 +218,7 @@
 
             function translateDate (input) {
                 input = '' + input;
-                var ret = input.substring(0, 4) + '-' + input.substring(4, 6) + '-' + input.substring(6);
+                var ret = input.substring(0, 4) + '-' + input.substring(4, 6) + '-' + input.substring(6, 8);
                 return ret;
             }
 
