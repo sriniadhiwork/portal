@@ -28,12 +28,12 @@
                   <td>{{ query.terms.gender }}</td>
                   <td>{{ query.lastRead | date : 'medium' }}</td>
                   <td>
-                    <uib-progress max="query.endpointStatuses.length" ng-if="query.status !== 'Complete'">
+                    <uib-progress ng-click="vm.viewingDetails[query.id] = !vm.viewingDetails[query.id]" max="query.endpointStatuses.length" ng-if="query.status !== 'Complete'">
                       <uib-bar class="progress-striped active" value="vm.countComplete(query)" type="success"><i>{{ vm.countComplete(query) }} organization<span ng-if="vm.countComplete(query) > 1">s</span> complete</i></uib-bar>
                       <uib-bar class="progress-striped active" value="query.endpointStatuses.length - vm.countComplete(query)" type="info"><i>{{ query.endpointStatuses.length - vm.countComplete(query) }} organization<span ng-if="query.endpointStatuses.length - vm.countComplete(query) > 1">s</span> pending</i></uib-bar>
                     </uib-progress>
                     <uib-progressbar ng-click="vm.viewingDetails[query.id] = !vm.viewingDetails[query.id]" class="progress-striped-no" ng-if="query.status === 'Complete'" value="100" type="{{ query.recordCount > 0 ? 'success' : 'danger' }}"><i>{{ query.recordCount }} record<span ng-if="query.recordCount !== 1">s</span> found</i></uib-progressbar>
-                    <div ng-if="query.status !== 'Complete' || vm.viewingDetails[query.id]">
+                    <div ng-if="vm.viewingDetails[query.id]">
                       <div ng-repeat="endpoint in query.endpointStatuses | orderBy:['endpoint.managingOrganization', 'endpoint.id'] track by endpoint.id">
                         <button ng-if="endpoint.status === 'Active'" class="btn btn-sm pull-right" ng-class="endpoint.isClearing ? 'btn-warning' : 'btn-danger'" ng-click="vm.cancelQueryEndpoint(endpoint)" ng-disabled="endpoint.isClearing"><i class="fa" ng-class="endpoint.isClearing ? 'fa-spinner fa-spin' : 'fa-ban'"></i><span class="sr-only">Cancel query for {{ endpoint.endpoint.locations[0].parentOrgName }}</span></button>
                         <button ng-if="endpoint.status !== 'Active'" class="btn btn-sm pull-right" ng-class="endpoint.isRequerying ? 'btn-warning' : 'btn-primary'" ng-click="vm.requeryEndpoint(endpoint)" ng-disabled="endpoint.isRequerying"><i class="fa" ng-class="endpoint.isRequerying ? 'fa-spinner fa-spin' : 'fa-refresh'"></i><span class="sr-only">Refresh query for {{ endpoint.endpoint.locations[0].parentOrgName }}</span></button>

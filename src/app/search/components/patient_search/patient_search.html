@@ -45,7 +45,7 @@
         <div class="form-group">
           <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobYear.$touched && vm.queryForm.dobMonth.$touched && vm.queryForm.dobDay.$touched)) && (vm.queryForm.dobYear.$error.required || vm.queryForm.dobMonth.$error.required || vm.queryForm.dobDay.$error.required) }">
             <label class="col-sm-12 control-label">Date of Birth <span class="text-danger">*</span></label>
-            <div class="col-md-4">
+            <div class="col-sm-12 col-md-4">
               <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobMonth.$touched && !vm.query.dobParts.month)) && vm.queryForm.dobMonth.$error.required }">
                 <label class="sr-only" for="dobMonth">Month</label>
                 <select class="input-sm form-control" ng-model="vm.query.dobParts.month"
@@ -67,7 +67,7 @@
                 <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobMonth.$touched && !vm.query.dobParts.month)) && vm.queryForm.dobMonth.$error.required">Field is required</span>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-sm-12 col-md-4">
               <div ng-class="{ 'has-error' : (vm.showFormErrors || (vm.queryForm.dobDay.$touched && !vm.query.dobParts.day)) && vm.queryForm.dobDay.$error.required }">
                 <label class="sr-only" for="dobDay">Day</label>
                 <select class="input-sm form-control" ng-model="vm.query.dobParts.day"
@@ -108,7 +108,7 @@
                 <span class="text-danger" ng-if="(vm.showFormErrors || (vm.queryForm.dobDay.$touched && !vm.query.dobParts.day)) && vm.queryForm.dobDay.$error.required">Field is required</span>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-sm-12 col-md-4">
               <label class="sr-only" for="dobYear">Year</label>
               <input class="input-sm form-control" type="number" ng-model="vm.query.dobParts.year" placeholder="yyyy"
                      ng-pattern="/^\d{4}$/"
@@ -138,12 +138,12 @@
                    ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
           </div>
 
-          <div class="col-sm-4">
+          <div class="col-sm-12 col-md-4">
             <label for="city" class="control-label">City</label>
             <input class="input-sm form-control" type="text" ng-model="vm.query.addresses[0].city" id="city" name="city"
                    ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-12 col-md-4">
             <label for="state" class="control-label">State</label>
             <select class="input-sm form-control" ng-model="vm.query.addresses[0].state"
                     id="state" name="state" ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
@@ -201,7 +201,7 @@
 	          <option value="WY">Wyoming</option>
             </select>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-12 col-md-4">
             <label for="zipcode" class="control-label">Zipcode</label>
             <input class="input-sm form-control" type="text" ng-model="vm.query.addresses[0].zipcode" id="zipcode" name="zipcode"
                    ng-keyup="$event.keyCode == 13 && !vm.queryForm.$invalid && vm.searchForPatient()">
@@ -222,7 +222,7 @@
           <div class="col-sm-12 bg-danger">{{ vm.errorMessage }}</div>
         </div>
         <div class="row">
-          <div class="col-sm-4 col-sm-offset-4">
+          <div class="col-sm-12 col-md-4 col-md-offset-4">
             <button ng-disabled="vm.queryForm.$invalid && vm.showFormErrors"
                     class="btn btn-success btn-block"
                     id="queryFormSubmit"
