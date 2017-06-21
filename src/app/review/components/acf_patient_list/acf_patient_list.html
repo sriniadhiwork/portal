@@ -80,7 +80,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="doc in vm.documents track by doc.id" ng-class="{ 'active' : vm.activeDocument === doc }">
+              <tr ng-repeat="doc in vm.documents track by doc.id" ng-class="{ 'success' : vm.activeDocument.id === doc.id }">
                 <td>
                   <button ng-if="!doc.cached && !doc.status" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
                   <button ng-if="!doc.cached && !doc.isRequerying && (doc.status === 'Failed' || doc.status === 'Cancelled')" ng-click="vm.requeryDocument(vm.activePatient, doc)" class="btn btn-primary btn-sm"><span class="sr-only">Retry </span><i class="fa fa-refresh"></i></button>
