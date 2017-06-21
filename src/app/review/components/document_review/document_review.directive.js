@@ -7,7 +7,7 @@
         .controller('DocumentReviewController', DocumentReviewController);
 
     /** @ngInject */
-    function aiDocumentReview() {
+    function aiDocumentReview () {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/review/components/document_review/document_review.html',
@@ -15,15 +15,15 @@
             controller: 'DocumentReviewController',
             controllerAs: 'vm',
             bindToController: {
-                activeDocument: '=?'
-            }
+                activeDocument: '=?',
+            },
         };
 
         return directive;
     }
 
     /** @ngInject */
-    function DocumentReviewController($filter, $log, $scope, $window, commonService) {
+    function DocumentReviewController ($filter, $log, $scope, $window, commonService) {
         var vm = this;
 
         vm.cancel = cancel;

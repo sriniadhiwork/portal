@@ -7,25 +7,25 @@
         mock.badRequest = {
             status:400,
             error:'Bad Request',
-            message:'One of the following search parameters was blank or improperly formed: Name, Date of Birth, Gender'
+            message:'One of the following search parameters was blank or improperly formed: Name, Date of Birth, Gender',
         };
         mock.dob = {
             year: 1999,
             month: '03',
-            day: '19'
+            day: '19',
         };
         mock.query = {}
         mock.query.patientNames = [{
             givenName: ['bob'],
             familyName: 'jones',
-            nameType: {code: 'L'}
+            nameType: {code: 'L'},
         }];
         mock.query.dobParts = mock.dob;
         mock.query.gender = 'M';
         mock.baseQuery = {
             addresses: [{ lines: []}],
             dobParts: {},
-            patientNames: [{givenName: [], nameType: { code: 'L', description: 'Legal Name'} }]
+            patientNames: [{givenName: [], nameType: { code: 'L', description: 'Legal Name'} }],
         };
 
         beforeEach(function () {
@@ -35,7 +35,7 @@
                     return $delegate;
                 });
             });
-            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
+            inject(function (_$compile_, _$log_, _$q_, _$rootScope_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;
@@ -56,7 +56,7 @@
                         this.$pristine = false;
                     },
                     $setPristine: function () { this.$pristine = true; },
-                    $setUntouched: function () { this.$untouched = true; }
+                    $setUntouched: function () { this.$untouched = true; },
                 };
             });
         });

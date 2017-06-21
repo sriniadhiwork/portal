@@ -15,7 +15,7 @@
                     return $delegate;
                 });
             });
-            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _$interval_, _commonService_) {
+            inject(function (_$compile_, _$interval_, _$log_, _$q_, _$rootScope_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;

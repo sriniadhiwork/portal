@@ -6,7 +6,7 @@
         .directive('aiNames', aiNames);
 
     /** @ngInject */
-    function aiNames() {
+    function aiNames () {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/components/names/names.html',
@@ -16,14 +16,14 @@
             bindToController: {
                 names: '=?',
                 showFormErrors: '=?',
-                submitForm: '&'
-            }
+                submitForm: '&',
+            },
         };
 
         return directive;
 
         /** @ngInject */
-        function NamesController(commonService) {
+        function NamesController (commonService) {
             var vm = this;
 
             vm.addGiven = addGiven;
@@ -38,9 +38,9 @@
 
             function activate () {
                 vm.defaultName = {givenName: [''], nameType: { code: 'L', description: 'Legal Name'} };
-                vm.nameTypes = commonService.nameTypes;
-                vm.nameAssemblies = commonService.nameAssemblies;
-                vm.nameRepresentations = commonService.nameRepresentations;
+                vm.nameTypes = commonService.getNameTypes();
+                vm.nameAssemblies = commonService.getNameAssemblies();
+                vm.nameRepresentations = commonService.getNameRepresentations();
 
                 if (angular.isUndefined(vm.names)) {
                     vm.names = [angular.copy(vm.defaultName)];

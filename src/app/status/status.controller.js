@@ -6,14 +6,14 @@
         .controller('StatusController', StatusController);
 
     /** @ngInject */
-    function StatusController($log, commonService) {
+    function StatusController ($log, commonService) {
         var vm = this;
 
         activate();
 
         ////////////////////////////////////////////////////////////////////
 
-        function activate() {
+        function activate () {
             vm.about = 'status';
             $log.info(vm.about);
             getAnalytics();
@@ -24,38 +24,38 @@
         function getAnalytics () {
             vm.browserVariety = {
                 type: 'PieChart',
-                options: { is3D: true, title: 'Visitors by browser (last 7 days)' }
+                options: { is3D: true, title: 'Visitors by browser (last 7 days)' },
             };
             vm.countries = {
                 type: 'PieChart',
-                options: { is3D: true, title: 'Visitors by country (last 7 days)' }
+                options: { is3D: true, title: 'Visitors by country (last 7 days)' },
             };
             vm.states = {
                 type: 'PieChart',
-                options: { is3D: true, title: 'Visitors by state (last 7 days)' }
+                options: { is3D: true, title: 'Visitors by state (last 7 days)' },
             };
             vm.cities = {
                 type: 'PieChart',
-                options: { is3D: true, title: 'Visitors by city (last 7 days)' }
+                options: { is3D: true, title: 'Visitors by city (last 7 days)' },
             };
             vm.traffic = {
                 type: 'LineChart',
                 options: {
                     legend: { position: 'none' },
-                    title: 'Visitors for the last 14 days'
-                }
+                    title: 'Visitors for the last 14 days',
+                },
             };
             vm.worldMap = {
                 type: 'GeoChart',
-                options: { }
+                options: { },
             };
             vm.stateMap = {
                 type: 'GeoChart',
-                options: { region: 'US', resolution: 'provinces'}
+                options: { region: 'US', resolution: 'provinces'},
             };
             vm.caMap = {
                 type: 'GeoChart',
-                options: { region: 'US-CA', displayMode: 'markers', resolution: 'provinces' }
+                options: { region: 'US-CA', displayMode: 'markers', resolution: 'provinces' },
             }
             commonService.getAnalytics('ag5zfnB1bHNlLTE2MDkxNnIVCxIIQXBpUXVlcnkYgICAgPiWlQoM')
                 .then(function (data) {

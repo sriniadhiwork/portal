@@ -6,7 +6,7 @@
 
         beforeEach(function () {
             module('portal');
-            inject(function ($compile, $rootScope, _$log_) {
+            inject(function ($compile, _$log_, $rootScope) {
                 $log = _$log_;
 
                 el = angular.element('<ai-footer></ai-footer>');

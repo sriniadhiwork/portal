@@ -6,7 +6,7 @@
         .directive('aiAddresses', aiAddresses);
 
     /** @ngInject */
-    function aiAddresses() {
+    function aiAddresses () {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/components/addresses/addresses.html',
@@ -18,14 +18,14 @@
                 fixed: '=?',
                 maxLines: '=?',
                 single: '=?',
-                submitForm: '&'
-            }
+                submitForm: '&',
+            },
         };
 
         return directive;
 
         /** @ngInject */
-        function AddressesController() {
+        function AddressesController () {
             var vm = this;
 
             vm.addAddress = addAddress;

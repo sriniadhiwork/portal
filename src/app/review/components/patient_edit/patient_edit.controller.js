@@ -6,7 +6,7 @@
         .controller('PatientEditController', PatientEditController);
 
     /** @ngInject */
-    function PatientEditController($filter, $log, $uibModalInstance, commonService, patient) {
+    function PatientEditController ($filter, $log, $uibModalInstance, commonService, patient) {
         var vm = this;
 
         vm.cancel = cancel;
@@ -21,7 +21,7 @@
             vm.patient.dateOfBirthParts = {
                 year: vm.patient.dateOfBirth.substring(0,4),
                 month: vm.patient.dateOfBirth.substring(4,6),
-                day: vm.patient.dateOfBirth.substring(6,8)
+                day: vm.patient.dateOfBirth.substring(6,8),
             };
         }
 

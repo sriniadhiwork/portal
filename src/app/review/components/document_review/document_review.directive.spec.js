@@ -46,7 +46,7 @@
                     scope = $rootScope.$new();
                     vm = ctrl('DocumentReviewController', {
                         '$scope': scope,
-                        '$filter': filter
+                        '$filter': filter,
                     });
                     scope.$digest();
                     scope.vm = vm;

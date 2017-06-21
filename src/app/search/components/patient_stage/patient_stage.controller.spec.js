@@ -7,23 +7,23 @@
         mock = {};
         mock.badRequest = {
             status: 500,
-            error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement'
+            error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement',
         };
         mock.modalInstance = {
             close: jasmine.createSpy('close'),
-            dismiss: jasmine.createSpy('dismiss')
+            dismiss: jasmine.createSpy('dismiss'),
         };
         mock.name = {
             nameType: { code: 'M', description: 'Maiden Name' },
             familyName: 'Jones',
-            givenName: ['Bob']
+            givenName: ['Bob'],
         };
         mock.queriedPatient = {
             dateOfBirth: '13120117',
             dateOfBirthParts: { year: '1312', month: '01', day: '17' },
             fullName: 'Bob Jones',
             gender: 'M',
-            ssn: '123-12-1234'
+            ssn: '123-12-1234',
         };
 
         beforeEach(function () {
@@ -34,7 +34,7 @@
                     return $delegate;
                 });
             });
-            inject(function ($controller, $rootScope, _$log_, _$uibModal_,_$q_, _commonService_, _Mock_) {
+            inject(function ($controller, _$log_, _$q_, $rootScope, _$uibModal_, _Mock_, _commonService_) {
                 $log = _$log_;
                 $uibModal = _$uibModal_;
                 $q = _$q_;
@@ -53,14 +53,14 @@
                 mock.fakeModalOptions.controller = 'PatientStageDetailsController';
                 mock.fakeModalOptions.size = 'md';
                 mock.fakeModalOptions.resolve = {
-                    record: jasmine.any(Function)
+                    record: jasmine.any(Function),
                 }
 
                 scope = $rootScope.$new();
                 vm = $controller('PatientStageController', {
                     $scope: scope,
                     $uibModalInstance: mock.modalInstance,
-                    query: mock.query
+                    query: mock.query,
                 });
                 scope.$digest();
             });
@@ -110,7 +110,7 @@
                 patientStage = {
                     patientRecordIds: [4],
                     patient: angular.copy(vm.patient),
-                    id: vm.query.id
+                    id: vm.query.id,
                 }
             });
 

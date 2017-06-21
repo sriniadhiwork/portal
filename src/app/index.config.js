@@ -6,7 +6,7 @@
         .config(config);
 
     /** @ngInject */
-    function config($logProvider, $httpProvider, IdleProvider, KeepaliveProvider, KeepaliveInterval, IdleTimeout, IdleWarn) {
+    function config ($httpProvider, $logProvider, IdleProvider, IdleTimeout, IdleWarn, KeepaliveInterval, KeepaliveProvider) {
         // Enable log
         $logProvider.debugEnabled(true);
 

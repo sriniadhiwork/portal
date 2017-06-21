@@ -8,8 +8,8 @@
             token: 'a token',
             config: {
                 headers: {},
-                url: ''
-            }
+                url: '',
+            },
         }
 
         beforeEach(function () {
@@ -17,7 +17,7 @@
                 httpProviderIt = $httpProvider;
             });
 
-            inject(function (_requestService_, _$httpBackend_, _$localStorage_, _API_, _AuthAPI_) {
+            inject(function (_$httpBackend_, _$localStorage_, _API_, _AuthAPI_, _requestService_) {
                 requestService = _requestService_;
                 $httpBackend = _$httpBackend_;
                 $localStorage = _$localStorage_;

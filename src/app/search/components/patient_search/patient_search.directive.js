@@ -6,20 +6,20 @@
         .directive('aiPatientSearch', aiPatientSearch);
 
     /** @ngInject */
-    function aiPatientSearch() {
+    function aiPatientSearch () {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/search/components/patient_search/patient_search.html',
             scope: { },
             controller: PatientSearchController,
             controllerAs: 'vm',
-            bindToController: { triggerHandlers: '&' }
+            bindToController: { triggerHandlers: '&' },
         };
 
         return directive;
 
         /** @ngInject */
-        function PatientSearchController($log, commonService) {
+        function PatientSearchController ($log, commonService) {
             var vm = this;
 
             vm.errorCount = errorCount;
@@ -33,7 +33,7 @@
                 vm.baseQuery = {
                     addresses: [{ lines: []}],
                     dobParts: {},
-                    patientNames: [{givenName: [], nameType: { code: 'L', description: 'Legal Name'} }]
+                    patientNames: [{givenName: [], nameType: { code: 'L', description: 'Legal Name'} }],
                 };
                 vm.query = angular.copy(vm.baseQuery);
             }

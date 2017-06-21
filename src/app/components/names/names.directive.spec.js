@@ -5,12 +5,12 @@
         var $compile, $rootScope, vm, el, $log, mock;
         mock = {
             names: [ { givenName: ['John', 'Frank'], familyName: 'Smith'} ],
-            defaultName: { givenName: [''], nameType: {code: 'L', description: 'Legal Name'} }
+            defaultName: { givenName: [''], nameType: {code: 'L', description: 'Legal Name'} },
         };
 
         beforeEach(function () {
             module('portal');
-            inject(function (_$compile_, _$rootScope_, _$log_) {
+            inject(function (_$compile_, _$log_, _$rootScope_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;

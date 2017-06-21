@@ -6,7 +6,7 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, $location, $timeout, commonService, AuthAPI, IDP) {
+    function MainController ($location, $log, $timeout, AuthAPI, IDP, commonService) {
         var vm = this;
 
         vm.hasAcf = hasAcf;

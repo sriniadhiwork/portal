@@ -5,40 +5,40 @@
         .module('portal')
         .config(routeConfig);
 
-    function routeConfig($routeProvider) {
+    function routeConfig ($routeProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: 'app/main/main.html',
                 controller: 'MainController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
             })
             .when('/search', {
                 templateUrl: 'app/search/search.html',
                 controller: 'SearchController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
             })
             .when('/review', {
                 templateUrl: 'app/review/review.html',
                 controller: 'ReviewController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
             })
             .when('/about', {
                 templateUrl: 'app/about/about.html',
                 controller: 'AboutController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
             })
             .when('/resources', {
                 templateUrl: 'app/resources/resources.html',
                 controller: 'ResourcesController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
             })
             .when('/status', {
                 templateUrl: 'app/status/status.html',
                 controller: 'StatusController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
             })
             .otherwise({
-                redirectTo: '/'
+                redirectTo: '/',
             });
     }
 

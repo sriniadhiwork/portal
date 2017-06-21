@@ -7,7 +7,7 @@
         mock.newAcf = {identifier:'New-01',name:'Fairgrounds',phoneNumber:'555-1895',address:{lines:['133 Smith Gardn'],city:'Albany',state:'CA',zipcode:'94602',country:null}};
         mock.badRequest = {
             status: 400,
-            error: 'ACF identitifer is required.'
+            error: 'ACF identitifer is required.',
         };
 
         beforeEach(function () {
@@ -24,7 +24,7 @@
                 });
                 $provide.constant('acfWritesAllowed', true);
             });
-            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _commonService_, _$location_, _Mock_) {
+            inject(function (_$compile_, _$location_, _$log_, _$q_, _$rootScope_, _Mock_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;
