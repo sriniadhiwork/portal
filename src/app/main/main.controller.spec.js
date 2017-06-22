@@ -4,7 +4,7 @@
     describe('main.controller', function () {
         var vm, scope, commonService, $log, $timeout, $window, location, ctrl, mock, $q;
         mock = {
-            token: 'a token here'
+            token: 'a token here',
         };
 
         beforeEach(function () {
@@ -18,7 +18,7 @@
                 });
             });
 
-            inject(function (_commonService_, _$log_, $controller, $rootScope, _$timeout_, _$location_, _$window_, _$q_) {
+            inject(function ($controller, _$location_, _$log_, _$q_, $rootScope, _$timeout_, _$window_, _commonService_) {
                 $log = _$log_;
                 ctrl = $controller;
                 $timeout = _$timeout_;

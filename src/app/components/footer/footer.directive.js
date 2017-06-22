@@ -6,20 +6,20 @@
         .directive('aiFooter', aiFooter);
 
     /** @ngInject */
-    function aiFooter() {
+    function aiFooter () {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/components/footer/footer.html',
             scope: {},
             controller: FooterController,
             controllerAs: 'vm',
-            bindToController: {}
+            bindToController: {},
         };
 
         return directive;
 
         /** @ngInject */
-        function FooterController() {
+        function FooterController () {
             //var vm = this;
 
             activate();

@@ -4,8 +4,8 @@
     describe('review.aiAcfPatientList', function () {
         var vm, el, scope, $log, $timeout, $uibModal, $q, commonService, mock, Mock, actualOptions;
         mock = {
-            fakeDocument: {contents: "<document><made><of>XML</of></made></document"},
-            userAcf: {"id":277,"identifier":"Humboldt-02","name":"Community College","phoneNumber":"555-1912","address":{"id":null,"lines":["92 Tenth Stn"],"city":"Mckinleyville","state":"CA","zipcode":"95501","country":null},"lastRead":1489156161065}
+            fakeDocument: {contents: "<document><made><of>XML</of></made></document>"},
+            userAcf: {"id":277,"identifier":"Humboldt-02","name":"Community College","phoneNumber":"555-1912","address":{"id":null,"lines":["92 Tenth Stn"],"city":"Mckinleyville","state":"CA","zipcode":"95501","country":null},"lastRead":1489156161065},
         };
         mock.fakeModal = {
             result: {
@@ -14,7 +14,7 @@
                     this.cancelCallback = cancelCallback;
                 }},
             close: function (item) { this.result.confirmCallBack(item); },
-            dismiss: function (type) { this.result.cancelCallback(type); }
+            dismiss: function (type) { this.result.cancelCallback(type); },
         };
         mock.fakeModalOptions = {
             templateUrl: 'app/review/components/patient_edit/patient_edit.html',
@@ -25,8 +25,8 @@
             keyboard: false,
             size: 'lg',
             resolve: {
-                patient: jasmine.any(Function)
-            }
+                patient: jasmine.any(Function),
+            },
         };
         beforeEach(function () {
             module('pulse.mock', 'portal', function ($provide) {
@@ -44,7 +44,7 @@
                     return $delegate;
                 });
             });
-            inject(function ($compile, $rootScope, _$log_, _$timeout_, _$q_, _$uibModal_, _Mock_, _commonService_) {
+            inject(function ($compile, _$log_, _$q_, $rootScope, _$timeout_, _$uibModal_, _Mock_, _commonService_) {
                 $log = _$log_;
                 $timeout = _$timeout_;
                 $q = _$q_;

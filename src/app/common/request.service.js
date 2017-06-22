@@ -3,18 +3,19 @@
 
     angular
         .module('portal.common')
-        .service('requestService', requestService)
+        .factory('requestService', requestService)
         .config(config);
 
     /** @ngInject */
     function requestService ($localStorage, API, AuthAPI) {
-        var self = this;
-
-        self.request = request;
+        var service = {
+            request: request,
+        }
+        return service;
 
         ////////////////////////////////////////////////////////////////////
 
-        function request(config) {
+        function request (config) {
             var token = $localStorage.jwtToken;
             if (config.url.indexOf(API) === 0 || config.url.indexOf(AuthAPI) === 0) {
                 if (token) {
@@ -26,7 +27,7 @@
     }
 
     /** @ngInject */
-    function config($httpProvider) {
+    function config ($httpProvider) {
         $httpProvider.interceptors.push('requestService');
     }
 })();

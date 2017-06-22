@@ -8,7 +8,7 @@
         mock.name = {
             nameType: { code: 'M', description: 'Maiden Name' },
             familyName: 'Jones',
-            givenName: ['Bob']
+            givenName: ['Bob'],
         };
 
         beforeEach(function () {
@@ -23,7 +23,7 @@
                     return $delegate;
                 });
             });
-            inject(function (_$compile_, _$rootScope_, _$timeout_, _$log_, _$uibModal_, _$q_, _commonService_, _Mock_) {
+            inject(function (_$compile_, _$log_, _$q_, _$rootScope_, _$timeout_, _$uibModal_, _Mock_, _commonService_) {
                 // Get local versions
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;

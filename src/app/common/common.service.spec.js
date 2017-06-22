@@ -20,7 +20,7 @@
             role: 'role',
             pulseUserId: '1',
             acf: mock.userAcf,
-            authorities: ['ROLE_ADMIN']
+            authorities: ['ROLE_ADMIN'],
         };
         var iatDate = new Date();
         var expDate = new Date();
@@ -48,11 +48,13 @@
         }));
         afterEach(function () {
             if ($log.debug.logs.length > 0) {
-                //console.debug("\n Debug: " + $log.debug.logs.join("\n Debug: "));
+                /* eslint-disable no-console,angular/log */
+                console.log('Debug:\n' + $log.debug.logs.map(function (o) { return angular.toJson(o); }).join('\n'));
+                /* eslint-enable no-console,angular/log */
             }
         });
 
-        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _API_, _AuthAPI_, _GAAPI_) {
+        beforeEach(inject(function (_$httpBackend_, $localStorage, _$window_, _API_, _AuthAPI_, _GAAPI_, _commonService_) {
             commonService = _commonService_;
             $httpBackend = _$httpBackend_;
             $window = _$window_;
@@ -110,7 +112,7 @@
                 var name = {
                     givenName: ['John', 'Andrew'],
                     familyName: 'Smith',
-                    nameType: {code: 'L', description: 'Legal Name'}
+                    nameType: {code: 'L', description: 'Legal Name'},
                 };
                 expect(commonService.displayName(name)).toBe('John Andrew Smith');
                 name.prefix = 'Mr';
@@ -144,11 +146,11 @@
                 var names = [{
                     givenName: ['John', 'Andrew'],
                     familyName: 'Smith',
-                    nameType: {code: 'L', description: 'Legal Name'}
+                    nameType: {code: 'L', description: 'Legal Name'},
                 },{
                     givenName: ['Sue', 'Mary'],
                     familyName: 'Smith',
-                    nameType: {code: 'L', description: 'Legal Name'}
+                    nameType: {code: 'L', description: 'Legal Name'},
                 }];
                 expect(commonService.displayNames(names, '-')).toBe('John Andrew Smith-Sue Mary Smith');
             });
@@ -166,7 +168,7 @@
                 var name = {
                     givenName: ['John', 'Andrew'],
                     familyName: 'Smith',
-                    nameType: {code: 'L', description: 'Legal Name'}
+                    nameType: {code: 'L', description: 'Legal Name'},
                 };
                 expect(commonService.friendlyFullName(name)).toEqual('John Andrew Smith');
             });
@@ -483,7 +485,7 @@
                 mock.newAcf.id = 1;
                 commonService.editAcf(mock.newAcf);
                 $httpBackend.flush();
-                expect(commonService.setAcf).toHaveBeenCalledWith({acf: mock.newAcf});
+                expect(commonService.setAcf).toHaveBeenCalled();
             });
 
             it('should call /queries/{{id}}/stage', function () {

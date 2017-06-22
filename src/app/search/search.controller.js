@@ -6,7 +6,7 @@
         .controller('SearchController', SearchController);
 
     /** @ngInject */
-    function SearchController($location, $log, commonService) {
+    function SearchController ($location, $log, commonService) {
         var vm = this;
 
         vm.hasAcf = hasAcf;
