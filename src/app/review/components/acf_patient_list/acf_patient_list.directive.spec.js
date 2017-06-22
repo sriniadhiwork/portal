@@ -4,7 +4,7 @@
     describe('review.aiAcfPatientList', function () {
         var vm, el, scope, $log, $timeout, $uibModal, $q, commonService, mock, Mock, actualOptions;
         mock = {
-            fakeDocument: {contents: "<document><made><of>XML</of></made></document"},
+            fakeDocument: {contents: "<document><made><of>XML</of></made></document>"},
             userAcf: {"id":277,"identifier":"Humboldt-02","name":"Community College","phoneNumber":"555-1912","address":{"id":null,"lines":["92 Tenth Stn"],"city":"Mckinleyville","state":"CA","zipcode":"95501","country":null},"lastRead":1489156161065},
         };
         mock.fakeModal = {
