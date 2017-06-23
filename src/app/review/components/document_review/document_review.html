@@ -9,7 +9,7 @@
     </div>
     <div class="panel-body">
       <div ng-if="vm.activeDocument">
-        <pre class="prettyprint lang-xml" ng-bind-html="vm.activeDocument.data | prettyXml | prettyprint"></pre>
+        <div ng-bind-html="vm.transformedDocument"></div>
       </div>
       <div ng-if="!vm.activeDocument">
         No document currently loaded
