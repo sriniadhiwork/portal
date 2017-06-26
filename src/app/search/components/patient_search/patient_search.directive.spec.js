@@ -2,12 +2,12 @@
     'use strict';
 
     describe('search.aiPatientSearch', function () {
-        var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
-        mock = {patientSearch: {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]}};
+        var $compile, $log, $q, $rootScope, commonService, el, mock, vm;
+        mock = {patientSearch: {results: [{id: 2, givenName: 'Joe', familyName: 'Rogan'}, {id: 3, givenName: 'Sue', familyName: 'Samson'}]}};
         mock.badRequest = {
-            status:400,
-            error:'Bad Request',
-            message:'One of the following search parameters was blank or improperly formed: Name, Date of Birth, Gender',
+            status: 400,
+            error: 'Bad Request',
+            message: 'One of the following search parameters was blank or improperly formed: Name, Date of Birth, Gender',
         };
         mock.dob = {
             year: 1999,

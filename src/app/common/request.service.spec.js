@@ -3,7 +3,7 @@
 
     describe('Service Unit Tests', function () {
 
-        var httpProviderIt, requestService, $httpBackend, $localStorage, API, AuthAPI, mock;
+        var $httpBackend, $localStorage, API, AuthAPI, httpProvider, mock, requestService;
         mock = {
             token: 'a token',
             config: {
@@ -14,7 +14,7 @@
 
         beforeEach(function () {
             module('portal.common', 'portal.constants', function ($httpProvider) {
-                httpProviderIt = $httpProvider;
+                httpProvider = $httpProvider;
             });
 
             inject(function (_$httpBackend_, _$localStorage_, _API_, _AuthAPI_, _requestService_) {
@@ -38,7 +38,7 @@
             describe('HTTP tests', function () {
 
                 it('should have the requestService as an interceptor', function () {
-                    expect(httpProviderIt.interceptors).toContain('requestService');
+                    expect(httpProvider.interceptors).toContain('requestService');
                 });
 
                 it('should put the token in the headers after setting', function () {

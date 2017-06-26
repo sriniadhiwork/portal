@@ -2,7 +2,7 @@
     'use strict';
 
     describe('review.aiPatientEdit', function () {
-        var vm, scope, $log, $uibModal, $q, commonService, mock;
+        var $log, $q, $uibModal, commonService, mock, scope, vm;
 
         mock = {
             badRequest: {

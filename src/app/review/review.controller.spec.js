@@ -2,7 +2,7 @@
     'use strict';
 
     describe('review.controller', function () {
-        var vm, scope, commonService, $log, location, ctrl;
+        var $log, commonService, ctrl, location, scope, vm;
 
         beforeEach(function () {
             module('portal.review', 'portal.constants', function ($provide) {

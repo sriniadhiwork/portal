@@ -2,7 +2,7 @@
     'use strict';
 
     describe('search.aiPatientReview', function () {
-        var $compile, $rootScope, $timeout, $uibModal, vm, el, $log, $q, commonService, mock, Mock, actualOptions;
+        var $compile, $log, $q, $rootScope, $timeout, $uibModal, Mock, actualOptions, commonService, el, mock, vm;
 
         mock = {};
         mock.name = {

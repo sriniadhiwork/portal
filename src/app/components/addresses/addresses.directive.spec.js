@@ -2,7 +2,7 @@
     'use strict';
 
     describe('portal.aiAddresses', function () {
-        var $compile, $rootScope, vm, el, $log, mock;
+        var $compile, $log, $rootScope, el, mock, vm;
         mock = {
             addresses: [ { lines: ['line 1', 'line 2'], city: 'city', state: 'state', zipcode: 'zip'} ],
         };
