@@ -2,9 +2,9 @@
     'use strict';
 
     describe('portal.aiAcf', function () {
-        var $compile, $rootScope, vm, el, $log, $q, commonService, mock, Mock, $location;
+        var $compile, $location, $log, $q, $rootScope, Mock, commonService, el, mock, vm;
         mock = {};
-        mock.newAcf = {identifier:'New-01',name:'Fairgrounds',phoneNumber:'555-1895',address:{lines:['133 Smith Gardn'],city:'Albany',state:'CA',zipcode:'94602',country:null}};
+        mock.newAcf = {identifier: 'New-01',name: 'Fairgrounds',phoneNumber: '555-1895',address: {lines: ['133 Smith Gardn'],city: 'Albany',state: 'CA',zipcode: '94602',country: null}};
         mock.badRequest = {
             status: 400,
             error: 'ACF identitifer is required.',
@@ -32,7 +32,7 @@
                 $location = _$location_;
                 Mock = _Mock_;
                 commonService = _commonService_;
-                commonService.createAcf.and.returnValue($q.when({response: angular.extend(mock.newAcf,{id:4})}));
+                commonService.createAcf.and.returnValue($q.when({response: angular.extend(mock.newAcf,{id: 4})}));
                 commonService.editAcf.and.returnValue($q.when(Mock.acfs[1]));
                 commonService.getAcfs.and.returnValue($q.when(Mock.acfs));
                 commonService.getUserAcf.and.returnValue(Mock.acfs[0]);

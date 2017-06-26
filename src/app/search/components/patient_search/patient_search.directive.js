@@ -19,10 +19,11 @@
         return directive;
 
         /** @ngInject */
-        function PatientSearchController ($log, commonService) {
+        function PatientSearchController ($log, $scope, commonService) {
             var vm = this;
 
             vm.errorCount = errorCount;
+            vm.requery = requery;
             vm.searchForPatient = searchForPatient;
 
             activate();
@@ -36,6 +37,9 @@
                     patientNames: [{givenName: [], nameType: { code: 'L', description: 'Legal Name'} }],
                 };
                 vm.query = angular.copy(vm.baseQuery);
+                $scope.$on('requery', function (e, args) {
+                    vm.requery(args.terms);
+                });
             }
 
             function errorCount () {
@@ -48,6 +52,25 @@
                     }
                 });
                 return count;
+            }
+
+            function requery (terms) {
+                vm.query = {
+                    addresses: terms.addresses,
+                    dobParts: {
+                        year: parseInt(terms.dob.substring(0, 4)),
+                        month: terms.dob.substring(4, 6),
+                        day: terms.dob.substring(6, 8),
+                    },
+                    gender: terms.gender,
+                    patientNames: [{
+                        givenName: [terms.patientNames[0].givenName[0]],
+                        familyName: terms.patientNames[0].familyName,
+                        nameType: { code: 'L', description: 'Legal Name'},
+                    }],
+                    ssn: terms.ssn,
+                    telephone: terms.telephone,
+                };
             }
 
             function searchForPatient () {

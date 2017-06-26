@@ -2,7 +2,7 @@
     'use strict';
 
     describe('search.controller', function () {
-        var vm, scope, commonService, $log, location, ctrl;
+        var $log, commonService, ctrl, location, scope, vm;
 
         beforeEach(function () {
             module('portal.search', 'portal.constants', function ($provide) {

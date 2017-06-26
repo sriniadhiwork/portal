@@ -3,8 +3,7 @@
 
     describe('portal.common.services', function () {
 
-        var commonService, $httpBackend, $window, requestHandler;
-        var API, AuthAPI, GAAPI;
+        var $httpBackend, $window, API, AuthAPI, GAAPI, commonService, requestHandler;
 
         requestHandler = {};
 
@@ -34,9 +33,9 @@
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
         mock.fakeDocument = {data: '<document><made><of>XML</of></made></document'};
         mock.newAcf = {name: 'New ACF'};
-        mock.endpoints = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
-        mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
-        mock.patientQueryResponse = {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]};
+        mock.endpoints = [{id: 2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id: 3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
+        mock.patientDocuments = {results: [{id: 2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id: 3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
+        mock.patientQueryResponse = {results: [{id: 2, givenName: 'Joe', familyName: 'Rogan'}, {id: 3, givenName: 'Sue', familyName: 'Samson'}]};
         mock.stagePatient = { patientRecords: [0,1], id: 1, patient: { givenName: 'Joe', familyName: 'Watson' } };
         mock.patient = { id: 1, fullName: 'John Doe', friendlyName: 'John', gender: 'M', dateOfBirth: 1484629200000 };
 

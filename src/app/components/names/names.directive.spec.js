@@ -2,7 +2,7 @@
     'use strict';
 
     describe('portal.aiNames', function () {
-        var $compile, $rootScope, vm, el, $log, mock;
+        var $compile, $log, $rootScope, el, mock, vm;
         mock = {
             names: [ { givenName: ['John', 'Frank'], familyName: 'Smith'} ],
             defaultName: { givenName: [''], nameType: {code: 'L', description: 'Legal Name'} },

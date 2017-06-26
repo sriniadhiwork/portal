@@ -8,14 +8,14 @@
     /** @ngInject */
     function aiPatientReview () {
         var directive = {
-            restrict: 'E',
-            templateUrl: 'app/search/components/patient_review/patient_review.html',
-            scope: { registerHandler: '&' },
-            controller: PatientReviewController,
-            controllerAs: 'vm',
             bindToController: {
                 triggerHandlers: '&',
             },
+            controller: PatientReviewController,
+            controllerAs: 'vm',
+            restrict: 'E',
+            scope: { registerHandler: '&' },
+            templateUrl: 'app/search/components/patient_review/patient_review.html',
             link: function (scope, element, attr, ctrl) {
                 var handler = scope.registerHandler({
                     handler: function () {
@@ -29,7 +29,7 @@
         return directive;
 
         /** @ngInject */
-        function PatientReviewController ($log, $scope, $timeout, $uibModal, QueryQueryTimeout, commonService) {
+        function PatientReviewController ($log, $rootScope, $scope, $timeout, $uibModal, QueryQueryTimeout, commonService) {
             var vm = this;
 
             vm.cancelQueryEndpoint = cancelQueryEndpoint;
@@ -101,10 +101,7 @@
             }
 
             function requery (query) {
-                commonService.searchForPatient(query.terms).then(function () {
-                    vm.getQueries();
-                });
-                vm.clearQuery(query);
+                $rootScope.$broadcast('requery', {terms: query.terms});
             }
 
             function requeryEndpoint (endpoint) {

@@ -2,7 +2,7 @@
     'use strict';
 
     describe('search.aiPatientStage', function () {
-        var vm, scope, $log, $uibModal, $q, commonService, mock, Mock, actualOptions;
+        var $log, $q, $uibModal, Mock, actualOptions, commonService, mock, scope, vm;
 
         mock = {};
         mock.badRequest = {

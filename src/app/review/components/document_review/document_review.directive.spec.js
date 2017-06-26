@@ -2,8 +2,8 @@
     'use strict';
 
     describe('review.aiDocumentReview', function () {
-        var vm, scope, el, ctrl, $log, mock, filter, filterInnerSpy;
-        mock = {fakeDocument: {id:2, title: 'Title of a doc', filetype: 'C-CDA 1', data: '<document><made><of>XML</of></made></document>', status: 'cached'}};
+        var $log, ctrl, el, filter, filterInnerSpy, mock, scope, vm;
+        mock = {fakeDocument: {id: 2, title: 'Title of a doc', filetype: 'C-CDA 1', data: '<document><made><of>XML</of></made></document>', status: 'cached'}};
 
         beforeEach(function () {
             module('portal');

@@ -2,8 +2,8 @@
     'use strict';
 
     describe('search.aiPatientStageDetails', function () {
-        var vm, scope, $log, mock;
-        mock = {record: {id:1,givenName:'John',familyName:'Snow',dateOfBirth:413269200000,gender:'M',phoneNumber:'9004783666',address:null,ssn:'451663333'}};
+        var $log, mock, scope, vm;
+        mock = {record: {id: 1,givenName: 'John',familyName: 'Snow',dateOfBirth: 413269200000,gender: 'M',phoneNumber: '9004783666',address: null,ssn: '451663333'}};
         mock.modalInstance = {
             close: jasmine.createSpy('close'),
             dismiss: jasmine.createSpy('dismiss'),

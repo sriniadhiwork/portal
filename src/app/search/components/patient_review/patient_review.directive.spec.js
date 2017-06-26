@@ -2,7 +2,7 @@
     'use strict';
 
     describe('search.aiPatientReview', function () {
-        var $compile, $rootScope, $timeout, $uibModal, vm, el, $log, $q, commonService, mock, Mock, actualOptions;
+        var $compile, $log, $q, $rootScope, $timeout, $uibModal, Mock, actualOptions, commonService, el, mock, vm;
 
         mock = {};
         mock.name = {
@@ -270,32 +270,10 @@
                 expect(vm.requery).toBeDefined();
             });
 
-            it('should call commonService.searchForPatient when requeried', function () {
-                var terms = Mock.queries[0].terms;
+            it('should broadcast the query when called', function () {
+                spyOn($rootScope, '$broadcast');
                 vm.requery(Mock.queries[0]);
-                expect(commonService.searchForPatient).toHaveBeenCalledWith(terms);
-            });
-
-            it('should refresh local queries when requeried', function () {
-                spyOn(vm,'getQueries');
-                vm.requery(Mock.queries[0]);
-                el.isolateScope().$digest();
-                expect(vm.getQueries).toHaveBeenCalled();
-            });
-
-            it('should call clearQuery to clear the requeried query', function () {
-                spyOn(vm,'clearQuery');
-                vm.requery(Mock.queries[0]);
-                expect(vm.clearQuery).toHaveBeenCalledWith(Mock.queries[0]);
-            });
-
-            it('should clear the query from patientQueries immediately', function () {
-                var newQueries = angular.copy(Mock.queries);
-                newQueries.splice(1,1);
-                commonService.getQueries.and.returnValue($q.when(newQueries));
-                vm.requery(Mock.queries[1]);
-                el.isolateScope().$digest();
-                expect(vm.patientQueries.length).toBe(Mock.queries.length - 1);
+                expect($rootScope.$broadcast).toHaveBeenCalledWith('requery', {terms: Mock.queries[0].terms});
             });
 
             it('should have a function to requery individual organizations', function () {

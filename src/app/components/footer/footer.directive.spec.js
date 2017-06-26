@@ -2,7 +2,7 @@
     'use strict';
 
     describe('footer.directive', function () {
-        var vm, el, scope, $log;
+        var $log, el, scope, vm;
 
         beforeEach(function () {
             module('portal');

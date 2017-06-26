@@ -2,11 +2,11 @@
     'use strict';
 
     describe('navbar.directive', function () {
-        var vm, el, scope, $log, $q, commonService;
+        var $log, $q, commonService, el, scope, vm;
         var mock = {statistics: [
-            {location:{name:'Santa Cruz',id:1,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:78,requestSuccessAvgCompletionSeconds:78,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}},
-            {location:{name:'Sutter Health',id:2,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:69,requestSuccessAvgCompletionSeconds:69,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}},
-            {location:{name:'Dignity Health',id:3,locationId:null,adapter:'eHealth',active:true},calculationStart:null,calculationEnd:null,calculationNumRequests:null,patientDiscoveryStats:{requestCount:1,requestSuccessCount:1,requestFailureCount:0,requestCancelledCount:0,requestAvgCompletionSeconds:63,requestSuccessAvgCompletionSeconds:63,requestFailureAvgCompletionSeconds:null,requestCancelledAvgCompletionSeconds:null}}]};
+            {location: {name: 'Santa Cruz',id: 1,locationId: null,adapter: 'eHealth',active: true},calculationStart: null,calculationEnd: null,calculationNumRequests: null,patientDiscoveryStats: {requestCount: 1,requestSuccessCount: 1,requestFailureCount: 0,requestCancelledCount: 0,requestAvgCompletionSeconds: 78,requestSuccessAvgCompletionSeconds: 78,requestFailureAvgCompletionSeconds: null,requestCancelledAvgCompletionSeconds: null}},
+            {location: {name: 'Sutter Health',id: 2,locationId: null,adapter: 'eHealth',active: true},calculationStart: null,calculationEnd: null,calculationNumRequests: null,patientDiscoveryStats: {requestCount: 1,requestSuccessCount: 1,requestFailureCount: 0,requestCancelledCount: 0,requestAvgCompletionSeconds: 69,requestSuccessAvgCompletionSeconds: 69,requestFailureAvgCompletionSeconds: null,requestCancelledAvgCompletionSeconds: null}},
+            {location: {name: 'Dignity Health',id: 3,locationId: null,adapter: 'eHealth',active: true},calculationStart: null,calculationEnd: null,calculationNumRequests: null,patientDiscoveryStats: {requestCount: 1,requestSuccessCount: 1,requestFailureCount: 0,requestCancelledCount: 0,requestAvgCompletionSeconds: 63,requestSuccessAvgCompletionSeconds: 63,requestFailureAvgCompletionSeconds: null,requestCancelledAvgCompletionSeconds: null}}]};
 
         beforeEach(function () {
             module('portal', function ($provide) {
