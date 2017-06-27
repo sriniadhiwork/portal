@@ -42,7 +42,7 @@
       <div class="row" ng-if="vm.activePatient !== null">
         <div class="col-sm-12">
           <div class="btn-group btn-group-sm pull-right">
-            <button class="btn btn-primary" ng-click="vm.editPatient(vm.activePatient)"><i class="fa fa-pencil-square-o"></i> Edit<span class="sr-only"> {{ vm.activePatient }}</span></button>
+            <button class="btn btn-primary" ng-click="vm.editPatient(vm.activePatient)"><i class="fa fa-pencil-square-o"></i> Edit<span class="sr-only"> {{ vm.activePatient.fullName }}</span></button>
             <button class="btn btn-danger"
                     confirm="Are you sure you'd like to discharge this Patient?"
                     confirm-title="Confirmation"
