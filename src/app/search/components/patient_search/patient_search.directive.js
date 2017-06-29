@@ -74,7 +74,7 @@
             }
 
             function searchForPatient () {
-                if (!vm.queryForm.$invalid && vm.queryForm.$dirty) {
+                if (!vm.queryForm.$invalid) {
                     vm.query.dob = vm.query.dobParts.year + vm.query.dobParts.month + vm.query.dobParts.day;
 
                     var queryObj = {query: angular.copy(vm.query)};

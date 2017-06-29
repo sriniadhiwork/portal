@@ -191,15 +191,8 @@
             });
         });
 
-        it('should only search if the form is valid and edited', function () {
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).not.toHaveBeenCalled();
-
+        it('should only search if the form is valid', function () {
             vm.queryForm.$invalid = true;
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).not.toHaveBeenCalled();
-
-            vm.queryForm.$setDirty();
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
 
