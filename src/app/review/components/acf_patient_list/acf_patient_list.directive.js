@@ -145,14 +145,9 @@
             }
 
             function getDocument (patient, doc) {
-                if (!doc.data) {
-                    commonService.getDocument(patient.id, doc.id).then(function (response) {
-                        doc.data = response.contents;
-                        vm.activeDocument = doc;
-                    });
-                } else {
-                    vm.activeDocument = doc;
-                }
+                commonService.getDocument(patient.id, doc.id).then(function (response) {
+                    vm.activeDocument = response;
+                });
             }
 
             function getPatientsAtAcf () {

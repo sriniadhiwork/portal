@@ -38,7 +38,7 @@
             vm.xslt = loadXMLDoc('assets/xslt/CDA_Style.xsl');
             $scope.$watch('vm.activeDocument', function (newDoc) {
                 if (newDoc) {
-                    vm.transformedDocument = $filter('xslt')(newDoc.data, vm.xslt);
+                    vm.transformedDocument = $filter('xslt')(newDoc.contents, vm.xslt);
                 }
             });
         }
