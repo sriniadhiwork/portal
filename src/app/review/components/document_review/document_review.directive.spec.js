@@ -3,7 +3,7 @@
 
     describe('review.aiDocumentReview', function () {
         var $log, ctrl, el, filter, filterInnerSpy, mock, scope, vm;
-        mock = {fakeDocument: {id: 2, title: 'Title of a doc', filetype: 'C-CDA 1', data: '<document><made><of>XML</of></made></document>', status: 'cached'}};
+        mock = {fakeDocument: {id: 2, title: 'Title of a doc', filetype: 'C-CDA 1', contents: '<document><made><of>XML</of></made></document>', status: 'cached'}};
 
         beforeEach(function () {
             module('portal');
@@ -63,7 +63,7 @@
                     vm.activeDocument = mock.fakeDocument;
                     scope.$digest();
                     expect(filter).toHaveBeenCalledWith('xslt');
-                    expect(filterInnerSpy).toHaveBeenCalledWith(mock.fakeDocument.data, jasmine.any(String));
+                    expect(filterInnerSpy).toHaveBeenCalledWith(mock.fakeDocument.contents, jasmine.any(String));
                     expect(vm.transformedDocument).not.toBe('');
                 });
 
