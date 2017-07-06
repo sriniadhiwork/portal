@@ -6,7 +6,7 @@
         .directive('aiAcf', aiAcf);
 
     /** @ngInject */
-    function aiAcf() {
+    function aiAcf () {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/components/acf/acf.html',
@@ -14,13 +14,13 @@
             controller: AcfController,
             controllerAs: 'vm',
             bindToController: {
-                mode: '@'
-            }
+                mode: '@',
+            },
         };
         return directive;
 
         /** @ngInject */
-        function AcfController($log, $location, commonService, acfWritesAllowed) {
+        function AcfController ($log, $location, commonService, acfWritesAllowed) {
             var vm = this;
 
             vm.acfSubmit = acfSubmit;
@@ -158,10 +158,12 @@
                     var parts;
                     for (var i = 0; i < vm.acfs.length; i++) {
                         parts = vm.acfs[i].identifier.split('-');
-                        if (vm.acfPrefixes.indexOf(parts[0]) < 0)
+                        if (vm.acfPrefixes.indexOf(parts[0]) < 0) {
                             vm.acfPrefixes.push(parts[0]);
-                        if (vm.acfSuffixes.indexOf(parts[1]) < 0)
+                        }
+                        if (vm.acfSuffixes.indexOf(parts[1]) < 0) {
                             vm.acfSuffixes.push(parts[1]);
+                        }
                     }
                 }
             }

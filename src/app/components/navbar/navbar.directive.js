@@ -6,7 +6,7 @@
         .directive('aiNavbar', aiNavbar);
 
     /** @ngInject */
-    function aiNavbar() {
+    function aiNavbar () {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/components/navbar/navbar.html',
@@ -14,14 +14,14 @@
             controller: NavbarController,
             controllerAs: 'vm',
             bindToController: {
-                active: '@'
-            }
+                active: '@',
+            },
         };
 
         return directive;
 
         /** @ngInject */
-        function NavbarController($log, $scope, Idle, commonService) {
+        function NavbarController ($log, $scope, Idle, commonService) {
             var vm = this;
 
             vm.isAuthenticated = isAuthenticated;

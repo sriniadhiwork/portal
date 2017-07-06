@@ -3,8 +3,7 @@
 
     describe('portal.common.services', function () {
 
-        var commonService, $httpBackend, $window, requestHandler;
-        var API, AuthAPI, GAAPI;
+        var $httpBackend, $window, API, AuthAPI, GAAPI, commonService, requestHandler;
 
         requestHandler = {};
 
@@ -20,7 +19,7 @@
             role: 'role',
             pulseUserId: '1',
             acf: mock.userAcf,
-            authorities: ['ROLE_ADMIN']
+            authorities: ['ROLE_ADMIN'],
         };
         var iatDate = new Date();
         var expDate = new Date();
@@ -34,9 +33,9 @@
         mock.acfs = [{id: 1, name: 'ACF 1', address: {}}, {id: 2, name: 'ACF 2', address: {}}];
         mock.fakeDocument = {data: '<document><made><of>XML</of></made></document'};
         mock.newAcf = {name: 'New ACF'};
-        mock.endpoints = [{id:2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id:3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
-        mock.patientDocuments = {results: [{id:2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id:3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
-        mock.patientQueryResponse = {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]};
+        mock.endpoints = [{id: 2, title: 'Title of a doc', url: 'http://www.example.com', status: 'Active'}, {id: 3, title: 'Another title', url: 'http://www.example.com/2', status: 'Inactive'}];
+        mock.patientDocuments = {results: [{id: 2, title: 'Title of a doc', filetype: 'C-CDA 1'}, {id: 3, title: 'Another title', filetype: 'C-CDA 2.2'}]};
+        mock.patientQueryResponse = {results: [{id: 2, givenName: 'Joe', familyName: 'Rogan'}, {id: 3, givenName: 'Sue', familyName: 'Samson'}]};
         mock.stagePatient = { patientRecords: [0,1], id: 1, patient: { givenName: 'Joe', familyName: 'Watson' } };
         mock.patient = { id: 1, fullName: 'John Doe', friendlyName: 'John', gender: 'M', dateOfBirth: 1484629200000 };
 
@@ -48,11 +47,13 @@
         }));
         afterEach(function () {
             if ($log.debug.logs.length > 0) {
-                //console.debug("\n Debug: " + $log.debug.logs.join("\n Debug: "));
+                /* eslint-disable no-console,angular/log */
+                console.log('Debug:\n' + $log.debug.logs.map(function (o) { return angular.toJson(o); }).join('\n'));
+                /* eslint-enable no-console,angular/log */
             }
         });
 
-        beforeEach(inject(function (_commonService_, _$httpBackend_, _$window_, $localStorage, _API_, _AuthAPI_, _GAAPI_) {
+        beforeEach(inject(function (_$httpBackend_, $localStorage, _$window_, _API_, _AuthAPI_, _GAAPI_, _commonService_) {
             commonService = _commonService_;
             $httpBackend = _$httpBackend_;
             $window = _$window_;
@@ -110,7 +111,7 @@
                 var name = {
                     givenName: ['John', 'Andrew'],
                     familyName: 'Smith',
-                    nameType: {code: 'L', description: 'Legal Name'}
+                    nameType: {code: 'L', description: 'Legal Name'},
                 };
                 expect(commonService.displayName(name)).toBe('John Andrew Smith');
                 name.prefix = 'Mr';
@@ -144,11 +145,11 @@
                 var names = [{
                     givenName: ['John', 'Andrew'],
                     familyName: 'Smith',
-                    nameType: {code: 'L', description: 'Legal Name'}
+                    nameType: {code: 'L', description: 'Legal Name'},
                 },{
                     givenName: ['Sue', 'Mary'],
                     familyName: 'Smith',
-                    nameType: {code: 'L', description: 'Legal Name'}
+                    nameType: {code: 'L', description: 'Legal Name'},
                 }];
                 expect(commonService.displayNames(names, '-')).toBe('John Andrew Smith-Sue Mary Smith');
             });
@@ -166,7 +167,7 @@
                 var name = {
                     givenName: ['John', 'Andrew'],
                     familyName: 'Smith',
-                    nameType: {code: 'L', description: 'Legal Name'}
+                    nameType: {code: 'L', description: 'Legal Name'},
                 };
                 expect(commonService.friendlyFullName(name)).toEqual('John Andrew Smith');
             });
@@ -483,7 +484,7 @@
                 mock.newAcf.id = 1;
                 commonService.editAcf(mock.newAcf);
                 $httpBackend.flush();
-                expect(commonService.setAcf).toHaveBeenCalledWith({acf: mock.newAcf});
+                expect(commonService.setAcf).toHaveBeenCalled();
             });
 
             it('should call /queries/{{id}}/stage', function () {

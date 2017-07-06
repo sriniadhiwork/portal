@@ -2,13 +2,13 @@
     'use strict';
 
     describe('ehealthdate.filter', function () {
-        var $log, $filter;
+        var $filter, $log;
 
         beforeEach(function () {
             module('portal');
-            inject(function (_$log_, _$filter_) {
-                $log = _$log_;
+            inject(function (_$filter_, _$log_) {
                 $filter = _$filter_;
+                $log = _$log_;
             });
         });
 

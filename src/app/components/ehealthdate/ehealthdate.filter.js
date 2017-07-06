@@ -51,6 +51,7 @@
                                             parseInt(date.substring(12,14))));
                     ret = $filter('date')(obj, 'MMM dd, yyyy h:mm:ss a', 'UTC');
                     break;
+                    // no default
                 }
                 ret += z;
                 return ret;

@@ -3,53 +3,57 @@
 
     angular
         .module('portal.common')
-        .service('commonService', commonService);
+        .factory('commonService', commonService);
 
     /** @ngInject */
-    function commonService ($http, $filter, $q, API, AuthAPI, GAAPI, $log, $localStorage, $window) {
-        var self = this;
-
+    function commonService ($filter, $http, $localStorage, $log, $q, $window, API, AuthAPI, GAAPI) {
         var ACF_LOCATION_IN_IDENTITY = 8;
 
-        self.cacheDocument = cacheDocument;
-        self.cancelDocument = cancelDocument;
-        self.cancelDocumentQueryEndpoint = cancelDocumentQueryEndpoint;
-        self.cancelQueryEndpoint = cancelQueryEndpoint;
-        self.clearQuery = clearQuery;
-        self.clearToken = clearToken;
-        self.convertDobString = convertDobString;
-        self.createAcf = createAcf;
-        self.dischargePatient = dischargePatient;
-        self.displayName = displayName;
-        self.displayNames = displayNames;
-        self.editAcf = editAcf;
-        self.editPatient = editPatient;
-        self.friendlyFullName = friendlyFullName;
-        self.getAcf = getAcf;
-        self.getAcfs = getAcfs;
-        self.getAnalytics = getAnalytics;
-        self.getDocument = getDocument;
-        self.getEndpointStatistics = getEndpointStatistics;
-        self.getQueries = getQueries;
-        self.getPatientsAtAcf = getPatientsAtAcf;
-        self.getSamlUserToken = getSamlUserToken;
-        self.getToken = getToken;
-        self.getTokenVals = getTokenVals;
-        self.getUserAcf = getUserAcf;
-        self.getUserIdentity = getUserIdentity;
-        self.getUserName = getUserName;
-        self.hasAcf = hasAcf;
-        self.isAuthenticated = isAuthenticated;
-        self.logout = logout;
-        self.queryEndpoints = queryEndpoints;
-        self.refreshToken = refreshToken;
-        self.requeryDocumentQueryEndpoint = requeryDocumentQueryEndpoint;
-        self.requeryEndpoint = requeryEndpoint;
-        self.saveToken = saveToken;
-        self.searchForPatient = searchForPatient;
-        self.searchForPatientDocuments = searchForPatientDocuments;
-        self.setAcf = setAcf;
-        self.stagePatient = stagePatient;
+        var service = {
+            cacheDocument: cacheDocument,
+            cancelDocument: cancelDocument,
+            cancelDocumentQueryEndpoint: cancelDocumentQueryEndpoint,
+            cancelQueryEndpoint: cancelQueryEndpoint,
+            clearQuery: clearQuery,
+            clearToken: clearToken,
+            convertDobString: convertDobString,
+            createAcf: createAcf,
+            dischargePatient: dischargePatient,
+            displayName: displayName,
+            displayNames: displayNames,
+            editAcf: editAcf,
+            editPatient: editPatient,
+            friendlyFullName: friendlyFullName,
+            getAcf: getAcf,
+            getAcfs: getAcfs,
+            getAnalytics: getAnalytics,
+            getDocument: getDocument,
+            getEndpointStatistics: getEndpointStatistics,
+            getNameAssemblies: getNameAssemblies,
+            getNameRepresentations: getNameRepresentations,
+            getNameTypes: getNameTypes,
+            getQueries: getQueries,
+            getPatientsAtAcf: getPatientsAtAcf,
+            getSamlUserToken: getSamlUserToken,
+            getToken: getToken,
+            getTokenVals: getTokenVals,
+            getUserAcf: getUserAcf,
+            getUserIdentity: getUserIdentity,
+            getUserName: getUserName,
+            hasAcf: hasAcf,
+            isAuthenticated: isAuthenticated,
+            logout: logout,
+            queryEndpoints: queryEndpoints,
+            refreshToken: refreshToken,
+            requeryDocumentQueryEndpoint: requeryDocumentQueryEndpoint,
+            requeryEndpoint: requeryEndpoint,
+            saveToken: saveToken,
+            searchForPatient: searchForPatient,
+            searchForPatientDocuments: searchForPatientDocuments,
+            setAcf: setAcf,
+            stagePatient: stagePatient,
+        }
+        return service;
 
         ////////////////////////////////////////////////////////////////////
 
@@ -117,7 +121,7 @@
 
         function displayNames (array, separator) {
             if (angular.isArray(array)) {
-                var ret = array.map(self.displayName);
+                var ret = array.map(this.displayName);
                 return ret.join(separator);
             } else {
                 return '';
@@ -131,7 +135,7 @@
         function editAcf (anAcf) {
             return postApi('/acfs/' + anAcf.id + '/edit', anAcf)
                 .then(function (response) {
-                    self.setAcf(response);
+                    service.setAcf(response);
                     return $q.when(response);
                 }, function (error) {
                     return $q.reject(error);
@@ -143,7 +147,7 @@
         }
 
         function friendlyFullName (name) {
-            return self.displayName(name).split('(')[0].trim();
+            return this.displayName(name).split('(')[0].trim();
         }
 
         function getAcfs () {
@@ -167,6 +171,37 @@
             return enhancedGet('/endpoints/statistics');
         }
 
+        function getNameAssemblies () {
+            return [
+                { code: 'F', description: 'Prefix Family Middle Given Suffix' },
+                { code: 'G', description: 'Prefix Given Middle Family Suffix' },
+            ];
+        }
+
+        function getNameRepresentations () {
+            return [
+                { code: 'A', description: 'Alphabetic (i.e. Default or some single-byte)' },
+                { code: 'I', description: 'Ideographic (i.e. Kanji)' },
+                { code: 'P', description: 'Phonetic (i.e. ASCII, Katakana, Hiragana, etc.)'},
+            ];
+        }
+
+        function getNameTypes () {
+            return [
+                { code: 'A', description: 'Alias Name' },
+                { code: 'B', description: 'Name at Birth' },
+                { code: 'C', description: 'Adopted Name' },
+                { code: 'D', description: 'Display Name' },
+                { code: 'I', description: 'Licensing Name' },
+                { code: 'L', description: 'Legal Name' },
+                { code: 'M', description: 'Maiden Name' },
+                { code: 'N', description: 'Nickname /"Call me" Name/Street Name' },
+                { code: 'S', description: 'Coded Pseudo-Name to ensure anonymity' },
+                { code: 'T', description: 'Indigenous/Tribal/Community Name' },
+                { code: 'U', description: 'Unspecified' },
+            ];
+        }
+
         function getQueries () {
             return enhancedGet('/queries');
         }
@@ -187,9 +222,9 @@
         function getToken (callApi) {
             var token = $localStorage.jwtToken;
             if (!token && callApi) {
-                self.getSamlUserToken().then(function (token) {
+                this.getSamlUserToken().then(function (token) {
                     if (validTokenFormat(token)) {
-                        self.saveToken(token);
+                        saveToken(token);
                         return token;
                     } else {
                         return null
@@ -200,13 +235,13 @@
         }
 
         function getTokenVals () {
-            var token = parseJwt(self.getToken());
+            var token = parseJwt(getToken());
             return token;
         }
 
         function getUserAcf () {
-            if (self.hasAcf()) {
-                var token = self.getToken();
+            if (hasAcf()) {
+                var token = getToken();
                 var identity = parseJwt(token).Identity;
                 var acf = angular.fromJson(identity[ACF_LOCATION_IN_IDENTITY]);
                 return acf;
@@ -216,10 +251,9 @@
         }
 
         function getUserIdentity () {
-            authorities: ['ROLE_ADMIN']
             var user = { };
-            if (self.isAuthenticated()) {
-                var token = parseJwt(self.getToken());
+            if (isAuthenticated()) {
+                var token = parseJwt(getToken());
                 var identity = token.Identity;
                 var authorities = token.Authorities;
                 user.user_id = identity[0];
@@ -239,8 +273,8 @@
         }
 
         function getUserName () {
-            if (self.isAuthenticated()) {
-                var token = self.getToken();
+            if (isAuthenticated()) {
+                var token = getToken();
                 var identity = parseJwt(token).Identity;
                 return identity[3];
             } else {
@@ -249,28 +283,33 @@
         }
 
         function hasAcf () {
-            if (self.isAuthenticated()) {
-                var token = self.getToken();
+            if (isAuthenticated()) {
+                var token = getToken();
                 var identity = parseJwt(token).Identity;
-                if (identity[ACF_LOCATION_IN_IDENTITY] && angular.fromJson(identity[ACF_LOCATION_IN_IDENTITY]) && angular.isString(angular.fromJson(identity[ACF_LOCATION_IN_IDENTITY]).name))
+                if (identity[ACF_LOCATION_IN_IDENTITY] && angular.fromJson(identity[ACF_LOCATION_IN_IDENTITY]) && angular.isString(angular.fromJson(identity[ACF_LOCATION_IN_IDENTITY]).name)) {
                     return true;
-                else
+                }
+                else {
                     return false;
+                }
             } else {
                 return false;
             }
         }
         function isAuthenticated () {
-            var valid, token;
-            token = self.getToken();
+            var token, valid;
+            token = getToken();
             if (token) {
                 var params = parseJwt(token);
-                if (params)
-                    valid =  Math.round(new Date().getTime() / 1000) <= params.exp;
-                else
+                if (params) {
+                    valid = Math.round(new Date().getTime() / 1000) <= params.exp;
+                }
+                else {
                     valid = false;
-                if (!valid)
-                    self.clearToken();
+                }
+                if (!valid) {
+                    clearToken();
+                }
             } else {
                 valid = false;
             }
@@ -278,7 +317,7 @@
         }
 
         function logout () {
-            self.clearToken();
+            clearToken();
             $window.location.replace(AuthAPI + '/saml/logout');
         }
 
@@ -293,7 +332,7 @@
                     return postApi('/jwt/keepalive', result, AuthAPI)
                         .then(function (response) {
                             if (validTokenFormat(response.token)) {
-                                self.saveToken(response.token);
+                                saveToken(response.token);
                                 return $q.when(response.token);
                             } else {
                                 return $q.when(null);
@@ -327,7 +366,7 @@
         function setAcf (acf) {
             return postApi('/jwt/setAcf', acf, AuthAPI)
                 .then(function (response) {
-                    self.saveToken(response.token);
+                    saveToken(response.token);
                     return $q.when(response.token);
                 }, function (error) {
                     return $q.reject(error);
@@ -346,7 +385,7 @@
                     return $q.when(response.data);
                 }, function (response) {
                     if (response.data.error && response.data.error.match(/ACF.*does not exist!/)) {
-                        self.clearToken();
+                        service.clearToken();
                         $window.location.replace('#/');
                     }
                     return $q.reject(response);
@@ -381,8 +420,9 @@
         }
 
         function postApi (endpoint, postObject, api) {
-            if (api === null || angular.isUndefined(api))
+            if (api === null || angular.isUndefined(api)) {
                 api = API;
+            }
             return $http.post(api + endpoint, postObject)
                 .then(function (response) {
                     return response.data;
@@ -391,33 +431,8 @@
                 });
         }
 
-        function validTokenFormat(token) {
+        function validTokenFormat (token) {
             return (angular.isString(token) && token.match(/.*\..*\..*/));
         }
-
-        self.nameTypes = [
-            { code: 'A', description: 'Alias Name' },
-            { code: 'B', description: 'Name at Birth' },
-            { code: 'C', description: 'Adopted Name' },
-            { code: 'D', description: 'Display Name' },
-            { code: 'I', description: 'Licensing Name' },
-            { code: 'L', description: 'Legal Name' },
-            { code: 'M', description: 'Maiden Name' },
-            { code: 'N', description: 'Nickname /"Call me" Name/Street Name' },
-            { code: 'S', description: 'Coded Pseudo-Name to ensure anonymity' },
-            { code: 'T', description: 'Indigenous/Tribal/Community Name' },
-            { code: 'U', description: 'Unspecified' }
-        ];
-
-        self.nameAssemblies = [
-            { code: 'F', description: 'Prefix Family Middle Given Suffix' },
-            { code: 'G', description: 'Prefix Given Middle Family Suffix' }
-        ];
-
-        self.nameRepresentations = [
-            { code: 'A', description: 'Alphabetic (i.e. Default or some single-byte)' },
-            { code: 'I', description: 'Ideographic (i.e. Kanji)' },
-            { code: 'P', description: 'Phonetic (i.e. ASCII, Katakana, Hiragana, etc.)'}
-        ];
     }
 })();

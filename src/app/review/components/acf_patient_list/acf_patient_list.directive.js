@@ -6,7 +6,7 @@
         .directive('aiAcfPatientList', aiAcfPatientList);
 
     /** @ngInject */
-    function aiAcfPatientList() {
+    function aiAcfPatientList () {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/review/components/acf_patient_list/acf_patient_list.html',
@@ -14,23 +14,23 @@
             controller: AcfPatientListController,
             controllerAs: 'vm',
             bindToController: {
-                activeDocument: '=?'
+                activeDocument: '=?',
             },
             link: function (scope, element, attr, ctrl) {
                 var handler = scope.registerHandler({
                     handler: function () {
                         ctrl.getPatientsAtAcf();
-                    }
+                    },
                 });
                 scope.$on('$destroy', handler);
-            }
+            },
 
         };
 
         return directive;
 
         /** @ngInject */
-        function AcfPatientListController($log, $timeout, $uibModal, commonService, QueryQueryTimeout) {
+        function AcfPatientListController ($log, $timeout, $uibModal, commonService, QueryQueryTimeout) {
             var vm = this;
 
             vm.activatePatient = activatePatient;
@@ -100,8 +100,9 @@
             function countActive (patient) {
                 var active = 0;
                 for (var i = 0; i < patient.endpointMaps.length; i++) {
-                    if (patient.endpointMaps[i].documentsQueryStatus === 'Active')
+                    if (patient.endpointMaps[i].documentsQueryStatus === 'Active') {
                         active += 1;
+                    }
                 }
                 return active;
             }
@@ -130,8 +131,8 @@
                     keyboard: false,
                     size: 'lg',
                     resolve: {
-                        patient: function () { return patient; }
-                    }
+                        patient: function () { return patient; },
+                    },
                 });
                 vm.editPatientInstance.result.then(function (patient) {
                     if (vm.activePatient) {
@@ -144,14 +145,9 @@
             }
 
             function getDocument (patient, doc) {
-                if (!doc.data) {
-                    commonService.getDocument(patient.id, doc.id).then(function (response) {
-                        doc.data = response.contents;
-                        vm.activeDocument = doc;
-                    });
-                } else {
-                    vm.activeDocument = doc;
-                }
+                commonService.getDocument(patient.id, doc.id).then(function (response) {
+                    vm.activeDocument = response;
+                });
             }
 
             function getPatientsAtAcf () {
@@ -218,7 +214,7 @@
 
             function translateDate (input) {
                 input = '' + input;
-                var ret = input.substring(0, 4) + '-' + input.substring(4, 6) + '-' + input.substring(6);
+                var ret = input.substring(0, 4) + '-' + input.substring(4, 6) + '-' + input.substring(6, 8);
                 return ret;
             }
 
@@ -233,8 +229,9 @@
                     }
                 } else {
                     vm.panelTitle = vm.patients.length + ' Active Patient';
-                    if (vm.patients.length !== 1)
+                    if (vm.patients.length !== 1) {
                         vm.panelTitle += 's';
+                    }
                     vm.panelTitle += ' at ' + vm.userAcf.identifier;
                 }
             }
