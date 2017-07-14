@@ -1,6 +1,6 @@
 {
     'API': 'https://www.pulse.emsa.ca.gov/rest',
-    'AuthAPI':  'https://www.puls.emsa.ca.gov/auth',
+    'AuthAPI':  'https://www.pulse.emsa.ca.gov/auth',
     'GAAPI': 'https://pulse-160916.appspot.com',
     'IdleTimeout': 20,
     'IdleWarn': 1,
