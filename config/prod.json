@@ -1,6 +1,6 @@
 {
-    'API': 'https://www.pulsedemo.org/rest',
-    'AuthAPI':  'https://www.pulsedemo.org/auth',
+    'API': 'https://www.pulse.emsa.ca.gov/rest',
+    'AuthAPI':  'https://www.puls.emsa.ca.gov/auth',
     'GAAPI': 'https://pulse-160916.appspot.com',
     'IdleTimeout': 20,
     'IdleWarn': 1,
@@ -8,6 +8,6 @@
     'KeepaliveInterval': 1,
     'LocationQueryInterval': 60,
     'QueryQueryTimeout': 5,
-    'SwaggerUrl': 'https://www.pulsedemo.org/rest/api-docs',
+    'SwaggerUrl': 'https://www.pulse.emsa.ca.gov/rest/api-docs',
     'acfWritesAllowed': false
 }
