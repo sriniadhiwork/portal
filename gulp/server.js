@@ -39,7 +39,7 @@ function browserSyncInit(baseDir, browser) {
             rejectUnauthorized: false
         }),
         proxyMiddleware('/auth', {
-            target: 'https://localhost:8082/',
+            target: 'https://localhost:8080/',
             pathRewrite: { '^/auth' : '' },
             changeOrigin: true,
             secure: false,
