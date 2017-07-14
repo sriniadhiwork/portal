@@ -6,7 +6,7 @@
         .controller('PatientStageController', PatientStageController);
 
     /** @ngInject */
-    function PatientStageController($filter, $log, $uibModal, $uibModalInstance, commonService, query) {
+    function PatientStageController ($filter, $log, $uibModal, $uibModalInstance, commonService, query) {
         var vm = this;
 
         vm.cancel = cancel;
@@ -67,12 +67,12 @@
                 dateOfBirthParts: {
                     year: vm.query.terms.dob.substring(0,4),
                     month: vm.query.terms.dob.substring(4,6),
-                    day: vm.query.terms.dob.substring(6,8)
+                    day: vm.query.terms.dob.substring(6,8),
                 },
                 dateOfBirthString: commonService.convertDobString(vm.query.terms.dob),
                 fullName: vm.friendlyFullName(vm.query.terms.patientNames[0]),
                 gender: vm.query.terms.gender,
-                ssn: vm.query.terms.ssn
+                ssn: vm.query.terms.ssn,
             };
         }
 
@@ -88,7 +88,7 @@
                 var newPatient = {
                     patientRecordIds: [],
                     patient: vm.patient,
-                    id: vm.query.id
+                    id: vm.query.id,
                 };
                 for (var i = 0; i < vm.query.endpointStatuses.length; i++) {
                     for (var j = 0; j < vm.query.endpointStatuses[i].results.length; j++) {
@@ -115,8 +115,8 @@
                 keyboard: false,
                 size: 'md',
                 resolve: {
-                    record: function () { return record; }
-                }
+                    record: function () { return record; },
+                },
             });
             vm.viewRecordDetailsInstance.result.then(function (response) {
                 $log.info(response);

@@ -2,12 +2,12 @@
     'use strict';
 
     describe('review.aiPatientEdit', function () {
-        var vm, scope, $log, $uibModal, $q, commonService, mock;
+        var $log, $q, $uibModal, commonService, mock, scope, vm;
 
         mock = {
             badRequest: {
                 status: 500,
-                error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement'
+                error: 'org.hibernate.exception.DataException: could not execute statement; nested exception is javax.persistence.PersistenceException: org.hibernate.exception.DataException: could not execute statement',
             },
             fakeModal: {
                 result: {
@@ -16,26 +16,25 @@
                         this.cancelCallback = cancelCallback;
                     }},
                 close: function (item) { this.result.confirmCallBack(item); },
-                dismiss: function (type) { this.result.cancelCallback(type); }
+                dismiss: function (type) { this.result.cancelCallback(type); },
             },
             modalInstance: {
                 close: jasmine.createSpy('close'),
-                dismiss: jasmine.createSpy('dismiss')
+                dismiss: jasmine.createSpy('dismiss'),
             },
             name: {
                 nameType: { code: 'M', description: 'Maiden Name' },
                 familyName: 'Jones',
-                givenName: ['Bob']
+                givenName: ['Bob'],
             },
             patient: {
                 dateOfBirth: '19900323',
                 fullName: 'John Doe',
                 friendlyName: 'John',
                 gender: 'M',
-                ssn: '123-12-1234'
-            }
+                ssn: '123-12-1234',
+            },
         };
-
 
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -44,7 +43,7 @@
                     return $delegate;
                 });
             });
-            inject(function ($controller, $rootScope, _$log_, _$uibModal_,_$q_, _commonService_) {
+            inject(function ($controller, _$log_, _$q_, $rootScope, _$uibModal_, _commonService_) {
                 $log = _$log_;
                 $uibModal = _$uibModal_;
                 spyOn($uibModal, 'open').and.returnValue(mock.fakeModal);
@@ -56,7 +55,7 @@
                 vm = $controller('PatientEditController', {
                     $scope: scope,
                     $uibModalInstance: mock.modalInstance,
-                    patient: mock.patient
+                    patient: mock.patient,
                 });
                 scope.$digest();
             });

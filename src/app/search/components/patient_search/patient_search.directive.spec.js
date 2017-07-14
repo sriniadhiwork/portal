@@ -2,44 +2,46 @@
     'use strict';
 
     describe('search.aiPatientSearch', function () {
-        var $compile, $rootScope, vm, el, $log, $q, commonService, mock;
-        mock = {patientSearch: {results: [{id:2, givenName: 'Joe', familyName: 'Rogan'}, {id:3, givenName: 'Sue', familyName: 'Samson'}]}};
+        var $compile, $log, $q, $rootScope, Mock, commonService, el, mock, vm;
+
+        mock = {patientSearch: {results: [{id: 2, givenName: 'Joe', familyName: 'Rogan'}, {id: 3, givenName: 'Sue', familyName: 'Samson'}]}};
         mock.badRequest = {
-            status:400,
-            error:'Bad Request',
-            message:'One of the following search parameters was blank or improperly formed: Name, Date of Birth, Gender'
+            status: 400,
+            error: 'Bad Request',
+            message: 'One of the following search parameters was blank or improperly formed: Name, Date of Birth, Gender',
         };
         mock.dob = {
             year: 1999,
             month: '03',
-            day: '19'
+            day: '19',
         };
         mock.query = {}
         mock.query.patientNames = [{
             givenName: ['bob'],
             familyName: 'jones',
-            nameType: {code: 'L'}
+            nameType: {code: 'L'},
         }];
         mock.query.dobParts = mock.dob;
         mock.query.gender = 'M';
         mock.baseQuery = {
             addresses: [{ lines: []}],
             dobParts: {},
-            patientNames: [{givenName: [], nameType: { code: 'L', description: 'Legal Name'} }]
+            patientNames: [{givenName: [], nameType: { code: 'L', description: 'Legal Name'} }],
         };
 
         beforeEach(function () {
-            module('portal', function ($provide) {
+            module('pulse.mock', 'portal', function ($provide) {
                 $provide.decorator('commonService', function ($delegate) {
                     $delegate.searchForPatient = jasmine.createSpy('commonService.searchForPatient');
                     return $delegate;
                 });
             });
-            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _commonService_) {
+            inject(function (_$compile_, _$log_, _$q_, _$rootScope_, _Mock_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;
                 $q = _$q_;
+                Mock = _Mock_;
                 commonService = _commonService_;
                 commonService.searchForPatient.and.returnValue($q.when(mock.patientSearch));
 
@@ -56,7 +58,7 @@
                         this.$pristine = false;
                     },
                     $setPristine: function () { this.$pristine = true; },
-                    $setUntouched: function () { this.$untouched = true; }
+                    $setUntouched: function () { this.$untouched = true; },
                 };
             });
         });
@@ -155,15 +157,42 @@
             });
         });
 
-        it('should only search if the form is valid and edited', function () {
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).not.toHaveBeenCalled();
+        describe('requerying', function () {
+            it('should listen for a requery broadcast and call the requery function with it', function () {
+                spyOn(vm, 'requery');
+                $rootScope.$broadcast('requery', {terms: Mock.queries[0].terms});
+                $rootScope.$digest();
+                expect(vm.requery).toHaveBeenCalledWith(Mock.queries[0].terms);
+            });
 
+            it('should fill in the query with the values from the previous search', function () {
+                vm.requery(Mock.queries[0].terms);
+                expect(vm.query).toEqual({
+                    addresses: [{
+                        lines: [],
+                        city: null,
+                        state: null,
+                        zipcode: null,
+                    }],
+                    dobParts: {
+                        year: 1312,
+                        month: '01',
+                        day: '17',
+                    },
+                    gender: 'M',
+                    patientNames: [{
+                        givenName: ['Bob'],
+                        familyName: 'Jones',
+                        nameType: { code: 'L', description: 'Legal Name'},
+                    }],
+                    ssn: '123-12-1234',
+                    telephone: null,
+                });
+            });
+        });
+
+        it('should only search if the form is valid', function () {
             vm.queryForm.$invalid = true;
-            vm.searchForPatient();
-            expect(commonService.searchForPatient).not.toHaveBeenCalled();
-
-            vm.queryForm.$setDirty();
             vm.searchForPatient();
             expect(commonService.searchForPatient).not.toHaveBeenCalled();
 

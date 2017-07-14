@@ -42,7 +42,7 @@
       <div class="row" ng-if="vm.activePatient !== null">
         <div class="col-sm-12">
           <div class="btn-group btn-group-sm pull-right">
-            <button class="btn btn-primary" ng-click="vm.editPatient(vm.activePatient)"><i class="fa fa-pencil-square-o"></i> Edit<span class="sr-only"> {{ vm.activePatient }}</span></button>
+            <button class="btn btn-primary" ng-click="vm.editPatient(vm.activePatient)"><i class="fa fa-pencil-square-o"></i> Edit<span class="sr-only"> {{ vm.activePatient.fullName }}</span></button>
             <button class="btn btn-danger"
                     confirm="Are you sure you'd like to discharge this Patient?"
                     confirm-title="Confirmation"
@@ -67,7 +67,6 @@
               <td>{{ vm.activePatient.ssn }}</td>
             </tr>
           </table>
-          </ul>
           <table class="table table-condensed" st-table="vm.documents" st-safe-src="vm.activePatient.documents">
             <thead>
               <tr>
@@ -81,13 +80,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="doc in vm.documents track by doc.id" ng-class="{ 'active' : vm.activeDocument === doc }">
+              <tr ng-repeat="doc in vm.documents track by doc.id" ng-class="{ 'success' : vm.activeDocument.id === doc.id }">
                 <td>
                   <button ng-if="!doc.cached && !doc.status" ng-click="vm.cacheDocument(vm.activePatient, doc)" class="btn btn-warning btn-sm"><span class="sr-only">Cache </span><i class="fa fa-download"></i></button>
                   <button ng-if="!doc.cached && !doc.isRequerying && (doc.status === 'Failed' || doc.status === 'Cancelled')" ng-click="vm.requeryDocument(vm.activePatient, doc)" class="btn btn-primary btn-sm"><span class="sr-only">Retry </span><i class="fa fa-refresh"></i></button>
                   <button ng-if="doc.status === 'Active' || doc.isRequerying" disabled class="btn btn-warning btn-sm"><span class="sr-only">Pending </span><i class="fa fa-spinner fa-spin"></i></button>
                   <button ng-if="doc.status === 'Active' && !doc.isRequerying" ng-click="vm.cancelDocument(vm.activePatient, doc)" class="btn btn-danger btn-sm"><span class="sr-only">Cancel </span><i class="fa fa-ban"></i></button>
-                  <button ng-if="doc.cached" ng-click="vm.getDocument(vm.activePatient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
+                  <button ng-if="doc.cached && doc.id !== vm.activeDocument.id" ng-click="vm.getDocument(vm.activePatient, doc)" class="btn btn-success btn-sm"><span class="sr-only">View </span><i class="fa fa-eye"></i></button>
+                  <button ng-if="doc.cached && doc.id === vm.activeDocument.id" disabled class="btn btn-success btn-sm"><span class="sr-only">Active document </span><i class="fa fa-check"></i></button>
                 </td>
                 <td>{{ doc.name }}</td>
                 <td>{{ doc.className }}</td>

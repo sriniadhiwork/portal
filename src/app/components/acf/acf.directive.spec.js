@@ -2,12 +2,12 @@
     'use strict';
 
     describe('portal.aiAcf', function () {
-        var $compile, $rootScope, vm, el, $log, $q, commonService, mock, Mock, $location;
+        var $compile, $location, $log, $q, $rootScope, Mock, commonService, el, mock, vm;
         mock = {};
-        mock.newAcf = {identifier:'New-01',name:'Fairgrounds',phoneNumber:'555-1895',address:{lines:['133 Smith Gardn'],city:'Albany',state:'CA',zipcode:'94602',country:null}};
+        mock.newAcf = {identifier: 'New-01',name: 'Fairgrounds',phoneNumber: '555-1895',address: {lines: ['133 Smith Gardn'],city: 'Albany',state: 'CA',zipcode: '94602',country: null}};
         mock.badRequest = {
             status: 400,
-            error: 'ACF identitifer is required.'
+            error: 'ACF identitifer is required.',
         };
 
         beforeEach(function () {
@@ -24,7 +24,7 @@
                 });
                 $provide.constant('acfWritesAllowed', true);
             });
-            inject(function (_$compile_, _$rootScope_, _$log_, _$q_, _commonService_, _$location_, _Mock_) {
+            inject(function (_$compile_, _$location_, _$log_, _$q_, _$rootScope_, _Mock_, _commonService_) {
                 $compile = _$compile_;
                 $rootScope = _$rootScope_;
                 $log = _$log_;
@@ -32,7 +32,7 @@
                 $location = _$location_;
                 Mock = _Mock_;
                 commonService = _commonService_;
-                commonService.createAcf.and.returnValue($q.when({response: angular.extend(mock.newAcf,{id:4})}));
+                commonService.createAcf.and.returnValue($q.when({response: angular.extend(mock.newAcf,{id: 4})}));
                 commonService.editAcf.and.returnValue($q.when(Mock.acfs[1]));
                 commonService.getAcfs.and.returnValue($q.when(Mock.acfs));
                 commonService.getUserAcf.and.returnValue(Mock.acfs[0]);

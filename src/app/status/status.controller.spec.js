@@ -2,10 +2,10 @@
     'use strict';
 
     describe('portal.status', function (){
-        var vm, scope, commonService, $log, $q, mock;
+        var $log, $q, commonService, mock, scope, vm;
 
         mock = {
-            data: {"rows":[{"c":[{"v":"20170223"},{"v":0}]},{"c":[{"v":"20170224"},{"v":0}]},{"c":[{"v":"20170225"},{"v":0}]},{"c":[{"v":"20170226"},{"v":0}]},{"c":[{"v":"20170227"},{"v":0}]},{"c":[{"v":"20170228"},{"v":0}]},{"c":[{"v":"20170301"},{"v":0}]},{"c":[{"v":"20170302"},{"v":0}]},{"c":[{"v":"20170303"},{"v":0}]},{"c":[{"v":"20170304"},{"v":0}]},{"c":[{"v":"20170305"},{"v":0}]},{"c":[{"v":"20170306"},{"v":0}]},{"c":[{"v":"20170307"},{"v":0}]},{"c":[{"v":"20170308"},{"v":1}]}],"cols":[{"type":"string","id":"ga:date","label":"ga:date"},{"type":"number","id":"ga:sessions","label":"ga:sessions"}]}
+            data: {'rows': [{'c': [{'v': '20170223'},{'v': 0}]},{'c': [{'v': '20170224'},{'v': 0}]},{'c': [{'v': '20170225'},{'v': 0}]},{'c': [{'v': '20170226'},{'v': 0}]},{'c': [{'v': '20170227'},{'v': 0}]},{'c': [{'v': '20170228'},{'v': 0}]},{'c': [{'v': '20170301'},{'v': 0}]},{'c': [{'v': '20170302'},{'v': 0}]},{'c': [{'v': '20170303'},{'v': 0}]},{'c': [{'v': '20170304'},{'v': 0}]},{'c': [{'v': '20170305'},{'v': 0}]},{'c': [{'v': '20170306'},{'v': 0}]},{'c': [{'v': '20170307'},{'v': 0}]},{'c': [{'v': '20170308'},{'v': 1}]}],'cols': [{'type': 'string','id': 'ga: date','label': 'ga: date'},{'type': 'number','id': 'ga: sessions','label': 'ga: sessions'}]},
         };
         beforeEach(function () {
             module('portal', function ($provide) {
@@ -15,7 +15,7 @@
                 });
             });
 
-            inject(function (_commonService_, _$log_, $controller, $rootScope, _$q_) {
+            inject(function ($controller, _$log_, _$q_, $rootScope, _commonService_) {
                 $log = _$log_;
                 $q = _$q_;
                 commonService = _commonService_;

@@ -6,7 +6,7 @@
         .controller('MainController', MainController);
 
     /** @ngInject */
-    function MainController($log, $location, $timeout, commonService, AuthAPI) {
+    function MainController ($location, $log, $timeout, AuthAPI, IDP, commonService) {
         var vm = this;
 
         vm.hasAcf = hasAcf;
@@ -21,6 +21,7 @@
             vm.commonService = commonService;
             vm.authAction = AuthAPI + '/saml/login?disco=true';
             vm.willRedirect = false;
+            vm.IDP = IDP;
 
             commonService.getSamlUserToken().then(function (response) {
                 if (angular.isDefined(response)) {

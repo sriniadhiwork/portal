@@ -6,7 +6,7 @@
         .controller('PatientStageDetailsController', PatientStageDetailsController);
 
     /** @ngInject */
-    function PatientStageDetailsController($log, $uibModalInstance, record) {
+    function PatientStageDetailsController ($log, $uibModalInstance, record) {
         var vm = this;
 
         vm.cancel = cancel;

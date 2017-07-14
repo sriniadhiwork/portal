@@ -2,10 +2,10 @@
     'use strict';
 
     describe('review.aiAcfPatientList', function () {
-        var vm, el, scope, $log, $timeout, $uibModal, $q, commonService, mock, Mock, actualOptions;
+        var $log, $q, $timeout, $uibModal, Mock, actualOptions, commonService, el, mock, scope, vm;
         mock = {
-            fakeDocument: {contents: "<document><made><of>XML</of></made></document"},
-            userAcf: {"id":277,"identifier":"Humboldt-02","name":"Community College","phoneNumber":"555-1912","address":{"id":null,"lines":["92 Tenth Stn"],"city":"Mckinleyville","state":"CA","zipcode":"95501","country":null},"lastRead":1489156161065}
+            fakeDocument: {contents: '<document><made><of>XML</of></made></document>'},
+            userAcf: {'id': 277,'identifier': 'Humboldt-02','name': 'Community College','phoneNumber': '555-1912','address': {'id': null,'lines': ['92 Tenth Stn'],'city': 'Mckinleyville','state': 'CA','zipcode': '95501','country': null},'lastRead': 1489156161065},
         };
         mock.fakeModal = {
             result: {
@@ -14,7 +14,7 @@
                     this.cancelCallback = cancelCallback;
                 }},
             close: function (item) { this.result.confirmCallBack(item); },
-            dismiss: function (type) { this.result.cancelCallback(type); }
+            dismiss: function (type) { this.result.cancelCallback(type); },
         };
         mock.fakeModalOptions = {
             templateUrl: 'app/review/components/patient_edit/patient_edit.html',
@@ -25,8 +25,8 @@
             keyboard: false,
             size: 'lg',
             resolve: {
-                patient: jasmine.any(Function)
-            }
+                patient: jasmine.any(Function),
+            },
         };
         beforeEach(function () {
             module('pulse.mock', 'portal', function ($provide) {
@@ -44,7 +44,7 @@
                     return $delegate;
                 });
             });
-            inject(function ($compile, $rootScope, _$log_, _$timeout_, _$q_, _$uibModal_, _Mock_, _commonService_) {
+            inject(function ($compile, _$log_, _$q_, $rootScope, _$timeout_, _$uibModal_, _Mock_, _commonService_) {
                 $log = _$log_;
                 $timeout = _$timeout_;
                 $q = _$q_;
@@ -70,7 +70,7 @@
                 commonService.convertDobString.and.returnValue('fake');
                 commonService.dischargePatient.and.returnValue($q.when({}));
                 commonService.displayName.and.returnValue(Mock.patients[0].givenName + ' ' + Mock.patients[0].familyName);
-                commonService.getDocument.and.returnValue($q.when(angular.copy(mock.fakeDocument)));
+                commonService.getDocument.and.returnValue($q.when(angular.copy(Mock.patients[0].endpointMaps[0].documents[0])));
                 commonService.getPatientsAtAcf.and.returnValue($q.when(angular.copy(Mock.patients)));
                 commonService.getUserAcf.and.returnValue(mock.userAcf);
                 commonService.requeryDocumentQueryEndpoint.and.returnValue($q.when({}));
@@ -177,6 +177,10 @@
 
             it('should have a way to get a document', function () {
                 var patient = vm.patients[0];
+                var returnedDocument = angular.copy(Mock.patients[0].endpointMaps[0].documents[0]);
+                returnedDocument.status = 'Active';
+                commonService.getDocument.and.returnValue($q.when(returnedDocument));
+
                 vm.cacheDocument(patient, patient.endpointMaps[0].documents[0]);
                 el.isolateScope().$digest();
 
@@ -187,7 +191,7 @@
                 expect(vm.activeDocument).toEqual(patient.endpointMaps[0].documents[0]);
             });
 
-            it('should not re-call the service if the document is already cached', function () {
+            it('should re-call the service because we\'re not caching the document on the front end', function () {
                 var patient = vm.patients[0];
                 var initCount = commonService.getDocument.calls.count();
                 vm.getDocument(patient, patient.endpointMaps[0].documents[0]);
@@ -195,7 +199,7 @@
 
                 vm.getDocument(patient, patient.endpointMaps[0].documents[0]);
                 el.isolateScope().$digest();
-                expect(commonService.getDocument.calls.count()).toBe(initCount + 1);
+                expect(commonService.getDocument.calls.count()).toBe(initCount + 2);
             });
 
             it('should requery for document contents', function () {

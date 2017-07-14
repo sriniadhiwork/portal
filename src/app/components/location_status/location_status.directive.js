@@ -6,20 +6,20 @@
         .directive('aiLocationStatus', aiLocationStatus);
 
     /** @ngInject */
-    function aiLocationStatus() {
+    function aiLocationStatus () {
         var directive = {
             restrict: 'E',
             templateUrl: 'app/components/location_status/location_status.html',
             scope: {},
             controller: LocationStatusController,
             controllerAs: 'vm',
-            bindToController: {}
+            bindToController: {},
         };
 
         return directive;
 
         /** @ngInject */
-        function LocationStatusController($log, $interval, $scope, commonService, LocationQueryInterval) {
+        function LocationStatusController ($interval, $log, $scope, LocationQueryInterval, commonService) {
             var vm = this;
 
             vm.getLocationStatistics = getLocationStatistics;
@@ -47,13 +47,19 @@
                                 vm.locationStatistics[i].statistics = { type: 'PieChart'};
                                 vm.locationStatistics[i].statistics.options = {
                                     title: vm.locationStatistics[i].location.name + ' (average response time: ' + vm.locationStatistics[i].patientDiscoveryStats.requestAvgCompletionSeconds + 's)',
-                                    is3D: true
+                                    is3D: true,
                                 };
-                                vm.locationStatistics[i].statistics.data = { cols: [{ id: 's', label: 'Status', type: 'string' },
-                                                                                    { id: 'c', label: 'Count', type: 'number' }],
-                                                                             rows: [{ c: [{ v: 'Success'}, { v: vm.locationStatistics[i].patientDiscoveryStats.requestSuccessCount}]},
-                                                                                    { c: [{ v: 'Failed'}, { v: vm.locationStatistics[i].patientDiscoveryStats.requestFailureCount}]},
-                                                                                    { c: [{ v: 'Cancelled'}, { v: vm.locationStatistics[i].patientDiscoveryStats.requestCancelledCount}]}]};
+                                vm.locationStatistics[i].statistics.data = {
+                                    cols: [
+                                        { id: 's', label: 'Status', type: 'string' },
+                                        { id: 'c', label: 'Count', type: 'number' },
+                                    ],
+                                    rows: [
+                                        { c: [{ v: 'Success'}, { v: vm.locationStatistics[i].patientDiscoveryStats.requestSuccessCount}]},
+                                        { c: [{ v: 'Failed'}, { v: vm.locationStatistics[i].patientDiscoveryStats.requestFailureCount}]},
+                                        { c: [{ v: 'Cancelled'}, { v: vm.locationStatistics[i].patientDiscoveryStats.requestCancelledCount}]},
+                                    ],
+                                };
                             } else {
                                 vm.locationStatistics[i].statistics = null;
                             }

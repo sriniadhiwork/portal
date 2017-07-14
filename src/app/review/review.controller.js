@@ -6,7 +6,7 @@
         .controller('ReviewController', ReviewController);
 
     /** @ngInject */
-    function ReviewController($location, $log, commonService) {
+    function ReviewController ($location, $log, commonService) {
         var vm = this;
 
         vm.hasAcf = hasAcf;

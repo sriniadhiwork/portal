@@ -6,30 +6,30 @@
         .directive('aiPatientReview', aiPatientReview);
 
     /** @ngInject */
-    function aiPatientReview() {
+    function aiPatientReview () {
         var directive = {
-            restrict: 'E',
-            templateUrl: 'app/search/components/patient_review/patient_review.html',
-            scope: { registerHandler: '&' },
+            bindToController: {
+                triggerHandlers: '&',
+            },
             controller: PatientReviewController,
             controllerAs: 'vm',
-            bindToController: {
-                triggerHandlers: '&'
-            },
+            restrict: 'E',
+            scope: { registerHandler: '&' },
+            templateUrl: 'app/search/components/patient_review/patient_review.html',
             link: function (scope, element, attr, ctrl) {
                 var handler = scope.registerHandler({
                     handler: function () {
                         ctrl.getQueries();
-                    }
+                    },
                 });
                 scope.$on('$destroy', handler);
-            }
+            },
         };
 
         return directive;
 
         /** @ngInject */
-        function PatientReviewController($log, $scope, $timeout, $uibModal, commonService, QueryQueryTimeout) {
+        function PatientReviewController ($log, $rootScope, $scope, $timeout, $uibModal, QueryQueryTimeout, commonService) {
             var vm = this;
 
             vm.cancelQueryEndpoint = cancelQueryEndpoint;
@@ -101,10 +101,7 @@
             }
 
             function requery (query) {
-                commonService.searchForPatient(query.terms).then(function () {
-                    vm.getQueries();
-                });
-                vm.clearQuery(query);
+                $rootScope.$broadcast('requery', {terms: query.terms});
             }
 
             function requeryEndpoint (endpoint) {
@@ -124,8 +121,8 @@
                     keyboard: false,
                     size: 'lg',
                     resolve: {
-                        query: function () { return query; }
-                    }
+                        query: function () { return query; },
+                    },
                 });
                 vm.stagePatientInstance.result.then(function () {
                     vm.triggerHandlers();

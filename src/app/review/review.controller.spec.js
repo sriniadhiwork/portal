@@ -2,7 +2,7 @@
     'use strict';
 
     describe('review.controller', function () {
-        var vm, scope, commonService, $log, location, ctrl;
+        var $log, commonService, ctrl, location, scope, vm;
 
         beforeEach(function () {
             module('portal.review', 'portal.constants', function ($provide) {
@@ -13,7 +13,7 @@
                 });
             });
 
-            inject(function (_commonService_, _$log_, $controller, $q, $rootScope, _$location_) {
+            inject(function ($controller, _$location_, _$log_, $q, $rootScope, _commonService_) {
                 commonService = _commonService_;
                 $log = _$log_;
                 location = _$location_;
