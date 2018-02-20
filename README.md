@@ -30,7 +30,7 @@ $ bower install
 ## Run Portal webserver
 
 * Run the server with ``gulp serve``
-  * Server will default to http://localhost:3000
+  * Server will default to https://localhost:3000
 * Run the tests with ``gulp test:auto``
 * Or run both with ``gulp live``
 
